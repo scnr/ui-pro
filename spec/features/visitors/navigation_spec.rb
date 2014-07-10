@@ -7,12 +7,27 @@ feature 'Navigation links', :devise do
     # Scenario: View navigation links
     #   Given I am a visitor
     #   When I visit the home page
-    #   Then I see "home," "sign in," and "sign up"
-    scenario 'view navigation links' do
+    #   And I am logged in
+    #   Then I see navigation links
+    scenario 'logged in user can view navigation links' do
+        sign_up_with('test@example.com', 'please123', 'please123')
         visit root_path
+
         expect(page).to have_content 'Home'
-        expect(page).to have_content 'Sign in'
-        expect(page).to have_content 'Sign up'
+        expect(page).to have_content 'Sign out'
+        expect(page).to have_content 'Edit account'
+        expect(page).to have_content 'Users'
+    end
+
+    # Scenario: View navigation links
+    #   Given I am a visitor
+    #   When I visit the home page
+    #   And I am not logged in
+    #   Then I see navigation links
+    scenario 'not logged in user cannot view navigation links' do
+        visit root_path
+
+        expect(page).to_not have_css('div.navbar a')
     end
 
 end
