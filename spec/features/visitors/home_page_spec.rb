@@ -7,10 +7,10 @@ feature 'Home page' do
     # Scenario: Visit the home page
     #   Given I am a visitor
     #   When I visit the home page
-    #   Then I see "Welcome"
+    #   I am redirect to the sign-in page
     scenario 'visit the home page' do
         visit root_path
-        expect(page).to have_content 'Welcome'
+        expect(current_path).to eq new_user_session_path
     end
 
 end
