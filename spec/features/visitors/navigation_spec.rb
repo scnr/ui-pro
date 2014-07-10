@@ -10,7 +10,8 @@ feature 'Navigation links', :devise do
     #   And I am logged in
     #   Then I see navigation links
     scenario 'logged in user can view navigation links' do
-        sign_up_with('test@example.com', 'please123', 'please123')
+        user = FactoryGirl.create(:user)
+        signin(user.email, user.password)
         visit root_path
 
         expect(page).to have_content 'Home'
