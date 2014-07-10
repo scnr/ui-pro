@@ -16,6 +16,7 @@ gem 'devise'
 gem 'pundit'
 gem 'simple_form'
 gem 'thin'
+gem 'awesome_print'
 
 group :development do
     gem 'better_errors'
