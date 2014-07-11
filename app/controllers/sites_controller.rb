@@ -26,6 +26,10 @@ class SitesController < ApplicationController
     def edit
     end
 
+    # POST /sites/1/invite_user
+    def invite_user
+    end
+
     # POST /sites
     # POST /sites.json
     def create

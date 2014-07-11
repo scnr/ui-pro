@@ -17,4 +17,8 @@ class User < ActiveRecord::Base
         sites.select(:id).where( site.id ).any?
     end
 
+    def to_s
+        "#{name} (#{email})"
+    end
+
 end

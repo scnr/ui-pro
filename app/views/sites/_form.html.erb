@@ -5,10 +5,28 @@
         <%= f.input :protocol %>
         <%= f.input :host, placeholder: 'example.com or test.example.com' %>
         <%= f.input :port %>
-        <%= f.association :users %>
     </div>
 
     <div class="form-actions">
         <%= f.button :submit %>
     </div>
 <% end %>
+
+<div>
+    <p>
+        Manage users
+    </p>
+
+    <ul>
+        <% (@site.users - [current_user]).each do |user| %>
+            <li>
+                <%= link_to user, user %> -
+                <%= link_to 'Remove', user %>
+            </li>
+        <% end %>
+    </ul>
+
+    <%= simple_form_for :site_invite_user, url: invite_user_site_path do |f| %>
+        <%= f.input :email, placeholder: 'E-mail address', label: 'Invite user' %>
+    <% end %>
+</div>
