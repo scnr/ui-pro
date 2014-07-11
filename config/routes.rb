@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   resources :sites
 
-    root to: 'visitors#index'
+    root to: 'sites#index'
     devise_for :users
     resources :users
 end
