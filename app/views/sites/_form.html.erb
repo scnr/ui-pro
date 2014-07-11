@@ -1,0 +1,14 @@
+<%= simple_form_for(@site) do |f| %>
+    <%= f.error_notification %>
+
+    <div class="form-inputs">
+        <%= f.input :protocol %>
+        <%= f.input :host, placeholder: 'example.com or test.example.com' %>
+        <%= f.input :port %>
+        <%= f.association :users %>
+    </div>
+
+    <div class="form-actions">
+        <%= f.button :submit %>
+    </div>
+<% end %>

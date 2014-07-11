@@ -1,0 +1,48 @@
+include Warden::Test::Helpers
+Warden.test_mode!
+
+# Feature: Site page
+#   As a user
+#   I want to visit a site
+#   So I can see a site
+feature 'Site page', :devise do
+
+    let(:user) { FactoryGirl.create :user }
+    let(:other_user) { FactoryGirl.create(:user, email: 'other@example.com') }
+    let(:site) { FactoryGirl.create :site }
+    let(:other_site) { FactoryGirl.create :site, host: 'fff.com' }
+
+    after(:each) do
+        Warden.test_reset!
+    end
+
+    # Scenario: User sees own site
+    #   Given I am signed in
+    #   When I visit one of my sites
+    #   Then I see the protocol, host and port
+    scenario 'user sees own profile' do
+        user.sites       << site
+        other_user.sites << other_site
+
+        login_as user, scope: :user
+        visit site_path( site )
+
+        expect(page).to have_content site.protocol
+        expect(page).to have_content site.host
+        expect(page).to have_content site.port
+    end
+
+    # Scenario: User cannot see an unassociated site
+    #   Given I am signed in
+    #   When I try to see an unassociated site
+    #   Then I get a 404 error
+    scenario "user cannot cannot see another user's site" do
+        user.sites       << site
+        other_user.sites << other_site
+
+        login_as user, scope: :user
+
+        expect { visit site_path( other_site ) }.to raise_error ActionController::RoutingError
+    end
+
+end

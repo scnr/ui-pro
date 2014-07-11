@@ -7,3 +7,9 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 user = CreateAdminService.new.call
 puts 'CREATED ADMIN USER: ' << user.email
+
+User.create(
+    email:                 'test@stuff.com',
+    password:              'testtest',
+    password_confirmation: 'testtest'
+)

@@ -15,9 +15,9 @@ feature 'Navigation links', :devise do
         visit root_path
 
         expect(page).to have_content 'Home'
+        expect(page).to have_content 'Sites'
         expect(page).to have_content 'Sign out'
         expect(page).to have_content 'Edit account'
-        expect(page).to have_content 'Users'
     end
 
     # Scenario: View navigation links

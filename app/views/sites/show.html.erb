@@ -1,0 +1,23 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+    <strong>Verified:</strong>
+</p>
+
+<p>
+    <strong>Protocol:</strong>
+    <%= @site.protocol %>
+</p>
+
+<p>
+    <strong>Host:</strong>
+    <%= @site.host %>
+</p>
+
+<p>
+    <strong>Port:</strong>
+    <%= @site.port %>
+</p>
+
+<%= link_to 'Edit', edit_site_path(@site) %> |
+<%= link_to 'Back', sites_path %>
