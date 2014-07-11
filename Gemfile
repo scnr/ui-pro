@@ -36,11 +36,11 @@ group :test do
     gem 'launchy'
     gem 'selenium-webdriver'
     gem 'rspec-sidekiq'
+    gem 'factory_girl_rails'
+    gem 'rspec-rails'
 end
 
 group :development, :test do
     gem 'thin'
     gem 'sqlite3'
-    gem 'factory_girl_rails'
-    gem 'rspec-rails'
 end
