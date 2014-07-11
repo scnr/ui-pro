@@ -11,7 +11,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140710201830) do
+ActiveRecord::Schema.define(version: 20140711063315) do
+
+  create_table "site_verifications", force: true do |t|
+    t.string   "filename"
+    t.string   "state",      default: "pending"
+    t.text     "code"
+    t.text     "message"
+    t.integer  "site_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "sites", force: true do |t|
     t.string   "protocol",   default: "http"

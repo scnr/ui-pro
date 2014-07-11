@@ -1,7 +1,12 @@
 class Site < ActiveRecord::Base
-    has_and_belongs_to_many :users
 
     PROTOCOL_TYPES = %w(http https)
+
+    has_one :verification, dependent: :destroy, autosave: true,
+            foreign_key: 'site_id', class: SiteVerification
+    before_create :build_verification
+
+    has_and_belongs_to_many :users
 
     validates_presence_of :protocol
     validates             :protocol, inclusion: {

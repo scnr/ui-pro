@@ -1,31 +1,14 @@
-<h1>Listing sites</h1>
+<h1>Sites</h1>
 
-<table>
-    <thead>
-    <tr>
-        <th>Verified</th>
-        <th>Protocol</th>
-        <th>Host</th>
-        <th>Port</th>
-        <th colspan="3"></th>
-    </tr>
-    </thead>
+<% @sites.each do |site| %>
+    <h2>
+        <%= link_to site.url, site %>
 
-    <tbody>
-    <% @sites.each do |site| %>
-        <tr>
-            <td></td>
-            <td><%= site.protocol %></td>
-            <td><%= site.host %></td>
-            <td><%= site.port %></td>
-            <td><%= link_to 'Show', site %></td>
-            <td><%= link_to 'Edit', edit_site_path(site) %></td>
-            <td><%= link_to 'Destroy', site, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-        </tr>
-    <% end %>
-    </tbody>
-</table>
-
-<br>
+        <small>
+            <%= link_to 'Edit', edit_site_path( site ) %> -
+            <%= link_to 'Destroy', site, method: :delete, data: { confirm: 'Are you sure?' } %>
+        </small>
+    </h2>
+<% end %>
 
 <%= link_to 'New Site', new_site_path %>

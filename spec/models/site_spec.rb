@@ -1,7 +1,12 @@
 describe Site, type: :model do
     subject { @site = FactoryGirl.create(:site) }
 
+    expect_it { to have_one :verification }
     expect_it { to have_and_belong_to_many :users }
+
+    it 'has a default #verification' do
+        expect(subject.verification).to be_kind_of SiteVerification
+    end
 
     describe :validations do
         describe '#protocol' do

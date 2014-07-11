@@ -4,6 +4,8 @@
 #   So I can learn more about the website
 feature 'Home page' do
 
+    let(:user) { FactoryGirl.create(:user) }
+
     # Scenario: Visit the home page
     #   Given I am a visitor
     #   When I visit the home page
@@ -18,10 +20,10 @@ feature 'Home page' do
     #   When I visit the home page
     #   I see my sites
     scenario 'logged in user sees site list' do
-        login_as FactoryGirl.create(:user)
+        signin user.email, user.password
         visit root_path
 
-        expect(page).to have_content 'Listing sites'
+        expect(page).to have_content 'Sites'
     end
 
 end
