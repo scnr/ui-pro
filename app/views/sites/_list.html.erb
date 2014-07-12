@@ -1,0 +1,16 @@
+<%
+   show_actions ||= false
+%>
+
+<% sites.each do |site| %>
+    <h2>
+        <%= link_to site.url, site %>
+
+        <% if show_actions %>
+            <small>
+                <%= link_to 'Edit', edit_site_path( site ) %> -
+                <%= link_to 'Destroy', site, method: :delete, data: { confirm: 'Are you sure?' } %>
+            </small>
+        <% end %>
+    </h2>
+<% end %>

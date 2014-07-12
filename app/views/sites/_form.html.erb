@@ -26,7 +26,9 @@
         <% end %>
     </ul>
 
-    <%= simple_form_for :site_invite_user, url: invite_user_site_path do |f| %>
-        <%= f.input :email, placeholder: 'E-mail address', label: 'Invite user' %>
+    <% if @site.id %>
+        <%= simple_form_for :site_invite_user, url: invite_user_site_path do |f| %>
+            <%= f.input :email, placeholder: 'E-mail address', label: 'Invite user' %>
+        <% end %>
     <% end %>
 </div>

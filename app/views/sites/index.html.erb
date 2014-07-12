@@ -1,14 +1,21 @@
 <h1>Sites</h1>
 
-<% @sites.each do |site| %>
+<div id="owned-sites">
     <h2>
-        <%= link_to site.url, site %>
+        Yours
 
         <small>
-            <%= link_to 'Edit', edit_site_path( site ) %> -
-            <%= link_to 'Destroy', site, method: :delete, data: { confirm: 'Are you sure?' } %>
+            <%= link_to 'New', new_site_path %>
         </small>
     </h2>
-<% end %>
 
-<%= link_to 'New Site', new_site_path %>
+    <%= render 'list', sites: @sites, show_actions: true %>
+</div>
+
+<% if @shared_sites.any? %>
+    <div id="shared-sites">
+        <h2>Shared</h2>
+
+        <%= render 'list', sites: @shared_sites %>
+    </div>
+<% end %>

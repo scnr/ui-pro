@@ -27,6 +27,7 @@ ActiveRecord::Schema.define(version: 20140711063315) do
     t.string   "protocol",   default: "http"
     t.string   "host"
     t.integer  "port",       default: 80
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

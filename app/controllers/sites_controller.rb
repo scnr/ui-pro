@@ -7,7 +7,9 @@ class SitesController < ApplicationController
     # GET /sites
     # GET /sites.json
     def index
-        @sites = current_user.sites
+        @sites        = current_user.sites
+        @shared_sites = current_user.shared_sites
+
         authorize Site
     end
 
@@ -34,7 +36,7 @@ class SitesController < ApplicationController
     # POST /sites.json
     def create
         @site = Site.new(site_params)
-        @site.users << current_user
+        @site.user = current_user
         authorize @site
 
         respond_to do |format|

@@ -6,6 +6,7 @@ class Site < ActiveRecord::Base
             foreign_key: 'site_id', class: SiteVerification
     before_create :build_verification
 
+    belongs_to :user
     has_and_belongs_to_many :users
 
     validates_presence_of :protocol

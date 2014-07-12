@@ -2,6 +2,7 @@ describe Site, type: :model do
     subject { @site = FactoryGirl.create(:site) }
 
     expect_it { to have_one :verification }
+    expect_it { to belong_to :user }
     expect_it { to have_and_belong_to_many :users }
 
     it 'has a default #verification' do

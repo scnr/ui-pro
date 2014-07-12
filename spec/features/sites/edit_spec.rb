@@ -15,17 +15,28 @@ feature 'Site edit', :devise do
         Warden.test_reset!
     end
 
-    # Scenario: User cannot edit an unassociated site
+    # Scenario: User cannot edit an not-owned site
     #   Given I am signed in
-    #   When I try to edit an unassociated site
+    #   When I try to edit a site I don't own
     #   Then I get a 404 error
-    scenario "user cannot cannot edit another user's site" do
-        user.sites       << site
-        other_user.sites << other_site
+    scenario "user cannot cannot edit a site they don't own" do
+        user.sites << site
 
         login_as user, scope: :user
 
         expect { visit edit_site_path( other_site ) }.to raise_error ActionController::RoutingError
+    end
+
+    # Scenario: User cannot edit a shared site
+    #   Given I am signed in
+    #   When I try to edit a shared site
+    #   Then I get a 404 error
+    scenario 'user cannot cannot edit a shared site' do
+        user.shared_sites << site
+
+        login_as user, scope: :user
+
+        expect { visit edit_site_path( site ) }.to raise_error ActionController::RoutingError
     end
 
     # Scenario: User updates the site

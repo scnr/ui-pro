@@ -21,8 +21,7 @@ feature 'Site page', :devise do
     #   When I visit one of my sites
     #   Then I see the protocol, host and port
     scenario 'user sees own profile' do
-        user.sites       << site
-        other_user.sites << other_site
+        user.sites << site
 
         login_as user, scope: :user
         visit site_path( site )
@@ -32,13 +31,24 @@ feature 'Site page', :devise do
         expect(page).to have_content site.port
     end
 
+    # Scenario: User can see an shared site
+    #   Given I am signed in
+    #   When I try to see a shared site
+    #   Then I see the protocol, host and port
+    scenario "user cannot cannot see another user's site" do
+        user.shared_sites << site
+
+        login_as user, scope: :user
+
+        expect { visit site_path( site ) }.to raise_error ActionController::RoutingError
+    end
+
     # Scenario: User cannot see an unassociated site
     #   Given I am signed in
     #   When I try to see an unassociated site
     #   Then I get a 404 error
     scenario "user cannot cannot see another user's site" do
-        user.sites       << site
-        other_user.sites << other_site
+        user.sites << site
 
         login_as user, scope: :user
 
