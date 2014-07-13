@@ -26,7 +26,7 @@ class SiteVerificationWorker < RenderWorker
         end
 
         if response.body.to_s.strip != @verification.code
-            update :failed, 'HTTP response body did not match the @verification code.'
+            update :failed, 'HTTP response body did not match the verification code.'
             return
         end
 
