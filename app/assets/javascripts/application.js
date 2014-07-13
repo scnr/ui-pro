@@ -16,3 +16,7 @@
 //= require bootstrap
 //= require websocket_rails/main
 //= require_tree .
+
+String.prototype.endsWith = function(suffix) {
+    return this.indexOf(suffix, this.length - suffix.length) !== -1;
+};

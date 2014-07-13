@@ -25,6 +25,7 @@ module ApplicationHelper
             controller: options[:controller],
             id:         options[:id],
             action:     options[:action],
+            format:     options[:format],
             only_path:  true
         )
     end

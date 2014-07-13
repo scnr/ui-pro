@@ -1,5 +1,4 @@
-class SiteVerificationWorker
-    include Sidekiq::Worker
+class SiteVerificationWorker < RenderWorker
 
     def perform( id, refreshable_channel )
         @refreshable_channel = refreshable_channel
@@ -41,7 +40,12 @@ class SiteVerificationWorker
         @verification.message = message
         @verification.send "#{action}!"
 
-        @verification.site.user.notify_browser @refreshable_channel
+        html = render(
+            partial: 'sites/form_verification',
+            locals: { site: @verification.site.reload }
+        )
+
+        @verification.site.user.notify_browser @refreshable_channel, html
     end
 
 end

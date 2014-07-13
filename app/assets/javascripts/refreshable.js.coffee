@@ -1,15 +1,14 @@
-updateRefreshable = ( e ) ->
-    $.get e.data('refreshable'), ( html ) ->
-        e.html( html )
-
 initializeRefreshables = ->
     $('[data-refreshable]').each ( i, e ) ->
-        e = $(e);
+        e   = $(e)
+        url = e.data('refreshable')
 
-        updateRefreshable(e) if( e.html().length == 0 )
-
-        dispatcher.bind 'refreshable://' + e.data('refreshable'), ->
-            updateRefreshable(e);
+        dispatcher.bind 'refreshable://' + e.data('refreshable'), (data) ->
+#            console.log data
+            if url.endsWith( '.js' )
+                eval( data );
+            else
+                e.html( data )
 
 pageReady = ->
     initializeRefreshables()
