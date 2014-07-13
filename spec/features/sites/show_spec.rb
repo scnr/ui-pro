@@ -20,7 +20,7 @@ feature 'Site page', :devise do
     #   Given I am signed in
     #   When I visit one of my sites
     #   Then I see the protocol, host and port
-    scenario 'user sees own profile' do
+    scenario 'user sees the scan details' do
         user.sites << site
 
         login_as user, scope: :user
@@ -29,6 +29,41 @@ feature 'Site page', :devise do
         expect(page).to have_content site.protocol
         expect(page).to have_content site.host
         expect(page).to have_content site.port
+    end
+
+    feature 'when the site is' do
+        feature 'verified' do
+            # Scenario: User sees 'Verified' when the site is verified
+            #   Given I am signed in
+            #   When I visit one of my sites
+            #   And the site is verified
+            #   Then I see 'Verified'
+            scenario 'user sees it' do
+                user.sites << site
+                site.verification.verified!
+
+                login_as user, scope: :user
+                visit site_path( site )
+
+                expect(page).to have_content 'Verified'
+            end
+        end
+
+        feature 'verified' do
+            # Scenario: User sees 'Unverified' when the site is verified
+            #   Given I am signed in
+            #   When I visit one of my sites
+            #   And the site is verified
+            #   Then I see 'Unverified'
+            scenario 'user sees it' do
+                user.sites << site
+
+                login_as user, scope: :user
+                visit site_path( site )
+
+                expect(page).to have_content 'Unverified'
+            end
+        end
     end
 
     # Scenario: User can see an shared site
