@@ -3,7 +3,7 @@ class SitesController < ApplicationController
     after_action :verify_authorized
 
     before_action :set_site, only: [:show, :edit, :update, :verify, :invite_user,
-                                    :destroy, :verification_form]
+                                    :destroy]
 
     # GET /sites
     # GET /sites.json
@@ -41,13 +41,6 @@ class SitesController < ApplicationController
 
         respond_to do |format|
             format.js { render text: '' }
-        end
-    end
-
-    # GET /sites/1/verification_form
-    def verification_form
-        respond_to do |format|
-            format.html { render partial: 'form_verification' }
         end
     end
 

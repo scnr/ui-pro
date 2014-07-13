@@ -20,14 +20,9 @@ module ApplicationHelper
 
     def refreshable_channel_path( options = {} )
         options.merge!( params.symbolize_keys.merge( options ) )
-
-        url_for(
-            controller: options[:controller],
-            id:         options[:id],
-            action:     options[:action],
-            format:     options[:format],
-            only_path:  true
-        )
+        path = [options[:controller], options[:id], options[:action]].compact.join('/')
+        path << ".#{options[:format]}" if options[:format]
+        path
     end
 
 end

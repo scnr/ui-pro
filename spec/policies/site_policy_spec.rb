@@ -49,7 +49,7 @@ describe SitePolicy do
         end
     end
 
-    %w(edit update destroy verify verification_form).each do |action|
+    %w(edit update destroy verify).each do |action|
         permissions "#{action}?" do
             context 'when the user' do
                 context 'is the site owner' do
