@@ -2,8 +2,7 @@ class SitesController < ApplicationController
     before_filter :authenticate_user!
     after_action :verify_authorized
 
-    before_action :set_site, only: [:show, :edit, :update, :verify, :invite_user,
-                                    :destroy]
+    before_action :set_site, only: [:show, :edit, :verify, :invite_user, :destroy]
 
     # GET /sites
     # GET /sites.json
@@ -66,20 +65,6 @@ class SitesController < ApplicationController
         end
     end
 
-    # PATCH/PUT /sites/1
-    # PATCH/PUT /sites/1.json
-    def update
-        respond_to do |format|
-            if @site.update(site_params)
-                format.html { redirect_to @site, notice: 'Site was successfully updated.' }
-                format.json { render :show, status: :ok, location: @site }
-            else
-                format.html { render :edit }
-                format.json { render json: @site.errors, status: :unprocessable_entity }
-            end
-        end
-    end
-
     # DELETE /sites/1
     # DELETE /sites/1.json
     def destroy
@@ -96,13 +81,13 @@ class SitesController < ApplicationController
     def set_site
         @site = current_user.sites.find_by_id( params[:id] )
 
-        raise ActionController::RoutingError.new( 'Scan not found.' ) if !@site
+        raise ActionController::RoutingError.new( 'Site not found.' ) if !@site
 
         authorize @site
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def site_params
-        params.require(:site).permit( :verification_method, :protocol, :host, :port)
+        params.require(:site).permit( :protocol, :host, :port )
     end
 end

@@ -39,68 +39,17 @@ feature 'Site edit', :devise do
         expect { visit edit_site_path( site ) }.to raise_error ActionController::RoutingError
     end
 
-    # Scenario: User updates the site
+    # Scenario: User sees verification button
     #   Given I am signed in
-    #   When I update the site
-    #   Then I see a site updated message
-    scenario 'user updates the site' do
+    #   When I go to the edit page
+    #   Then I see a verification link
+    scenario 'user sees verification link' do
         user.sites << site
 
         login_as user, scope: :user
         visit edit_site_path( site )
 
-        fill_in 'Protocol', with: 'https'
-        click_button 'Update'
-
-        expect(page).to have_content 'Site was successfully updated.'
-    end
-
-    # Scenario: User changes protocol
-    #   Given I am signed in
-    #   When I change the protocol
-    #   Then the protocol gets changed
-    scenario 'user changes protocol' do
-        user.sites << site
-
-        login_as user, scope: :user
-        visit edit_site_path( site )
-
-        fill_in 'Protocol', with: 'https'
-        click_button 'Update'
-
-        expect(site.reload.protocol).to eq 'https'
-    end
-
-    # Scenario: User changes host
-    #   Given I am signed in
-    #   When I change the host
-    #   Then the protocol gets changed
-    scenario 'user changes host' do
-        user.sites << site
-
-        login_as user, scope: :user
-        visit edit_site_path( site )
-
-        fill_in 'Host', with: 'blah.gr'
-        click_button 'Update'
-
-        expect(site.reload.host).to eq 'blah.gr'
-    end
-
-    # Scenario: User changes port
-    #   Given I am signed in
-    #   When I change the port
-    #   Then the port gets changed
-    scenario 'user changes port' do
-        user.sites << site
-
-        login_as user, scope: :user
-        visit edit_site_path( site )
-
-        fill_in 'Port', with: 88
-        click_button 'Update'
-
-        expect(site.reload.port).to eq 88
+        expect(page).to have_xpath "//a[@href='#{verify_site_path(site)}']"
     end
 
 end

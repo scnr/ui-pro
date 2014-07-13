@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
     root to: 'sites#index'
 
-    resources :sites do
+    resources :sites, except: [:update] do
         post  :invite_user, on: :member
         put   :verify,      on: :member
     end
