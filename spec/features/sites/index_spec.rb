@@ -31,6 +31,22 @@ feature 'Site index page' do
             expect(page).to_not have_content other_site.url
         end
 
+        # Scenario: Sites are accompanied by verification status
+        #   Given I am signed in
+        #   When I visit the site index page
+        #   Then I see my sites with their verification status
+        scenario 'user can see the site verification status' do
+            other_site.host = 'test.gg'
+            user.sites << site
+
+            site.verification.verified!
+
+            login_as( user, scope: :user )
+            visit sites_path
+
+            expect(page).to have_content 'Verified'
+        end
+
         # Scenario: Sites are accompanied by edit links
         #   Given I am signed in
         #   When I visit the site index page
