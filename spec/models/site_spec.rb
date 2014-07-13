@@ -173,6 +173,22 @@ describe Site, type: :model do
         end
     end
 
+    describe '#verified?' do
+        context 'when the site has been verified' do
+            before { subject.verification.verified! }
+
+            it 'returns true' do
+                expect(subject).to be_verified
+            end
+        end
+
+        context 'when the site has not been verified' do
+            it 'returns false' do
+                expect(subject).to_not be_verified
+            end
+        end
+    end
+
     describe '#to_s' do
         it 'is aliased to #url' do
             expect(subject.to_s).to eq subject.url

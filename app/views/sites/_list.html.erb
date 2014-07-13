@@ -4,12 +4,18 @@
 
 <% sites.each do |site| %>
     <h2>
+        <% if site.user == current_user %>
+            <small>
+                (<%= site.verified? ? 'Verified' : 'Unverified' %>)
+            </small>
+        <% end %>
+
         <%= link_to site.url, site %>
 
         <% if show_actions %>
             <small>
                 <%= link_to 'Edit', edit_site_path( site ) %> -
-                <%= link_to 'Destroy', site, method: :delete, data: { confirm: 'Are you sure?' } %>
+                <%= link_to 'Delete', site, method: :delete, data: { confirm: 'Are you sure?' } %>
             </small>
         <% end %>
     </h2>

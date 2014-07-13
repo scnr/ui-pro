@@ -14,6 +14,7 @@ gem 'pundit'
 gem 'simple_form'
 gem 'sidekiq'
 gem 'typhoeus'
+gem 'websocket-rails', '0.6.2'
 
 group :doc do
     gem 'sdoc', '~> 0.4.0'
@@ -29,6 +30,8 @@ end
 
 group :test do
     gem 'shoulda'
+    gem 'capybara-webkit'
+    # gem 'poltergeist'
     gem 'capybara'
     gem 'database_cleaner'
     gem 'faker'

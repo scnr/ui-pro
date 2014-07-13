@@ -19,6 +19,10 @@ class User < ActiveRecord::Base
         shared_sites.select(:id).where( site.id ).any?
     end
 
+    def notify_browser( *args )
+        WebsocketRails.users[self.id].send_message( *args )
+    end
+
     def to_s
         "#{name} (#{email})"
     end

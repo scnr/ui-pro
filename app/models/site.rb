@@ -34,4 +34,8 @@ class Site < ActiveRecord::Base
     end
     alias :to_s :url
 
+    def verified?
+        verification.verified?
+    end
+
 end

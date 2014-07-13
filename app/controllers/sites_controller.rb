@@ -2,7 +2,8 @@ class SitesController < ApplicationController
     before_filter :authenticate_user!
     after_action :verify_authorized
 
-    before_action :set_site, only: [:show, :edit, :update, :destroy]
+    before_action :set_site, only: [:show, :edit, :update, :verify, :invite_user,
+                                    :destroy, :verification_form]
 
     # GET /sites
     # GET /sites.json
@@ -26,6 +27,28 @@ class SitesController < ApplicationController
 
     # GET /sites/1/edit
     def edit
+    end
+
+    # PATCH/PUT /sites/1/verify
+    def verify
+        @site.verification.message = nil
+        @site.verification.started!
+
+        SiteVerificationWorker.perform_async(
+            @site.verification.id,
+            refreshable_channel_name( action: :verification_form )
+        )
+
+        respond_to do |format|
+            format.js { render text: '' }
+        end
+    end
+
+    # GET /sites/1/verification_form
+    def verification_form
+        respond_to do |format|
+            format.html { render partial: 'form_verification' }
+        end
     end
 
     # POST /sites/1/invite_user

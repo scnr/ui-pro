@@ -2,8 +2,10 @@ describe SiteVerificationWorker do
     before { Typhoeus.stub(verification.url).and_return(response) }
 
     subject { described_class.new }
-    let(:site) { FactoryGirl.create :site }
+    let(:user) { FactoryGirl.create :user }
+    let(:site) { FactoryGirl.create :site, user: user }
     let(:verification) { site.verification }
+    let(:refreshable_channel) { "refreshable://sites/#{site.id}/verification_form" }
 
     let(:response) do
         Typhoeus::Response.new(
@@ -18,7 +20,7 @@ describe SiteVerificationWorker do
             before { verification.verified! }
 
             it 'returns nil' do
-                expect(subject.perform(verification.id)).to be_nil
+                expect(subject.perform( verification.id, refreshable_channel )).to be_nil
             end
         end
 
@@ -26,18 +28,18 @@ describe SiteVerificationWorker do
             before { site.destroy }
 
             it 'returns nil' do
-                expect(subject.perform(verification.id)).to be_nil
+                expect(subject.perform( verification.id, refreshable_channel )).to be_nil
             end
         end
     end
 
     it 'sets the initial state to :started' do
         expect_any_instance_of(verification.class).to receive(:started!)
-        subject.perform(verification.id)
+        subject.perform( verification.id, refreshable_channel )
     end
 
     context 'when the site' do
-        before { subject.perform(verification.id) }
+        before { subject.perform( verification.id, refreshable_channel ) }
 
         context 'returns a 200 code' do
             context 'and the response body' do
@@ -120,7 +122,7 @@ describe SiteVerificationWorker do
     context 'when an exception is raised' do
         before do
             allow_any_instance_of(verification.class).to receive(:started!) { raise_exception }
-            subject.perform(verification.id)
+            subject.perform( verification.id, refreshable_channel )
         end
 
         let(:raise_exception) { raise 'Test' }
@@ -145,6 +147,15 @@ describe SiteVerificationWorker do
         it "sets the #{SiteVerification}#message" do
             expect(verification.reload.message).to include exception.class.to_s
             expect(verification.reload.message).to include exception.to_s
+        end
+    end
+
+    describe '#update' do
+        before { subject.perform( verification.id, refreshable_channel ) }
+
+        it 'notifies the browser' do
+            expect_any_instance_of(user.class).to receive(:notify_browser)
+            subject.update :error
         end
     end
 

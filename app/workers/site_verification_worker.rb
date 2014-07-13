@@ -1,42 +1,47 @@
 class SiteVerificationWorker
     include Sidekiq::Worker
 
-    def perform( id )
-        verification = SiteVerification.find_by_id( id )
-        return if !verification || verification.done?
+    def perform( id, refreshable_channel )
+        @refreshable_channel = refreshable_channel
+        @verification        = SiteVerification.find_by_id( id )
 
-        verification.started!
+        return if !@verification || @verification.verified?
+
+        update :started
 
         response = Typhoeus.get(
-            verification.url,
+            @verification.url,
             timeout_ms:     5_000,
             ssl_verifypeer: false,
             ssl_verifyhost: 0
         )
 
         if response.code == 0
-            verification.message = 'Server did not return a response. ' <<
+            update :failed, 'Server did not return a response. ' <<
                 "(#{response.return_code}: #{response.return_message})"
-
-            verification.failed!
             return
         elsif response.code != 200
-            verification.message = "HTTP response didn't have an 200 (OK) " <<
+            update :failed, "HTTP response didn't have an 200 (OK) " <<
                 "status code: #{response.code}"
-
-            verification.failed!
             return
         end
 
-        if response.body.to_s.strip != verification.code
-            verification.message = 'HTTP response body did not match the verification code.'
-            verification.failed!
+        if response.body.to_s.strip != @verification.code
+            update :failed, 'HTTP response body did not match the @verification code.'
             return
         end
 
-        verification.verified!
+        update :verified
     rescue => e
-        verification.message = "[#{e.class}] #{e}"
-        verification.error!
+        update :error, "[#{e.class}] #{e}"
+        nil
     end
+
+    def update( action, message = nil )
+        @verification.message = message
+        @verification.send "#{action}!"
+
+        @verification.site.user.notify_browser @refreshable_channel
+    end
+
 end

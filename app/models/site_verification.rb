@@ -19,6 +19,7 @@ class SiteVerification < ActiveRecord::Base
         define_method "#{s}!" do
             self.state = s
             save
+            nil
         end
     end
 

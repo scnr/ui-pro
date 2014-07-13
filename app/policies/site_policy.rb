@@ -7,7 +7,8 @@ class SitePolicy < Policy
         site.user == user || user.has_shared_site?( site )
     end
 
-    allow_admin_or :edit, :update, :destroy do |user, site|
+    allow_admin_or :edit, :update, :destroy, :verify, :verification_form,
+                   :invite_user do |user, site|
         site.user == user
     end
 
