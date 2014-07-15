@@ -73,8 +73,7 @@ class ScansController < ApplicationController
     private
 
     def set_site
-        @site = current_user.sites.find_by_id( params[:site_id] ) ||
-            current_user.shared_sites.find_by_id( params[:site_id] )
+        @site = policy_scope(Site).find_by_id( params[:site_id] )
 
         raise ActionController::RoutingError.new( 'Site not found.' ) if !@site
 

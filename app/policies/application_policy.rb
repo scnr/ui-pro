@@ -1,6 +1,27 @@
 class ApplicationPolicy
     attr_reader :user, :record
 
+    class Scope
+        attr_reader :user, :scope
+
+        def initialize( user, scope )
+            @user  = user
+            @scope = scope
+        end
+
+        def resolve
+            if user.admin?
+                scope.all
+            else
+                non_admin_resolve
+            end
+        end
+
+        def non_admin_resolve
+            scope
+        end
+    end
+
     class <<self
         def allow( *actions, &block )
             prepare_actions( actions ).each do |action|

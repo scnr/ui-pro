@@ -93,8 +93,7 @@ class SitesController < ApplicationController
 
     # Use callbacks to share common setup or constraints between actions.
     def set_site
-        @site = current_user.sites.find_by_id( params[:id] ) ||
-            current_user.shared_sites.find_by_id( params[:id] )
+        @site = policy_scope(Site).find_by_id( params[:id] )
 
         raise ActionController::RoutingError.new( 'Site not found.' ) if !@site
 
