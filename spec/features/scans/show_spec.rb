@@ -23,8 +23,8 @@ feature 'Scan page' do
         visit site_scan_path( site, scan )
     end
 
-    scenario 'user sees scan name in heading' do
-        expect(find('h1').text).to match scan.name
+    scenario 'user sees capitalized scan name in heading' do
+        expect(find('h1').text).to match scan.name.capitalize
     end
 
     scenario 'user sees site url in heading' do
