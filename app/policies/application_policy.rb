@@ -1,11 +1,11 @@
 class ApplicationPolicy
-    attr_reader :user, :model
+    attr_reader :user, :record
 
     class <<self
         def allow( *actions, &block )
             prepare_actions( actions ).each do |action|
                 define_method "#{action}?" do
-                    block ? block.call( user, model, self ) : true
+                    block ? block.call( user, record, self ) : true
                 end
             end
         end
@@ -15,8 +15,8 @@ class ApplicationPolicy
         end
 
         def allow_admin_or( *actions, &block )
-            allow( actions ) do |user, model, policy|
-                policy.admin? || (user && block.call( user, model, policy ))
+            allow( actions ) do |user, record, policy|
+                policy.admin? || (user && block.call( user, record, policy ))
             end
         end
 
@@ -27,9 +27,9 @@ class ApplicationPolicy
         end
     end
 
-    def initialize( user, model )
-        @user  = user
-        @model = model
+    def initialize( user, record )
+        @user   = user
+        @record = record
     end
 
     def admin?
@@ -40,4 +40,35 @@ class ApplicationPolicy
         admin? || block.call
     end
 
+    def index?
+        false
+    end
+
+    def show?
+        scope.where( id: record.id ).exists?
+    end
+
+    def create?
+        false
+    end
+
+    def new?
+        create?
+    end
+
+    def update?
+        false
+    end
+
+    def edit?
+        update?
+    end
+
+    def destroy?
+        false
+    end
+
+    def scope
+        Pundit.policy_scope!( user, record.class )
+    end
 end
