@@ -1,4 +1,4 @@
-class ScanPolicy < Policy
+class ScanPolicy < ApplicationPolicy
     alias :scan :model
 
     allow_admin_or :index, :show, :new, :create do |user, scan|

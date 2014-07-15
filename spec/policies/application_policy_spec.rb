@@ -1,4 +1,4 @@
-describe Policy do
+describe ApplicationPolicy do
     subject { described_class }
 
     let (:current_user) { FactoryGirl.build_stubbed :user }

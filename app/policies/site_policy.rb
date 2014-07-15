@@ -1,4 +1,4 @@
-class SitePolicy < Policy
+class SitePolicy < ApplicationPolicy
     alias :site :model
 
     allow_authenticated :index, :new, :create

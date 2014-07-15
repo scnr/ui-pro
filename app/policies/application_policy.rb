@@ -1,4 +1,4 @@
-class Policy
+class ApplicationPolicy
     attr_reader :user, :model
 
     class <<self
