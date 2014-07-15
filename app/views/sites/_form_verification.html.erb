@@ -1,11 +1,17 @@
+<%
+   site ||= @site
+%>
+
 <% if site.verification.verified? %>
-    Verified
+    Verified, please wait, you are being redirected...
+
+    <script>window.location = '<%= url_for(site) %>'; </script>
 <% elsif site.verification.started? %>
     In progress
 <% else %>
     <p>
         Please create a file at
-        <code><%= site.verification.url %></code>
+        <code><%= link_to site.verification.url, site.verification.url %></code>
         with the following content:
     </p>
 
@@ -14,7 +20,7 @@
     </p>
 
     <div>
-        <strong>SSH command:</strong>
+        <strong>Linux shell command:</strong>
         <pre>echo <%= site.verification.code %> > <%= site.verification.filename %></pre>
     </div>
 

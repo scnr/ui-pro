@@ -1,28 +1,61 @@
 module ApplicationHelper
 
-    def refreshable_element( options = {}, &block )
-        options.merge!( params.symbolize_keys.merge( options ) )
+    def refreshable_partial( resource, options = {} )
+        options[:path]    = refreshable_partial_channel_path( resource )
+        options[:partial] = refreshable_partial_path( resource, options )
 
-        tag = options[:tag] || 'div'
-        id  = options[:id]  || url[1..-1].gsub( '/', '_' )
+        options[:tagname] ||= 'div'
+        options[:id]      ||= options[:path][1..-1].gsub( '/', '_' )
+        options[:classes] ||= nil
 
-        html = <<-HTML
-            <#{h tag} #{"id='#{h id}'" if id}
-                class="refreshable #{h options[:class]}"
-                data-refreshable="#{h refreshable_channel_path(options)}">#{h block.call if block_given?}</#{h tag}>
-        HTML
-        html.html_safe
+        render partial: 'shared/refreshable_partial', locals: options
     end
 
-    def refreshable_channel_name( options = {} )
-        "refreshable://#{refreshable_channel_path( options )}"
+    def refresh_partial( resource, options = {} )
+        current_user.notify_browser(
+            refreshable_partial_channel( resource ),
+            render_to_string( partial: refreshable_partial_path( resource, options ) )
+        )
     end
 
-    def refreshable_channel_path( options = {} )
-        options.merge!( params.symbolize_keys.merge( options ) )
-        path = [options[:controller], options[:id], options[:action]].compact.join('/')
-        path << ".#{options[:format]}" if options[:format]
-        path
+    def refreshable_partial_channel( resource )
+        "refreshable-partial://#{refreshable_partial_channel_path( resource )}"
+    end
+
+    def refreshable_partial_channel_path( resource )
+        resource = refreshable_partial_prepare_resource( resource )
+
+        partial  = resource.shift
+        path     = '/'
+
+        resource.each do |segment|
+            case segment
+                when ActiveRecord::Base
+                    path << "#{segment.class.to_s.tableize}/#{segment.id}/"
+
+                else
+                    path << "#{segment}/"
+            end
+        end
+
+        "#{path}#{partial}"
+    end
+
+    def refreshable_partial_path( resource, options = {} )
+        resource = refreshable_partial_prepare_resource( resource )
+
+        views = resource.last.is_a?( ActiveRecord::Base ) ?
+            resource.last.class.to_s.tableize : resource.last.to_s
+
+        partial = "#{views}/#{resource.first}"
+        partial << ".#{options[:format]}" if options[:format]
+        partial
+    end
+
+    def refreshable_partial_prepare_resource( resource )
+        resource = [resource].flatten
+        return resource.dup if resource.size > 1
+        [resource, params[:controller]].flatten
     end
 
 end

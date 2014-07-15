@@ -1,0 +1,12 @@
+<h1>
+    <%= link_to @scan.name.capitalize, [@scan.site, @scan] %> scan for
+    <%= link_to @scan.site, @scan.site %>
+</h1>
+
+<%= render @scan %>
+
+<% if policy(@scan).edit? %>
+    <%= link_to 'Edit', edit_site_scan_path(@site, @scan) %> |
+<%  end%>
+
+<%= link_to 'Back', site_scans_path %>

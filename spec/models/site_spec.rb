@@ -1,9 +1,12 @@
 describe Site, type: :model do
     subject { @site = FactoryGirl.create(:site) }
+    let(:scan) { FactoryGirl.create :scan }
+    let(:other_scan) { FactoryGirl.create :scan }
 
     expect_it { to have_one :verification }
     expect_it { to belong_to :user }
     expect_it { to have_and_belong_to_many :users }
+    expect_it { to have_many :scans }
 
     it 'has a default #verification' do
         expect(subject.verification).to be_kind_of SiteVerification
@@ -186,6 +189,18 @@ describe Site, type: :model do
             it 'returns false' do
                 expect(subject).to_not be_verified
             end
+        end
+    end
+
+    describe '#destroy' do
+        it 'destroys associated scans' do
+            subject.scans << scan
+            subject.scans << other_scan
+
+            subject.destroy
+
+            expect{ scan.reload }.to raise_error ActiveRecord::RecordNotFound
+            expect{ other_scan.reload }.to raise_error ActiveRecord::RecordNotFound
         end
     end
 

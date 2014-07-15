@@ -11,7 +11,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140711063315) do
+ActiveRecord::Schema.define(version: 20140714004058) do
+
+  create_table "scans", force: true do |t|
+    t.integer  "site_id"
+    t.boolean  "enabled",     default: false
+    t.string   "name"
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "scans", ["site_id"], name: "index_scans_on_site_id"
 
   create_table "site_verifications", force: true do |t|
     t.string   "filename"

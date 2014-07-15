@@ -2,7 +2,8 @@ class SitesController < ApplicationController
     before_filter :authenticate_user!
     after_action :verify_authorized
 
-    before_action :set_site, only: [:show, :edit, :verify, :invite_user, :destroy]
+    before_action :set_site, only: [:show, :edit, :verification, :verify,
+                                    :invite_user, :destroy]
 
     # GET /sites
     # GET /sites.json
@@ -16,6 +17,15 @@ class SitesController < ApplicationController
     # GET /sites/1
     # GET /sites/1.json
     def show
+        @has_scans = false
+
+        if @site.scans.empty?
+            @scan = @site.scans.new
+            authorize @scan
+        else
+            @scans = @site.scans
+            @has_scans = true
+        end
     end
 
     # GET /sites/new
@@ -35,12 +45,16 @@ class SitesController < ApplicationController
 
         SiteVerificationWorker.perform_async(
             @site.verification.id,
-            refreshable_channel_name( action: :verification_form )
+            refreshable_partial_channel( [ :form_verification, @site ] )
         )
 
         respond_to do |format|
-            format.js { render text: '' }
+            format.html { redirect_to verification_site_url( @site ) }
         end
+    end
+
+    # GET /sites/1/verification
+    def verification
     end
 
     # POST /sites/1/invite_user
@@ -56,7 +70,7 @@ class SitesController < ApplicationController
 
         respond_to do |format|
             if @site.save
-                format.html { redirect_to @site, notice: 'Site was successfully created.' }
+                format.html { redirect_to verification_site_url(@site), notice: 'Site was successfully created.' }
                 format.json { render :show, status: :created, location: @site }
             else
                 format.html { render :new }
@@ -79,7 +93,8 @@ class SitesController < ApplicationController
 
     # Use callbacks to share common setup or constraints between actions.
     def set_site
-        @site = current_user.sites.find_by_id( params[:id] )
+        @site = current_user.sites.find_by_id( params[:id] ) ||
+            current_user.shared_sites.find_by_id( params[:id] )
 
         raise ActionController::RoutingError.new( 'Site not found.' ) if !@site
 

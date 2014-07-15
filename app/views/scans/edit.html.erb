@@ -1,0 +1,9 @@
+<h1>
+    Editing <%=  link_to @scan.name, [@scan.site, @scan] %> scan
+    for <%= link_to @scan.site, @scan.site %>
+</h1>
+
+<%= render 'form' %>
+
+<%= link_to 'Show', [@site, @scan] %> |
+<%= link_to 'Back', site_scans_path( @site ) %>

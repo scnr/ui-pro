@@ -29,6 +29,10 @@ class SiteVerification < ActiveRecord::Base
         end
     end
 
+    def unverified?
+        !verified?
+    end
+
     def state
         super.to_sym
     end

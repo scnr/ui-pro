@@ -1,24 +1,8 @@
-<p id="notice"><%= notice %></p>
+<h1><%= link_to @site.url, @site %> </h1>
 
-<p>
-    <strong>Verified:</strong>
-    <%= @site.verified? ? 'Verified' : 'Unverified' %>
-</p>
-
-<p>
-    <strong>Protocol:</strong>
-    <%= @site.protocol %>
-</p>
-
-<p>
-    <strong>Host:</strong>
-    <%= @site.host %>
-</p>
-
-<p>
-    <strong>Port:</strong>
-    <%= @site.port %>
-</p>
-
-<%= link_to 'Edit', edit_site_path(@site) %> |
-<%= link_to 'Back', sites_path %>
+<% if @has_scans %>
+    <%= refreshable_partial( [:table, @site, :scans] )%>
+<% else %>
+    <h2>Create a scan</h2>
+    <%= render 'scans/form' %>
+<% end %>

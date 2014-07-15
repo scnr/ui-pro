@@ -21,14 +21,4 @@
             </div>
         <% end %>
     </div>
-
-    <div class="col-md-8">
-        <h2>
-            Ownership verification
-        </h2>
-
-        <%= refreshable_element action: :verification_form do
-            render partial: 'form_verification', locals: { site: @site }
-        end %>
-    </div>
 </div>

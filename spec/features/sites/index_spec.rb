@@ -15,14 +15,16 @@ feature 'Site index page' do
     end
 
     feature 'owned sites' do
+        before do
+            other_site.host = 'test.gg'
+            user.sites << site
+        end
+
         # Scenario: Site listed on index page
         #   Given I am signed in
         #   When I visit the site index page
         #   Then I see my sites
         scenario 'user sees a list' do
-            other_site.host = 'test.gg'
-            user.sites << site
-
             login_as( user, scope: :user )
             visit sites_path
 
@@ -36,9 +38,6 @@ feature 'Site index page' do
         #   When I visit the site index page
         #   Then I see my sites with their verification status
         scenario 'user can see the site verification status' do
-            other_site.host = 'test.gg'
-            user.sites << site
-
             site.verification.verified!
 
             login_as( user, scope: :user )
@@ -47,38 +46,78 @@ feature 'Site index page' do
             expect(page).to have_content 'Verified'
         end
 
-        # Scenario: Sites are accompanied by edit links
-        #   Given I am signed in
-        #   When I visit the site index page
-        #   Then I see my sites with edit links
-        scenario 'user can edit' do
-            other_site.host = 'test.gg'
-            user.sites << site
+        feature 'which are verified' do
+            before do
+                site.verification.verified!
 
-            login_as( user, scope: :user )
-            visit sites_path
+                login_as( user, scope: :user )
+                visit sites_path
+            end
 
-            click_link 'Edit'
+            # Scenario: Sites which are verified are not accompanied by verification links
+            #   Given I am signed in
+            #   When I visit the site index page
+            #   Then I don't see my verified sites with verification links
+            scenario 'user does not see verification link' do
+                expect(page).to_not have_xpath "//a[@href='#{verification_site_path( site )}']"
+            end
 
-            expect(current_url).to match edit_site_path(site)
+            # Scenario: Sites which are verified are accompanied by edit links
+            #   Given I am signed in
+            #   When I visit the site index page
+            #   Then I see my verified sites with edit links
+            scenario 'user can edit' do
+                click_link 'Edit'
+
+                expect(current_url).to match edit_site_path(site)
+            end
+
+            # Scenario: Sites which are verified are accompanied by delete links
+            #   Given I am signed in
+            #   When I visit the site index page
+            #   Then I see my verified sites with delete links
+            scenario 'user can delete' do
+                click_link 'Delete'
+                visit sites_path
+
+                expect(page).to_not have_content site.url
+            end
         end
 
-        # Scenario: Sites are accompanied by delete links
-        #   Given I am signed in
-        #   When I visit the site index page
-        #   Then I see my sites with delete links
-        scenario 'user can delete' do
-            other_site.host = 'test.gg'
-            user.sites << site
+        feature 'which are unverified' do
+            before do
+                site.verification.failed!
 
-            login_as( user, scope: :user )
-            visit sites_path
+                login_as( user, scope: :user )
+                visit sites_path
+            end
 
-            click_link 'Delete'
+            # Scenario: Sites which are unverified are accompanied by verification links
+            #   Given I am signed in
+            #   When I visit the site index page
+            #   Then I see my unverified sites with verification links
+            scenario 'user sees verification link' do
+                expect(page).to have_xpath "//a[@href='#{verification_site_path( site )}']"
+            end
 
-            visit sites_path
+            # Scenario: Sites which are unverified are not accompanied by edit links
+            #   Given I am signed in
+            #   When I visit the site index page
+            #   Then I see my unverified sites without edit links
+            scenario 'user does not see edit links' do
+                expect(page).to_not have_content edit_site_path(site)
+            end
 
-            expect(page).to_not have_content site.url
+            # Scenario: Sites which are unverified are accompanied by delete links
+            #   Given I am signed in
+            #   When I visit the site index page
+            #   Then I see my unverified sites with delete links
+            scenario 'user sees delete links' do
+                click_link 'Delete'
+                visit sites_path
+
+                expect(page).to_not have_content site.url
+            end
         end
     end
 
@@ -95,9 +134,6 @@ feature 'Site index page' do
             #   And there are no shared sites
             #   Then I see no shared sites
             scenario 'user sees no list' do
-                login_as( user, scope: :user )
-                visit sites_path
-
                 expect(page).to_not have_css('#shared-sites')
             end
         end
@@ -117,12 +153,6 @@ feature 'Site index page' do
             #   And there is a shared site
             #   Then I see it listed
             scenario 'user sees list' do
-                other_site.host = 'test.gg'
-                user.shared_sites << site
-
-                login_as( user, scope: :user )
-                visit sites_path
-
                 expect(page).to have_css('#shared-sites')
                 expect(page).to have_content site.url
             end
@@ -132,12 +162,6 @@ feature 'Site index page' do
             #   When I visit the site index page
             #   Then I see shared sites without edit links
             scenario 'user does not see edit link' do
-                other_site.host = 'test.gg'
-                user.shared_sites << site
-
-                login_as( user, scope: :user )
-                visit sites_path
-
                 expect(page).to_not have_xpath "//a[@href='#{edit_site_path(site)}']"
             end
 

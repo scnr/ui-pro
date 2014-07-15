@@ -1,25 +1,14 @@
-describe SitePolicy do
+describe ScanPolicy do
     subject { described_class }
 
     let(:user) { FactoryGirl.build_stubbed :user }
     let(:admin) { FactoryGirl.build_stubbed :user, :admin }
+    let(:guest) { FactoryGirl.build_stubbed :user, :guest }
+
     let(:site) { FactoryGirl.create :site }
+    let(:scan) { FactoryGirl.create :scan, site: site }
 
-    %w(index new create).each do |action|
-        permissions "#{action}?" do
-            context 'when the user is' do
-                context 'logged in' do
-                    expect_it { to permit(user) }
-                end
-
-                context 'not logged in' do
-                    expect_it { to_not permit }
-                end
-            end
-        end
-    end
-
-    %w(show).each do |action|
+    %w(index show new create).each do |action|
         permissions "#{action}?" do
             context 'when the site is' do
                 context 'unverified' do
@@ -28,12 +17,12 @@ describe SitePolicy do
                     context 'when the user' do
                         context 'is the site owner' do
                             before { user.sites << site }
-                            expect_it { to_not permit( user, site ) }
+                            expect_it { to_not permit( user, scan ) }
                         end
 
                         context 'has the shared site' do
                             before { user.shared_sites << site }
-                            expect_it { to_not permit( user, site ) }
+                            expect_it { to_not permit( user, scan ) }
                         end
 
                         context 'is an admin' do
@@ -43,7 +32,7 @@ describe SitePolicy do
 
                         context 'is not associated with the site' do
                             before { site }
-                            expect_it { to_not permit( user, site ) }
+                            expect_it { to_not permit( user, scan ) }
                         end
 
                         context 'not logged in' do
@@ -58,12 +47,12 @@ describe SitePolicy do
                     context 'when the user' do
                         context 'is the site owner' do
                             before { user.sites << site }
-                            expect_it { to permit( user, site ) }
+                            expect_it { to permit( user, scan ) }
                         end
 
                         context 'has the shared site' do
                             before { user.shared_sites << site }
-                            expect_it { to permit( user, site ) }
+                            expect_it { to permit( user, scan ) }
                         end
 
                         context 'is an admin' do
@@ -73,7 +62,7 @@ describe SitePolicy do
 
                         context 'is not associated with the site' do
                             before { site }
-                            expect_it { to_not permit( user, site ) }
+                            expect_it { to_not permit( user, scan ) }
                         end
 
                         context 'not logged in' do
@@ -85,7 +74,7 @@ describe SitePolicy do
         end
     end
 
-    %w(edit invite_user).each do |action|
+    %w(update edit destroy).each do |action|
         permissions "#{action}?" do
             context 'when the user' do
                 context 'when the site is' do
@@ -94,12 +83,12 @@ describe SitePolicy do
 
                         context 'is the site owner' do
                             before { user.sites << site }
-                            expect_it { to_not permit( user, site ) }
+                            expect_it { to_not permit( user, scan ) }
                         end
 
                         context 'has the shared site' do
                             before { user.shared_sites << site }
-                            expect_it { to_not permit( user, site ) }
+                            expect_it { to_not permit( user, scan ) }
                         end
 
                         context 'is an admin' do
@@ -109,7 +98,7 @@ describe SitePolicy do
 
                         context 'is not associated with the site' do
                             before { site }
-                            expect_it { to_not permit( user, site ) }
+                            expect_it { to_not permit( user, scan ) }
                         end
 
                         context 'not logged in' do
@@ -122,12 +111,12 @@ describe SitePolicy do
 
                         context 'is the site owner' do
                             before { user.sites << site }
-                            expect_it { to permit( user, site ) }
+                            expect_it { to permit( user, scan ) }
                         end
 
                         context 'has the shared site' do
                             before { user.shared_sites << site }
-                            expect_it { to_not permit( user, site ) }
+                            expect_it { to_not permit( user, scan ) }
                         end
 
                         context 'is an admin' do
@@ -137,7 +126,7 @@ describe SitePolicy do
 
                         context 'is not associated with the site' do
                             before { site }
-                            expect_it { to_not permit( user, site ) }
+                            expect_it { to_not permit( user, scan ) }
                         end
 
                         context 'not logged in' do
@@ -148,35 +137,4 @@ describe SitePolicy do
             end
         end
     end
-
-    %w(destroy verify verification).each do |action|
-        permissions "#{action}?" do
-            context 'when the user' do
-                context 'is the site owner' do
-                    before { user.sites << site }
-                    expect_it { to permit( user, site ) }
-                end
-
-                context 'has the shared site' do
-                    before { user.shared_sites << site }
-                    expect_it { to_not permit( user, site ) }
-                end
-
-                context 'is an admin' do
-                    before { site }
-                    expect_it { to permit( admin, site ) }
-                end
-
-                context 'is not associated with the site' do
-                    before { site }
-                    expect_it { to_not permit( user, site ) }
-                end
-
-                context 'not logged in' do
-                    expect_it { to_not permit }
-                end
-            end
-        end
-    end
-
 end

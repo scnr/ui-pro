@@ -9,6 +9,8 @@ class Site < ActiveRecord::Base
     belongs_to :user
     has_and_belongs_to_many :users
 
+    has_many :scans, dependent: :destroy
+
     validates_presence_of :protocol
     validates             :protocol, inclusion: {
         in:      PROTOCOL_TYPES,
@@ -36,6 +38,10 @@ class Site < ActiveRecord::Base
 
     def verified?
         verification.verified?
+    end
+
+    def unverified?
+        verification.unverified?
     end
 
 end

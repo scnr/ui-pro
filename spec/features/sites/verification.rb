@@ -103,6 +103,15 @@ feature 'Site verification' do
         scenario 'user cannot see verification link' do
             expect(page).to_not have_xpath "//a[@href='#{verify_site_path(site)}']"
         end
+
+        # Scenario: User can see the Verified message for a verified site
+        #   Given I am signed in
+        #   When I visit the edit site page
+        #   And the site is verified
+        #   I see a Verified message
+        scenario 'user is redirected to the site page with JS', js: true do
+            expect(current_url).to match site_path( site )
+        end
     end
 
     feature 'when the site is not verified' do

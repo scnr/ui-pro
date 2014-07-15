@@ -1,22 +1,26 @@
-<%
-   show_actions ||= false
-%>
-
 <% sites.each do |site| %>
     <h2>
-        <% if site.user == current_user %>
+        <% if policy(site).verify? %>
             <small>
                 (<%= site.verified? ? 'Verified' : 'Unverified' %>)
             </small>
         <% end %>
 
-        <%= link_to site.url, site %>
-
-        <% if show_actions %>
-            <small>
-                <%= link_to 'Edit', edit_site_path( site ) %> -
-                <%= link_to 'Delete', site, method: :delete, data: { confirm: 'Are you sure?' } %>
-            </small>
+        <% if site.verified? %>
+            <%= link_to site.url, site_path( site ) %>
+        <% else %>
+            <%= link_to site.url, verification_site_path( site ) %>
         <% end %>
+
+        <small>
+            <% if policy(site).edit? %>
+                <%= link_to 'Edit', edit_site_path( site ) %>
+                -
+            <% end %>
+
+            <% if policy(site).destroy? %>
+                <%= link_to 'Delete', site, method: :delete, data: { confirm: 'Are you sure?' } %>
+            <% end %>
+        </small>
     </h2>
 <% end %>
