@@ -10,7 +10,6 @@ class ScansController < ApplicationController
     # GET /scans
     # GET /scans.json
     def index
-        authorize @site
         redirect_to @site
     end
 
@@ -76,6 +75,8 @@ class ScansController < ApplicationController
         @site = policy_scope(Site).find_by_id( params[:site_id] )
 
         raise ActionController::RoutingError.new( 'Site not found.' ) if !@site
+
+        authorize @site
 
         @scans = @site.scans
     end
