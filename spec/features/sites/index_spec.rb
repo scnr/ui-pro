@@ -8,7 +8,7 @@ feature 'Site index page' do
 
     let(:user) { FactoryGirl.create :user }
     let(:site) { FactoryGirl.create :site }
-    let(:other_site) { FactoryGirl.create :site }
+    let(:other_site) { FactoryGirl.create :site, host: 'gg.gg' }
 
     after(:each) do
         Warden.test_reset!

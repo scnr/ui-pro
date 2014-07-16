@@ -5,7 +5,7 @@ describe Scan do
     let(:other_scan) { FactoryGirl.create :scan, site: site }
 
     let(:site) { FactoryGirl.create :site }
-    let(:other_site) { FactoryGirl.create :site }
+    let(:other_site) { FactoryGirl.create :site, host: 'ff.dd' }
 
     expect_it { to belong_to :site }
 
