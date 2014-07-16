@@ -2,6 +2,7 @@ describe Site, type: :model do
     subject { @site = FactoryGirl.create(:site) }
     let(:scan) { FactoryGirl.create :scan }
     let(:other_scan) { FactoryGirl.create :scan }
+    let(:user) { FactoryGirl.create :user }
 
     expect_it { to have_one :verification }
     expect_it { to belong_to :user }
@@ -74,6 +75,56 @@ describe Site, type: :model do
                     subject.save
                     expect(subject.errors).to include :host
                 end
+            end
+
+            it 'is unique for #port, #protocol and #user' do
+                site = Site.new(
+                    protocol: 'https',
+                    host:     'test.com',
+                    port:     22,
+                    user:     user
+                )
+                expect(site.save).to be_truthy
+
+                site = Site.new(
+                    protocol: 'https',
+                    host:     'test.com',
+                    port:     22,
+                    user:     user
+                )
+                expect(site.save).to be_falsey
+
+                site = Site.new(
+                    protocol: 'http',
+                    host:     'test.com',
+                    port:     22,
+                    user:     user
+                )
+                expect(site.save).to be_truthy
+
+                site = Site.new(
+                    protocol: 'https',
+                    host:     'test.com',
+                    port:     21,
+                    user:     user
+                )
+                expect(site.save).to be_truthy
+
+                site = Site.new(
+                    protocol: 'https',
+                    host:     'test2.com',
+                    port:     22,
+                    user:     user
+                )
+                expect(site.save).to be_truthy
+
+                site = Site.new(
+                    protocol: 'https',
+                    host:     'test2.com',
+                    port:     22,
+                    user:     FactoryGirl.create(:user, email: 'gg@ff.ff' )
+                )
+                expect(site.save).to be_truthy
             end
         end
 

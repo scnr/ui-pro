@@ -17,9 +17,9 @@ class Site < ActiveRecord::Base
         message: "Acceptable types are: #{PROTOCOL_TYPES.join( ', ' )}"
     }
 
-    validates_presence_of :host
-    validates_format_of   :host,
-                          with: /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}\z/
+    validates_presence_of   :host
+    validates_format_of     :host, with: /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}\z/
+    validates_uniqueness_of :host, scope: [:user_id, :port, :protocol]
 
     validates_presence_of     :port
     validates_numericality_of :port
