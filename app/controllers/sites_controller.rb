@@ -48,9 +48,7 @@ class SitesController < ApplicationController
             refreshable_partial_channel( [ :form_verification, @site ] )
         )
 
-        respond_to do |format|
-            format.html { redirect_to verification_site_url( @site ) }
-        end
+        head :ok, :content_type => 'text/html'
     end
 
     # GET /sites/1/verification
