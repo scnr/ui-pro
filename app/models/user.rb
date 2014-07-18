@@ -2,6 +2,8 @@ class User < ActiveRecord::Base
     enum role: [:user, :vip, :admin]
     after_initialize :set_default_role, if: :new_record?
 
+    has_many :profiles
+
     has_many :sites
     has_and_belongs_to_many :shared_sites, class_name: 'Site',
                             foreign_key: :user_id
