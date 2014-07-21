@@ -80,11 +80,11 @@ feature 'Scan index' do
         #   Then I see destroy links for the listed scans
         scenario 'user sees destroy links' do
             expect(page).to have_content scan.name
-            first( :link, 'Destroy' ).click
+            first( :link, 'Delete' ).click
             expect(page).to_not have_content scan.name
 
             expect(page).to have_content other_scan.name
-            first( :link, 'Destroy' ).click
+            first( :link, 'Delete' ).click
             expect(page).to_not have_content other_scan.name
         end
     end
