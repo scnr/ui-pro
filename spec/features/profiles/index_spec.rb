@@ -7,8 +7,10 @@ Warden.test_mode!
 feature 'Profile index page' do
 
     let(:user) { FactoryGirl.create :user }
+    let(:admin) { FactoryGirl.create :user, :admin, email: 'ff@ff.cc' }
     let(:profile) { FactoryGirl.create :profile }
     let(:other_profile) { FactoryGirl.create :profile, name: 'Stuff' }
+    let(:scan) { FactoryGirl.create :scan }
 
     after(:each) do
         Warden.test_reset!
@@ -42,25 +44,85 @@ feature 'Profile index page' do
             expect(page).to have_xpath "//a[@href='#{new_profile_path}']"
         end
 
-        # Scenario: Profiles are accompanied by edit links
-        #   Given I am signed in
-        #   When I visit the profile index page
-        #   Then I see my profiles with edit links
-        scenario 'can edit' do
-            click_link 'Edit'
+        feature 'and the profile has no scans' do
 
-            expect(current_url).to match edit_profile_path(profile)
+            # Scenario: Profiles without scans are accompanied by edit links
+            #   Given I am signed in
+            #   When I visit the profile index page
+            #   And the profile has no associated scans
+            #   Then I see my profiles with edit links
+            scenario 'can edit' do
+                click_link 'Edit'
+
+                expect(current_url).to match edit_profile_path(profile)
+            end
+
+            # Scenario: Profiles without scans are accompanied by delete links
+            #   Given I am signed in
+            #   When I visit the profile index page
+            #   And the profile has no associated scans
+            #   Then I see profiles with delete links
+            scenario 'can delete' do
+                click_link 'Delete'
+                visit profiles_path
+
+                expect(page).to_not have_content profile.name
+            end
         end
 
-        # Scenario: Profiles are accompanied by delete links
-        #   Given I am signed in
-        #   When I visit the profile index page
-        #   Then I see profiles with delete links
-        scenario 'can delete' do
-            click_link 'Delete'
-            visit profiles_path
+        feature 'and the profile has scans' do
+            feature 'and the user is an admin' do
+                before do
+                    admin.profiles << profile
+                    profile.scans << scan
 
-            expect(page).to_not have_content profile.name
+                    login_as( admin, scope: :user )
+                    visit profiles_path
+                end
+
+                # Scenario: Profiles with scans are not accompanied by edit links
+                #   Given I am signed in
+                #   When I visit the profile index page
+                #   And the profile has associated scans
+                #   Then I don't see edit links
+                scenario 'can edit' do
+                    expect(page).to have_xpath "//a[@href='#{edit_profile_path(profile)}']"
+                end
+
+                # Scenario: Profiles with scans are not accompanied by delete links
+                #   Given I am signed in
+                #   When I visit the profile index page
+                #   And the profile has associated scans
+                #   Then I don't see delete links
+                scenario 'can delete' do
+                    expect(page).to have_selector(:link_or_button, 'Delete')
+                end
+            end
+
+            feature 'and the user is not an admin' do
+                before do
+                    profile.scans << scan
+                    visit profiles_path
+                end
+
+                # Scenario: Profiles with scans are not accompanied by edit links
+                #   Given I am signed in
+                #   When I visit the profile index page
+                #   And the profile has associated scans
+                #   Then I don't see edit links
+                scenario 'cannot edit' do
+                    expect(page).to_not have_xpath "//a[@href='#{edit_profile_path(profile)}']"
+                end
+
+                # Scenario: Profiles with scans are not accompanied by delete links
+                #   Given I am signed in
+                #   When I visit the profile index page
+                #   And the profile has associated scans
+                #   Then I don't see delete links
+                scenario 'cannot delete' do
+                    expect(page).to_not have_selector(:link_or_button, 'Delete')
+                end
+            end
         end
     end
 

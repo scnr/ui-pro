@@ -4,6 +4,7 @@ describe ProfilePolicy do
     let(:user) { FactoryGirl.build_stubbed :user }
     let(:admin) { FactoryGirl.build_stubbed :user, :admin }
     let(:profile) { FactoryGirl.create :profile }
+    let(:scan) { FactoryGirl.create :scan }
 
     %w(index new create).each do |action|
         permissions "#{action}?" do
@@ -19,7 +20,7 @@ describe ProfilePolicy do
         end
     end
 
-    %w(show update destroy).each do |action|
+    %w(show).each do |action|
         permissions "#{action}?" do
             context 'when the user' do
                 context 'is the site owner' do
@@ -39,6 +40,58 @@ describe ProfilePolicy do
 
                 context 'not logged in' do
                     expect_it { to_not permit }
+                end
+            end
+        end
+    end
+
+    %w(update destroy).each do |action|
+        permissions "#{action}?" do
+            context 'when the profile does not have any scans' do
+                context 'when the user' do
+                    context 'is the site owner' do
+                        before { user.profiles << profile }
+                        expect_it { to permit( user, profile ) }
+                    end
+
+                    context 'is an admin' do
+                        before { profile }
+                        expect_it { to permit( admin, profile ) }
+                    end
+
+                    context 'is not associated with the site' do
+                        before { profile }
+                        expect_it { to_not permit( user, profile ) }
+                    end
+
+                    context 'not logged in' do
+                        expect_it { to_not permit }
+                    end
+                end
+            end
+
+            context 'when the profile has scans' do
+                before { profile.scans << scan }
+
+                context 'when the user' do
+                    context 'is the site owner' do
+                        before { user.profiles << profile }
+                        expect_it { to_not permit( user, profile ) }
+                    end
+
+                    context 'is an admin' do
+                        before { profile }
+                        expect_it { to permit( admin, profile ) }
+                    end
+
+                    context 'is not associated with the site' do
+                        before { profile }
+                        expect_it { to_not permit( user, profile ) }
+                    end
+
+                    context 'not logged in' do
+                        expect_it { to_not permit }
+                    end
                 end
             end
         end

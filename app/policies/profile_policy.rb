@@ -9,8 +9,13 @@ class ProfilePolicy < ApplicationPolicy
 
     allow_authenticated :index, :create
 
-    allow_admin_or :show, :update, :destroy do |user, profile|
+    allow_admin_or :show do |user, profile|
         profile.user == user
+    end
+
+    allow_admin_or :update, :destroy do |user, profile|
+        # Don't allow profiles to be manipulated if they have associated scans.
+        profile.user == user && profile.scans.empty?
     end
 
     # TODO: Whitelist checks and plugins.
