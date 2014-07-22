@@ -5,8 +5,6 @@ class ScansController < ApplicationController
     before_action :set_site
     before_action :set_scan, only: [:show, :edit, :update, :destroy]
 
-    after_action :refresh_scan_table_partial, only: [:create, :update, :destroy]
-
     # GET /scans
     # GET /scans.json
     def index
@@ -36,6 +34,8 @@ class ScansController < ApplicationController
 
         respond_to do |format|
             if @scan.save
+                refresh_scan_table_partial
+
                 format.html { redirect_to [@site, @scan], notice: 'Scan was successfully created.' }
                 format.json { render :show, status: :created, location: @scan }
             else
@@ -50,6 +50,8 @@ class ScansController < ApplicationController
     def update
         respond_to do |format|
             if @scan.update(scan_params)
+                refresh_scan_table_partial
+
                 format.html { redirect_to [@site, @scan], notice: 'Scan was successfully updated.' }
                 format.json { render :show, status: :ok, location: @scan }
             else
@@ -63,6 +65,8 @@ class ScansController < ApplicationController
     # DELETE /scans/1.json
     def destroy
         @scan.destroy
+        refresh_scan_table_partial
+
         respond_to do |format|
             format.html { redirect_to site_scans_url, notice: 'Scan was successfully destroyed.' }
             format.json { head :no_content }
@@ -92,7 +96,15 @@ class ScansController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def scan_params
-        params.require(:scan).permit( :name, :description, :enabled )
+        permitted = params.require(:scan).
+            permit( *policy(@scan || Scan).permitted_attributes )
+
+        if permitted[:profile_id].to_i > 0
+            # Fail if user tries to set a profile they do not own.
+            policy_scope(Profile).find( params[:scan][:profile_id] )
+        end
+
+        permitted
     end
 
     def refresh_scan_table_partial

@@ -8,6 +8,7 @@ describe Scan do
     let(:other_site) { FactoryGirl.create :site, host: 'ff.dd' }
 
     expect_it { to belong_to :site }
+    expect_it { to belong_to :profile }
 
     describe :validations do
         describe '#name' do
@@ -15,8 +16,8 @@ describe Scan do
 
             it 'is required' do
                 subject.name = ''
-                expect(subject.save).to be_falsey
 
+                expect(subject.save).to be_falsey
                 expect(subject.errors).to include :name
             end
 
@@ -39,6 +40,21 @@ describe Scan do
                     other_scan.name = name
                     expect(other_scan.save).to be_truthy
                 end
+            end
+        end
+
+        describe '#profile' do
+            let(:profile) { FactoryGirl.create :profile }
+
+            it 'is required' do
+                subject.profile = nil
+
+                expect(subject.save).to be_falsey
+                expect(subject.errors).to include :profile
+
+                subject.profile = profile
+
+                expect(subject.save).to be_truthy
             end
         end
     end

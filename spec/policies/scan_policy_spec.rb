@@ -137,4 +137,35 @@ describe ScanPolicy do
             end
         end
     end
+
+    describe '#permitted_attributes' do
+        let(:permitted_attributes) { subject.new(user, scan).permitted_attributes }
+
+        context 'when authorizing a model class' do
+            let(:scan) { Scan }
+
+            [:name, :description, :enabled, :profile_id].each do |attribute|
+                it "includes #{attribute}" do
+                    expect(permitted_attributes).to include attribute
+                end
+            end
+        end
+
+        context 'when authorizing a record' do
+            [:name, :description, :enabled].each do |attribute|
+                it "includes #{attribute}" do
+                    expect(permitted_attributes).to include attribute
+                end
+            end
+
+            context 'when the user is an admin' do
+                let(:user) { admin }
+
+                it 'includes profile_id' do
+                    expect(permitted_attributes).to include :profile_id
+                end
+            end
+        end
+
+    end
 end

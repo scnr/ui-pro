@@ -11,4 +11,16 @@ class ScanPolicy < ApplicationPolicy
         scan.site.user == user
     end
 
+    def permitted_attributes
+        permitted = [:name, :description, :enabled]
+
+        # Don't allow the scan profile to be changed once a scan has been
+        # created unless requested by an admin.
+        if scan == Scan || admin?
+            permitted << :profile_id
+        end
+
+        permitted
+    end
+
 end

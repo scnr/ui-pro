@@ -1,16 +1,18 @@
 include Warden::Test::Helpers
 Warden.test_mode!
 
-# Feature: Scan page
+# Feature: Edit scan page
 #   As a user
-#   I want to visit a scan
-#   So I can see the scan revisions
-feature 'Scan page' do
+#   I want to edit a scan
+#   So I can change its options
+feature 'Edit scan page' do
 
-    let(:user) { FactoryGirl.create :user, sites: [site] }
+    let(:user) { FactoryGirl.create :user, sites: [site], profiles: [other_profile, profile] }
     let(:other_user) { FactoryGirl.create :user, email: 'dd@ss.cc', shared_sites: [site] }
     let(:site) { FactoryGirl.create :site, scans: [scan] }
-    let(:scan) { FactoryGirl.create :scan }
+    let(:scan) { FactoryGirl.create :scan, profile: profile }
+    let(:profile) { FactoryGirl.create :profile, name: 'Stuff' }
+    let(:other_profile) { FactoryGirl.create :profile, name: 'Other stuff' }
 
     after(:each) do
         Warden.test_reset!
@@ -23,9 +25,6 @@ feature 'Scan page' do
         visit edit_site_scan_path( site, scan )
     end
 
-    scenario 'user can disable it'
-    scenario 'user can change the schedule'
-
     scenario 'user sees scan name in heading' do
         expect(find('h1').text).to match scan.name
     end
@@ -35,6 +34,8 @@ feature 'Scan page' do
     end
 
     feature 'user is the site owner' do
+        scenario 'user can change the schedule'
+
         scenario 'user sees verification message' do
             name = 'blahblah'
 
@@ -70,6 +71,10 @@ feature 'Scan page' do
             click_button 'Update'
 
             expect(scan.reload.description).to eq description
+        end
+
+        scenario 'user cannot change the profile' do
+            expect(page).to have_css "#scan_profile_id[@disabled='disabled']"
         end
     end
 
