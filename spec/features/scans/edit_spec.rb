@@ -45,16 +45,6 @@ feature 'Edit scan page' do
             expect(page).to have_content 'Scan was successfully updated.'
         end
 
-        scenario 'user can change the enabled status' do
-            scan.enabled = false
-            scan.save
-
-            check 'Enabled'
-            click_button 'Update'
-
-            expect(scan.reload).to be_enabled
-        end
-
         scenario 'user can change the name' do
             name = 'blahblah'
 

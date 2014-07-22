@@ -2,7 +2,6 @@
 
 FactoryGirl.define do
     factory :scan do
-        enabled true
         site nil
         name 'MyString'
         description 'MyText'

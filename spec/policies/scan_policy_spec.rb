@@ -144,7 +144,7 @@ describe ScanPolicy do
         context 'when authorizing a model class' do
             let(:scan) { Scan }
 
-            [:name, :description, :enabled, :profile_id].each do |attribute|
+            [:name, :description, :profile_id].each do |attribute|
                 it "includes #{attribute}" do
                     expect(permitted_attributes).to include attribute
                 end
@@ -152,7 +152,7 @@ describe ScanPolicy do
         end
 
         context 'when authorizing a record' do
-            [:name, :description, :enabled].each do |attribute|
+            [:name, :description].each do |attribute|
                 it "includes #{attribute}" do
                     expect(permitted_attributes).to include attribute
                 end

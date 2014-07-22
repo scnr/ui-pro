@@ -12,7 +12,7 @@ class ScanPolicy < ApplicationPolicy
     end
 
     def permitted_attributes
-        permitted = [:name, :description, :enabled]
+        permitted = [:name, :description]
 
         # Don't allow the scan profile to be changed once a scan has been
         # created unless requested by an admin.

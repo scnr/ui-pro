@@ -6,7 +6,6 @@
         <%= f.input :description %>
         <%= f.association :profile, collection: current_user.profiles,
                           disabled: !!@scan.id %>
-        <%= f.input :enabled %>
     </div>
 
     <div class="form-actions">

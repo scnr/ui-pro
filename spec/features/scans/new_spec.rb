@@ -35,7 +35,6 @@ feature 'New scan page' do
 
         fill_in 'Name', with: name
         fill_in 'Description', with: description
-        check 'Enabled'
         select profile.name, from: 'Profile'
 
         click_button 'Create'
@@ -46,7 +45,6 @@ feature 'New scan page' do
 
         expect(scan.name).to eq name
         expect(scan.description).to eq description
-        expect(scan).to be_enabled
         expect(scan.profile).to eq profile
     end
 
