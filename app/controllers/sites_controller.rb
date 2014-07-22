@@ -100,6 +100,6 @@ class SitesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def site_params
-        params.require(:site).permit( :protocol, :host, :port )
+        params.require(:site).permit( *policy(@site || Site).permitted_attributes )
     end
 end

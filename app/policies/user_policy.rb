@@ -17,4 +17,10 @@ class UserPolicy < ApplicationPolicy
         admin?
     end
 
+    def permitted_attributes
+        return [] if !admin?
+
+        [:role]
+    end
+
 end

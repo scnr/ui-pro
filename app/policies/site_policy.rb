@@ -30,4 +30,8 @@ class SitePolicy < ApplicationPolicy
         site.user == user
     end
 
+    def permitted_attributes
+        [:protocol, :host, :port]
+    end
+
 end
