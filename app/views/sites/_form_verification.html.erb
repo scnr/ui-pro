@@ -1,11 +1,17 @@
 <%
    site ||= @site
+
+   if site.user.profiles.any?
+       redirect = url_for( site )
+   else
+       redirect = url_for([:new, :profile])
+   end
 %>
 
 <% if site.verification.verified? %>
     Verified, please wait, you are being redirected...
 
-    <script>window.location = '<%= url_for(site) %>'; </script>
+    <script>window.location = '<%= redirect %>'; </script>
 <% elsif site.verification.started? %>
     In progress
 <% else %>

@@ -9,8 +9,72 @@ describe Scan do
 
     expect_it { to belong_to :site }
     expect_it { to belong_to :profile }
+    expect_it { to have_one  :schedule }
+
+    it 'accepts nested attributes for #schedule' do
+        subject.update( schedule_attributes: { month_frequency: 10 } )
+        expect(subject.schedule.month_frequency).to eq 10
+
+        subject.save
+
+        expect(subject.schedule.month_frequency).to eq 10
+    end
+
+    describe :scopes do
+        let(:scheduled) do
+            [
+                FactoryGirl.create( :scan,
+                                    site: site,
+                                    name: 'stuff',
+                                    schedule_attributes: {
+                                        start_at: Time.now
+                                    }
+                ),
+                FactoryGirl.create( :scan,
+                                    site: site,
+                                    name: 'stuff2',
+                                    schedule_attributes: {
+                                        start_at: Time.now
+                                    }
+                )
+            ]
+        end
+
+        let(:unscheduled) do
+            [
+                FactoryGirl.create( :scan, site: site, name: 'stuff3' ),
+                FactoryGirl.create( :scan, site: site, name: 'stuff4' )
+            ]
+        end
+
+        describe :scheduled do
+            it "returns scans with #{Scan}#start_at" do
+                scheduled
+                unscheduled
+
+                expect(described_class.scheduled).to eq scheduled
+            end
+        end
+
+        describe :unscheduled do
+            it "returns scans without #{Scan}#start_at" do
+                scheduled
+                unscheduled
+
+                expect(described_class.unscheduled).to eq unscheduled
+            end
+        end
+    end
 
     describe :validations do
+        it 'validates the #schedule' do
+            subject.build_schedule
+            subject.schedule.start_at = 'stuff'
+
+            expect(subject.save).to be_falsey
+            expect(subject.errors).to include :schedule
+        end
+
         describe '#name' do
             let(:name) { 'stuff' }
 
@@ -55,6 +119,35 @@ describe Scan do
                 subject.profile = profile
 
                 expect(subject.save).to be_truthy
+            end
+        end
+    end
+
+    describe '#scheduled?' do
+        context 'when the scan does not have an associated schedule' do
+            it 'returns false' do
+                subject.schedule = nil
+
+                expect(subject.schedule).to be_falsey
+                expect(subject).to_not be_scheduled
+            end
+        end
+
+        context 'when the scan has an associated schedule' do
+            context 'without #start_at set' do
+                it 'returns false' do
+                    subject.build_schedule
+
+                    expect(subject.schedule).to be_truthy
+                    expect(subject).to_not be_scheduled
+                end
+            end
+
+            context 'with #start_at set' do
+                it 'returns true' do
+                    subject.update( schedule_attributes: { start_at: Time.now } )
+                    expect(subject).to be_scheduled
+                end
             end
         end
     end

@@ -5,6 +5,6 @@ FactoryGirl.define do
         site nil
         name 'MyString'
         description 'MyText'
-        profile FactoryGirl.create(:profile)
+        profile FactoryGirl.create( :profile, name: 'My profile' )
     end
 end

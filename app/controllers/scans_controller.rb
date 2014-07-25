@@ -19,6 +19,8 @@ class ScansController < ApplicationController
     # GET /scans/new
     def new
         @scan = @site.scans.new
+        @scan.build_schedule
+
         authorize @scan
     end
 
@@ -99,6 +101,7 @@ class ScansController < ApplicationController
         permitted = params.require(:scan).
             permit( *policy(@scan || Scan).permitted_attributes )
 
+        # TODO: Write specs for this.
         if permitted[:profile_id].to_i > 0
             # Fail if user tries to set a profile they do not own.
             policy_scope(Profile).find( params[:scan][:profile_id] )

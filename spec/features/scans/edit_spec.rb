@@ -63,8 +63,15 @@ feature 'Edit scan page' do
             expect(scan.reload.description).to eq description
         end
 
-        scenario 'user cannot change the profile' do
-            expect(page).to have_css "#scan_profile_id[@disabled='disabled']"
+        scenario 'user can change the profile' do
+            select profile.name, from: 'Profile'
+            click_button 'Update'
+
+            expect(scan.reload.profile).to eq profile
+        end
+
+        feature 'when the scan has at least one revision' do
+            scenario 'user cannot change the profile'
         end
     end
 
@@ -75,7 +82,7 @@ feature 'Edit scan page' do
         end
 
         scenario 'user sees "Access denied" message' do
-            expect(page).to have_content "Access denied"
+            expect(page).to have_content 'Access denied'
         end
 
         scenario 'user is redirected to the home page' do

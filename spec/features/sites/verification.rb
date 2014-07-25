@@ -6,15 +6,6 @@ Warden.test_mode!
 #   I want to verify ownership of my site
 feature 'Site verification' do
 
-    before do
-        Typhoeus.stub( site.verification.url ).and_return( response )
-        user.sites << site
-    end
-
-    after(:each) do
-        Warden.test_reset!
-    end
-
     let(:user) { FactoryGirl.create :user }
     let(:site) { FactoryGirl.create :site, host: 'localhost.local' }
     let(:response) do
@@ -26,14 +17,21 @@ feature 'Site verification' do
     end
 
     before do
+        Typhoeus.stub( site.verification.url ).and_return( response )
+        user.sites << site
+
         login_as user, scope: :user
+    end
+
+    after(:each) do
+        Warden.test_reset!
     end
 
     feature 'when site verification fails' do
         before do
             site.verification.message = 'Error message!'
             site.verification.failed!
-            visit edit_site_path( site )
+            visit verification_site_path( site )
         end
 
         # Scenario: User sees the HTTP error message for a failed verification
@@ -58,7 +56,7 @@ feature 'Site verification' do
     feature 'when site verification is in progress' do
         before do
             site.verification.started!
-            visit edit_site_path( site )
+            visit verification_site_path( site )
         end
 
         # Scenario: User sees progress message for a verification in progress
@@ -83,7 +81,7 @@ feature 'Site verification' do
     feature 'when the site is verified' do
         before do
             site.verification.verified!
-            visit edit_site_path( site )
+            visit verification_site_path( site )
         end
 
         # Scenario: User can see the Verified message for a verified site
@@ -104,19 +102,38 @@ feature 'Site verification' do
             expect(page).to_not have_xpath "//a[@href='#{verify_site_path(site)}']"
         end
 
-        # Scenario: User can see the Verified message for a verified site
-        #   Given I am signed in
-        #   When I visit the edit site page
-        #   And the site is verified
-        #   I see a Verified message
-        scenario 'user is redirected to the site page with JS', js: true do
-            expect(current_url).to match site_path( site )
+        feature 'when user has profiles' do
+            before do
+                user.profiles << FactoryGirl.create( :profile )
+                visit verification_site_path( site )
+            end
+
+            # Scenario: User is redirected to the sites index page upon verification
+            #   Given I am signed in
+            #   When I verify my site
+            #   And have profiles
+            #   I am redirected to the site index
+            scenario 'user is redirected to the site page with JS', js: true do
+                expect(current_url).to end_with site_path( site )
+            end
+        end
+
+        feature 'when user has no profiles' do
+
+            # Scenario: User is redirected to the new profile page upon verification
+            #   Given I am signed in
+            #   When I verify my site
+            #   And have no profiles
+            #   I am redirected to the new profile page
+            scenario 'user is redirected to the new profile page with JS', js: true do
+                expect(current_url).to end_with new_profile_path
+            end
         end
     end
 
     feature 'when the site is not verified' do
         before do
-            visit edit_site_path( site )
+            visit verification_site_path( site )
         end
 
         # Scenario: User can see the location of the verification file they need to create

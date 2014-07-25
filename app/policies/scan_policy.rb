@@ -20,7 +20,7 @@ class ScanPolicy < ApplicationPolicy
             permitted << :profile_id
         end
 
-        permitted
+        permitted << { schedule_attributes: SchedulePolicy.new( user, record ).permitted_attributes }
     end
 
 end

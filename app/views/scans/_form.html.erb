@@ -1,14 +1,63 @@
-<%= simple_form_for( [@site, @scan] ) do |f| %>
+<%= simple_form_for( [@site, @scan], html: { class: 'form-horizontal' } ) do |f| %>
     <%= f.error_notification %>
 
-    <div class="form-inputs">
-        <%= f.input :name %>
-        <%= f.input :description %>
-        <%= f.association :profile, collection: current_user.profiles,
-                          disabled: !!@scan.id %>
+    <div class="row">
+        <div class="form-inputs col-md-3">
+            <%= f.input :name, placeholder: 'Name', label: false %>
+            <%= f.association :profile,
+                              collection: current_user.profiles,
+                              hint: 'The profile will remain editable until the
+                              first time the scan runs.'
+            %>
+
+            <%= f.input :description, placeholder: 'Description', label: false %>
+        </div>
+
+        <div class="form-inputs col-md-8">
+            <%= f.simple_fields_for :schedule do |sf| %>
+
+            <div class="row-fluid">
+                <div class="col-md-6">
+                    <fieldset>
+                        <legend>Schedule</legend>
+                        <%= sf.input :start_at,
+                                     include_blank: true,
+                                     start_year: Date.today.year,
+                                     end_year: Date.today.year + 1,
+                                     hint: 'You can skip this for now, the scan
+                                        will not run until it is scheduled.'
+                        %>
+
+                        <%= sf.input :stop_after_hours, placeholder: 'hours' %>
+                    </fieldset>
+                </div>
+
+                <div class="col-md-6">
+                    <fieldset>
+                        <legend>Frequency</legend>
+                        <%= sf.input :day_frequency,
+                                          collection: (1..29),
+                                          as: :integer,
+                                          label: false,
+                                          placeholder: 'Days (1-29)'
+                        %>
+                        <%= sf.input :month_frequency,
+                                          collection: (1..12),
+                                          as: :integer,
+                                          label: false,
+                                          placeholder: 'Months (1-12)'
+                        %>
+                    </fieldset>
+                </div>
+            </div>
+            <% end %>
+        </div>
+
     </div>
 
-    <div class="form-actions">
-        <%= f.button :submit %>
+    <div class="row-fluid">
+        <div class="form-actions">
+            <%= f.button :submit %>
+        </div>
     </div>
 <% end %>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140722042631) do
+ActiveRecord::Schema.define(version: 20140722054517) do
 
   create_table "profiles", force: true do |t|
     t.integer  "user_id"
@@ -84,6 +84,16 @@ ActiveRecord::Schema.define(version: 20140722042631) do
 
   add_index "scans", ["profile_id"], name: "index_scans_on_profile_id"
   add_index "scans", ["site_id"], name: "index_scans_on_site_id"
+
+  create_table "schedules", force: true do |t|
+    t.integer  "month_frequency"
+    t.integer  "day_frequency"
+    t.datetime "start_at"
+    t.float    "stop_after_hours"
+    t.integer  "scan_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "site_verifications", force: true do |t|
     t.string   "filename"

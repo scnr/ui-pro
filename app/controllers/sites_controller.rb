@@ -21,6 +21,8 @@ class SitesController < ApplicationController
 
         if @site.scans.empty?
             @scan = @site.scans.new
+            @scan.build_schedule
+
             authorize @scan
         else
             @scans = @site.scans
