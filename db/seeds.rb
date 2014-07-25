@@ -5,11 +5,75 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
-user = CreateAdminService.new.call
-puts 'CREATED ADMIN USER: ' << user.email
+admin = CreateAdminService.new.call
+puts 'CREATED ADMIN USER: ' << admin.email
 
 User.create(
     email:                 'test@stuff.com',
     password:              'testtest',
     password_confirmation: 'testtest'
 )
+
+arachni_defaults = {}
+profile_columns  = Profile.column_names
+
+Arachni::Options.to_rpc_data.each do |name, value|
+    name = name.to_sym
+    next if value.nil?
+
+    if Arachni::Options.group_classes.include?( name )
+        value.each do |k, v|
+            next if v.nil?
+
+            key = "#{name}_#{k}".to_sym
+            if !profile_columns.include?( key.to_s )
+                $stderr.puts "[Profile defaults] Ignoring: #{key}"
+                next
+            end
+
+            arachni_defaults[key] = v
+        end
+    else
+        if !profile_columns.include?( name.to_s )
+            $stderr.puts "[Profile defaults] Ignoring: #{name}"
+            next
+        end
+        arachni_defaults[name] = value
+    end
+end
+
+arachni_defaults.merge!(
+    name:          'Default',
+    description:   'Sensible, default settings.',
+    user:          admin,
+    audit_links:   true,
+    audit_forms:   true,
+    audit_cookies: true,
+    input_values:  Arachni::Options.input.default_values
+)
+
+# exit
+
+# puts 'SETTING UP DEFAULT PROFILES'
+# p = Profile.create! arachni_defaults.merge(
+#                         name:        'Default',
+#                         description: 'Sensible, default settings.',
+#                         checks:      :all
+#                     )
+# p.make_default
+# puts 'Default profile created: ' << p.name
+
+p = Profile.create! arachni_defaults.merge(
+                        name: 'Cross-Site Scripting (XSS)',
+                        description: 'Scans for Cross-Site Scripting (XSS) vulnerabilities.',
+                        checks: %w(xss xss_path xss_tag xss_script_context xss_event
+                                    xss_dom xss_dom_inputs xss_dom_script_context)
+                    )
+puts 'XSS profile created: ' << p.name
+
+p = Profile.create! arachni_defaults.merge(
+                        name: 'SQL injection',
+                        description: 'Scans for SQL injection vulnerabilities.',
+                        checks: %w(sqli sqli_blind_differential sqli_blind_timing)
+                    )
+puts 'SQLi profile created: ' << p.name
