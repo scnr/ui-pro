@@ -7,7 +7,7 @@ class ProfilePolicy < ApplicationPolicy
         end
     end
 
-    allow_authenticated :index, :create
+    allow_authenticated :index, :create, :copy
 
     allow_admin_or :show do |user, profile|
         profile.user == user

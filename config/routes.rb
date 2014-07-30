@@ -13,6 +13,10 @@ Rails.application.routes.draw do
 
     devise_for :users
     resources :users
-    resources :profiles
+
+    resources :profiles do
+        get   :copy, on: :member
+    end
+
     resources :schedules, only: [:index]
 end

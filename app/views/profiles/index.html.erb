@@ -23,6 +23,10 @@
                 <td><%= link_to 'Edit', edit_profile_path(profile) %></td>
             <% end %>
 
+            <% if policy(profile).copy? %>
+                <td><%= link_to 'Copy', copy_profile_path(profile) %></td>
+            <% end %>
+
             <% if policy(profile).destroy? %>
                 <td><%= link_to 'Delete', profile, method: :delete, data: { confirm: 'Are you sure?' } %></td>
             <% end %>

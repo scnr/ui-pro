@@ -65,6 +65,10 @@ feature 'Profile index page' do
                 expect(page).to have_xpath "//a[@href='#{edit_profile_path( profile )}']"
             end
 
+            scenario 'can copy' do
+                expect(page).to have_xpath "//a[@href='#{copy_profile_path( profile )}']"
+            end
+
             # Scenario: Profiles without scans are accompanied by delete links
             #   Given I am signed in
             #   When I visit the profile index page
@@ -94,6 +98,10 @@ feature 'Profile index page' do
                 #   Then I see my profiles with edit links
                 scenario 'can edit' do
                     expect(page).to have_xpath "//a[@href='#{edit_profile_path( profile )}']"
+                end
+
+                scenario 'can copy' do
+                    expect(page).to have_xpath "//a[@href='#{copy_profile_path( profile )}']"
                 end
 
                 # Scenario: Profiles without scan revisions are accompanied by delete links
@@ -132,6 +140,10 @@ feature 'Profile index page' do
                         expect(page).to have_xpath "//a[@href='#{edit_profile_path(profile)}']"
                     end
 
+                    scenario 'can copy' do
+                        expect(page).to have_xpath "//a[@href='#{copy_profile_path( profile )}']"
+                    end
+
                     # Scenario: Profiles with scans are not accompanied by delete links
                     #   Given I am signed in
                     #   When I visit the profile index page
@@ -155,6 +167,10 @@ feature 'Profile index page' do
                     #   Then I don't see edit links
                     scenario 'cannot edit' do
                         expect(page).to_not have_xpath "//a[@href='#{edit_profile_path(profile)}']"
+                    end
+
+                    scenario 'can copy' do
+                        expect(page).to have_xpath "//a[@href='#{copy_profile_path( profile )}']"
                     end
 
                     # Scenario: Profiles with scans are not accompanied by delete links

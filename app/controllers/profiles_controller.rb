@@ -2,7 +2,7 @@ class ProfilesController < ApplicationController
     before_filter :authenticate_user!
     after_action :verify_authorized
 
-    before_action :set_profile, only: [:show, :edit, :update, :destroy]
+    before_action :set_profile, only: [:show, :copy, :edit, :update, :destroy]
 
     # GET /profiles
     # GET /profiles.json
@@ -23,6 +23,12 @@ class ProfilesController < ApplicationController
 
     # GET /profiles/1/edit
     def edit
+    end
+
+    # GET /profiles/1/copy
+    def copy
+        @profile = @profile.dup
+        render :new
     end
 
     # POST /profiles

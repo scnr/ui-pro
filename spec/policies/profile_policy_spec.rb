@@ -6,7 +6,7 @@ describe ProfilePolicy do
     let(:profile) { FactoryGirl.create :profile }
     let(:scan) { FactoryGirl.create :scan }
 
-    %w(index new create).each do |action|
+    %w(index new copy create).each do |action|
         permissions "#{action}?" do
             context 'when the user is' do
                 context 'logged in' do
