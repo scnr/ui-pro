@@ -62,9 +62,7 @@ feature 'Profile index page' do
             #   And the profile has no associated scans
             #   Then I see my profiles with edit links
             scenario 'can edit' do
-                click_link 'Edit'
-
-                expect(current_url).to match edit_profile_path(profile)
+                expect(page).to have_xpath "//a[@href='#{edit_profile_path( profile )}']"
             end
 
             # Scenario: Profiles without scans are accompanied by delete links
@@ -95,9 +93,7 @@ feature 'Profile index page' do
                 #   And the profile has no associated scans with revisions
                 #   Then I see my profiles with edit links
                 scenario 'can edit' do
-                    click_link 'Edit'
-
-                    expect(current_url).to match edit_profile_path(profile)
+                    expect(page).to have_xpath "//a[@href='#{edit_profile_path( profile )}']"
                 end
 
                 # Scenario: Profiles without scan revisions are accompanied by delete links
