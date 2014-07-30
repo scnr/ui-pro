@@ -9,8 +9,9 @@ feature 'Scan index' do
 
     let(:user) { FactoryGirl.create :user, sites: [site] }
     let(:site) { FactoryGirl.create :site }
-    let(:scan) { FactoryGirl.create :scan }
-    let(:other_scan) { FactoryGirl.create :scan, name: 'Blah' }
+    let(:scan) { FactoryGirl.create :scan, profile: profile }
+    let(:other_scan) { FactoryGirl.create :scan, name: 'Blah', profile: profile }
+    let(:profile) { FactoryGirl.create :profile }
 
     after(:each) do
         Warden.test_reset!
@@ -60,9 +61,12 @@ feature 'Scan index' do
         #   Given I am signed in
         #   When I visit a site with scans
         #   Then I see a list of scans
-        scenario 'user sees a list of scans' do
-            expect(page).to have_content scan.name
-            expect(page).to have_content other_scan.name
+        scenario 'user sees links to profiles of scans' do
+            expect(page).to have_content scan.profile.name
+            expect(page).to have_xpath "//a[@href='#{profile_path( scan.profile )}']"
+
+            expect(page).to have_content other_scan.profile.name
+            expect(page).to have_xpath "//a[@href='#{profile_path( other_scan.profile )}']"
         end
 
         # Scenario: User can see links to the scan edit page
