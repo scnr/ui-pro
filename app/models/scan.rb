@@ -5,6 +5,8 @@ class Scan < ActiveRecord::Base
     has_one :schedule, dependent: :destroy
     accepts_nested_attributes_for :schedule
 
+    has_many :revisions, dependent: :destroy
+
     validates_associated    :schedule
 
     validates_presence_of   :name
@@ -20,6 +22,8 @@ class Scan < ActiveRecord::Base
             Schedule.where( 'schedules.scan_id = scans.id' ).limit(1).arel.exists
         )
     end
+
+    scope :with_revisions, -> { joins(:revisions).where( 'revisions.id IS NOT NULL' ) }
 
     def scheduled?
         !!(schedule && schedule.start_at)

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140722054517) do
+ActiveRecord::Schema.define(version: 20140725122309) do
 
   create_table "profiles", force: true do |t|
     t.integer  "user_id"
@@ -72,6 +72,18 @@ ActiveRecord::Schema.define(version: 20140722054517) do
     t.integer  "browser_cluster_screen_width"
     t.integer  "browser_cluster_screen_height"
   end
+
+  create_table "revisions", force: true do |t|
+    t.integer  "scan_id"
+    t.string   "state"
+    t.datetime "started_at"
+    t.datetime "stopped_at"
+    t.string   "snapshot_location"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "revisions", ["scan_id"], name: "index_revisions_on_scan_id"
 
   create_table "scans", force: true do |t|
     t.integer  "site_id"

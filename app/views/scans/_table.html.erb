@@ -3,26 +3,30 @@
     <tr>
         <th>Name</th>
         <th>Description</th>
-        <th colspan="3"></th>
+        <th>Revisions</th>
+        <th colspan="2"></th>
     </tr>
     </thead>
 
     <tbody>
     <% @scans.each do |scan| %>
         <tr>
-            <td><%= scan.name %></td>
-            <td><%= scan.description %></td>
-
             <% if policy(scan).show? %>
-                <td><%= link_to 'Show', [@site, scan] %></td>
+                <td><%= link_to scan.name, [@site, scan] %></td>
+            <% else %>
+                <td><%= scan.name %></td>
             <% end %>
+
+            <td><%= scan.description %></td>
+            <td><%= scan.revisions.size %></td>
 
             <% if policy(scan).edit? %>
                 <td><%= link_to 'Edit', edit_site_scan_path( @site, scan ) %></td>
             <% end %>
 
             <% if policy(scan).destroy? %>
-                <td><%= link_to 'Delete', [@site, scan], method: :delete, data: { confirm: 'Are you sure?' } %></td>
+                <td><%= link_to 'Delete', [@site, scan], method: :delete,
+                                data: { confirm: 'Are you sure?' } %></td>
             <% end %>
         </tr>
     <% end %>

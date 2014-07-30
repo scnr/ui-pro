@@ -73,24 +73,52 @@ describe ProfilePolicy do
             context 'when the profile has scans' do
                 before { profile.scans << scan }
 
-                context 'when the user' do
-                    context 'is the site owner' do
-                        before { user.profiles << profile }
-                        expect_it { to_not permit( user, profile ) }
-                    end
+                context 'without revisions' do
 
-                    context 'is an admin' do
-                        before { profile }
-                        expect_it { to permit( admin, profile ) }
-                    end
+                    context 'when the user' do
+                        context 'is the site owner' do
+                            before { user.profiles << profile }
+                            expect_it { to permit( user, profile ) }
+                        end
 
-                    context 'is not associated with the site' do
-                        before { profile }
-                        expect_it { to_not permit( user, profile ) }
-                    end
+                        context 'is an admin' do
+                            before { profile }
+                            expect_it { to permit( admin, profile ) }
+                        end
 
-                    context 'not logged in' do
-                        expect_it { to_not permit }
+                        context 'is not associated with the site' do
+                            before { profile }
+                            expect_it { to_not permit( user, profile ) }
+                        end
+
+                        context 'not logged in' do
+                            expect_it { to_not permit }
+                        end
+                    end
+                end
+
+                context 'with revisions' do
+                    before { scan.revisions << FactoryGirl.create(:revision) }
+
+                    context 'when the user' do
+                        context 'is the site owner' do
+                            before { user.profiles << profile }
+                            expect_it { to_not permit( user, profile ) }
+                        end
+
+                        context 'is an admin' do
+                            before { profile }
+                            expect_it { to permit( admin, profile ) }
+                        end
+
+                        context 'is not associated with the site' do
+                            before { profile }
+                            expect_it { to_not permit( user, profile ) }
+                        end
+
+                        context 'not logged in' do
+                            expect_it { to_not permit }
+                        end
                     end
                 end
             end

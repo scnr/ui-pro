@@ -27,7 +27,7 @@ describe ScanPolicy do
 
                         context 'is an admin' do
                             before { site }
-                            expect_it { to permit( admin, site ) }
+                            expect_it { to permit( admin, scan ) }
                         end
 
                         context 'is not associated with the site' do
@@ -57,7 +57,7 @@ describe ScanPolicy do
 
                         context 'is an admin' do
                             before { site }
-                            expect_it { to permit( admin, site ) }
+                            expect_it { to permit( admin, scan ) }
                         end
 
                         context 'is not associated with the site' do
@@ -93,7 +93,7 @@ describe ScanPolicy do
 
                         context 'is an admin' do
                             before { site }
-                            expect_it { to permit( admin, site ) }
+                            expect_it { to permit( admin, scan ) }
                         end
 
                         context 'is not associated with the site' do
@@ -121,7 +121,7 @@ describe ScanPolicy do
 
                         context 'is an admin' do
                             before { site }
-                            expect_it { to permit( admin, site ) }
+                            expect_it { to permit( admin, scan ) }
                         end
 
                         context 'is not associated with the site' do

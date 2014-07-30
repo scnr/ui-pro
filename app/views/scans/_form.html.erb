@@ -5,9 +5,10 @@
         <div class="form-inputs col-md-3">
             <%= f.input :name, placeholder: 'Name', label: false %>
             <%= f.association :profile,
+                              disabled: @scan.revisions.any?,
                               collection: current_user.profiles,
-                              hint: 'The profile will remain editable until the
-                              first time the scan runs.'
+                              hint: ('The profile will remain editable until the
+                              first time the scan runs.' if @scan.revisions.empty?)
             %>
 
             <%= f.input :description, placeholder: 'Description', label: false %>

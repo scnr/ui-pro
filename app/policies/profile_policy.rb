@@ -15,7 +15,7 @@ class ProfilePolicy < ApplicationPolicy
 
     allow_admin_or :update, :destroy do |user, profile|
         # Don't allow profiles to be manipulated if they have associated scans.
-        profile.user == user && profile.scans.empty?
+        profile.user == user && profile.scans.with_revisions.empty?
     end
 
     # TODO: Whitelist checks and plugins.

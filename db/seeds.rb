@@ -8,7 +8,7 @@
 admin = CreateAdminService.new.call
 puts 'CREATED ADMIN USER: ' << admin.email
 
-User.create(
+user = User.create(
     email:                 'test@stuff.com',
     password:              'testtest',
     password_confirmation: 'testtest'
@@ -45,7 +45,7 @@ end
 arachni_defaults.merge!(
     name:          'Default',
     description:   'Sensible, default settings.',
-    user:          admin,
+    user:          user,
     audit_links:   true,
     audit_forms:   true,
     audit_cookies: true,
@@ -64,16 +64,37 @@ arachni_defaults.merge!(
 # puts 'Default profile created: ' << p.name
 
 p = Profile.create! arachni_defaults.merge(
-                        name: 'Cross-Site Scripting (XSS)',
-                        description: 'Scans for Cross-Site Scripting (XSS) vulnerabilities.',
-                        checks: %w(xss xss_path xss_tag xss_script_context xss_event
-                                    xss_dom xss_dom_inputs xss_dom_script_context)
-                    )
+    name:        'Cross-Site Scripting (XSS)',
+    description: 'Scans for Cross-Site Scripting (XSS) vulnerabilities.',
+    checks:      %w(xss xss_path xss_tag xss_script_context xss_event
+                    xss_dom xss_dom_inputs xss_dom_script_context)
+)
 puts 'XSS profile created: ' << p.name
 
 p = Profile.create! arachni_defaults.merge(
-                        name: 'SQL injection',
-                        description: 'Scans for SQL injection vulnerabilities.',
-                        checks: %w(sqli sqli_blind_differential sqli_blind_timing)
-                    )
+    name:        'SQL injection',
+    description: 'Scans for SQL injection vulnerabilities.',
+    checks:      %w(sqli sqli_blind_differential sqli_blind_timing)
+)
 puts 'SQLi profile created: ' << p.name
+
+site = user.sites.create(
+    protocol: 'http',
+    host:     'test.com',
+    port:     8080
+)
+site.verification.verified!
+
+scan = site.scans.create(
+    profile:     p,
+    name:        'my scan',
+    description: 'my description'
+)
+
+scan.build_schedule
+scan.save
+
+scan.revisions.create(
+    state:      'started',
+    started_at: Time.now
+)

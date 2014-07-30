@@ -1,0 +1,22 @@
+<h1>
+    <%= link_to "Revision ##{@revision.index}", [@revision.scan.site, @revision.scan, @revision] %> of
+    <%= link_to @revision.scan.name, [@revision.scan.site, @revision.scan] %> scan for
+    <%= link_to @revision.scan.site, @revision.scan.site %>
+</h1>
+
+<p>
+    <strong>State:</strong>
+    <%= @revision.state.capitalize %>
+</p>
+
+<p>
+    <strong>Started at:</strong>
+    <%= @revision.started_at %>
+</p>
+
+<p>
+    <strong>Stopped at:</strong>
+    <%= @revision.stopped_at %>
+</p>
+
+<%= link_to 'Back', site_scan_path( @revision.scan.site, @revision.scan ) %>

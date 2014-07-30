@@ -10,6 +10,7 @@ describe Scan do
     expect_it { to belong_to :site }
     expect_it { to belong_to :profile }
     expect_it { to have_one  :schedule }
+    expect_it { to have_many :revisions }
 
     it 'accepts nested attributes for #schedule' do
         subject.update( schedule_attributes: { month_frequency: 10 } )
@@ -47,6 +48,34 @@ describe Scan do
             ]
         end
 
+        let(:with_revisions) do
+            [
+                FactoryGirl.create( :scan,
+                                    site: site,
+                                    name: 'stuff5',
+                                    schedule_attributes: {
+                                        start_at: Time.now
+                                    },
+                                    revisions: [FactoryGirl.create(:revision)]
+                ),
+                FactoryGirl.create( :scan,
+                                    site: site,
+                                    name: 'stuff6',
+                                    schedule_attributes: {
+                                        start_at: Time.now
+                                    },
+                                    revisions: [FactoryGirl.create(:revision)]
+                )
+            ]
+        end
+
+        let(:without_revisions) do
+            [
+                FactoryGirl.create( :scan, site: site, name: 'stuff7' ),
+                FactoryGirl.create( :scan, site: site, name: 'stuff8' )
+            ]
+        end
+
         describe :scheduled do
             it "returns scans with #{Scan}#start_at" do
                 scheduled
@@ -62,6 +91,15 @@ describe Scan do
                 unscheduled
 
                 expect(described_class.unscheduled).to eq unscheduled
+            end
+        end
+
+        describe :with_revisions do
+            it "returns scans with #{Revision}" do
+                with_revisions
+                without_revisions
+
+                expect(described_class.with_revisions).to eq with_revisions
             end
         end
     end

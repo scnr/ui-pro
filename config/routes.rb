@@ -6,11 +6,13 @@ Rails.application.routes.draw do
         get   :verification, on: :member
         put   :verify,       on: :member
 
-        resources :scans
+        resources :scans do
+            resources :revisions, only: [:show, :destroy]
+        end
     end
 
     devise_for :users
     resources :users
     resources :profiles
-    resources :schedules, except: [:new, :edit, :update, :destroy]
+    resources :schedules, only: [:index]
 end

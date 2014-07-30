@@ -8,6 +8,18 @@
     </div>
 </div>
 
+<% if @profile.scans.any? %>
+    <h2><%= @profile.scans.size %> associated <%= 'scan'.pluralize @profile.scans.size %></h2>
+    <ol>
+        <% @profile.scans.each do |scan| %>
+            <li>
+                <%= link_to scan.name, [scan.site, scan] %> of
+                <%= link_to scan.site, scan.site %>
+            </li>
+        <% end %>
+    </ol>
+<% end %>
+
 <section id="scope">
     <h2 id="scope-h">
         Scope

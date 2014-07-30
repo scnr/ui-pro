@@ -1,19 +1,16 @@
 <p>
-    <strong>Name:</strong>
-    <%= scan.name %>
-</p>
-
-<p>
-    <strong>Description:</strong>
     <%= scan.description %>
 </p>
 
 <p>
     <strong>Profile:</strong>
-    <%= scan.profile %>
+    <%= link_to scan.profile, scan.profile %>
 </p>
 
 <p>
     <strong>Schedule:</strong>
 </p>
 
+<h2><%= scan.revisions.size %> revisions</h2>
+
+<%= render 'revisions/list', scan: scan %>

@@ -10,7 +10,7 @@ feature 'Scan page' do
     let(:user) { FactoryGirl.create :user, sites: [site] }
     let(:other_user) { FactoryGirl.create :user, email: 'dd@ss.cc', shared_sites: [site] }
     let(:site) { FactoryGirl.create :site, scans: [scan] }
-    let(:scan) { FactoryGirl.create :scan }
+    let(:scan) { FactoryGirl.create :scan, profile: FactoryGirl.create(:profile) }
 
     after(:each) do
         Warden.test_reset!
@@ -35,9 +35,19 @@ feature 'Scan page' do
         expect(page).to have_content scan.description
     end
 
-    scenario 'user sees profile'
+    scenario 'user sees a link to the profile' do
+        expect(page).to have_xpath "//a[@href='#{profile_path(scan.profile)}']"
+    end
+
     scenario 'user sees schedule'
-    scenario 'user sees revisions'
+
+    scenario 'user sees the amount of revisions in an h2' do
+        expect(find('h2').text).to match "#{scan.revisions.size} revisions"
+    end
+
+    scenario 'user sees the revisions' do
+        expect(page).to have_css '.scan-revisions-table'
+    end
 
     feature 'user is the site owner' do
         scenario 'user can see edit link' do
