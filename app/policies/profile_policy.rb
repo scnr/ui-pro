@@ -29,7 +29,7 @@ class ProfilePolicy < ApplicationPolicy
             :scope_exclude_path_patterns_cookies, :scope_exclude_path_patterns_vectors,
             :scope_extend_paths, :scope_include_subdomains, :audit_with_both_http_methods,
             :http_request_concurrency, :scope_include_path_patterns, :scope_page_limit,
-            :login_check_pattern, :login_check_url, :spawns, :min_pages_per_instance,
+            :session_check_pattern, :session_check_url, :spawns, :min_pages_per_instance,
             { checks: [] }, :http_proxy_host, :http_proxy_password, :http_proxy_port,
             :http_proxy_type, :http_proxy_username, :http_request_redirect_limit,
             :scope_redundant_path_patterns, :scope_restrict_paths, :http_user_agent,

@@ -182,49 +182,49 @@ describe Profile do
             end
         end
 
-        describe 'login check' do
+        describe 'session check' do
             before do
-                subject.login_check_url     = nil
-                subject.login_check_pattern = nil
+                subject.session_check_url     = nil
+                subject.session_check_pattern = nil
             end
 
-            context 'when it has a #login_check_url' do
-                context 'but not a #login_check_pattern' do
+            context 'when it has a #session_check_url' do
+                context 'but not a #session_check_pattern' do
                     it 'is invalid' do
-                        subject.login_check_url = 'http://test.com'
+                        subject.session_check_url = 'http://test.com'
 
                         expect(subject.save).to be_falsey
-                        expect(subject.errors).to include :login_check_pattern
+                        expect(subject.errors).to include :session_check_pattern
                     end
                 end
             end
 
-            context 'when it has a #login_check_pattern' do
-                context 'but not a #login_check_url' do
+            context 'when it has a #session_check_pattern' do
+                context 'but not a #session_check_url' do
                     it 'is invalid' do
-                        subject.login_check_pattern = 'stuff'
+                        subject.session_check_pattern = 'stuff'
 
                         expect(subject.save).to be_falsey
-                        expect(subject.errors).to include :login_check_url
+                        expect(subject.errors).to include :session_check_url
                     end
                 end
             end
 
-            context 'when #login_check_url is not a valid absolute URL' do
+            context 'when #session_check_url is not a valid absolute URL' do
                 it 'should be invalid' do
-                    subject.login_check_url     = 'stuff-url'
-                    subject.login_check_pattern = 'stuff'
+                    subject.session_check_url     = 'stuff-url'
+                    subject.session_check_pattern = 'stuff'
 
                     expect(subject.save).to be_falsey
-                    expect(subject.errors).to include :login_check_url
+                    expect(subject.errors).to include :session_check_url
                 end
             end
 
-            context 'when it has a valid #login_check_url' do
-                context 'and a #login_check_pattern' do
+            context 'when it has a valid #session_check_url' do
+                context 'and a #session_check_pattern' do
                     it 'is valid' do
-                        subject.login_check_url     = 'http://test.com/stuff/'
-                        subject.login_check_pattern = 'stuff'
+                        subject.session_check_url     = 'http://test.com/stuff/'
+                        subject.session_check_pattern = 'stuff'
 
                         expect(subject.save).to be_truthy
                     end
@@ -364,10 +364,10 @@ describe Profile do
             expect(arachni_link_templates).to eq profile_link_templates
 
             profile_link_templates =
-                Regexp.new(profile_rpc_data['login'].delete('check_pattern')).to_s
+                Regexp.new(profile_rpc_data['session'].delete('check_pattern')).to_s
 
             arachni_link_templates =
-                arachni_rpc_data['login'].delete('check_pattern')
+                arachni_rpc_data['session'].delete('check_pattern')
 
             expect(arachni_link_templates).to eq profile_link_templates
 

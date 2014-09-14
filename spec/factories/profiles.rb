@@ -61,8 +61,8 @@ FactoryGirl.define do
         scope_exclude_binaries true
         scope_auto_redundant_paths 100
         scope_https_only false
-        login_check_url 'http://stuff/'
-        login_check_pattern 'logout.php'
+        session_check_url 'http://stuff/'
+        session_check_pattern 'logout.php'
         http_request_timeout 10_000
         no_fingerprinting false
         platforms ["linux", 'php']

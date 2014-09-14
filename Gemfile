@@ -48,5 +48,4 @@ group :development, :test do
     gem 'awesome_print'
 end
 
-gem 'arachni-rpc', path: File.dirname( __FILE__ ) + '/../../../arachni-rpc-v0.2'
-gem 'arachni',     path: File.dirname( __FILE__ ) + '/../../../arachni'
+gem 'arachni', path: File.dirname( __FILE__ ) + '/../../../arachni'

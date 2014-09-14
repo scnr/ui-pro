@@ -633,20 +633,20 @@
 
     <div class="row-fluid">
 
-        <% if !profile.login_check_url.to_s.empty? && !profile.login_check_pattern.to_s.empty? %>
+        <% if !profile.session_check_url.to_s.empty? && !profile.session_check_pattern.to_s.empty? %>
             <div class="col-md-6">
                 <p>
                     <b>URL:</b>
-                    <%= profile.login_check_url %>
+                    <%= profile.session_check_url %>
                 </p>
-                <%= messages_for :login_check_url %>
+                <%= messages_for :session_check_url %>
             </div>
             <div class="col-md-6">
                 <p>
                     <b>Pattern:</b>
-                    <%= profile.login_check_pattern %>
+                    <%= profile.session_check_pattern %>
                 </p>
-                <%= messages_for :login_check_pattern %>
+                <%= messages_for :session_check_pattern %>
             </div>
         <% else %>
             <div class="col-md-12">
