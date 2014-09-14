@@ -7,7 +7,7 @@ describe Profile do
     expect_it { to belong_to :user }
     expect_it { to have_many :scans }
 
-    describe '#validations' do
+    describe :validations do
         describe '#name' do
             it 'is required' do
                 subject.name = nil
@@ -290,99 +290,7 @@ describe Profile do
             Arachni::Options.update( subject.to_rpc_options )
             arachni_rpc_data = Arachni::Options.to_rpc_data
 
-
-            profile_exclude_content_patterns =
-                profile_rpc_data['scope'].delete('exclude_content_patterns').
-                    map { |s| Regexp.new(s).to_s }
-
-            arachni_exclude_content_patterns =
-                arachni_rpc_data['scope'].delete('exclude_content_patterns')
-
-            expect(arachni_exclude_content_patterns).to eq profile_exclude_content_patterns
-
-            profile_exclude_path_patterns =
-                profile_rpc_data['scope'].delete('exclude_path_patterns').
-                    map { |s| Regexp.new(s).to_s }
-
-            arachni_exclude_path_patterns =
-                arachni_rpc_data['scope'].delete('exclude_path_patterns')
-
-            expect(arachni_exclude_path_patterns).to eq profile_exclude_path_patterns
-
-            profile_include_path_patterns =
-                profile_rpc_data['scope'].delete('include_path_patterns').
-                    map { |s| Regexp.new(s).to_s }
-
-            arachni_include_path_patterns =
-                arachni_rpc_data['scope'].delete('include_path_patterns')
-
-            expect(arachni_include_path_patterns).to eq profile_include_path_patterns
-
-            profile_redundant_path_patterns =
-                Hash[profile_rpc_data['scope'].delete('redundant_path_patterns').
-                    map { |pattern, counter| [Regexp.new(pattern).to_s, counter.to_s] }]
-
-            arachni_redundant_path_patterns =
-                arachni_rpc_data['scope'].delete('redundant_path_patterns')
-
-            expect(arachni_redundant_path_patterns).to eq profile_redundant_path_patterns
-
-            profile_url_rewrites =
-                Hash[profile_rpc_data['scope'].delete('url_rewrites').
-                         map { |pattern, counter| [Regexp.new(pattern).to_s, counter.to_s] }]
-
-            arachni_url_rewrites =
-                arachni_rpc_data['scope'].delete('url_rewrites')
-
-            expect(arachni_url_rewrites).to eq profile_url_rewrites
-
-            profile_exclude_vector_patterns =
-                profile_rpc_data['audit'].delete('exclude_vector_patterns').
-                    map { |s| Regexp.new(s).to_s }
-
-            arachni_exclude_vector_patterns =
-                arachni_rpc_data['audit'].delete('exclude_vector_patterns')
-
-            expect(arachni_exclude_vector_patterns).to eq profile_exclude_vector_patterns
-
-            profile_include_vector_patterns =
-                profile_rpc_data['audit'].delete('include_vector_patterns').
-                    map { |s| Regexp.new(s).to_s }
-
-            arachni_include_vector_patterns =
-                arachni_rpc_data['audit'].delete('include_vector_patterns')
-
-            expect(arachni_include_vector_patterns).to eq profile_include_vector_patterns
-
-            profile_link_templates =
-                profile_rpc_data['audit'].delete('link_templates').
-                    map { |s| Regexp.new(s).to_s }
-
-            arachni_link_templates =
-                arachni_rpc_data['audit'].delete('link_templates')
-
-            expect(arachni_link_templates).to eq profile_link_templates
-
-            profile_link_templates =
-                Regexp.new(profile_rpc_data['session'].delete('check_pattern')).to_s
-
-            arachni_link_templates =
-                arachni_rpc_data['session'].delete('check_pattern')
-
-            expect(arachni_link_templates).to eq profile_link_templates
-
-            profile_inputs =
-                Hash[profile_rpc_data.delete('input').delete('values').
-                         map { |pattern, val| [Regexp.new(pattern).to_s, val] }]
-
-            arachni_inputs =
-                arachni_rpc_data.delete('input').delete('values')
-
-            expect(arachni_inputs).to eq profile_inputs
-
-            subject.to_rpc_options.each do |k, v|
-                expect(arachni_rpc_data[k]).to eq profile_rpc_data[k]
-            end
+            expect(arachni_rpc_data).to eq profile_rpc_data
         end
     end
 

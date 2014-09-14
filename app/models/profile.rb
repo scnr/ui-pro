@@ -2,6 +2,7 @@ class Profile < ActiveRecord::Base
 
     belongs_to :user
     has_many   :scans
+    belongs_to :plan
 
     DESCRIPTIONS_FILE = "#{Rails.root}/config/profile/attributes.yml"
 
@@ -111,7 +112,7 @@ class Profile < ActiveRecord::Base
             end
         end
 
-        opts
+        Arachni::Options.hash_to_rpc_data( opts )
     end
 
     def export( serializer = YAML )

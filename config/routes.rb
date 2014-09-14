@@ -15,8 +15,10 @@ Rails.application.routes.draw do
     resources :users
 
     resources :profiles do
-        get   :copy, on: :member
+        get :copy, on: :member
     end
 
     resources :schedules, only: [:index]
+
+    resources :plans
 end
