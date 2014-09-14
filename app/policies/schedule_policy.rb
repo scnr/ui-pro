@@ -1,7 +1,9 @@
 class SchedulePolicy < ApplicationPolicy
     alias :schedule :record
 
-    allow_admin_or :index, :show do |user, schedule|
+    allow_authenticated :index
+
+    allow_admin_or :show do |user, schedule|
         next if schedule.scan.site.unverified?
         schedule.scan.site.user == user || user.has_shared_site?( schedule.scan.site )
     end

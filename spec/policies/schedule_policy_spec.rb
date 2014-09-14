@@ -7,7 +7,21 @@ describe SchedulePolicy do
     let(:scan) { FactoryGirl.create :scan, schedule: FactoryGirl.create( :schedule ) }
     let(:schedule) { FactoryGirl.create( :schedule, scan: scan ) }
 
-    %w(index show).each do |action|
+    %w(index).each do |action|
+        permissions "#{action}?" do
+            context 'when the user is' do
+                context 'logged in' do
+                    expect_it { to permit(user) }
+                end
+
+                context 'not logged in' do
+                    expect_it { to_not permit }
+                end
+            end
+        end
+    end
+
+    %w(show).each do |action|
         permissions "#{action}?" do
             context 'when the site is' do
                 context 'unverified' do

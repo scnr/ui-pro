@@ -6,7 +6,7 @@ class SchedulesController < ApplicationController
     # GET /schedules.json
     def index
         # TODO: This doesn't seem optimised.
-        @schedules = policy_scope( Scan ).map(&:schedule)
+        @schedules = policy_scope( Scan ).all.map(&:schedule)
         authorize Schedule
     end
 
