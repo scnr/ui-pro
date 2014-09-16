@@ -13,6 +13,7 @@ FactoryGirl.define do
         scope_page_limit 1000
         http_request_redirect_limit 5
         http_request_concurrency 20
+        http_response_max_size 200_000
         audit_links true
         audit_forms true
         audit_cookies true
