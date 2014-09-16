@@ -40,6 +40,7 @@ ActiveRecord::Schema.define(version: 20140914235651) do
 
   create_table "profiles", force: true do |t|
     t.integer  "user_id"
+    t.integer  "plan_id"
     t.boolean  "default"
     t.string   "name"
     t.text     "description"
@@ -90,8 +91,9 @@ ActiveRecord::Schema.define(version: 20140914235651) do
     t.boolean  "browser_cluster_ignore_images"
     t.integer  "browser_cluster_screen_width"
     t.integer  "browser_cluster_screen_height"
-    t.integer  "plan_id"
   end
+
+  add_index "profiles", ["plan_id"], name: "index_profiles_on_plan_id"
 
   create_table "revisions", force: true do |t|
     t.integer  "scan_id"
@@ -107,6 +109,7 @@ ActiveRecord::Schema.define(version: 20140914235651) do
 
   create_table "scans", force: true do |t|
     t.integer  "site_id"
+    t.integer  "plan_id"
     t.string   "name"
     t.text     "description"
     t.datetime "created_at"
@@ -114,6 +117,7 @@ ActiveRecord::Schema.define(version: 20140914235651) do
     t.integer  "profile_id"
   end
 
+  add_index "scans", ["plan_id"], name: "index_scans_on_plan_id"
   add_index "scans", ["profile_id"], name: "index_scans_on_profile_id"
   add_index "scans", ["site_id"], name: "index_scans_on_site_id"
 
@@ -169,11 +173,9 @@ ActiveRecord::Schema.define(version: 20140914235651) do
     t.datetime "updated_at"
     t.string   "name"
     t.integer  "role"
-    t.integer  "plan_id"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true
-  add_index "users", ["plan_id"], name: "index_users_on_plan_id"
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
 
 end

@@ -7,6 +7,7 @@ describe Scan do
     let(:site) { FactoryGirl.create :site }
     let(:other_site) { FactoryGirl.create :site, host: 'ff.dd' }
 
+    it { should belong_to :plan }
     expect_it { to belong_to :site }
     expect_it { to belong_to :profile }
     expect_it { to have_one  :schedule }

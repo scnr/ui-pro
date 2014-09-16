@@ -6,5 +6,6 @@ FactoryGirl.define do
         name 'MyString'
         description 'MyText'
         profile FactoryGirl.create( :profile, name: 'My profile' )
+        plan { FactoryGirl.create( :plan, name: 'My plan' ) }
     end
 end

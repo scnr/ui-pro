@@ -2,6 +2,7 @@ class CreateProfiles < ActiveRecord::Migration
     def change
         create_table :profiles do |t|
             t.belongs_to :user
+            t.belongs_to :plan, index: true
             t.boolean  "default"
             t.string   "name"
             t.text     "description"

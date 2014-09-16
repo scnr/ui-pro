@@ -1,5 +1,5 @@
 class Plan < ActiveRecord::Base
-    has_many :users
+    has_many :scans
 
     has_one :profile, dependent: :destroy, autosave: true
     accepts_nested_attributes_for :profile
