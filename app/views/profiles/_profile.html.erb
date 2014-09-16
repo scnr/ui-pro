@@ -60,49 +60,9 @@
                 <%= messages_for :scope_redundant_path_patterns %>
             </div>
         <% end %>
-
-        <% if profile.scope_auto_redundant_paths %>
-            <div class="col-md-6">
-                <p>
-                    <b>Auto redundant:</b>
-                    <%= profile.scope_auto_redundant_paths %>
-                </p>
-                <%= messages_for :scope_auto_redundant_paths %>
-            </div>
-        <% end %>
     </div>
 
     <div class="row-fluid">
-        <% if profile.scope_directory_depth_limit %>
-            <div class="col-md-6">
-                <p>
-                    <b>Depth limit:</b>
-                    <%= profile.scope_directory_depth_limit %>
-                </p>
-                <%= messages_for :scope_directory_depth_limit %>
-            </div>
-        <% end %>
-
-        <% if profile.scope_page_limit %>
-            <div class="col-md-6">
-                <p>
-                    <b>Page:</b>
-                    <%= profile.scope_page_limit %>
-                </p>
-                <%= messages_for :scope_page_limit %>
-            </div>
-        <% end %>
-    </div>
-    <div class="row-fluid">
-        <div class="col-md-6">
-            <p>
-                <b>Follow subdomains:</b>
-                <input <%= 'checked' if profile.scope_include_subdomains %>
-                       disabled type="checkbox">
-            </p>
-            <%= messages_for :scope_include_subdomains %>
-        </div>
-
         <% if profile.scope_url_rewrites.any? %>
             <div class="col-md-6">
                 <div>
@@ -130,35 +90,12 @@
         <% end %>
     </div>
     <div class="row-fluid">
-        <% if profile.scope_exclude_binaries %>
-            <div class="col-md-6">
-                <p>
-                    <b>Exclude binaries:</b>
-                    <input <%= 'checked' if profile.scope_exclude_binaries %>
-                           disabled type="checkbox">
-                </p>
-                <%= messages_for :scope_exclude_binaries %>
-            </div>
-        <% end %>
-        <% if profile.scope_https_only %>
-            <div class="col-md-6">
-                <p>
-                    <b>HTTPS only:</b>
-                    <input <%= 'checked' if profile.scope_https_only %>
-                           disabled type="checkbox">
-                </p>
-                <%= messages_for :scope_https_only %>
-            </div>
-        <% end %>
-
-    </div>
-    <div class="row-fluid">
         <% if profile.scope_exclude_path_patterns.any? %>
             <div class="col-md-6">
                 <p>
                     <b>Exclude:</b>
                     <textarea disabled
-                              id="profile_exclude"><%= profile.scope_exclude_path_patterns.join("\n") %></textarea>
+                              id="profile_scope_exclude_path_patterns"><%= profile.scope_exclude_path_patterns.join("\n") %></textarea>
                 </p>
                 <%= messages_for :scope_exclude_path_patterns %>
             </div>
@@ -169,7 +106,7 @@
                 <p>
                     <b>Include:</b>
                     <textarea disabled
-                              id="profile_include"><%= profile.scope_include_path_patterns.join("\n") %></textarea>
+                              id="profile_scope_include_path_patterns"><%= profile.scope_include_path_patterns.join("\n") %></textarea>
                 </p>
                 <%= messages_for :scope_include_path_patterns %>
             </div>
@@ -181,7 +118,7 @@
                 <p>
                     <b>Restrict paths:</b> <br/>
                     <textarea disabled
-                              id="profile_restrict_paths"><%= profile.scope_restrict_paths.join("\n") %></textarea>
+                              id="profile_scope_restrict_paths"><%= profile.scope_restrict_paths.join("\n") %></textarea>
                 </p>
                 <%= messages_for :scope_restrict_paths %>
             </div>
@@ -192,29 +129,19 @@
                 <p>
                     <b>Extend paths:</b>
                     <textarea disabled
-                              id="profile_extend_paths"><%= profile.scope_extend_paths.join("\n") %></textarea>
+                              id="profile_scope_extend_paths"><%= profile.scope_extend_paths.join("\n") %></textarea>
                 </p>
                 <%= messages_for :scope_extend_paths %>
             </div>
         <% end %>
     </div>
     <div class="row-fluid">
-        <% if profile.scope_dom_depth_limit %>
-            <div class="col-md-6">
-                <p>
-                    <b>DOM depth limit:</b>
-                    <%= profile.scope_dom_depth_limit %>
-                </p>
-                <%= messages_for :scope_dom_depth_limit %>
-            </div>
-        <% end %>
-
         <% if profile.scope_exclude_content_patterns.any? %>
             <div class="col-md-6">
                 <p>
                     <b>Exclude pages:</b> <br/>
                     <textarea disabled
-                              id="profile_exclude_pages"><%= profile.scope_exclude_content_patterns.join("\n") %></textarea>
+                              id="profile_scope_exclude_content_patterns"><%= profile.scope_exclude_content_patterns.join("\n") %></textarea>
                 </p>
                 <%= messages_for :scope_exclude_content_patterns %>
             </div>
@@ -257,37 +184,6 @@
             </p>
             <%= messages_for :audit_cookies %>
         </div>
-        <div class="col-md-6">
-            <p>
-                <b>Headers:</b>
-                <input <%= 'checked' if profile.audit_headers %>
-                       disabled type="checkbox">
-            </p>
-            <%= messages_for :audit_headers %>
-        </div>
-    </div>
-    <div class="row-fluid">
-        <% if profile.audit_with_both_http_methods %>
-            <div class="col-md-6">
-                <p>
-                    <b>Fuzz methods:</b>
-                    <input <%= 'checked' if profile.audit_with_both_http_methods %>
-                           disabled type="checkbox">
-                </p>
-                <%= messages_for :audit_with_both_http_methods %>
-            </div>
-        <% end %>
-
-        <% if profile.audit_cookies_extensively %>
-            <div class="col-md-6">
-                <p>
-                    <b>Audit cookies extensively:</b>
-                    <input <%= 'checked' if profile.audit_cookies_extensively %>
-                           disabled type="checkbox">
-                </p>
-                <%= messages_for :audit_cookies_extensively %>
-            </div>
-        <% end %>
     </div>
 
     <div class="row-fluid">
@@ -296,7 +192,7 @@
                 <p>
                     <b>Exclude input vectors:</b>
                     <textarea disabled
-                              id="profile_exclude_vectors"><%= profile.audit_exclude_vector_patterns.join("\n") %></textarea>
+                              id="profile_audit_exclude_vector_patterns"><%= profile.audit_exclude_vector_patterns.join("\n") %></textarea>
                 </p>
                 <%= messages_for :audit_exclude_vector_patterns %>
             </div>
@@ -307,7 +203,7 @@
                 <p>
                     <b>Include input vectors:</b>
                     <textarea disabled
-                              id="profile_exclude_vectors"><%= profile.audit_include_vector_patterns.join("\n") %></textarea>
+                              id="profile_audit_audit_include_vector_patterns"><%= profile.audit_include_vector_patterns.join("\n") %></textarea>
                 </p>
                 <%= messages_for :audit_include_vector_patterns %>
             </div>
@@ -320,13 +216,12 @@
                 <p>
                     <b>Link templates:</b>
                     <textarea disabled
-                              id="profile_exclude_vectors"><%= profile.audit_link_templates.join("\n") %></textarea>
+                              id="profile_audit_link_templates"><%= profile.audit_link_templates.join("\n") %></textarea>
                 </p>
                 <%= messages_for :audit_link_templates %>
             </div>
         <% end %>
     </div>
-
 </section>
 
 <hr/>
@@ -394,78 +289,10 @@
     <div class="row-fluid">
         <div class="col-md-6">
             <p>
-                <b>HTTP request concurrency limit:</b>
-                <%= profile.http_request_concurrency %>
-            </p>
-            <%= messages_for :http_request_concurrency %>
-        </div>
-        <div class="col-md-6">
-            <p>
-                <b>HTTP request queue size:</b>
-                <%= profile.http_request_queue_size %>
-            </p>
-            <%= messages_for :http_request_queue_size %>
-        </div>
-    </div>
-
-    <% if !profile.http_proxy_host.to_s.empty? && profile.http_proxy_port %>
-        <div class="row-fluid">
-            <div class="col-md-6">
-                <p>
-                    <b>Proxy host:</b>
-                    <%= profile.http_proxy_host %>
-                </p>
-                <%= messages_for :http_proxy_host %>
-            </div>
-            <div class="col-md-6">
-                <p>
-                    <b>Proxy port:</b>
-                    <%= profile.http_proxy_port %>
-                </p>
-                <%= messages_for :http_proxy_port %>
-            </div>
-        </div>
-        <div class="row-fluid">
-            <div class="col-md-6">
-                <p>
-                    <b>Proxy username:</b>
-                    <%= profile.http_proxy_username %>
-                </p>
-                <%= messages_for :http_proxy_username %>
-            </div>
-            <div class="col-md-6">
-                <p>
-                    <b>Proxy password:</b>
-                    <%= profile.http_proxy_password %>
-                </p>
-                <%= messages_for :http_proxy_password %>
-            </div>
-        </div>
-        <div class="row-fluid">
-            <div class="col-md-6">
-                <p>
-                    <b>Proxy type:</b>
-                    <%= profile.http_proxy_type %>
-                </p>
-                <%= messages_for :http_proxy_type %>
-            </div>
-        </div>
-    <% end %>
-
-    <div class="row-fluid">
-        <div class="col-md-6">
-            <p>
                 <b>User agent:</b>
                 <%= profile.http_user_agent %>
             </p>
             <%= messages_for :http_user_agent %>
-        </div>
-        <div class="col-md-6">
-            <p>
-                <b>Request timeout:</b>
-                <%= profile.http_request_timeout %>
-            </p>
-            <%= messages_for :http_request_timeout %>
         </div>
     </div>
     <div class="row-fluid">
@@ -473,7 +300,7 @@
             <div class="col-md-6">
                 <p>
                     <b>Cookies:</b>
-                    <textarea disabled id="profile_cookies"><%= profile.http_cookies.map { |k, v| "#{k}=#{v}" }.join("\n") %></textarea>
+                    <textarea disabled id="profile_http_cookies"><%= profile.http_cookies.map { |k, v| "#{k}=#{v}" }.join("\n") %></textarea>
                 </p>
                 <%= messages_for :http_cookies %>
             </div>
@@ -483,23 +310,12 @@
             <div class="col-md-6">
                 <p>
                     <b>Custom headers:</b>
-                    <textarea disabled id="profile_custom_headers"><%= profile.http_request_headers.map { |k, v| "#{k}=#{v}" }.join("\n") %></textarea>
+                    <textarea disabled id="profile_http_request_headers"><%= profile.http_request_headers.map { |k, v| "#{k}=#{v}" }.join("\n") %></textarea>
                 </p>
                 <%= messages_for :http_request_headers %>
             </div>
         <% end %>
     </div>
-
-    <div class="row-fluid">
-        <div class="col-md-6">
-            <p>
-                <b>Redirect limit:</b>
-                <%= profile.http_request_redirect_limit %>
-            </p>
-            <%= messages_for :http_request_redirect_limit %>
-        </div>
-    </div>
-
 </section>
 
 <hr/>
@@ -573,40 +389,6 @@
     <div class="row-fluid">
         <div class="col-md-6">
             <p>
-                <b>Pool size:</b>
-                <%= profile.browser_cluster_pool_size %>
-            </p>
-            <%= messages_for :browser_cluster_pool_size %>
-        </div>
-        <div class="col-md-6">
-            <p>
-                <b>Job timeout:</b>
-                <%= profile.browser_cluster_job_timeout %>
-            </p>
-            <%= messages_for :browser_cluster_job_timeout %>
-        </div>
-    </div>
-
-    <div class="row-fluid">
-        <div class="col-md-6">
-            <p>
-                <b>Worker time-to-live:</b>
-                <%= profile.browser_cluster_worker_time_to_live %>
-            </p>
-            <%= messages_for :browser_cluster_worker_time_to_live %>
-        </div>
-        <div class="col-md-6">
-            <p>
-                <b>Ignore images:</b>
-                <%= profile.browser_cluster_ignore_images %>
-            </p>
-            <%= messages_for :browser_cluster_ignore_images %>
-        </div>
-    </div>
-
-    <div class="row-fluid">
-        <div class="col-md-6">
-            <p>
                 <b>Screen width:</b>
                 <%= profile.browser_cluster_screen_width %>
             </p>
@@ -632,7 +414,6 @@
     </h2>
 
     <div class="row-fluid">
-
         <% if !profile.session_check_url.to_s.empty? && !profile.session_check_pattern.to_s.empty? %>
             <div class="col-md-6">
                 <p>

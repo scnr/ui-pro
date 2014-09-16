@@ -19,11 +19,6 @@ FactoryGirl.define do
         audit_headers false
         checks ['xss', 'xss_tag']
         authorized_by "john@doe.com"
-        http_proxy_host "proxy.com"
-        http_proxy_port 8080
-        http_proxy_username "proxy-user"
-        http_proxy_password "proxy-pass"
-        http_proxy_type "http"
         http_cookies(
             'my-name'      => 'my value',
             'another-name' => 'another value'
@@ -57,7 +52,6 @@ FactoryGirl.define do
             'include-me', 'include-me-too'
         ]
         audit_with_both_http_methods false
-        audit_cookies_extensively false
         scope_exclude_binaries true
         scope_auto_redundant_paths 100
         scope_https_only false

@@ -40,7 +40,6 @@ class Profile < ActiveRecord::Base
 
     RPC_OPTS = [
         :audit_cookies,
-        :audit_cookies_extensively,
         :audit_exclude_vector_patterns,
         :audit_forms,
         :audit_headers,
@@ -60,11 +59,6 @@ class Profile < ActiveRecord::Base
         :http_authentication_password,
         :http_authentication_username,
         :http_cookies,
-        :http_proxy_host,
-        :http_proxy_password,
-        :http_proxy_port,
-        :http_proxy_type,
-        :http_proxy_username,
         :http_request_concurrency,
         :http_request_headers,
         :http_request_queue_size,
