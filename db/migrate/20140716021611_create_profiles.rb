@@ -11,6 +11,7 @@ class CreateProfiles < ActiveRecord::Migration
             t.integer  "scope_page_limit"
             t.integer  "http_request_redirect_limit"
             t.integer  "http_request_concurrency"
+            t.integer  "http_response_max_size"
             t.boolean  "audit_links"
             t.boolean  "audit_forms"
             t.boolean  "audit_cookies"
