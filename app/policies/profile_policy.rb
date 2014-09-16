@@ -67,7 +67,8 @@ class ProfilePolicy < ApplicationPolicy
                 :http_request_redirect_limit, :http_request_timeout,
                 :http_request_queue_size, :browser_cluster_pool_size,
                 :browser_cluster_job_timeout, :browser_cluster_worker_time_to_live,
-                :browser_cluster_ignore_images, :scope_page_limit, { plugins: {} }
+                :browser_cluster_ignore_images, :scope_page_limit, { plugins: {} },
+                :http_response_max_size
             ]
         end
 
