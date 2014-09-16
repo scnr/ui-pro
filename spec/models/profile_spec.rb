@@ -284,13 +284,49 @@ describe Profile do
     end
 
     describe '#to_rpc_options' do
-        it "returns a hash suitable for #{Arachni::Options}#update" do
-            profile_rpc_data = subject.to_rpc_options
+        before :each do
+            Arachni::Options.reset
+        end
 
-            Arachni::Options.update( subject.to_rpc_options )
-            arachni_rpc_data = Arachni::Options.to_rpc_data
+        describe :user do
+            let(:rpc_options) { subject.to_rpc_options :user }
+            let(:flat_rpc_options) { described_class.flatten rpc_options }
 
-            expect(arachni_rpc_data).to eq profile_rpc_data
+            it 'includes user RPC options' do
+                expect( flat_rpc_options.keys.sort ).to eq described_class::USER_RPC_OPTS.map(&:to_s).sort
+                expect(Arachni::Options.hash_to_rpc_data( rpc_options )).to eq Arachni::Options.update( rpc_options ).to_rpc_data
+            end
+        end
+
+        describe :admin do
+            let(:rpc_options) { subject.to_rpc_options :admin }
+            let(:flat_rpc_options) { described_class.flatten rpc_options }
+
+            it 'includes admin RPC options' do
+                expect( flat_rpc_options.keys.sort ).to eq described_class::ADMIN_RPC_OPTS.map(&:to_s).sort
+                expect(Arachni::Options.hash_to_rpc_data( rpc_options )).to eq Arachni::Options.update( rpc_options ).to_rpc_data
+            end
+        end
+
+        describe :all do
+            let(:rpc_options) { subject.to_rpc_options :all }
+            let(:flat_rpc_options) { described_class.flatten rpc_options }
+
+            it 'includes all RPC options' do
+                expect( flat_rpc_options.keys.sort ).to eq described_class::ALL_RPC_OPTS.map(&:to_s).sort
+
+                Arachni::Options.update( rpc_options )
+
+                expect(Arachni::Options.hash_to_rpc_data( rpc_options )).to eq Arachni::Options.to_rpc_data
+            end
+        end
+
+        describe 'by default' do
+            let(:rpc_options) { subject.to_rpc_options }
+
+            it 'includes all RPC options' do
+                expect( rpc_options ).to eq subject.to_rpc_options(:all )
+            end
         end
     end
 

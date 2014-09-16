@@ -38,64 +38,70 @@ class Profile < ActiveRecord::Base
     serialize :plugins,                        Hash
     serialize :input_values,                   Hash
 
-    RPC_OPTS = [
+    USER_RPC_OPTS = [
+        :checks,
+        :platforms,
+        :no_fingerprinting,
+        :input_values,
         :audit_cookies,
         :audit_exclude_vector_patterns,
         :audit_forms,
-        :audit_headers,
         :audit_include_vector_patterns,
-        :audit_include_vectors,
         :audit_link_templates,
         :audit_links,
-        :audit_with_both_http_methods,
-        :authorized_by,
-        :browser_cluster_ignore_images,
-        :browser_cluster_job_timeout,
-        :browser_cluster_pool_size,
         :browser_cluster_screen_height,
         :browser_cluster_screen_width,
-        :browser_cluster_worker_time_to_live,
-        :checks,
         :http_authentication_password,
         :http_authentication_username,
         :http_cookies,
-        :http_request_concurrency,
         :http_request_headers,
-        :http_request_queue_size,
-        :http_request_redirect_limit,
-        :http_request_timeout,
-        :http_response_max_size,
         :http_user_agent,
-        :input_values,
         :session_check_pattern,
         :session_check_url,
-        :no_fingerprinting,
-        :platforms,
-        :plugins,
-        :scope_auto_redundant_paths,
-        :scope_directory_depth_limit,
-        :scope_dom_depth_limit,
-        :scope_exclude_binaries,
         :scope_exclude_content_patterns,
         :scope_exclude_path_patterns,
         :scope_extend_paths,
-        :scope_https_only,
         :scope_include_path_patterns,
-        :scope_include_subdomains,
-        :scope_page_limit,
         :scope_redundant_path_patterns,
         :scope_restrict_paths,
         :scope_url_rewrites
     ]
 
+    ADMIN_RPC_OPTS = [
+        :plugins,
+        :authorized_by,
+        :audit_headers,
+        :audit_with_both_http_methods,
+        :scope_auto_redundant_paths,
+        :scope_directory_depth_limit,
+        :scope_exclude_binaries,
+        :scope_include_subdomains,
+        :scope_https_only,
+        :scope_dom_depth_limit,
+        :http_request_concurrency,
+        :http_request_redirect_limit,
+        :http_request_timeout,
+        :http_request_queue_size,
+        :http_response_max_size,
+        :browser_cluster_pool_size,
+        :browser_cluster_job_timeout,
+        :browser_cluster_worker_time_to_live,
+        :browser_cluster_ignore_images,
+        :scope_page_limit
+    ]
+
+    ALL_RPC_OPTS = USER_RPC_OPTS + ADMIN_RPC_OPTS
+
     def to_s
         name
     end
 
-    def to_rpc_options
+    def to_rpc_options( type = :all )
+        rpc_options = self.class.const_get( "#{type.to_s.upcase}_RPC_OPTS".to_sym )
+
         opts = {}
         attributes.each do |k, v|
-            next if !RPC_OPTS.include?( k.to_sym ) || v.nil? ||
+            next if !rpc_options.include?( k.to_sym ) || v.nil? ||
                 (v.respond_to?( :empty? ) ? v.empty? : false)
 
             if (group_name = find_group_option( k ))
@@ -107,7 +113,7 @@ class Profile < ActiveRecord::Base
             end
         end
 
-        Arachni::Options.hash_to_rpc_data( opts )
+        opts
     end
 
     def export( serializer = YAML )
@@ -173,6 +179,10 @@ class Profile < ActiveRecord::Base
     end
 
     def self.import_from_data( data )
+        new flatten( data )
+    end
+
+    def self.flatten( data )
         options = {}
         data.each do |name, value|
             if Arachni::Options.group_classes.include?( name.to_sym )
@@ -188,7 +198,7 @@ class Profile < ActiveRecord::Base
             end
         end
 
-        new options
+        options
     end
 
     def self.string_list_to_array( string_or_array )
