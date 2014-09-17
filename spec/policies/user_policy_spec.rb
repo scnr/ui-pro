@@ -44,4 +44,23 @@ describe UserPolicy do
         end
     end
 
+    describe '#permitted_attributes' do
+        let(:user) { current_user }
+        let(:permitted_attributes) { subject.new(user, current_user).permitted_attributes }
+
+        it 'returns empty array' do
+            expect(permitted_attributes).to be_empty
+        end
+
+        context 'when the user is an admin' do
+            let(:user) { admin }
+
+            [:role, :profile_override].each do |attribute|
+                it "includes #{attribute}" do
+                    expect(permitted_attributes).to include attribute
+                end
+            end
+        end
+    end
+
 end

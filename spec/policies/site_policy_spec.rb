@@ -179,4 +179,22 @@ describe SitePolicy do
         end
     end
 
+    describe '#permitted_attributes' do
+        let(:permitted_attributes) { subject.new(user, site).permitted_attributes }
+
+        [:protocol, :host, :port].each do |attribute|
+            it "includes #{attribute}" do
+                expect(permitted_attributes).to include attribute
+            end
+        end
+
+        context 'when the user is an admin' do
+            let(:user) { admin }
+
+            it 'includes profile_override' do
+                expect(permitted_attributes).to include :profile_override
+            end
+        end
+    end
+
 end

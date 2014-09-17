@@ -20,7 +20,7 @@ class UserPolicy < ApplicationPolicy
     def permitted_attributes
         return [] if !admin?
 
-        [:role]
+        [:role, :profile_override]
     end
 
 end

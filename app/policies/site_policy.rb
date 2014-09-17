@@ -31,7 +31,13 @@ class SitePolicy < ApplicationPolicy
     end
 
     def permitted_attributes
-        [:protocol, :host, :port]
+        permitted = [:protocol, :host, :port]
+
+        if admin?
+            permitted << :profile_override
+        end
+
+        permitted
     end
 
 end

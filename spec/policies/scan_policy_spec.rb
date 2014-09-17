@@ -164,8 +164,12 @@ describe ScanPolicy do
                 it 'includes profile_id' do
                     expect(permitted_attributes).to include :profile_id
                 end
+
+                it 'includes profile_override' do
+                    expect(permitted_attributes).to include :profile_override
+                end
             end
         end
-
     end
+
 end

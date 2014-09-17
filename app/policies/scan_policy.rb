@@ -17,7 +17,7 @@ class ScanPolicy < ApplicationPolicy
         # Don't allow the scan profile to be changed once a scan has been
         # created unless requested by an admin.
         if scan == Scan || admin?
-            permitted << :profile_id
+            permitted += [ :profile_id, :profile_override ]
         end
 
         permitted << { schedule_attributes: SchedulePolicy.new( user, record ).permitted_attributes }
