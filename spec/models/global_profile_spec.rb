@@ -10,12 +10,13 @@ describe GlobalProfile do
         end
     end
 
-    describe '#to_rpc_options' do
+    describe '.to_rpc_options' do
         before :each do
+            subject
             Arachni::Options.reset
         end
 
-        let(:rpc_options) { subject.to_rpc_options }
+        let(:rpc_options) { described_class.to_rpc_options }
         let(:flat_rpc_options) { described_class.flatten rpc_options }
 
         it 'returns RPC options' do

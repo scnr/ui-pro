@@ -22,4 +22,8 @@ class GlobalProfile < ActiveRecord::Base
         :browser_cluster_ignore_images
     ]
 
+    def self.to_rpc_options
+        first.to_rpc_options
+    end
+
 end
