@@ -19,43 +19,41 @@ class ProfilePolicy < ApplicationPolicy
     end
 
     def permitted_attributes
-        # Set in the default global profile, override as needed in the User or
-        # Site profiles:
-        # * plugins                             =>
-        #   Used to configure the DB logger, login stuff (like autologin or
-        #   custom login plugins for each site), notifier, etc.
-        # * authorized_by                       => User e-mail address
-        # * audit_headers                       => false
-        # * audit_with_both_http_methods        => false
-        # * scope_auto_redundant_paths          => 10
-        # * scope_directory_depth_limit         => 10
-        # * scope_exclude_binaries              => true
-        # * scope_include_subdomains            => false
-        # * scope_https_only                    => false
-        # * scope_dom_depth_limit               => 10
-        # * http_response_max_size              => 200_000
-        # * http_request_concurrency            => 10
-        # * http_request_redirect_limit         => 5
-        # * http_request_timeout                => 5_000
-        # * http_request_queue_size             => 1_000?
-        # * browser_cluster_pool_size           => 10?
-        # * browser_cluster_job_timeout         => 5_000
-        # * browser_cluster_worker_time_to_live => 100
-        # * browser_cluster_ignore_images       => true
-        #
-        # Set in Plan profile:
-        # * scope_page_limit
         [
-            :name, :audit_cookies, :audit_forms, :audit_links, :http_user_agent,
-            :audit_exclude_vector_patterns, :audit_include_vector_patterns,
-            :http_cookies, :http_request_headers, :scope_exclude_path_patterns,
-            :scope_exclude_vectors, :scope_extend_paths, :scope_include_subdomains,
-            :scope_include_path_patterns, :scope_page_limit, :session_check_pattern,
-            :session_check_url, { checks: [] }, :scope_redundant_path_patterns,
-            :scope_restrict_paths, :description, :scope_exclude_content_patterns,
-            :no_fingerprinting, { platforms: [] }, :http_authentication_username,
-            :http_authentication_password, :input_values, :browser_cluster_screen_width,
-            :browser_cluster_screen_height, :audit_link_templates, :scope_url_rewrites
+            :name,
+            :description,
+            { checks:    [] },
+            { platforms: [] },
+            :no_fingerprinting,
+            :input_values,
+            :audit_links,
+            :audit_forms,
+            :audit_cookies,
+            # :audit_headers,
+            :audit_link_templates,
+            # :audit_with_both_http_methods,
+            :audit_exclude_vector_patterns,
+            :audit_include_vector_patterns,
+            :http_user_agent,
+            :http_cookies,
+            :http_request_headers,
+            :scope_page_limit,
+            :scope_extend_paths,
+            :scope_restrict_paths,
+            :scope_include_path_patterns,
+            :scope_exclude_path_patterns,
+            :scope_redundant_path_patterns,
+            :scope_exclude_content_patterns,
+            :scope_exclude_vector_patterns,
+            :scope_include_vector_patterns,
+            :scope_include_subdomains,
+            :scope_url_rewrites,
+            :session_check_pattern,
+            :session_check_url,
+            :http_authentication_username,
+            :http_authentication_password,
+            :browser_cluster_screen_width,
+            :browser_cluster_screen_height
         ]
     end
 end
