@@ -133,6 +133,7 @@ ActiveRecord::Schema.define(version: 20140917024953) do
     t.integer  "plan_id"
     t.string   "name"
     t.text     "description"
+    t.text     "profile_override"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "profile_id"
@@ -163,10 +164,11 @@ ActiveRecord::Schema.define(version: 20140917024953) do
   end
 
   create_table "sites", force: true do |t|
-    t.string   "protocol",   default: "http"
+    t.string   "protocol",         default: "http"
     t.string   "host"
-    t.integer  "port",       default: 80
+    t.integer  "port",             default: 80
     t.integer  "user_id"
+    t.text     "profile_override"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -190,6 +192,7 @@ ActiveRecord::Schema.define(version: 20140917024953) do
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
+    t.text     "profile_override"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "name"

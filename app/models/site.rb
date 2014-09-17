@@ -1,4 +1,5 @@
 class Site < ActiveRecord::Base
+    include ProfileOverride
 
     PROTOCOL_TYPES = %w(http https)
 

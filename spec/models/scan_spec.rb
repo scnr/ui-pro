@@ -195,7 +195,7 @@ describe Scan do
         end
     end
 
-    describe '#to_rpc_options' do
+    describe '#rpc_options' do
         before :all do
             FactoryGirl.create :global_profile
             plan = FactoryGirl.create :plan
@@ -209,9 +209,7 @@ describe Scan do
         end
 
         let(:rpc_options) do
-            subject.to_rpc_options.merge(
-                authorized_by: user.email
-            )
+            subject.rpc_options.merge( 'authorized_by' => user.email )
         end
         let(:normalized_rpc_options) do
             Arachni::Options.hash_to_rpc_data( rpc_options )
@@ -232,6 +230,84 @@ describe Scan do
             Arachni::Options.authorized_by = user.email
 
             expect(normalized_rpc_options).to eq Arachni::Options.to_rpc_data
+        end
+
+        context "when #{User}#profile_override is set" do
+            it 'overrides the configuration' do
+                values = {
+                    '1111111' => '2222'
+                }
+                user.profile_override = {
+                    'dd' => 'f',
+                    'input' => {
+                        'values' => values
+                    }
+                }
+                user.save
+
+                expect(rpc_options['input']['values'][values.keys[0]]).to eq values.values[0]
+            end
+        end
+
+        context "when #{Site}#profile_override is set" do
+            it 'overrides the configuration' do
+                values = {
+                    '222222' => '33333'
+                }
+                site.profile_override = {
+                    'input' => {
+                        'values' => values
+                    }
+                }
+
+                expect(rpc_options['input']['values'][values.keys[0]]).to eq values.values[0]
+            end
+        end
+
+        context "when #{described_class}#profile_override is set" do
+            it 'overrides the configuration' do
+                values = {
+                    '333333' => '444444'
+                }
+                subject.profile_override = {
+                    'input' => {
+                        'values' => values
+                    }
+                }
+
+                expect(rpc_options['input']['values'][values.keys[0]]).to eq values.values[0]
+            end
+        end
+
+        context 'when profile overrides have been specified' do
+            it "has an order of #{User} -> #{Site} -> #{Scan}" do
+                user.profile_override = {
+                    'input' => {
+                        'values' => {
+                            'override' => 'user'
+                        }
+                    }
+                }
+                expect(subject.rpc_options['input']['values']['override']).to eq 'user'
+
+                site.profile_override = {
+                    'input' => {
+                        'values' => {
+                            'override' => 'site'
+                        }
+                    }
+                }
+                expect(subject.rpc_options['input']['values']['override']).to eq 'site'
+
+                subject.profile_override = {
+                    'input' => {
+                        'values' => {
+                            'override' => 'scan'
+                        }
+                    }
+                }
+                expect(subject.rpc_options['input']['values']['override']).to eq 'scan'
+            end
         end
     end
 

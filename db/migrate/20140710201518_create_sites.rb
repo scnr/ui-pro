@@ -5,6 +5,7 @@ class CreateSites < ActiveRecord::Migration
             t.string  :host
             t.integer :port, default: 80
             t.belongs_to :user
+            t.text  :profile_override
 
             t.timestamps
         end

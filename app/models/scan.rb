@@ -1,4 +1,6 @@
 class Scan < ActiveRecord::Base
+    include ProfileOverride
+
     belongs_to :plan
     belongs_to :site
     belongs_to :profile
@@ -32,11 +34,19 @@ class Scan < ActiveRecord::Base
         !!(schedule && schedule.start_at)
     end
 
-    def to_rpc_options
-        profile.to_rpc_options.deep_merge( GlobalProfile.to_rpc_options ).
-            deep_merge( plan.profile.to_rpc_options ).merge(
-            authorized_by: site.user.email
-        )
+    def rpc_options
+        options = profile.to_rpc_options
+        options.deep_merge!( GlobalProfile.to_rpc_options )
+        options.deep_merge!( plan.profile.to_rpc_options )
+        options.merge!( 'authorized_by' => site.user.email )
+
+        # Order is important, we go from User (most generic) to Site (middle-ground)
+        # to Scan (specialized).
+        options.deep_merge!( site.user.profile_override )
+        options.deep_merge!( site.profile_override )
+        options.deep_merge!( profile_override )
+
+        options
     end
 
 end

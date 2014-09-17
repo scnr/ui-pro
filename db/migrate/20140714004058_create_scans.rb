@@ -5,6 +5,7 @@ class CreateScans < ActiveRecord::Migration
       t.belongs_to :plan, index: true
       t.string :name
       t.text :description
+      t.text :profile_override
 
       t.timestamps
     end
