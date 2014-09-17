@@ -4,7 +4,10 @@ class PlanPolicy < ApplicationPolicy
     def permitted_attributes
         [
             :name, :description, :enabled, :price,
-            { profile_attributes: PlanProfilePolicy.new(user, PlanProfile).permitted_attributes }
+            {
+                profile_override_attributes:
+                    ProfileOverridePolicy.new( user, ProfileOverride ).permitted_attributes
+            }
         ]
     end
 

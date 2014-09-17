@@ -2,8 +2,9 @@ describe User, type: :model do
     subject { FactoryGirl.create :user }
     let(:site) { FactoryGirl.create :site }
 
-    it { should respond_to(:email) }
+    expect_it { to have_one  :profile_override }
 
+    it { should respond_to(:email) }
     it { should have_many :profiles }
     it { should have_many :sites }
     it { should have_and_belong_to_many :shared_sites }

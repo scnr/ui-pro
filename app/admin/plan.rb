@@ -9,7 +9,7 @@ ActiveAdmin.register Plan do
             f.input :enabled
         end
 
-        f.inputs 'Profile', for: [:profile, f.object.profile] do |plan_form|
+        f.inputs 'Profile', for: [:profile_override, f.object.profile_override] do |plan_form|
             plan_form.input :scope_page_limit
         end
 
@@ -19,7 +19,7 @@ ActiveAdmin.register Plan do
     controller do
         def new
             @plan = Plan.new
-            @plan.build_profile
+            @plan.build_profile_override
         end
     end
 end

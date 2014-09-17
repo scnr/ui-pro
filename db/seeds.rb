@@ -82,7 +82,7 @@ plan = Plan.create!(
     name:        'My plan',
     description: 'Plan description.',
     price:       20,
-    profile_attributes: {
+    profile_override_attributes: {
         scope_page_limit: 1_000
     }
 )

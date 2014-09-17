@@ -4,6 +4,7 @@ describe Site, type: :model do
     let(:other_scan) { FactoryGirl.create :scan, site: subject }
     let(:user) { FactoryGirl.create :user }
 
+    expect_it { to have_one :profile_override }
     expect_it { to have_one :verification }
     expect_it { to belong_to :user }
     expect_it { to have_and_belong_to_many :users }

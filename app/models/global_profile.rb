@@ -1,7 +1,6 @@
 class GlobalProfile < ActiveRecord::Base
-    include ProfileUtilities
-
-    serialize :plugins, Hash
+    include ProfileRpcHelpers
+    include GlobalProfileAttributes
 
     RPC_OPTS = [
         :plugins,

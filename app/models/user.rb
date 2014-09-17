@@ -1,14 +1,18 @@
 class User < ActiveRecord::Base
-    include ProfileOverride
-
     enum role: [:user, :vip, :admin]
     after_initialize :set_default_role, if: :new_record?
+
+    has_one :profile_override, as: :profile_overridable, dependent: :destroy,
+            autosave: true
+    accepts_nested_attributes_for :profile_override
 
     has_many :profiles
 
     has_many :sites
     has_and_belongs_to_many :shared_sites, class_name: 'Site',
                             foreign_key: :user_id
+
+    after_initialize :prepare_profile_override
 
     def set_default_role
         self.role ||= :user
@@ -29,6 +33,13 @@ class User < ActiveRecord::Base
 
     def to_s
         "#{name} (#{email})"
+    end
+
+    private
+
+    def prepare_profile_override
+        build_profile_override if !profile_override
+        true
     end
 
 end

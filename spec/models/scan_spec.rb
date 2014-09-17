@@ -11,6 +11,7 @@ describe Scan do
     it { should belong_to :plan }
     expect_it { to belong_to :site }
     expect_it { to belong_to :profile }
+    expect_it { to have_one  :profile_override }
     expect_it { to have_one  :schedule }
     expect_it { to have_many :revisions }
 
@@ -199,8 +200,8 @@ describe Scan do
         before :all do
             FactoryGirl.create :global_profile
             plan = FactoryGirl.create :plan
-            plan.build_profile
-            plan.profile.scope_page_limit = 1_000
+            plan.build_profile_override
+            plan.profile_override.scope_page_limit = 1_000
             subject.plan = plan
         end
 
@@ -226,7 +227,7 @@ describe Scan do
             Arachni::Options.update GlobalProfile.to_rpc_options
             expect(normalized_rpc_options).to_not eq Arachni::Options.to_rpc_data
 
-            Arachni::Options.update subject.plan.profile.to_rpc_options
+            Arachni::Options.update subject.plan.profile_override.to_rpc_options
             Arachni::Options.authorized_by = user.email
 
             expect(normalized_rpc_options).to eq Arachni::Options.to_rpc_data
@@ -234,15 +235,8 @@ describe Scan do
 
         context "when #{User}#profile_override is set" do
             it 'overrides the configuration' do
-                values = {
-                    '1111111' => '2222'
-                }
-                user.profile_override = {
-                    'dd' => 'f',
-                    'input' => {
-                        'values' => values
-                    }
-                }
+                values = { '1111111' => '2222' }
+                user.profile_override.input_values = values
                 user.save
 
                 expect(rpc_options['input']['values'][values.keys[0]]).to eq values.values[0]
@@ -251,14 +245,8 @@ describe Scan do
 
         context "when #{Site}#profile_override is set" do
             it 'overrides the configuration' do
-                values = {
-                    '222222' => '33333'
-                }
-                site.profile_override = {
-                    'input' => {
-                        'values' => values
-                    }
-                }
+                values = { '222222' => '33333' }
+                site.profile_override.input_values = values
 
                 expect(rpc_options['input']['values'][values.keys[0]]).to eq values.values[0]
             end
@@ -266,14 +254,8 @@ describe Scan do
 
         context "when #{described_class}#profile_override is set" do
             it 'overrides the configuration' do
-                values = {
-                    '333333' => '444444'
-                }
-                subject.profile_override = {
-                    'input' => {
-                        'values' => values
-                    }
-                }
+                values = { '333333' => '444444' }
+                subject.profile_override.input_values = values
 
                 expect(rpc_options['input']['values'][values.keys[0]]).to eq values.values[0]
             end
@@ -281,31 +263,13 @@ describe Scan do
 
         context 'when profile overrides have been specified' do
             it "has an order of #{User} -> #{Site} -> #{Scan}" do
-                user.profile_override = {
-                    'input' => {
-                        'values' => {
-                            'override' => 'user'
-                        }
-                    }
-                }
+                user.profile_override.input_values = { 'override' => 'user' }
                 expect(subject.rpc_options['input']['values']['override']).to eq 'user'
 
-                site.profile_override = {
-                    'input' => {
-                        'values' => {
-                            'override' => 'site'
-                        }
-                    }
-                }
+                site.profile_override.input_values = { 'override' => 'site' }
                 expect(subject.rpc_options['input']['values']['override']).to eq 'site'
 
-                subject.profile_override = {
-                    'input' => {
-                        'values' => {
-                            'override' => 'scan'
-                        }
-                    }
-                }
+                subject.profile_override.input_values = { 'override' => 'scan' }
                 expect(subject.rpc_options['input']['values']['override']).to eq 'scan'
             end
         end

@@ -1,7 +1,9 @@
 class Site < ActiveRecord::Base
-    include ProfileOverride
-
     PROTOCOL_TYPES = %w(http https)
+
+    has_one :profile_override, as: :profile_overridable, dependent: :destroy,
+            autosave: true
+    accepts_nested_attributes_for :profile_override
 
     has_one :verification, dependent: :destroy, autosave: true,
             foreign_key: 'site_id', class: SiteVerification
@@ -24,6 +26,8 @@ class Site < ActiveRecord::Base
 
     validates_presence_of     :port
     validates_numericality_of :port
+
+    before_save :build_profile_override
 
     def url
         u = "#{protocol}://#{host}"

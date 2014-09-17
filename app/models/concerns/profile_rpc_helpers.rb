@@ -1,6 +1,6 @@
 require 'active_support/concern'
 
-module ProfileUtilities
+module ProfileRpcHelpers
     extend ActiveSupport::Concern
 
     module ClassMethods
