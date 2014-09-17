@@ -22,7 +22,6 @@ class CreateProfiles < ActiveRecord::Migration
             t.text     "scope_restrict_paths"
             t.text     "scope_extend_paths"
             t.boolean  "audit_with_both_http_methods"
-            t.boolean  "scope_exclude_binaries"
             t.text     "session_check_url"
             t.text     "session_check_pattern"
             t.boolean  "no_fingerprinting"
