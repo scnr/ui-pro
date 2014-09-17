@@ -45,7 +45,7 @@ class ProfilePolicy < ApplicationPolicy
         #
         # Set in Plan profile:
         # * scope_page_limit
-        permitted = [
+        [
             :name, :audit_cookies, :audit_forms, :audit_links, :http_user_agent,
             :audit_exclude_vector_patterns, :audit_include_vector_patterns,
             :http_cookies, :http_request_headers, :scope_exclude_path_patterns,
@@ -57,21 +57,5 @@ class ProfilePolicy < ApplicationPolicy
             :http_authentication_password, :input_values, :browser_cluster_screen_width,
             :browser_cluster_screen_height, :audit_link_templates, :scope_url_rewrites
         ]
-
-        if user.admin?
-            permitted += [
-                :authorized_by, :audit_headers, :audit_with_both_http_methods,
-                :scope_auto_redundant_paths, :scope_directory_depth_limit,
-                :scope_exclude_binaries, :scope_include_subdomains,
-                :scope_https_only, :scope_dom_depth_limit, :http_request_concurrency,
-                :http_request_redirect_limit, :http_request_timeout,
-                :http_request_queue_size, :browser_cluster_pool_size,
-                :browser_cluster_job_timeout, :browser_cluster_worker_time_to_live,
-                :browser_cluster_ignore_images, :scope_page_limit, { plugins: {} },
-                :http_response_max_size
-            ]
-        end
-
-        permitted
     end
 end

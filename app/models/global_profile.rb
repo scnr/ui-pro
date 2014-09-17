@@ -5,8 +5,6 @@ class GlobalProfile < ActiveRecord::Base
 
     RPC_OPTS = [
         :plugins,
-        :authorized_by,
-        :audit_with_both_http_methods,
         :scope_auto_redundant_paths,
         :scope_directory_depth_limit,
         :scope_exclude_binaries,
@@ -21,8 +19,9 @@ class GlobalProfile < ActiveRecord::Base
         :browser_cluster_pool_size,
         :browser_cluster_job_timeout,
         :browser_cluster_worker_time_to_live,
-        :browser_cluster_ignore_images,
-        :scope_page_limit
+        :browser_cluster_ignore_images
     ]
+
+
 
 end

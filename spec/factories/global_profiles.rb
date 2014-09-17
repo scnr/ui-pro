@@ -1,5 +1,3 @@
-# Read about factories at https://github.com/thoughtbot/factory_girl
-
 FactoryGirl.define do
     factory :global_profile do
         scope_directory_depth_limit 10
@@ -13,7 +11,6 @@ FactoryGirl.define do
                 'my-option' => 'stuff'
             }
         )
-        audit_with_both_http_methods false
         scope_exclude_binaries true
         scope_auto_redundant_paths 100
         scope_https_only false

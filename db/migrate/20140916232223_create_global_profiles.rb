@@ -7,7 +7,6 @@ class CreateGlobalProfiles < ActiveRecord::Migration
           t.integer  "http_response_max_size"
           t.boolean  "scope_include_subdomains"
           t.text     "plugins"
-          t.boolean  "audit_with_both_http_methods"
           t.boolean  "scope_exclude_binaries"
           t.integer  "scope_auto_redundant_paths"
           t.boolean  "scope_https_only"
