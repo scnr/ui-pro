@@ -11,7 +11,7 @@ module ProfileOverride
 
     def validate_profile_override
         begin
-            Arachni::Options.hash_to_rpc_data( profile_override || {} )
+            Arachni::Options.hash_to_rpc_data( profile_override )
             true
         rescue NoMethodError => e
             errors.add :profile_override, e.to_s
