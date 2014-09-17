@@ -1,7 +1,7 @@
 # Read about factories at https://github.com/thoughtbot/factory_girl
 
 FactoryGirl.define do
-    factory :default_profile do
+    factory :global_profile do
         scope_directory_depth_limit 10
         http_request_redirect_limit 5
         http_request_concurrency 20

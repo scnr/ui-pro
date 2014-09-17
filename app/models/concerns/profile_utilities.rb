@@ -24,10 +24,6 @@ module ProfileUtilities
         end
     end
 
-    def to_s
-        name
-    end
-
     def to_rpc_options
         opts = {}
         attributes.each do |k, v|

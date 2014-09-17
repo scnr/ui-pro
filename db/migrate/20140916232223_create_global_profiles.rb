@@ -1,6 +1,6 @@
-class CreateDefaultProfiles < ActiveRecord::Migration
+class CreateGlobalProfiles < ActiveRecord::Migration
   def change
-      create_table :default_profiles do |t|
+      create_table :global_profiles do |t|
           t.integer  "scope_directory_depth_limit"
           t.integer  "http_request_redirect_limit"
           t.integer  "http_request_concurrency"

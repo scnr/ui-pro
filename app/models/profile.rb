@@ -80,6 +80,10 @@ class Profile < ActiveRecord::Base
         end
     end
 
+    def to_s
+        name
+    end
+
     %w(scope_exclude_path_patterns scope_exclude_content_patterns
         scope_include_path_patterns scope_restrict_paths scope_extend_paths
         audit_exclude_vector_patterns audit_include_vector_patterns

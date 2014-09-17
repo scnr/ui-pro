@@ -1,4 +1,4 @@
-class DefaultProfile < ActiveRecord::Base
+class GlobalProfile < ActiveRecord::Base
     include ProfileUtilities
 
     serialize :plugins, Hash
