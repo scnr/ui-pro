@@ -5,6 +5,7 @@ class CreateSchedules < ActiveRecord::Migration
             t.integer :day_frequency
             t.datetime :start_at
             t.float :stop_after_hours
+            t.boolean :stop_suspend
             t.belongs_to :scan
 
             t.timestamps

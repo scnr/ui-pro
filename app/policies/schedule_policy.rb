@@ -14,7 +14,7 @@ class SchedulePolicy < ApplicationPolicy
     end
 
     def permitted_attributes
-        [:month_frequency, :day_frequency, :start_at, :stop_after_hours]
+        [:month_frequency, :day_frequency, :start_at, :stop_after_hours, :stop_suspend]
     end
 
 end
