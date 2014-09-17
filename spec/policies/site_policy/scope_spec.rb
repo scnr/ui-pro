@@ -6,6 +6,7 @@ describe SitePolicy::Scope do
     let(:other_site) { FactoryGirl.create :site, host: 'fssf.fff' }
 
     before do
+        Site.delete_all
         site
         other_site
     end
