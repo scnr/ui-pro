@@ -10,7 +10,8 @@ feature 'Profile index page' do
     let(:admin) { FactoryGirl.create :user, :admin, email: 'ff@ff.cc' }
     let(:profile) { FactoryGirl.create :profile }
     let(:other_profile) { FactoryGirl.create :profile, name: 'Stuff' }
-    let(:scan) { FactoryGirl.create :scan }
+    let(:site) { FactoryGirl.create :site }
+    let(:scan) { FactoryGirl.create :scan, site: site }
 
     after(:each) do
         Warden.test_reset!

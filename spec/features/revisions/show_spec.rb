@@ -9,8 +9,8 @@ feature 'Revision page' do
 
     let(:user) { FactoryGirl.create :user, sites: [site] }
     let(:other_user) { FactoryGirl.create :user, email: 'dd@ss.cc', shared_sites: [site] }
-    let(:site) { FactoryGirl.create :site, scans: [scan] }
-    let(:scan) { FactoryGirl.create :scan, revisions: [revision] }
+    let(:site) { FactoryGirl.create :site }
+    let(:scan) { FactoryGirl.create :scan, site: site, revisions: [revision] }
     let(:revision) { FactoryGirl.create :revision }
 
     after(:each) do

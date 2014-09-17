@@ -3,8 +3,10 @@ describe SchedulePolicy do
 
     let(:user) { FactoryGirl.build_stubbed :user }
     let(:admin) { FactoryGirl.build_stubbed :user, :admin }
-    let(:site) { FactoryGirl.create :site, scans: [scan] }
-    let(:scan) { FactoryGirl.create :scan, schedule: FactoryGirl.create( :schedule ) }
+    let(:site) { FactoryGirl.create :site }
+    let(:scan) do
+        FactoryGirl.create :scan, site: site, schedule: FactoryGirl.create( :schedule )
+    end
     let(:schedule) { FactoryGirl.create( :schedule, scan: scan ) }
 
     %w(index).each do |action|

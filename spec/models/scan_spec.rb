@@ -4,7 +4,8 @@ describe Scan do
     subject { FactoryGirl.create :scan, site: site }
     let(:other_scan) { FactoryGirl.create :scan, site: site }
 
-    let(:site) { FactoryGirl.create :site }
+    let(:user) { FactoryGirl.create :user }
+    let(:site) { FactoryGirl.create :site, user: user }
     let(:other_site) { FactoryGirl.create :site, host: 'ff.dd' }
 
     it { should belong_to :plan }
@@ -87,6 +88,8 @@ describe Scan do
         end
 
         describe :unscheduled do
+            before { described_class.delete_all }
+
             it "returns scans without #{Scan}#start_at" do
                 scheduled
                 unscheduled
@@ -159,6 +162,76 @@ describe Scan do
 
                 expect(subject.save).to be_truthy
             end
+        end
+
+        describe '#site' do
+            let(:site) { FactoryGirl.create :site }
+
+            it 'is required' do
+                subject.site = nil
+
+                expect(subject.save).to be_falsey
+                expect(subject.errors).to include :site
+
+                subject.site = site
+
+                expect(subject.save).to be_truthy
+            end
+        end
+
+        describe '#plan' do
+            let(:plan) { FactoryGirl.create :plan }
+
+            it 'is required' do
+                subject.plan = nil
+
+                expect(subject.save).to be_falsey
+                expect(subject.errors).to include :plan
+
+                subject.plan = plan
+
+                expect(subject.save).to be_truthy
+            end
+        end
+    end
+
+    describe '#to_rpc_options' do
+        before :all do
+            FactoryGirl.create :global_profile
+            plan = FactoryGirl.create :plan
+            plan.build_profile
+            plan.profile.scope_page_limit = 1_000
+            subject.plan = plan
+        end
+
+        before :each do
+            Arachni::Options.reset
+        end
+
+        let(:rpc_options) do
+            subject.to_rpc_options.merge(
+                authorized_by: user.email
+            )
+        end
+        let(:normalized_rpc_options) do
+            Arachni::Options.hash_to_rpc_data( rpc_options )
+        end
+
+        it 'returns RPC options' do
+            expect(normalized_rpc_options).to eq Arachni::Options.update( rpc_options ).to_rpc_data
+        end
+
+        it 'combines all profile settings' do
+            Arachni::Options.update subject.profile.to_rpc_options
+            expect(normalized_rpc_options).to_not eq Arachni::Options.to_rpc_data
+
+            Arachni::Options.update GlobalProfile.to_rpc_options
+            expect(normalized_rpc_options).to_not eq Arachni::Options.to_rpc_data
+
+            Arachni::Options.update subject.plan.profile.to_rpc_options
+            Arachni::Options.authorized_by = user.email
+
+            expect(normalized_rpc_options).to eq Arachni::Options.to_rpc_data
         end
     end
 

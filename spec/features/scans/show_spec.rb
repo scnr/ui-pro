@@ -9,8 +9,8 @@ feature 'Scan page' do
 
     let(:user) { FactoryGirl.create :user, sites: [site] }
     let(:other_user) { FactoryGirl.create :user, email: 'dd@ss.cc', shared_sites: [site] }
-    let(:site) { FactoryGirl.create :site, scans: [scan] }
-    let(:scan) { FactoryGirl.create :scan, profile: FactoryGirl.create(:profile) }
+    let(:site) { FactoryGirl.create :site}
+    let(:scan) { FactoryGirl.create :scan, site: site, profile: FactoryGirl.create(:profile) }
 
     after(:each) do
         Warden.test_reset!

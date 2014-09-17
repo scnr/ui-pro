@@ -1,5 +1,5 @@
 describe SitePolicy::Scope do
-    subject { described_class.new( user, Site ).resolve }
+    subject { described_class.new( user, Site ).resolve.to_a }
     let(:simple_user) { FactoryGirl.build_stubbed :user }
     let(:admin) { FactoryGirl.build_stubbed :user, :admin }
     let(:site) { FactoryGirl.create :site }

@@ -13,6 +13,8 @@ class Scan < ActiveRecord::Base
     validates_presence_of   :name
     validates_uniqueness_of :name, scope: :site
 
+    validates_presence_of   :site
+    validates_presence_of   :plan
     validates_presence_of   :profile
 
     scope :scheduled,   -> do
@@ -29,4 +31,12 @@ class Scan < ActiveRecord::Base
     def scheduled?
         !!(schedule && schedule.start_at)
     end
+
+    def to_rpc_options
+        profile.to_rpc_options.deep_merge( GlobalProfile.to_rpc_options ).
+            deep_merge( plan.profile.to_rpc_options ).merge(
+            authorized_by: site.user.email
+        )
+    end
+
 end

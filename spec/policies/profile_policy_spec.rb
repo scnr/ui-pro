@@ -4,7 +4,10 @@ describe ProfilePolicy do
     let(:user) { FactoryGirl.build_stubbed :user }
     let(:admin) { FactoryGirl.build_stubbed :user, :admin }
     let(:profile) { FactoryGirl.create :profile }
-    let(:scan) { FactoryGirl.create :scan }
+    let(:site) do
+        FactoryGirl.create( :site, user: FactoryGirl.create( :user ) )
+    end
+    let(:scan) { FactoryGirl.create :scan, site: site }
 
     %w(index new copy create).each do |action|
         permissions "#{action}?" do

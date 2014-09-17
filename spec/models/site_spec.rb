@@ -1,7 +1,7 @@
 describe Site, type: :model do
     subject { @site = FactoryGirl.create(:site) }
-    let(:scan) { FactoryGirl.create :scan }
-    let(:other_scan) { FactoryGirl.create :scan }
+    let(:scan) { FactoryGirl.create :scan, site: subject }
+    let(:other_scan) { FactoryGirl.create :scan, site: subject }
     let(:user) { FactoryGirl.create :user }
 
     expect_it { to have_one :verification }

@@ -9,8 +9,8 @@ feature 'Scan index' do
 
     let(:user) { FactoryGirl.create :user, sites: [site] }
     let(:site) { FactoryGirl.create :site }
-    let(:scan) { FactoryGirl.create :scan, profile: profile }
-    let(:other_scan) { FactoryGirl.create :scan, name: 'Blah', profile: profile }
+    let(:scan) { FactoryGirl.create :scan, site: site, profile: profile }
+    let(:other_scan) { FactoryGirl.create :scan, site: site, name: 'Blah', profile: profile }
     let(:profile) { FactoryGirl.create :profile }
 
     after(:each) do

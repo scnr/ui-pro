@@ -8,7 +8,8 @@ feature 'New scan page' do
 
     let(:user) { FactoryGirl.create :user, sites: [site], profiles: [other_profile, profile] }
     let(:other_user) { FactoryGirl.create :user, email: 'dd@ss.cc', shared_sites: [site] }
-    let(:site) { FactoryGirl.create :site  }
+    let(:site) { FactoryGirl.create :site }
+    let(:plan) { FactoryGirl.create :plan }
     let(:profile) { FactoryGirl.create :profile, name: 'Stuff' }
     let(:other_profile) { FactoryGirl.create :profile, name: 'Other stuff' }
 
@@ -20,6 +21,7 @@ feature 'New scan page' do
     end
 
     before do
+        plan
         site.verification.verified!
 
         login_as user, scope: :user
@@ -34,6 +36,7 @@ feature 'New scan page' do
         fill_in 'Name', with: name
         fill_in 'Description', with: description
         select profile.name, from: 'Profile'
+        select plan.name, from: 'Plan'
 
         select '2015', from: 'scan_schedule_attributes_start_at_1i'
         select 'March', from: 'scan_schedule_attributes_start_at_2i'
@@ -69,6 +72,7 @@ feature 'New scan page' do
         fill_in 'Name', with: name
         fill_in 'Description', with: description
         select profile.name, from: 'Profile'
+        select plan.name, from: 'Plan'
 
         click_button 'Create'
 
@@ -102,10 +106,21 @@ feature 'New scan page' do
         end
     end
 
+    feature 'when the plan is missing' do
+        scenario 'user sees an error' do
+            fill_in 'Name', with: name
+            select profile.name, from: 'Profile'
+            click_button 'Create'
+
+            expect(find(:div, '.scan_plan.error')).to have_content "can't be blank"
+        end
+    end
+
     feature 'when start_at is missing' do
         scenario 'the scan is not scheduled' do
             fill_in 'Name', with: name
             select profile.name, from: 'Profile'
+            select plan.name, from: 'Plan'
 
             click_button 'Create'
 

@@ -9,8 +9,10 @@ feature 'Edit scan page' do
 
     let(:user) { FactoryGirl.create :user, sites: [site], profiles: [other_profile, profile] }
     let(:other_user) { FactoryGirl.create :user, email: 'dd@ss.cc', shared_sites: [site] }
-    let(:site) { FactoryGirl.create :site, scans: [scan] }
-    let(:scan) { FactoryGirl.create :scan, profile: profile, schedule: FactoryGirl.create(:schedule) }
+    let(:site) { FactoryGirl.create :site }
+    let(:scan) do
+        FactoryGirl.create :scan, profile: profile, site: site, schedule: FactoryGirl.create(:schedule)
+    end
     let(:profile) { FactoryGirl.create :profile, name: 'Stuff' }
     let(:other_profile) { FactoryGirl.create :profile, name: 'Other stuff' }
 

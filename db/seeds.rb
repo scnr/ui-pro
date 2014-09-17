@@ -78,6 +78,15 @@ p = Profile.create! arachni_defaults.merge(
 )
 puts 'SQLi profile created: ' << p.name
 
+plan = Plan.create!(
+    name:        'My plan',
+    description: 'Plan description.',
+    price:       20,
+    profile_attributes: {
+        scope_page_limit: 1_000
+    }
+)
+
 site = user.sites.create(
     protocol: 'http',
     host:     'test.com',
@@ -88,7 +97,8 @@ site.verification.verified!
 scan = site.scans.create(
     profile:     p,
     name:        'my scan',
-    description: 'my description'
+    description: 'my description',
+    plan:        plan
 )
 
 scan.build_schedule

@@ -289,7 +289,6 @@ describe Profile do
         end
 
         let(:rpc_options) { subject.to_rpc_options }
-        let(:flat_rpc_options) { described_class.flatten rpc_options }
 
         it 'returns RPC options' do
             expect(Arachni::Options.hash_to_rpc_data( rpc_options )).to eq Arachni::Options.update( rpc_options ).to_rpc_data
