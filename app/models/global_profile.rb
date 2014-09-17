@@ -22,6 +22,4 @@ class GlobalProfile < ActiveRecord::Base
         :browser_cluster_ignore_images
     ]
 
-
-
 end

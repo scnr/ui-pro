@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140916232223) do
+ActiveRecord::Schema.define(version: 20140917024953) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -45,6 +45,13 @@ ActiveRecord::Schema.define(version: 20140916232223) do
     t.integer  "browser_cluster_job_timeout"
     t.integer  "browser_cluster_worker_time_to_live"
     t.boolean  "browser_cluster_ignore_images"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "plan_profiles", force: true do |t|
+    t.integer  "scope_page_limit"
+    t.integer  "plan_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
