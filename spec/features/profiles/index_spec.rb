@@ -18,6 +18,7 @@ feature 'Profile index page' do
     end
 
     before do
+        Scan.delete_all
         other_profile
         user.profiles << profile
     end
