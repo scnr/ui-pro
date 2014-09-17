@@ -1,17 +1,17 @@
 class Profile < ActiveRecord::Base
+    include ProfileUtilities
 
     belongs_to :user
     has_many   :scans
-    belongs_to :plan
 
     DESCRIPTIONS_FILE = "#{Rails.root}/config/profile/attributes.yml"
+
+    validates_presence_of   :description
+    validate :validate_description
 
     validates_presence_of   :name
     validates_uniqueness_of :name, scope: :user
 
-    validates_presence_of   :description
-
-    validate :validate_description
     validate :validate_scope_redundant_path_patterns
     validate :validate_http_cookies
     validate :validate_http_request_headers
@@ -35,10 +35,9 @@ class Profile < ActiveRecord::Base
     serialize :audit_link_templates,           Array
     serialize :checks,                         Array
     serialize :platforms,                      Array
-    serialize :plugins,                        Hash
     serialize :input_values,                   Hash
 
-    USER_RPC_OPTS = [
+    RPC_OPTS = [
         :checks,
         :platforms,
         :no_fingerprinting,
@@ -46,6 +45,7 @@ class Profile < ActiveRecord::Base
         :audit_cookies,
         :audit_exclude_vector_patterns,
         :audit_forms,
+        :audit_headers,
         :audit_include_vector_patterns,
         :audit_link_templates,
         :audit_links,
@@ -66,55 +66,6 @@ class Profile < ActiveRecord::Base
         :scope_restrict_paths,
         :scope_url_rewrites
     ]
-
-    ADMIN_RPC_OPTS = [
-        :plugins,
-        :authorized_by,
-        :audit_headers,
-        :audit_with_both_http_methods,
-        :scope_auto_redundant_paths,
-        :scope_directory_depth_limit,
-        :scope_exclude_binaries,
-        :scope_include_subdomains,
-        :scope_https_only,
-        :scope_dom_depth_limit,
-        :http_request_concurrency,
-        :http_request_redirect_limit,
-        :http_request_timeout,
-        :http_request_queue_size,
-        :http_response_max_size,
-        :browser_cluster_pool_size,
-        :browser_cluster_job_timeout,
-        :browser_cluster_worker_time_to_live,
-        :browser_cluster_ignore_images,
-        :scope_page_limit
-    ]
-
-    ALL_RPC_OPTS = USER_RPC_OPTS + ADMIN_RPC_OPTS
-
-    def to_s
-        name
-    end
-
-    def to_rpc_options( type = :all )
-        rpc_options = self.class.const_get( "#{type.to_s.upcase}_RPC_OPTS".to_sym )
-
-        opts = {}
-        attributes.each do |k, v|
-            next if !rpc_options.include?( k.to_sym ) || v.nil? ||
-                (v.respond_to?( :empty? ) ? v.empty? : false)
-
-            if (group_name = find_group_option( k ))
-                group_name = group_name.to_s
-                opts[group_name] ||= {}
-                opts[group_name][k[group_name.size+1..-1]] = v
-            else
-                opts[k] = v
-            end
-        end
-
-        opts
-    end
 
     def export( serializer = YAML )
         profile_hash = to_rpc_options
@@ -182,25 +133,6 @@ class Profile < ActiveRecord::Base
         new flatten( data )
     end
 
-    def self.flatten( data )
-        options = {}
-        data.each do |name, value|
-            if Arachni::Options.group_classes.include?( name.to_sym )
-                value.each do |k, v|
-                    key = "#{name}_#{k}"
-                    next if !attribute_names.include?( key.to_s )
-
-                    options[key] = v
-                end
-            else
-                next if !attribute_names.include?( name.to_s )
-                options[name] = value
-            end
-        end
-
-        options
-    end
-
     def self.string_list_to_array( string_or_array )
         case string_or_array
             when Array
@@ -221,15 +153,6 @@ class Profile < ActiveRecord::Base
     end
 
     private
-
-    def find_group_option( name )
-        Arachni::Options.group_classes.keys.find { |n| name.start_with? "#{n}_" }
-    end
-
-    def validate_description
-        return if ActionController::Base.helpers.strip_tags( description ) == description
-        errors.add :description, 'cannot contain HTML, please use Markdown instead'
-    end
 
     def validate_scope_redundant_path_patterns
         scope_redundant_path_patterns.each do |pattern, counter|
@@ -307,6 +230,11 @@ class Profile < ActiveRecord::Base
             next if available.include? platform.to_s
             errors.add :platforms, "'#{platform}' does not exist"
         end
+    end
+
+    def validate_description
+        return if ActionController::Base.helpers.strip_tags( description ) == description
+        errors.add :description, 'cannot contain HTML, please use Markdown instead'
     end
 
 end

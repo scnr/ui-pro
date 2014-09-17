@@ -1,0 +1,28 @@
+class DefaultProfile < ActiveRecord::Base
+    include ProfileUtilities
+
+    serialize :plugins, Hash
+
+    RPC_OPTS = [
+        :plugins,
+        :authorized_by,
+        :audit_with_both_http_methods,
+        :scope_auto_redundant_paths,
+        :scope_directory_depth_limit,
+        :scope_exclude_binaries,
+        :scope_include_subdomains,
+        :scope_https_only,
+        :scope_dom_depth_limit,
+        :http_request_concurrency,
+        :http_request_redirect_limit,
+        :http_request_timeout,
+        :http_request_queue_size,
+        :http_response_max_size,
+        :browser_cluster_pool_size,
+        :browser_cluster_job_timeout,
+        :browser_cluster_worker_time_to_live,
+        :browser_cluster_ignore_images,
+        :scope_page_limit
+    ]
+
+end

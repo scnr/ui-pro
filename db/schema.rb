@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140914235651) do
+ActiveRecord::Schema.define(version: 20140916232223) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -27,6 +27,34 @@ ActiveRecord::Schema.define(version: 20140914235651) do
   add_index "active_admin_comments", ["author_type", "author_id"], name: "index_active_admin_comments_on_author_type_and_author_id"
   add_index "active_admin_comments", ["namespace"], name: "index_active_admin_comments_on_namespace"
   add_index "active_admin_comments", ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id"
+
+  create_table "default_profiles", force: true do |t|
+    t.integer  "plan_id"
+    t.boolean  "default"
+    t.string   "name"
+    t.text     "description"
+    t.integer  "scope_directory_depth_limit"
+    t.integer  "http_request_redirect_limit"
+    t.integer  "http_request_concurrency"
+    t.integer  "http_response_max_size"
+    t.boolean  "scope_include_subdomains"
+    t.text     "plugins"
+    t.boolean  "audit_with_both_http_methods"
+    t.boolean  "scope_exclude_binaries"
+    t.integer  "scope_auto_redundant_paths"
+    t.boolean  "scope_https_only"
+    t.integer  "http_request_timeout"
+    t.integer  "http_request_queue_size"
+    t.integer  "scope_dom_depth_limit"
+    t.integer  "browser_cluster_pool_size"
+    t.integer  "browser_cluster_job_timeout"
+    t.integer  "browser_cluster_worker_time_to_live"
+    t.boolean  "browser_cluster_ignore_images"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "default_profiles", ["plan_id"], name: "index_default_profiles_on_plan_id"
 
   create_table "plans", force: true do |t|
     t.string   "name"
@@ -45,25 +73,17 @@ ActiveRecord::Schema.define(version: 20140914235651) do
     t.string   "name"
     t.text     "description"
     t.text     "scope_redundant_path_patterns"
-    t.integer  "scope_directory_depth_limit"
-    t.integer  "scope_page_limit"
-    t.integer  "http_request_redirect_limit"
-    t.integer  "http_request_concurrency"
-    t.integer  "http_response_max_size"
     t.boolean  "audit_links"
     t.boolean  "audit_forms"
     t.boolean  "audit_cookies"
     t.boolean  "audit_headers"
     t.text     "checks"
-    t.text     "authorized_by"
     t.text     "http_cookies"
     t.text     "http_user_agent"
     t.text     "scope_exclude_path_patterns"
     t.text     "scope_exclude_content_patterns"
     t.text     "audit_exclude_vector_patterns"
     t.text     "scope_include_path_patterns"
-    t.boolean  "scope_include_subdomains"
-    t.text     "plugins"
     t.text     "http_request_headers"
     t.text     "scope_restrict_paths"
     t.text     "scope_extend_paths"
@@ -74,8 +94,6 @@ ActiveRecord::Schema.define(version: 20140914235651) do
     t.text     "session_check_url"
     t.text     "session_check_pattern"
     t.integer  "http_request_timeout"
-    t.datetime "created_at"
-    t.datetime "updated_at"
     t.boolean  "no_fingerprinting"
     t.text     "platforms"
     t.string   "http_authentication_username"
@@ -92,6 +110,8 @@ ActiveRecord::Schema.define(version: 20140914235651) do
     t.boolean  "browser_cluster_ignore_images"
     t.integer  "browser_cluster_screen_width"
     t.integer  "browser_cluster_screen_height"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "profiles", ["plan_id"], name: "index_profiles_on_plan_id"

@@ -234,7 +234,7 @@ describe Profile do
     end
 
     %w(http_cookies http_request_headers scope_redundant_path_patterns
-        scope_url_rewrites plugins input_values).each do |attr|
+        scope_url_rewrites input_values).each do |attr|
 
         describe "#{attr}" do
             it 'is a Hash' do
@@ -288,45 +288,11 @@ describe Profile do
             Arachni::Options.reset
         end
 
-        describe :user do
-            let(:rpc_options) { subject.to_rpc_options :user }
-            let(:flat_rpc_options) { described_class.flatten rpc_options }
+        let(:rpc_options) { subject.to_rpc_options }
+        let(:flat_rpc_options) { described_class.flatten rpc_options }
 
-            it 'includes user RPC options' do
-                expect( flat_rpc_options.keys.sort ).to eq described_class::USER_RPC_OPTS.map(&:to_s).sort
-                expect(Arachni::Options.hash_to_rpc_data( rpc_options )).to eq Arachni::Options.update( rpc_options ).to_rpc_data
-            end
-        end
-
-        describe :admin do
-            let(:rpc_options) { subject.to_rpc_options :admin }
-            let(:flat_rpc_options) { described_class.flatten rpc_options }
-
-            it 'includes admin RPC options' do
-                expect( flat_rpc_options.keys.sort ).to eq described_class::ADMIN_RPC_OPTS.map(&:to_s).sort
-                expect(Arachni::Options.hash_to_rpc_data( rpc_options )).to eq Arachni::Options.update( rpc_options ).to_rpc_data
-            end
-        end
-
-        describe :all do
-            let(:rpc_options) { subject.to_rpc_options :all }
-            let(:flat_rpc_options) { described_class.flatten rpc_options }
-
-            it 'includes all RPC options' do
-                expect( flat_rpc_options.keys.sort ).to eq described_class::ALL_RPC_OPTS.map(&:to_s).sort
-
-                Arachni::Options.update( rpc_options )
-
-                expect(Arachni::Options.hash_to_rpc_data( rpc_options )).to eq Arachni::Options.to_rpc_data
-            end
-        end
-
-        describe 'by default' do
-            let(:rpc_options) { subject.to_rpc_options }
-
-            it 'includes all RPC options' do
-                expect( rpc_options ).to eq subject.to_rpc_options(:all )
-            end
+        it 'includes user RPC options' do
+            expect(Arachni::Options.hash_to_rpc_data( rpc_options )).to eq Arachni::Options.update( rpc_options ).to_rpc_data
         end
     end
 

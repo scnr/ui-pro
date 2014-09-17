@@ -7,25 +7,17 @@ class CreateProfiles < ActiveRecord::Migration
             t.string   "name"
             t.text     "description"
             t.text     "scope_redundant_path_patterns"
-            t.integer  "scope_directory_depth_limit"
-            t.integer  "scope_page_limit"
-            t.integer  "http_request_redirect_limit"
-            t.integer  "http_request_concurrency"
-            t.integer  "http_response_max_size"
             t.boolean  "audit_links"
             t.boolean  "audit_forms"
             t.boolean  "audit_cookies"
             t.boolean  "audit_headers"
             t.text     "checks"
-            t.text     "authorized_by"
             t.text     "http_cookies"
             t.text     "http_user_agent"
             t.text     "scope_exclude_path_patterns"
             t.text     "scope_exclude_content_patterns"
             t.text     "audit_exclude_vector_patterns"
             t.text     "scope_include_path_patterns"
-            t.boolean  "scope_include_subdomains"
-            t.text     "plugins"
             t.text     "http_request_headers"
             t.text     "scope_restrict_paths"
             t.text     "scope_extend_paths"
@@ -36,8 +28,6 @@ class CreateProfiles < ActiveRecord::Migration
             t.text     "session_check_url"
             t.text     "session_check_pattern"
             t.integer  "http_request_timeout"
-            t.datetime "created_at"
-            t.datetime "updated_at"
             t.boolean  "no_fingerprinting"
             t.text     "platforms"
             t.string   "http_authentication_username"
@@ -54,6 +44,8 @@ class CreateProfiles < ActiveRecord::Migration
             t.boolean  "browser_cluster_ignore_images"
             t.integer  "browser_cluster_screen_width"
             t.integer  "browser_cluster_screen_height"
+
+            t.timestamps
         end
     end
 end
