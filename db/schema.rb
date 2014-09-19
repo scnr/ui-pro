@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140919034058) do
+ActiveRecord::Schema.define(version: 20140919034315) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -124,6 +124,17 @@ ActiveRecord::Schema.define(version: 20140919034058) do
   end
 
   add_index "issue_page_dom_stack_frames", ["with_dom_stack_frame_id", "with_dom_stack_frame_type"], name: "issue_page_dom_stack_frames_poly_index"
+
+  create_table "issue_page_dom_transitions", force: true do |t|
+    t.text     "element"
+    t.text     "event"
+    t.float    "time"
+    t.integer  "issue_page_dom_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "issue_page_dom_transitions", ["issue_page_dom_id"], name: "index_issue_page_dom_transitions_on_issue_page_dom_id"
 
   create_table "issue_page_doms", force: true do |t|
     t.string   "url"
