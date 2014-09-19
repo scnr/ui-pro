@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140919220620) do
+ActiveRecord::Schema.define(version: 20140919223426) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -229,6 +229,24 @@ ActiveRecord::Schema.define(version: 20140919220620) do
 
   add_index "issue_types", ["check_shortname"], name: "index_issue_types_on_check_shortname", unique: true
   add_index "issue_types", ["name"], name: "index_issue_types_on_name", unique: true
+
+  create_table "issues", force: true do |t|
+    t.string   "digest"
+    t.text     "signature"
+    t.text     "proof"
+    t.boolean  "trusted"
+    t.integer  "referring_issue_page_id"
+    t.integer  "issue_page_id"
+    t.integer  "issue_type_id"
+    t.integer  "issue_platform_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "issues", ["digest"], name: "index_issues_on_digest"
+  add_index "issues", ["issue_page_id"], name: "index_issues_on_issue_page_id"
+  add_index "issues", ["issue_platform_id"], name: "index_issues_on_issue_platform_id"
+  add_index "issues", ["issue_type_id"], name: "index_issues_on_issue_type_id"
 
   create_table "plans", force: true do |t|
     t.string   "name"
