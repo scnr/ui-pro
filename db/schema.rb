@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140919013135) do
+ActiveRecord::Schema.define(version: 20140919015820) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -81,6 +81,18 @@ ActiveRecord::Schema.define(version: 20140919013135) do
   end
 
   add_index "http_responses", ["responsable_id", "responsable_type"], name: "index_http_responses_on_responsable_id_and_responsable_type"
+
+  create_table "page_dom_functions", force: true do |t|
+    t.text     "source"
+    t.text     "arguments"
+    t.text     "name"
+    t.integer  "with_func_id"
+    t.string   "with_func_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "page_dom_functions", ["with_func_id", "with_func_type"], name: "index_page_dom_functions_on_with_func_id_and_with_func_type"
 
   create_table "plans", force: true do |t|
     t.string   "name"
