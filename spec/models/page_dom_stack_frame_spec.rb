@@ -1,5 +1,6 @@
 require 'spec_helper'
 
 describe PageDomStackFrame do
-  pending "add some examples to (or delete) #{__FILE__}"
+    expect_it { to belong_to :traceable }
+    expect_it { to have_one :function }
 end

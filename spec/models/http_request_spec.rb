@@ -3,6 +3,8 @@ require 'spec_helper'
 describe HttpRequest do
     subject { FactoryGirl.create :http_request }
 
+    expect_it { to belong_to :requestable }
+
     describe '#headers' do
         it 'is a Hash' do
             expect( subject.headers ).to be_kind_of Hash
