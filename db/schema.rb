@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140919220131) do
+ActiveRecord::Schema.define(version: 20140919220620) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -160,6 +160,18 @@ ActiveRecord::Schema.define(version: 20140919220131) do
 
   add_index "issue_platform_types", ["name"], name: "index_issue_platform_types_on_name", unique: true
   add_index "issue_platform_types", ["shortname"], name: "index_issue_platform_types_on_shortname", unique: true
+
+  create_table "issue_platforms", force: true do |t|
+    t.string   "shortname"
+    t.string   "name"
+    t.integer  "issue_platform_type_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "issue_platforms", ["issue_platform_type_id"], name: "index_issue_platforms_on_issue_platform_type_id"
+  add_index "issue_platforms", ["name"], name: "index_issue_platforms_on_name", unique: true
+  add_index "issue_platforms", ["shortname"], name: "index_issue_platforms_on_shortname", unique: true
 
   create_table "issue_remarks", force: true do |t|
     t.string   "author"
