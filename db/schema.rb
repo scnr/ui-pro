@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140919034315) do
+ActiveRecord::Schema.define(version: 20140919040202) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -150,6 +150,17 @@ ActiveRecord::Schema.define(version: 20140919034315) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "issue_type_tags", force: true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "issue_type_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "issue_type_tags", ["issue_type_id"], name: "index_issue_type_tags_on_issue_type_id"
+  add_index "issue_type_tags", ["name"], name: "index_issue_type_tags_on_name", unique: true
 
   create_table "plans", force: true do |t|
     t.string   "name"
