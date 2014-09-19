@@ -54,6 +54,7 @@ ActiveRecord::Schema.define(version: 20140919013135) do
     t.string   "http_method"
     t.text     "parameters"
     t.text     "headers"
+    t.text     "body"
     t.text     "raw"
     t.integer  "requestable_id"
     t.string   "requestable_type"
