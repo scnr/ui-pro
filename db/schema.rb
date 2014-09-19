@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140919011750) do
+ActiveRecord::Schema.define(version: 20140919013135) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -53,14 +53,33 @@ ActiveRecord::Schema.define(version: 20140919011750) do
     t.text     "url"
     t.string   "http_method"
     t.text     "parameters"
-    t.text     "body"
     t.text     "headers"
     t.text     "raw"
-    t.integer  "with_http_request_id"
-    t.string   "with_http_request_type"
+    t.integer  "requestable_id"
+    t.string   "requestable_type"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "http_requests", ["requestable_id", "requestable_type"], name: "index_http_requests_on_requestable_id_and_requestable_type"
+
+  create_table "http_responses", force: true do |t|
+    t.text     "url"
+    t.integer  "code"
+    t.string   "ip_address"
+    t.text     "headers"
+    t.text     "body"
+    t.float    "time"
+    t.string   "return_code"
+    t.string   "return_message"
+    t.text     "raw_headers"
+    t.integer  "responsable_id"
+    t.string   "responsable_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "http_responses", ["responsable_id", "responsable_type"], name: "index_http_responses_on_responsable_id_and_responsable_type"
 
   create_table "plans", force: true do |t|
     t.string   "name"

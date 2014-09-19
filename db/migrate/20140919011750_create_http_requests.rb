@@ -4,10 +4,9 @@ class CreateHttpRequests < ActiveRecord::Migration
             t.text :url
             t.string :http_method
             t.text :parameters
-            t.text :body
             t.text :headers
             t.text :raw
-            t.belongs_to :with_http_request, polymorphic: true
+            t.belongs_to :requestable, polymorphic: true, index: true
 
             t.timestamps
         end
