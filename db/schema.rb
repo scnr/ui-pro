@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140919041150) do
+ActiveRecord::Schema.define(version: 20140919042358) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -383,5 +383,23 @@ ActiveRecord::Schema.define(version: 20140919041150) do
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+
+  create_table "vectors", force: true do |t|
+    t.text     "original_inputs"
+    t.text     "inputs"
+    t.text     "seed"
+    t.string   "arachni_class"
+    t.string   "type"
+    t.text     "action"
+    t.text     "html"
+    t.string   "http_method"
+    t.text     "affected_input_name"
+    t.integer  "with_vector_id"
+    t.string   "with_vector_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "vectors", ["with_vector_id", "with_vector_type"], name: "index_vectors_on_with_vector_id_and_with_vector_type"
 
 end
