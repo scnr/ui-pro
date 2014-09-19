@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140919033336) do
+ActiveRecord::Schema.define(version: 20140919034058) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -93,6 +93,14 @@ ActiveRecord::Schema.define(version: 20140919033336) do
   end
 
   add_index "issue_page_dom_data_flow_sinks", ["issue_page_dom_id"], name: "index_issue_page_dom_data_flow_sinks_on_issue_page_dom_id"
+
+  create_table "issue_page_dom_execution_flow_sinks", force: true do |t|
+    t.integer  "issue_page_dom_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "issue_page_dom_execution_flow_sinks", ["issue_page_dom_id"], name: "index_issue_page_dom_execution_flow_sinks_on_issue_page_dom_id"
 
   create_table "issue_page_dom_functions", force: true do |t|
     t.text     "source"
