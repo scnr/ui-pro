@@ -1,5 +1,5 @@
 class HttpRequest < ActiveRecord::Base
-    belongs_to :with_http_request, polymorphic: true
+    belongs_to :requestable, polymorphic: true
 
     serialize :headers,    Hash
     serialize :parameters, Hash
