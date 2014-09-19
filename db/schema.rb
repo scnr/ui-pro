@@ -82,22 +82,22 @@ ActiveRecord::Schema.define(version: 20140919023240) do
 
   add_index "http_responses", ["responsable_id", "responsable_type"], name: "index_http_responses_on_responsable_id_and_responsable_type"
 
+  create_table "issue_page_dom_functions", force: true do |t|
+    t.text     "source"
+    t.text     "arguments"
+    t.text     "name"
+    t.integer  "with_dom_function_id"
+    t.string   "with_dom_function_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "issue_page_dom_functions", ["with_dom_function_id", "with_dom_function_type"], name: "issue_page_dom_functions_poly_index"
+
   create_table "issue_pages", force: true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  create_table "page_dom_functions", force: true do |t|
-    t.text     "source"
-    t.text     "arguments"
-    t.text     "name"
-    t.integer  "with_func_id"
-    t.string   "with_func_type"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "page_dom_functions", ["with_func_id", "with_func_type"], name: "index_page_dom_functions_on_with_func_id_and_with_func_type"
 
   create_table "page_dom_stack_frames", force: true do |t|
     t.integer  "line"

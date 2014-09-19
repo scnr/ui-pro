@@ -1,5 +1,5 @@
 FactoryGirl.define do
-    factory :page_dom_function do
+    factory :issue_page_dom_function do
         source "function decodeURI() {
     [native code]
 }"
