@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140919021758) do
+ActiveRecord::Schema.define(version: 20140919023240) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -81,6 +81,11 @@ ActiveRecord::Schema.define(version: 20140919021758) do
   end
 
   add_index "http_responses", ["responsable_id", "responsable_type"], name: "index_http_responses_on_responsable_id_and_responsable_type"
+
+  create_table "issue_pages", force: true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "page_dom_functions", force: true do |t|
     t.text     "source"
