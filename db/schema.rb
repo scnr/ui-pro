@@ -94,21 +94,21 @@ ActiveRecord::Schema.define(version: 20140919023240) do
 
   add_index "issue_page_dom_functions", ["with_dom_function_id", "with_dom_function_type"], name: "issue_page_dom_functions_poly_index"
 
+  create_table "issue_page_dom_stack_frames", force: true do |t|
+    t.integer  "line"
+    t.text     "url"
+    t.integer  "with_dom_stack_frame_id"
+    t.string   "with_dom_stack_frame_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "issue_page_dom_stack_frames", ["with_dom_stack_frame_id", "with_dom_stack_frame_type"], name: "issue_page_dom_stack_frames_poly_index"
+
   create_table "issue_pages", force: true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  create_table "page_dom_stack_frames", force: true do |t|
-    t.integer  "line"
-    t.text     "url"
-    t.integer  "traceable_id"
-    t.string   "traceable_type"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "page_dom_stack_frames", ["traceable_id", "traceable_type"], name: "index_page_dom_stack_frames_on_traceable_id_and_traceable_type"
 
   create_table "plans", force: true do |t|
     t.string   "name"
