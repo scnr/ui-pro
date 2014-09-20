@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140920011411) do
+ActiveRecord::Schema.define(version: 20140920041348) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -223,7 +223,6 @@ ActiveRecord::Schema.define(version: 20140920011411) do
     t.text     "remedy_guidance"
     t.integer  "cwe"
     t.integer  "issue_type_severity_id"
-    t.integer  "issue_type_tag_id"
     t.integer  "issue_type_reference_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -232,8 +231,12 @@ ActiveRecord::Schema.define(version: 20140920011411) do
   add_index "issue_types", ["check_shortname"], name: "index_issue_types_on_check_shortname", unique: true
   add_index "issue_types", ["issue_type_reference_id"], name: "index_issue_types_on_issue_type_reference_id"
   add_index "issue_types", ["issue_type_severity_id"], name: "index_issue_types_on_issue_type_severity_id"
-  add_index "issue_types", ["issue_type_tag_id"], name: "index_issue_types_on_issue_type_tag_id"
   add_index "issue_types", ["name"], name: "index_issue_types_on_name", unique: true
+
+  create_table "issue_types_issue_type_tags", force: true do |t|
+    t.integer "issue_type_id"
+    t.integer "issue_type_tag_id"
+  end
 
   create_table "issues", force: true do |t|
     t.string   "digest"
