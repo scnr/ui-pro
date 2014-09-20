@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140919223426) do
+ActiveRecord::Schema.define(version: 20140920003745) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -405,6 +405,16 @@ ActiveRecord::Schema.define(version: 20140919223426) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "sitemap_entries", force: true do |t|
+    t.text     "url"
+    t.integer  "code"
+    t.integer  "revision_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "sitemap_entries", ["revision_id"], name: "index_sitemap_entries_on_revision_id"
 
   create_table "sites", force: true do |t|
     t.string   "protocol",   default: "http"
