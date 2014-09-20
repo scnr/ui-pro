@@ -6,6 +6,7 @@ class CreateIssues < ActiveRecord::Migration
             t.text :proof
             t.boolean :trusted
             t.integer :referring_issue_page_id
+            t.belongs_to :revision, index: true
             t.belongs_to :issue_page, index: true
             t.belongs_to :issue_type, index: true
             t.belongs_to :issue_platform, index: true

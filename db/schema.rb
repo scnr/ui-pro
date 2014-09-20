@@ -241,6 +241,7 @@ ActiveRecord::Schema.define(version: 20140920003745) do
     t.text     "proof"
     t.boolean  "trusted"
     t.integer  "referring_issue_page_id"
+    t.integer  "revision_id"
     t.integer  "issue_page_id"
     t.integer  "issue_type_id"
     t.integer  "issue_platform_id"
@@ -253,6 +254,7 @@ ActiveRecord::Schema.define(version: 20140920003745) do
   add_index "issues", ["issue_platform_id"], name: "index_issues_on_issue_platform_id"
   add_index "issues", ["issue_type_id"], name: "index_issues_on_issue_type_id"
   add_index "issues", ["referring_issue_page_id"], name: "index_issues_on_referring_issue_page_id"
+  add_index "issues", ["revision_id"], name: "index_issues_on_revision_id"
   add_index "issues", ["trusted"], name: "index_issues_on_trusted"
 
   create_table "plans", force: true do |t|

@@ -9,6 +9,8 @@ class Issue < ActiveRecord::Base
     belongs_to :platform, class_name: 'IssuePlatform',
                foreign_key: 'issue_platform_id'
 
+    belongs_to :revision
+
     has_one  :vector,  as: :with_vector
     has_many :remarks, class_name: 'IssueRemark', foreign_key: 'issue_id'
 end

@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe Issue do
+    expect_it { to belong_to :revision }
     expect_it { to belong_to :page }
     expect_it { to belong_to :referring_page }
     expect_it { to belong_to :type }
