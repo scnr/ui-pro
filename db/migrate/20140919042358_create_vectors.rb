@@ -14,5 +14,7 @@ class CreateVectors < ActiveRecord::Migration
 
             t.timestamps
         end
+
+        add_index :vectors, :type
     end
 end

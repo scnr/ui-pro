@@ -7,5 +7,7 @@ class CreateIssuePageDoms < ActiveRecord::Migration
 
             t.timestamps
         end
+
+        add_index :issue_page_doms, :url
     end
 end

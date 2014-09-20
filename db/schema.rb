@@ -63,6 +63,7 @@ ActiveRecord::Schema.define(version: 20140919223426) do
   end
 
   add_index "http_requests", ["requestable_id", "requestable_type"], name: "index_http_requests_on_requestable_id_and_requestable_type"
+  add_index "http_requests", ["url"], name: "index_http_requests_on_url"
 
   create_table "http_responses", force: true do |t|
     t.text     "url"
@@ -81,6 +82,7 @@ ActiveRecord::Schema.define(version: 20140919223426) do
   end
 
   add_index "http_responses", ["responsable_id", "responsable_type"], name: "index_http_responses_on_responsable_id_and_responsable_type"
+  add_index "http_responses", ["url"], name: "index_http_responses_on_url"
 
   create_table "issue_page_dom_data_flow_sinks", force: true do |t|
     t.text     "object"
@@ -93,6 +95,7 @@ ActiveRecord::Schema.define(version: 20140919223426) do
   end
 
   add_index "issue_page_dom_data_flow_sinks", ["issue_page_dom_id"], name: "index_issue_page_dom_data_flow_sinks_on_issue_page_dom_id"
+  add_index "issue_page_dom_data_flow_sinks", ["object"], name: "index_issue_page_dom_data_flow_sinks_on_object"
 
   create_table "issue_page_dom_execution_flow_sinks", force: true do |t|
     t.integer  "issue_page_dom_id"
@@ -112,6 +115,7 @@ ActiveRecord::Schema.define(version: 20140919223426) do
     t.datetime "updated_at"
   end
 
+  add_index "issue_page_dom_functions", ["name"], name: "index_issue_page_dom_functions_on_name"
   add_index "issue_page_dom_functions", ["with_dom_function_id", "with_dom_function_type"], name: "issue_page_dom_functions_poly_index"
 
   create_table "issue_page_dom_stack_frames", force: true do |t|
@@ -145,6 +149,7 @@ ActiveRecord::Schema.define(version: 20140919223426) do
   end
 
   add_index "issue_page_doms", ["issue_page_id"], name: "index_issue_page_doms_on_issue_page_id"
+  add_index "issue_page_doms", ["url"], name: "index_issue_page_doms_on_url"
 
   create_table "issue_pages", force: true do |t|
     t.datetime "created_at"
@@ -247,6 +252,8 @@ ActiveRecord::Schema.define(version: 20140919223426) do
   add_index "issues", ["issue_page_id"], name: "index_issues_on_issue_page_id"
   add_index "issues", ["issue_platform_id"], name: "index_issues_on_issue_platform_id"
   add_index "issues", ["issue_type_id"], name: "index_issues_on_issue_type_id"
+  add_index "issues", ["referring_issue_page_id"], name: "index_issues_on_referring_issue_page_id"
+  add_index "issues", ["trusted"], name: "index_issues_on_trusted"
 
   create_table "plans", force: true do |t|
     t.string   "name"
@@ -387,6 +394,8 @@ ActiveRecord::Schema.define(version: 20140919223426) do
     t.datetime "updated_at"
   end
 
+  add_index "schedules", ["scan_id"], name: "index_schedules_on_scan_id"
+
   create_table "site_verifications", force: true do |t|
     t.string   "filename"
     t.string   "state",      default: "pending"
@@ -405,6 +414,9 @@ ActiveRecord::Schema.define(version: 20140919223426) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "sites", ["host", "port"], name: "index_sites_on_host_and_port"
+  add_index "sites", ["user_id"], name: "index_sites_on_user_id"
 
   create_table "sites_users", id: false, force: true do |t|
     t.integer "site_id"
@@ -450,6 +462,7 @@ ActiveRecord::Schema.define(version: 20140919223426) do
     t.datetime "updated_at"
   end
 
+  add_index "vectors", ["type"], name: "index_vectors_on_type"
   add_index "vectors", ["with_vector_id", "with_vector_type"], name: "index_vectors_on_with_vector_id_and_with_vector_type"
 
 end

@@ -11,5 +11,7 @@ class CreateHttpRequests < ActiveRecord::Migration
 
             t.timestamps
         end
+
+        add_index :http_requests, :url
     end
 end

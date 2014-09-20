@@ -12,6 +12,8 @@ class CreateIssues < ActiveRecord::Migration
 
             t.timestamps
         end
+        add_index :issues, :referring_issue_page_id
         add_index :issues, :digest
+        add_index :issues, :trusted
     end
 end

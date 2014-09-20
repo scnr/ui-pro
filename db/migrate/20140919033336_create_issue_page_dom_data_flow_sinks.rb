@@ -9,5 +9,7 @@ class CreateIssuePageDomDataFlowSinks < ActiveRecord::Migration
 
             t.timestamps
         end
+
+        add_index :issue_page_dom_data_flow_sinks, :object
     end
 end

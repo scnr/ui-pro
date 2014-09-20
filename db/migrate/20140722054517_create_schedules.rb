@@ -6,7 +6,7 @@ class CreateSchedules < ActiveRecord::Migration
             t.datetime :start_at
             t.float :stop_after_hours
             t.boolean :stop_suspend
-            t.belongs_to :scan
+            t.belongs_to :scan, index: true
 
             t.timestamps
         end

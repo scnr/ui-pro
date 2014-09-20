@@ -14,5 +14,7 @@ class CreateHttpResponses < ActiveRecord::Migration
 
             t.timestamps
         end
+
+        add_index :http_responses, :url
     end
 end
