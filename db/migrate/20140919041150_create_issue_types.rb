@@ -7,7 +7,6 @@ class CreateIssueTypes < ActiveRecord::Migration
             t.text :remedy_guidance
             t.integer :cwe
             t.belongs_to :issue_type_severity, index: true
-            t.belongs_to :issue_type_reference, index: true
 
             t.timestamps
         end

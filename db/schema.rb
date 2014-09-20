@@ -191,12 +191,12 @@ ActiveRecord::Schema.define(version: 20140920041348) do
   create_table "issue_type_references", force: true do |t|
     t.string   "title"
     t.text     "url"
+    t.integer  "issue_type_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "issue_type_references", ["title"], name: "index_issue_type_references_on_title", unique: true
-  add_index "issue_type_references", ["url"], name: "index_issue_type_references_on_url", unique: true
+  add_index "issue_type_references", ["issue_type_id"], name: "index_issue_type_references_on_issue_type_id"
 
   create_table "issue_type_severities", force: true do |t|
     t.string   "name"
@@ -223,13 +223,11 @@ ActiveRecord::Schema.define(version: 20140920041348) do
     t.text     "remedy_guidance"
     t.integer  "cwe"
     t.integer  "issue_type_severity_id"
-    t.integer  "issue_type_reference_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "issue_types", ["check_shortname"], name: "index_issue_types_on_check_shortname", unique: true
-  add_index "issue_types", ["issue_type_reference_id"], name: "index_issue_types_on_issue_type_reference_id"
   add_index "issue_types", ["issue_type_severity_id"], name: "index_issue_types_on_issue_type_severity_id"
   add_index "issue_types", ["name"], name: "index_issue_types_on_name", unique: true
 

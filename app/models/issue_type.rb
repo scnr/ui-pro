@@ -6,8 +6,8 @@ class IssueType < ActiveRecord::Base
              foreign_key: 'issue_type_tag_id',
              join_table: 'issue_types_issue_type_tags'
 
-    belongs_to :references, class_name: 'IssueTypeReference',
-             foreign_key: 'issue_type_reference_id'
+    has_many :references, class_name: 'IssueTypeReference',
+             foreign_key: 'issue_type_id'
 
     has_many :issues
 end

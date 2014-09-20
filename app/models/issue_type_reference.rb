@@ -1,3 +1,3 @@
 class IssueTypeReference < ActiveRecord::Base
-    has_many :types, class_name: 'IssueType'
+    belongs_to :types, class_name: 'IssueType', foreign_key: 'issue_type_id'
 end

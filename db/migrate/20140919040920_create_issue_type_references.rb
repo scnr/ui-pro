@@ -3,10 +3,9 @@ class CreateIssueTypeReferences < ActiveRecord::Migration
         create_table :issue_type_references do |t|
             t.string :title
             t.text :url
+            t.belongs_to :issue_type, index: true
 
             t.timestamps
         end
-        add_index :issue_type_references, :title, unique: true
-        add_index :issue_type_references, :url, unique: true
     end
 end
