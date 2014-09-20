@@ -4,5 +4,6 @@ FactoryGirl.define do
         signature "MyText"
         proof "MyText"
         trusted false
+        active false
     end
 end

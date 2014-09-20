@@ -5,6 +5,7 @@ class CreateIssues < ActiveRecord::Migration
             t.text :signature
             t.text :proof
             t.boolean :trusted
+            t.boolean :active
             t.integer :referring_issue_page_id
             t.belongs_to :revision, index: true
             t.belongs_to :issue_page, index: true
@@ -16,5 +17,6 @@ class CreateIssues < ActiveRecord::Migration
         add_index :issues, :referring_issue_page_id
         add_index :issues, :digest
         add_index :issues, :trusted
+        add_index :issues, :active
     end
 end

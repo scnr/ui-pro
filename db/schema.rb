@@ -241,6 +241,7 @@ ActiveRecord::Schema.define(version: 20140920041348) do
     t.text     "signature"
     t.text     "proof"
     t.boolean  "trusted"
+    t.boolean  "active"
     t.integer  "referring_issue_page_id"
     t.integer  "revision_id"
     t.integer  "issue_page_id"
@@ -250,6 +251,7 @@ ActiveRecord::Schema.define(version: 20140920041348) do
     t.datetime "updated_at"
   end
 
+  add_index "issues", ["active"], name: "index_issues_on_active"
   add_index "issues", ["digest"], name: "index_issues_on_digest"
   add_index "issues", ["issue_page_id"], name: "index_issues_on_issue_page_id"
   add_index "issues", ["issue_platform_id"], name: "index_issues_on_issue_platform_id"
