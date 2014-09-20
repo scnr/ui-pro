@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
     ActiveAdmin.routes(self)
 
-    root to: 'sites#index'
+    root to: 'dashboard#index'
 
     resources :sites, except: [:update] do
         post  :invite_user,  on: :member
