@@ -1,3 +1,3 @@
 class IssueTypeSeverity < ActiveRecord::Base
-    belongs_to :type, class_name: 'IssueType', foreign_key: 'issue_type_id'
+    has_many :types, class_name: 'IssueType'
 end
