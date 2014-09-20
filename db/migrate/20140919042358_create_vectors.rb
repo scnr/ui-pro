@@ -5,7 +5,7 @@ class CreateVectors < ActiveRecord::Migration
             t.text :inputs
             t.text :seed
             t.string :arachni_class
-            t.string :type
+            t.string :kind
             t.text :action
             t.text :html
             t.string :http_method
@@ -15,6 +15,6 @@ class CreateVectors < ActiveRecord::Migration
             t.timestamps
         end
 
-        add_index :vectors, :type
+        add_index :vectors, :kind
     end
 end

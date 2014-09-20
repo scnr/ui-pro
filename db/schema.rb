@@ -473,7 +473,7 @@ ActiveRecord::Schema.define(version: 20140920041348) do
     t.text     "inputs"
     t.text     "seed"
     t.string   "arachni_class"
-    t.string   "type"
+    t.string   "kind"
     t.text     "action"
     t.text     "html"
     t.string   "http_method"
@@ -484,7 +484,7 @@ ActiveRecord::Schema.define(version: 20140920041348) do
     t.datetime "updated_at"
   end
 
-  add_index "vectors", ["type"], name: "index_vectors_on_type"
+  add_index "vectors", ["kind"], name: "index_vectors_on_kind"
   add_index "vectors", ["with_vector_id", "with_vector_type"], name: "index_vectors_on_with_vector_id_and_with_vector_type"
 
 end

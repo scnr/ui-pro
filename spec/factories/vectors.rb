@@ -10,7 +10,7 @@ FactoryGirl.define do
         })
         seed "/etc/passwd"
         arachni_class "Arachni::Element::Form"
-        type "form"
+        kind "form"
         action "http://test.com/"
         html "<form>stuff</form>"
         http_method "POST"
