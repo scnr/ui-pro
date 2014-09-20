@@ -87,6 +87,51 @@ plan = Plan.create!(
     }
 )
 
+puts 'Creating platforms'
+Arachni::Platform::Manager::TYPES.each do |shortname, name|
+    IssuePlatformType.create( shortname: shortname, name: name )
+end
+
+Arachni::Platform::Manager::PLATFORM_NAMES.each do |shortname, name|
+    type = FrameworkHelper.platform_manager.find_type( shortname )
+    IssuePlatformType.find_by_shortname( type ).platforms.create( shortname: shortname, name: name )
+end
+
+puts 'Creating issue types'
+FrameworkHelper.framework do |f|
+    f.list_checks.each do |check|
+        next if !check[:issue]
+
+        severity = IssueTypeSeverity.find_or_create_by(
+            name: check[:issue][:severity].to_s
+        )
+
+        tags = []
+        (check[:issue][:tags] || []).each do |tag|
+            tags << IssueTypeTag.find_or_create_by( name: tag )
+        end
+
+        references = []
+        (check[:issue][:references] || []).each do |title, url|
+            references << IssueTypeReference.find_or_create_by(
+                title: title,
+                url:   url
+            )
+        end
+
+        IssueType.create(
+            name:            check[:issue][:name],
+            description:     check[:issue][:description],
+            remedy_guidance: check[:issue][:remedy_guidance],
+            cwe:             check[:issue][:cwe],
+            check_shortname: check[:shortname],
+            severity:        severity,
+            tags:            tags,
+            references:      references
+        )
+    end
+end
+
 site = user.sites.create(
     protocol: 'http',
     host:     'test.com',
@@ -104,7 +149,7 @@ scan = site.scans.create(
 scan.build_schedule
 scan.save
 
-scan.revisions.create(
+revision = scan.revisions.create(
     state:      'started',
     started_at: Time.now
 )
