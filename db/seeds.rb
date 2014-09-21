@@ -154,117 +154,12 @@ revision = scan.revisions.create(
     started_at: Time.now
 )
 
-puts 'Creating issue'
-ap native_issue = Arachni::Issue.from_rpc_data( MessagePack.load( IO.read( '/tmp/issue' ) ) )
+puts 'Creating issues'
 
-native_request = native_issue.request
-request = HttpRequest.create(
-    url:         native_request.url,
-    http_method: native_request.method,
-    body:        native_request.effective_body,
-    parameters:  native_request.parameters,
-    headers:     native_request.headers,
-    raw:         native_request.to_s
-)
-
-native_response = native_issue.response
-response = HttpResponse.create(
-    url:            native_response.url,
-    code:           native_response.code,
-    ip_address:     native_response.ip_address,
-    body:           native_response.body,
-    time:           native_response.time,
-    headers:        native_response.headers,
-    return_code:    native_response.return_code,
-    return_message: native_response.return_message,
-    raw_headers:    native_response.headers_string
-)
-
-data_flow_sinks = []
-native_issue.page.dom.data_flow_sinks.each do |sink|
-    data_flow_sinks << IssuePageDomDataFlowSink.create(
-        object:                 sink.object,
-        taint_value:            sink.taint,
-        tainted_value:          sink.tainted_value,
-        tainted_argument_index: sink.tainted_argument_index,
-        function:               IssuePageDomFunction.create(
-            name:      sink.function.name,
-            source:    sink.function.source,
-            arguments: sink.function.arguments
-        ),
-        stackframes:            sink.trace.map do |frame|
-            IssuePageDomStackFrame.create(
-                url:      frame.url,
-                line:     frame.line,
-                function: IssuePageDomFunction.create(
-                    name:      frame.function.name,
-                    source:    frame.function.source,
-                    arguments: frame.function.arguments
-                )
-            )
-        end
-    )
+report = '/home/zapotek/workspace/arachni/spec/support/fixtures/report.afr'
+Arachni::Report.load( report ).issues.each do |issue|
+    ap issue.unique_id
+    issue.variations.each do |variation|
+        revision.issues.create_from_arachni( variation.to_solo( issue ) )
+    end
 end
-
-execution_flow_sinks = []
-native_issue.page.dom.execution_flow_sinks.each do |sink|
-    execution_flow_sinks << IssuePageDomExecutionFlowSink.create(
-        stackframes: sink.trace.map do |frame|
-            IssuePageDomStackFrame.create(
-                url:      frame.url,
-                line:     frame.line,
-                function: IssuePageDomFunction.create(
-                    name:      frame.function.name,
-                    source:    frame.function.source,
-                    arguments: frame.function.arguments
-                )
-            )
-        end
-    )
-end
-
-transitions = []
-native_issue.page.dom.transitions.each do |transition|
-    transitions << IssuePageDomTransition.create(
-        element: transition.element.to_s,
-        event:   transition.event,
-        time:    transition.time
-    )
-end
-
-page_dom = IssuePageDom.create(
-    url:                  native_issue.page.dom.url,
-    body:                 native_issue.page.body,
-    transitions:          transitions,
-    data_flow_sinks:      data_flow_sinks,
-    execution_flow_sinks: execution_flow_sinks
-)
-
-page = IssuePage.create(
-    dom:      page_dom,
-    request:  request,
-    response: response
-)
-
-vector = Vector.create(
-    action:              native_issue.vector.action,
-    http_method:         native_issue.vector.http_method,
-    seed:                native_issue.vector.seed,
-    inputs:              native_issue.vector.inputs,
-    affected_input_name: native_issue.vector.affected_input_name,
-    html:                native_issue.vector.html,
-    arachni_class:       native_issue.vector.class.to_s,
-    kind:                native_issue.vector.type,
-    original_inputs:     native_issue.vector.default_inputs
-)
-
-IssueType.find_by_check_shortname( 'xss_dom' ).issues.create(
-    digest:    native_issue.digest.to_s,
-    signature: native_issue.signature,
-    proof:     native_issue.proof,
-    trusted:   native_issue.trusted,
-    active:    native_issue.active?,
-    page:      page,
-    vector:    vector,
-    revision:  revision
-)
