@@ -17,7 +17,8 @@ describe HttpResponse do
         end
 
         it "creates a #{described_class} from #{Arachni::HTTP::Response}" do
-            response = described_class.create_from_arachni( arachni_response )
+            response = described_class.create_from_arachni( arachni_response ).reload
+            expect(response).to be_valid
 
             expect(response.url).to eq arachni_response.url
             expect(response.code).to eq arachni_response.code

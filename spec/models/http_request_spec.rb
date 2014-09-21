@@ -30,7 +30,8 @@ describe HttpRequest do
         end
 
         it "creates a #{described_class} from #{Arachni::HTTP::Request}" do
-            request = described_class.create_from_arachni( arachni_request )
+            request = described_class.create_from_arachni( arachni_request ).reload
+            expect(request).to be_valid
 
             expect(request.url).to eq arachni_request.url
             expect(request.http_method).to eq arachni_request.method.to_s.upcase

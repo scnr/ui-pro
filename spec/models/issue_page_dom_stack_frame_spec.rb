@@ -10,7 +10,8 @@ describe IssuePageDomStackFrame do
         end
 
         it "creates a #{described_class} from #{Arachni::Browser::Javascript::TaintTracer::Frame}" do
-            frame = described_class.create_from_arachni( arachni_stackframe )
+            frame = described_class.create_from_arachni( arachni_stackframe ).reload
+            expect(frame).to be_valid
 
             expect(frame.url).to eq arachni_stackframe.url
             expect(frame.line).to eq arachni_stackframe.line

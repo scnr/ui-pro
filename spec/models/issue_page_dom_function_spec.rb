@@ -17,7 +17,8 @@ describe IssuePageDomFunction do
         end
 
         it "creates a #{described_class} from #{Arachni::Browser::Javascript::TaintTracer::Frame::CalledFunction}" do
-            function = described_class.create_from_arachni( arachni_function )
+            function = described_class.create_from_arachni( arachni_function ).reload
+            expect(function).to be_valid
 
             expect(function.name).to eq arachni_function.name
             expect(function.source).to eq arachni_function.source
