@@ -15,6 +15,7 @@ class Vector < ActiveRecord::Base
             h[attr] = vector.send(attr) if vector.respond_to?( attr )
         end
 
+        h[:kind]          = vector.class.type
         h[:arachni_class] = vector.class.to_s
 
         create h
