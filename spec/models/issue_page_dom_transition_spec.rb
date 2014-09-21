@@ -9,12 +9,12 @@ describe IssuePageDomTransition do
         end
 
         it "creates a #{described_class} from #{Arachni::Page::DOM::Transition}" do
-            frame = described_class.create_from_arachni( arachni_transition ).reload
-            expect(frame).to be_valid
+            transition = described_class.create_from_arachni( arachni_transition ).reload
+            expect(transition).to be_valid
 
-            expect(frame.element).to eq arachni_transition.element.to_s
-            expect(frame.event).to eq arachni_transition.event.to_s
-            expect(frame.time).to eq arachni_transition.time
+            expect(transition.element).to eq arachni_transition.element.to_s
+            expect(transition.event).to eq arachni_transition.event.to_s
+            expect(transition.time).to eq arachni_transition.time
         end
     end
 
