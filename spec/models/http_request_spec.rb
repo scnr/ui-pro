@@ -24,4 +24,38 @@ describe HttpRequest do
         end
     end
 
+    describe '.create_from_arachni' do
+        let(:url) { 'http://test.com/stuff' }
+        let(:http_method) { 'get' }
+        let(:parameters) { { 'p1' => 'p2' } }
+        let(:body) { { 'b1' => 'b2' } }
+        let(:headers) do
+            {
+                'User-Agent' => 'Arachni/v1.0',
+                'From'       => 'tasos.laskos@test.com'
+            }
+        end
+
+        let(:arachni_request) do
+            Arachni::HTTP::Request.new(
+                url:        url,
+                method:     http_method,
+                parameters: parameters,
+                body:       body,
+                headers:    headers
+            )
+        end
+
+        it "creates a #{described_class} from #{Arachni::HTTP::Request}" do
+            request = described_class.create_from_arachni( arachni_request )
+
+            expect(request.url).to eq arachni_request.url
+            expect(request.http_method).to eq arachni_request.method.to_s.upcase
+            expect(request.parameters).to eq arachni_request.parameters
+            expect(request.body).to eq arachni_request.effective_body
+            expect(request.headers).to eq arachni_request.headers
+            expect(request.raw).to eq arachni_request.to_s
+        end
+    end
+
 end
