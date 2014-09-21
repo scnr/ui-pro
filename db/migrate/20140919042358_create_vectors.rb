@@ -1,7 +1,7 @@
 class CreateVectors < ActiveRecord::Migration
     def change
         create_table :vectors do |t|
-            t.text :original_inputs
+            t.text :default_inputs
             t.text :inputs
             t.text :seed
             t.string :arachni_class

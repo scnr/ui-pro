@@ -471,7 +471,7 @@ ActiveRecord::Schema.define(version: 20140920041348) do
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
 
   create_table "vectors", force: true do |t|
-    t.text     "original_inputs"
+    t.text     "default_inputs"
     t.text     "inputs"
     t.text     "seed"
     t.string   "arachni_class"
