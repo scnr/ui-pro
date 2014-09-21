@@ -9,7 +9,7 @@ describe IssuePageDomExecutionFlowSink do
             Factory[:execution_flow]
         end
 
-        it "creates a #{described_class} from #{Arachni::Browser::Javascript::TaintTracer::Sink::DataFlow}" do
+        it "creates a #{described_class} from #{Arachni::Browser::Javascript::TaintTracer::Sink::ExecutionFlow}" do
             sink = described_class.create_from_arachni( arachni_execution_flow_sink ).reload
             expect(sink).to be_valid
 
