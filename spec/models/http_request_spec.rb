@@ -25,25 +25,8 @@ describe HttpRequest do
     end
 
     describe '.create_from_arachni' do
-        let(:url) { 'http://test.com/stuff' }
-        let(:http_method) { 'get' }
-        let(:parameters) { { 'p1' => 'p2' } }
-        let(:body) { { 'b1' => 'b2' } }
-        let(:headers) do
-            {
-                'User-Agent' => 'Arachni/v1.0',
-                'From'       => 'tasos.laskos@test.com'
-            }
-        end
-
         let(:arachni_request) do
-            Arachni::HTTP::Request.new(
-                url:        url,
-                method:     http_method,
-                parameters: parameters,
-                body:       body,
-                headers:    headers
-            )
+            Factory[:request]
         end
 
         it "creates a #{described_class} from #{Arachni::HTTP::Request}" do

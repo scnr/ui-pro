@@ -79,3 +79,11 @@ RSpec::Core::MemoizedHelpers.module_eval do
     alias to should
     alias to_not should_not
 end
+
+require 'arachni'
+
+arachni_root_dir = Gem::Specification.find_by_name( 'arachni' ).gem_dir
+support_path     = "#{arachni_root_dir}/spec/support"
+
+require "#{support_path}/lib/factory"
+Dir.glob( "#{support_path}/{factories}/**/*.rb" ).each { |f| require f }

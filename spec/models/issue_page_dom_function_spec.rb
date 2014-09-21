@@ -12,22 +12,8 @@ describe IssuePageDomFunction do
     end
 
     describe '.create_from_arachni' do
-        let(:source) do
-            "function decodeURI() {
-                 [native code]
-             }"
-        end
-        let(:arguments) do
-            ["#%7Cinput%7Cdefault%3Csome_dangerous_input_c19b39d05da8ac6c4a1643ad7b2ca89b/%3E"]
-        end
-        let(:name) { 'name' }
-
         let(:arachni_function) do
-            Arachni::Browser::Javascript::TaintTracer::Frame::CalledFunction.new(
-                name:      name,
-                source:    source,
-                arguments: arguments
-            )
+            Factory[:called_function]
         end
 
         it "creates a #{described_class} from #{Arachni::Browser::Javascript::TaintTracer::Frame::CalledFunction}" do

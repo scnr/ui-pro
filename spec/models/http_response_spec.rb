@@ -12,31 +12,8 @@ describe HttpResponse do
     end
 
     describe '.create_from_arachni' do
-        let(:url) { 'http://test.com/stuff' }
-        let(:code) { 200 }
-        let(:time) { 0.012 }
-        let(:ip_address) { '127.0.0.1' }
-        let(:return_code) { 'ok' }
-        let(:return_message) { 'No error' }
-        let(:body) { '<html>stuff' }
-        let(:headers) do
-            {
-                'User-Agent' => 'Arachni/v1.0',
-                'From'       => 'tasos.laskos@test.com'
-            }
-        end
-
         let(:arachni_response) do
-            Arachni::HTTP::Response.new(
-                url:            url,
-                code:           code,
-                time:           time,
-                ip_address:     ip_address,
-                return_code:    return_code,
-                return_message: return_message,
-                body:           body,
-                headers:        headers
-            )
+            Factory[:response]
         end
 
         it "creates a #{described_class} from #{Arachni::HTTP::Response}" do
