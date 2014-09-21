@@ -5,4 +5,34 @@ describe IssuePageDom do
     expect_it { to have_many :transitions }
     expect_it { to have_many :data_flow_sinks }
     expect_it { to have_many :execution_flow_sinks }
+
+    describe '.create_from_arachni' do
+        let(:arachni_page_dom) do
+            Factory[:dom]
+        end
+
+        it "creates a #{described_class} from #{Arachni::Page::DOM}" do
+            dom = described_class.create_from_arachni( arachni_page_dom ).reload
+            expect(dom).to be_valid
+
+            expect(dom.transitions).to be_any
+            dom.transitions.each do |transition|
+                expect(transition).to be_kind_of IssuePageDomTransition
+                expect(transition).to be_valid
+            end
+
+            expect(dom.data_flow_sinks).to be_any
+            dom.data_flow_sinks.each do |sink|
+                expect(sink).to be_kind_of IssuePageDomDataFlowSink
+                expect(sink).to be_valid
+            end
+
+            expect(dom.execution_flow_sinks).to be_any
+            dom.execution_flow_sinks.each do |sink|
+                expect(sink).to be_kind_of IssuePageDomExecutionFlowSink
+                expect(sink).to be_valid
+            end
+        end
+    end
+
 end
