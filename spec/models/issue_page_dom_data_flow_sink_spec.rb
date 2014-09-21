@@ -4,4 +4,25 @@ describe IssuePageDomDataFlowSink do
     expect_it { to belong_to :dom }
     expect_it { to have_one  :function }
     expect_it { to have_many :stackframes }
+
+    describe '.create_from_arachni' do
+        let(:arachni_data_flow_sink) do
+            Factory[:data_flow]
+        end
+
+        it "creates a #{described_class} from #{Arachni::Browser::Javascript::TaintTracer::Sink::DataFlow}" do
+            sink = described_class.create_from_arachni( arachni_data_flow_sink ).reload
+            expect(sink).to be_valid
+
+            expect(sink.object).to eq arachni_data_flow_sink.object
+            expect(sink.tainted_argument_index).to eq arachni_data_flow_sink.tainted_argument_index
+            expect(sink.taint_value).to eq arachni_data_flow_sink.taint
+
+            expect(sink.function).to be_valid
+            sink.stackframes.each do |frame|
+                expect(frame).to be_valid
+            end
+        end
+    end
+
 end
