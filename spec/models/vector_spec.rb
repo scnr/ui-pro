@@ -5,9 +5,9 @@ describe Vector do
 
     expect_it { to belong_to :with_vector }
 
-    describe '#original_inputs' do
+    describe '#default_inputs' do
         it 'is a Hash' do
-            expect( subject.original_inputs ).to be_kind_of Hash
+            expect( subject.default_inputs ).to be_kind_of Hash
         end
     end
 
