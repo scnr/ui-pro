@@ -16,9 +16,7 @@ describe IssuePageDomStackFrame do
             expect(frame.url).to eq arachni_stackframe.url
             expect(frame.line).to eq arachni_stackframe.line
 
-            [:name, :source, :arguments].each do |attr|
-                expect(frame.function.send(attr)).to eq arachni_stackframe.function.send(attr)
-            end
+            expect(frame.function).to be_valid
         end
     end
 
