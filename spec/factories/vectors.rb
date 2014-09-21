@@ -1,6 +1,6 @@
 FactoryGirl.define do
     factory :vector do
-        original_inputs({
+        default_inputs({
             'pname1' => 'pvalue1',
             'pname2' => 'pvalue2'
         })
