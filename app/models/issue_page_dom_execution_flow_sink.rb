@@ -3,4 +3,12 @@ class IssuePageDomExecutionFlowSink < ActiveRecord::Base
 
     has_many :stackframes, as: :with_dom_stack_frame,
              class_name: 'IssuePageDomStackFrame'
+
+    def self.create_from_arachni( sink )
+        create(
+            stackframes: sink.trace.map do |frame|
+                IssuePageDomStackFrame.create_from_arachni( frame )
+            end
+        )
+    end
 end
