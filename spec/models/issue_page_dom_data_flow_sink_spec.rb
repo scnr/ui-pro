@@ -18,8 +18,11 @@ describe IssuePageDomDataFlowSink do
             expect(sink.tainted_argument_index).to eq arachni_data_flow_sink.tainted_argument_index
             expect(sink.taint_value).to eq arachni_data_flow_sink.taint
 
+            expect(sink.function).to be_kind_of IssuePageDomFunction
             expect(sink.function).to be_valid
+
             sink.stackframes.each do |frame|
+                expect(frame).to be_kind_of IssuePageDomStackFrame
                 expect(frame).to be_valid
             end
         end

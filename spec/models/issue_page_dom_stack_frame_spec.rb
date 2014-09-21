@@ -16,6 +16,7 @@ describe IssuePageDomStackFrame do
             expect(frame.url).to eq arachni_stackframe.url
             expect(frame.line).to eq arachni_stackframe.line
 
+            expect(frame.function).to be_kind_of IssuePageDomFunction
             expect(frame.function).to be_valid
         end
     end
