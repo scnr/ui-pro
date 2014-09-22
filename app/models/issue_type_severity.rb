@@ -7,4 +7,17 @@ class IssueTypeSeverity < ActiveRecord::Base
             where( name: severity.to_s ).first
         end
     end
+
+    def to_s
+        name
+    end
+
+    def capitalize
+        to_s.capitalize
+    end
+
+    def to_sym
+        to_s.to_sym
+    end
+
 end

@@ -1,1 +1,45 @@
-<h1>Dashboard</h1>
+<div id="dashboard">
+    <div class="row">
+        <div class="col-md-9">
+            <h1>Dashboard</h1>
+        </div>
+
+        <div class="col-md-3">
+            <% @issue_count_by_severity.each do |severity, count| %>
+                <span class="badge-severity badge-severity-<%= severity %>">
+                    <a href="#"><%= count %></a>
+                </span>
+            <% end %>
+        </div>
+    </div>
+
+    <h2>Your notifications</h2>
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Scans</h3>
+
+            Notifications...
+        </div>
+
+        <div class="col-md-6">
+            <h3>Issues</h3>
+
+            Notifications...
+        </div>
+    </div>
+
+    <h2>Shared notifications</h2>
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Scans</h3>
+
+            Notifications...
+        </div>
+
+        <div class="col-md-6">
+            <h3>Issues</h3>
+
+            Notifications...
+        </div>
+    </div>
+</div>

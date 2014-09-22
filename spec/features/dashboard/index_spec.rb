@@ -18,18 +18,14 @@ feature 'Dashboard index page' do
             scenario 'low severity issues'
             scenario 'informational severity issues'
         end
-
-        feature 'resolved' do
-            scenario 'high severity issues'
-            scenario 'medium severity issues'
-            scenario 'low severity issues'
-            scenario 'informational severity issues'
-        end
     end
 
     feature 'user sees latest notifications' do
-        scenario 'of scans'
-        scenario 'of issues'
+        scenario 'of own scans'
+        scenario 'of shared scans'
+
+        scenario 'of own issues'
+        scenario 'of shared issues'
     end
 
 end

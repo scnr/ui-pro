@@ -91,3 +91,26 @@ section {
     @extend .btn-primary;
     @extend .btn-xs;
 }
+
+.badge-severity {
+    @extend .badge;
+
+    padding:   20px;
+    font-size: 20px;
+}
+
+.badge-severity-high {
+    background-color: red;
+}
+
+.badge-severity-medium {
+    background-color: orange;
+}
+
+.badge-severity-low {
+    background-color: yellow;
+}
+
+.badge-severity-informational {
+    background-color: #ccc;
+}
