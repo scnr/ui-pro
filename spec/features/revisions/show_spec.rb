@@ -9,6 +9,7 @@ feature 'Revision page' do
 
     let(:user) { FactoryGirl.create :user, sites: [site] }
     let(:other_user) { FactoryGirl.create :user, email: 'dd@ss.cc', shared_sites: [site] }
+    let(:user_without_sites) { FactoryGirl.create :user, email: 'dd2@ss.cc' }
     let(:site) { FactoryGirl.create :site }
     let(:scan) { FactoryGirl.create :scan, site: site, revisions: [revision] }
     let(:revision) { FactoryGirl.create :revision }
@@ -61,9 +62,7 @@ feature 'Revision page' do
 
     feature 'user is not associated with the site' do
         before do
-            user.sites.clear
-
-            login_as user, scope: :user
+            login_as user_without_sites, scope: :user
             visit site_scan_revision_path( site, scan, revision )
         end
 
