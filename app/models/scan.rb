@@ -3,15 +3,16 @@ class Scan < ActiveRecord::Base
     belongs_to :site
     belongs_to :profile
 
-    has_one :profile_override, as: :profile_overridable, dependent: :destroy,
-            autosave: true
+    has_one :profile_override, as: :profile_overridable, autosave: true,
+            dependent: :destroy
     accepts_nested_attributes_for :profile_override
 
-    has_one :schedule, dependent: :destroy
+    has_one :schedule, autosave: true, dependent: :destroy
     accepts_nested_attributes_for :schedule
 
     has_many :revisions, dependent: :destroy
 
+    validates_associated    :profile_override
     validates_associated    :schedule
 
     validates_presence_of   :name

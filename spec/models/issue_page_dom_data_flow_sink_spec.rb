@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe IssuePageDomDataFlowSink do
     expect_it { to belong_to :dom }
-    expect_it { to have_one  :function }
-    expect_it { to have_many :stackframes }
+    expect_it { to have_one(:function).dependent(:destroy) }
+    expect_it { to have_many(:stackframes).dependent(:destroy) }
 
     describe '.create_from_arachni' do
         let(:arachni_data_flow_sink) do

@@ -7,8 +7,8 @@ describe Revision do
     let(:site) { FactoryGirl.create :site }
 
     expect_it { to belong_to :scan }
-    expect_it { to have_many :issues }
-    expect_it { to have_many :sitemap_entries }
+    expect_it { to have_many(:issues).dependent(:destroy) }
+    expect_it { to have_many(:sitemap_entries).dependent(:destroy) }
 
     describe '#index' do
         it 'returns the index of the revision' do

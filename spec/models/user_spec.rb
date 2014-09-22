@@ -6,7 +6,7 @@ describe User, type: :model do
 
     it { should respond_to(:email) }
     it { should have_many :profiles }
-    it { should have_many :sites }
+    it { should have_many(:sites).dependent(:destroy) }
     it { should have_and_belong_to_many :shared_sites }
 
     describe '#name' do

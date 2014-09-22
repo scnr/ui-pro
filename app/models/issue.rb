@@ -1,4 +1,6 @@
 class Issue < ActiveRecord::Base
+    belongs_to :revision
+
     belongs_to :page, class_name: 'IssuePage', foreign_key: 'issue_page_id',
                dependent: :destroy
 
@@ -9,8 +11,6 @@ class Issue < ActiveRecord::Base
 
     belongs_to :platform, class_name: 'IssuePlatform',
                foreign_key: 'issue_platform_id'
-
-    belongs_to :revision
 
     has_one  :vector,  as: :with_vector, dependent: :destroy
     has_many :remarks, class_name: 'IssueRemark', foreign_key: 'issue_id',

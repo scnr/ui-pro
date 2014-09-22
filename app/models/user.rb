@@ -8,11 +8,13 @@ class User < ActiveRecord::Base
 
     has_many :profiles
 
-    has_many :sites
+    has_many :sites, dependent: :destroy
     has_and_belongs_to_many :shared_sites, class_name: 'Site',
                             foreign_key: :user_id
 
     after_initialize :prepare_profile_override
+
+    validates_associated :profile_override
 
     def set_default_role
         self.role ||= :user

@@ -7,7 +7,7 @@ class IssueType < ActiveRecord::Base
              join_table: 'issue_types_issue_type_tags'
 
     has_many :references, class_name: 'IssueTypeReference',
-             foreign_key: 'issue_type_id'
+             foreign_key: 'issue_type_id', dependent: :destroy
 
     has_many :issues
 end

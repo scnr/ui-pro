@@ -11,9 +11,9 @@ describe Scan do
     it { should belong_to :plan }
     expect_it { to belong_to :site }
     expect_it { to belong_to :profile }
-    expect_it { to have_one  :profile_override }
-    expect_it { to have_one  :schedule }
-    expect_it { to have_many :revisions }
+    expect_it { to have_one(:profile_override).dependent(:destroy).autosave(true) }
+    expect_it { to have_one(:schedule).dependent(:destroy).autosave(true) }
+    expect_it { to have_many(:revisions).dependent(:destroy) }
 
     it 'accepts nested attributes for #schedule' do
         subject.update( schedule_attributes: { month_frequency: 10 } )
