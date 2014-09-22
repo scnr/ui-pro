@@ -132,13 +132,18 @@ FrameworkHelper.framework do |f|
     end
 end
 
+report     = Arachni::Report.load( '/home/zapotek/workspace/arachni/spec/support/fixtures/report.afr' )
+parsed_url = Arachni::URI( report.url )
+
+puts 'Creating site'
 site = user.sites.create(
-    protocol: 'http',
-    host:     'test.com',
-    port:     8080
+    protocol: parsed_url.scheme,
+    host:     parsed_url.host,
+    port:     parsed_url.port || 80
 )
 site.verification.verified!
 
+puts 'Creating scan'
 scan = site.scans.create(
     profile:     p,
     name:        'my scan',
@@ -149,17 +154,21 @@ scan = site.scans.create(
 scan.build_schedule
 scan.save
 
+puts 'Creating revision'
 revision = scan.revisions.create(
     state:      'started',
     started_at: Time.now
 )
 
 puts 'Creating issues'
-
-report = '/home/zapotek/workspace/arachni/spec/support/fixtures/report.afr'
-Arachni::Report.load( report ).issues.each do |issue|
+report.issues.each do |issue|
     ap issue.unique_id
     issue.variations.each do |variation|
         revision.issues.create_from_arachni( variation.to_solo( issue ) )
     end
+end
+
+puts 'Creating sitemap'
+report.sitemap.each do |url, code|
+    revision.sitemap_entries.create( url: url, code: code )
 end
