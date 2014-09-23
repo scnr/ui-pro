@@ -18,21 +18,23 @@ describe Issue do
         end
     end
 
-    IssueTypeSeverity::SEVERITIES.each do |severity|
-        describe "#{severity}_severity" do
-            it "returns #{severity} severity issues" do
+    describe :scopes do
+        IssueTypeSeverity::SEVERITIES.each do |severity|
+            describe "#{severity}_severity" do
+                it "returns #{severity} severity issues" do
 
-                # Create issues of all severities
-                IssueTypeSeverity::SEVERITIES.each do |s|
-                    send( s )
-                end
+                    # Create issues of all severities
+                    IssueTypeSeverity::SEVERITIES.each do |s|
+                        send( s )
+                    end
 
-                issues = Issue.send( "#{severity}_severity" )
-                expect(Issue.count).to be > issues.size
+                    issues = Issue.send( "#{severity}_severity" )
+                    expect(Issue.count).to be > issues.size
 
-                expect( issues ).to be_any
-                issues.each do |issue|
-                    issue.severity.name == severity.to_s
+                    expect( issues ).to be_any
+                    issues.each do |issue|
+                        issue.severity.name == severity.to_s
+                    end
                 end
             end
         end
