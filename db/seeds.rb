@@ -157,7 +157,8 @@ scan.save
 puts 'Creating revision'
 revision = scan.revisions.create(
     state:      'started',
-    started_at: Time.now
+    started_at: Time.now - 8000,
+    stopped_at: Time.now - 4000
 )
 
 puts 'Creating issues'
