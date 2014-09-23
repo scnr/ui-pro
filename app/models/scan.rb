@@ -11,6 +11,7 @@ class Scan < ActiveRecord::Base
     accepts_nested_attributes_for :schedule
 
     has_many :revisions, dependent: :destroy
+    has_many :issues, through: :revisions
 
     validates_associated    :profile_override
     validates_associated    :schedule

@@ -14,6 +14,7 @@ describe Scan do
     expect_it { to have_one(:profile_override).dependent(:destroy).autosave(true) }
     expect_it { to have_one(:schedule).dependent(:destroy).autosave(true) }
     expect_it { to have_many(:revisions).dependent(:destroy) }
+    expect_it { to have_many :issues }
 
     it 'accepts nested attributes for #schedule' do
         subject.update( schedule_attributes: { month_frequency: 10 } )
