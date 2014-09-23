@@ -8,6 +8,7 @@ class Issue < ActiveRecord::Base
                foreign_key: 'issue_page_id', dependent: :destroy
 
     belongs_to :type, class_name: 'IssueType', foreign_key: 'issue_type_id'
+    has_one :severity, through: :type
 
     belongs_to :platform, class_name: 'IssuePlatform',
                foreign_key: 'issue_platform_id'
@@ -15,6 +16,12 @@ class Issue < ActiveRecord::Base
     has_one  :vector,  as: :with_vector, dependent: :destroy
     has_many :remarks, class_name: 'IssueRemark', foreign_key: 'issue_id',
                 dependent: :destroy
+
+    IssueTypeSeverity::SEVERITIES.each do |severity|
+        scope "#{severity}_severity", -> do
+            joins(:severity).where( 'issue_type_severities.name = ?', severity )
+        end
+    end
 
     def self.create_from_arachni( issue )
         issue_remarks = []
