@@ -2,8 +2,8 @@
 
 FactoryGirl.define do
     factory :issue_type do
-        name "XSS"
-        check_shortname "xss"
+        name { "XSS #{rand(9999)}" }
+        check_shortname { "xss_#{rand(9999)}" }
         description "XSS vuln."
         remedy_guidance "MyText"
         severity { FactoryGirl.create :issue_type_severity }
