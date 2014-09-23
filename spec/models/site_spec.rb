@@ -9,6 +9,8 @@ describe Site, type: :model do
     expect_it { to belong_to :user }
     expect_it { to have_and_belong_to_many :users }
     expect_it { to have_many :scans }
+    expect_it { to have_many :revisions }
+    expect_it { to have_many :issues }
 
     it 'has a default #verification' do
         expect(subject.verification).to be_kind_of SiteVerification
@@ -168,6 +170,28 @@ describe Site, type: :model do
         it 'as URL with Arachni::URI'
     end
 
+    describe :scopes do
+        before { subject }
+
+        describe :verified do
+            it 'returns verified sites' do
+                expect(described_class.verified).to be_empty
+
+                subject.verification.verified!
+                expect(described_class.verified).to be_any
+            end
+        end
+
+        describe :unverified do
+            it 'returns verified sites' do
+                expect(described_class.unverified).to be_any
+
+                subject.verification.verified!
+                expect(described_class.unverified).to be_empty
+            end
+        end
+    end
+
     describe '#url' do
         context 'when protocol is' do
             context 'http' do
@@ -253,6 +277,30 @@ describe Site, type: :model do
 
             expect{ scan.reload }.to raise_error ActiveRecord::RecordNotFound
             expect{ other_scan.reload }.to raise_error ActiveRecord::RecordNotFound
+        end
+    end
+
+    describe '#scanned_at' do
+        it 'returns the latest stop_time' do
+            scan.revisions.create(
+                stopped_at: Time.now - 9000
+            )
+            latest = scan.revisions.create(
+                stopped_at: Time.now - 5000
+            )
+            scan.revisions.create(
+                stopped_at: Time.now - 10000
+            )
+
+            scan.revisions.create
+
+            expect(subject.scanned_at.to_s).to eq latest.stopped_at.to_s
+        end
+
+        context 'when no scans have been performed' do
+            it 'returns nil' do
+                expect(subject.scanned_at).to be_nil
+            end
         end
     end
 

@@ -13,6 +13,8 @@ class Site < ActiveRecord::Base
     has_and_belongs_to_many :users
 
     has_many :scans, dependent: :destroy
+    has_many :revisions, through: :scans
+    has_many :issues, through: :scans
 
     validates_presence_of :protocol
     validates             :protocol, inclusion: {
@@ -29,6 +31,13 @@ class Site < ActiveRecord::Base
 
     before_save :build_profile_override
 
+    scope :verified, -> do
+        joins(:verification).where( site_verifications: { state: :verified } )
+    end
+    scope :unverified, -> do
+        joins(:verification).where.not( site_verifications: { state: :verified } )
+    end
+
     def url
         u = "#{protocol}://#{host}"
 
@@ -40,6 +49,10 @@ class Site < ActiveRecord::Base
         "#{u}:#{port}"
     end
     alias :to_s :url
+
+    def scanned_at
+        revisions.order( stopped_at: :desc ).limit(1).pluck(:stopped_at).first
+    end
 
     def verified?
         verification.verified?
