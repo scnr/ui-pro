@@ -14,8 +14,8 @@
                 <%= link_to site.url, site.url %>
             </td>
 
-            <td>
-                <% if site.scans.any? %>
+            <td class="state">
+                <% if site.revisions.any? %>
                     <% if (sz = site.issues.high_severity.size) > 0 %>
                         <span class="label-severity label-lg label-severity-high">Critical</span>
 
@@ -38,13 +38,13 @@
                         &mdash; no issues
                     <% end %>
                 <% else %>
-                    <span class="label label-default">Undetermined</span>
+                    <span class="label-severity label-severity-undetermined">Undetermined</span>
 
                     &mdash; no scans have been performed yet
                 <% end %>
             </td>
 
-            <td>
+            <td class="last-scanned">
                 <% if site.scanned_at %>
                     <%= time_ago_in_words site.scanned_at %> ago
                 <% else %>

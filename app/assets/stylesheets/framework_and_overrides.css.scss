@@ -170,3 +170,7 @@ section {
 .label-severity-informational {
     background-color: $severity-informational-color;
 }
+
+.label-severity-undetermined {
+    @extend .label-default;
+}
