@@ -143,6 +143,9 @@ site = user.sites.create(
 )
 site.verification.verified!
 
+admin.shared_sites = [site]
+admin.save
+
 puts 'Creating scan'
 scan = site.scans.create(
     profile:     p,
