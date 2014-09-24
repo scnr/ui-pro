@@ -13,7 +13,10 @@ feature 'Navigation links', :devise do
         login_as FactoryGirl.create(:user)
         visit root_path
 
-        expect(page).to have_content 'Home'
+        expect(page).to have_content 'Dashboard'
+        expect(page).to have_content 'Sites'
+        expect(page).to have_content 'Profiles'
+        expect(page).to have_content 'Schedule'
         expect(page).to have_content 'Sign out'
         expect(page).to have_content 'Edit account'
     end

@@ -1,3 +1,8 @@
+$severity-high-color:          #C9302C;
+$severity-medium-color:        #d45500;
+$severity-low-color:           #f0ad4e;
+$severity-informational-color: #3A87AD;
+
 // import the CSS framework
 @import "bootstrap";
 
@@ -7,9 +12,21 @@ img {
     margin: 0 auto;
 }
 
+.navbar-nav > li > a {
+    padding-top:    10px !important;
+    padding-bottom: 10px !important;
+}
+
+.navbar {
+    min-height: 30px !important
+}
+
 // override for the 'Home' navigation link
-.navbar-brand {
-    font-size: inherit;
+a.navbar-brand {
+    font-size:      inherit;
+    height:         30px !important;
+    padding-top:    10px !important;
+    padding-bottom: 10px !important;
 }
 
 // THESE ARE EXAMPLES YOU CAN MODIFY
@@ -94,23 +111,62 @@ section {
 
 .badge-severity {
     @extend .badge;
-
-    padding:   20px;
-    font-size: 20px;
 }
 
 .badge-severity-high {
-    background-color: red;
+    background-color: $severity-high-color;
 }
 
 .badge-severity-medium {
-    background-color: orange;
+    background-color: $severity-medium-color;
 }
 
 .badge-severity-low {
-    background-color: yellow;
+    background-color: $severity-low-color;
 }
 
 .badge-severity-informational {
-    background-color: #ccc;
+    background-color: $severity-informational-color;
+}
+
+.btn-severity {
+    @extend .btn;
+    color: white;
+}
+
+.btn-severity-high {
+    background-color: $severity-high-color;
+    border-color:     $severity-high-color;
+}
+
+.btn-severity-medium {
+    background-color: $severity-medium-color;
+}
+
+.btn-severity-low {
+    background-color: $severity-low-color;
+}
+
+.btn-severity-informational {
+    background-color: $severity-informational-color;
+}
+
+.label-severity {
+    @extend .label;
+}
+
+.label-severity-high {
+    background-color: $severity-high-color;
+}
+
+.label-severity-medium {
+    background-color: $severity-medium-color;
+}
+
+.label-severity-low {
+    background-color: $severity-low-color;
+}
+
+.label-severity-informational {
+    background-color: $severity-informational-color;
 }

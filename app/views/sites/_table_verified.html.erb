@@ -1,0 +1,78 @@
+<table class="table table-hover table-striped">
+    <thead>
+        <tr>
+            <th>URL</th>
+            <th>State</th>
+            <th>Last scanned</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    <% sites.each do |site| %>
+        <tr>
+            <td>
+                <%= link_to site.url, site.url %>
+            </td>
+
+            <td>
+                <% if site.scans.any? %>
+                    <% if (sz = site.issues.high_severity.size) > 0 %>
+                        <span class="label-severity label-lg label-severity-high">Critical</span>
+
+                        &mdash; <%= sz %> <a href="#">high</a> severity issues
+                    <% elsif (sz = site.issues.medium_severity.size) > 0 %>
+                        <span class="label-severity label-severity-medium">Serious</span>
+
+                        &mdash; <%= sz %> <a href="#">medium</a> severity issues
+                    <% elsif (sz = site.issues.low_severity.size) > 0 %>
+                        <span class="label-severity label-severity-low">Fair</span>
+
+                        &mdash; <%= sz %> <a href="#">low</a> severity issues
+                    <% elsif site.issues.informational_severity.any? %>
+                        <span class="label-severity label-severity-informational">Good</span>
+
+                        &mdash; only has <a href="#">informational</a> findings
+                    <% else %>
+                        <span class="label-severity label-severity-informational">Good</span>
+
+                        &mdash; no issues
+                    <% end %>
+                <% else %>
+                    <span class="label label-default">Undetermined</span>
+
+                    &mdash; no scans have been performed yet
+                <% end %>
+            </td>
+
+            <td>
+                <% if site.scanned_at %>
+                    <%= time_ago_in_words site.scanned_at %> ago
+                <% else %>
+                    No scans have been performed yet.
+                <% end %>
+            </td>
+
+            <td>
+                <% if policy(site).show? %>
+                    <%= link_to site_path( site ) , class: 'btn btn-sm btn-primary' do %>
+                        <i class="fa fa-eye"></i>
+                    <% end %>
+                <% end %>
+
+                <% if policy(site).edit? %>
+                    <%= link_to edit_site_path( site ) , class: 'btn btn-sm btn-warning' do %>
+                        <i class="fa fa-pencil"></i>
+                    <% end %>
+                <% end %>
+
+                <% if policy(site).destroy? %>
+                    <%= link_to site, method: :delete, class: 'btn btn-sm btn-danger',
+                                data: { confirm: 'Are you sure?' } do %>
+                        <i class="fa fa-trash"></i>
+                    <% end %>
+                <% end %>
+            </td>
+        </tr>
+    <% end %>
+    </tbody>
+</table>

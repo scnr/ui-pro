@@ -6,9 +6,9 @@
 
         <div class="col-md-3">
             <% @issue_count_by_severity.each do |severity, count| %>
-                <span class="badge-severity badge-severity-<%= severity %>">
-                    <a href="#"><%= count %></a>
-                </span>
+                <a href="#" class="btn-severity btn-lg btn-severity-<%= severity %>">
+                    <%= count %>
+                </a>
             <% end %>
         </div>
     </div>

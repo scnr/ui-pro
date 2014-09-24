@@ -33,19 +33,6 @@ feature 'Site index page' do
             expect(page).to_not have_content other_site.url
         end
 
-        # Scenario: Sites are accompanied by verification status
-        #   Given I am signed in
-        #   When I visit the site index page
-        #   Then I see my sites with their verification status
-        scenario 'user can see the site verification status' do
-            site.verification.verified!
-
-            login_as( user, scope: :user )
-            visit sites_path
-
-            expect(page).to have_content 'Verified'
-        end
-
         feature 'which are verified' do
             before do
                 site.verification.verified!
@@ -66,10 +53,8 @@ feature 'Site index page' do
             #   Given I am signed in
             #   When I visit the site index page
             #   Then I see my verified sites with edit links
-            scenario 'user can edit' do
-                click_link 'Edit'
-
-                expect(current_url).to match edit_site_path(site)
+            scenario 'user can see edit links' do
+                expect(page).to have_xpath "//a[@href='#{edit_site_path( site )}']"
             end
 
             # Scenario: Sites which are verified are accompanied by delete links
@@ -77,10 +62,7 @@ feature 'Site index page' do
             #   When I visit the site index page
             #   Then I see my verified sites with delete links
             scenario 'user can delete' do
-                click_link 'Delete'
-                visit sites_path
-
-                expect(page).to_not have_content site.url
+                expect(page).to have_xpath "//a[@href='#{site_path( site )}' and @data-method='delete']"
             end
         end
 
@@ -113,10 +95,7 @@ feature 'Site index page' do
             #   When I visit the site index page
             #   Then I see my unverified sites with delete links
             scenario 'user sees delete links' do
-                click_link 'Delete'
-                visit sites_path
-
-                expect(page).to_not have_content site.url
+                expect(page).to have_xpath "//a[@href='#{site_path( site )}' and @data-method='delete']"
             end
         end
     end
@@ -144,33 +123,36 @@ feature 'Site index page' do
                 user.shared_sites << site
 
                 login_as( user, scope: :user )
-                visit sites_path
             end
 
-            # Scenario: Shared site listed on index page
-            #   Given I am signed in
-            #   When I visit the site index page
-            #   And there is a shared site
-            #   Then I see it listed
-            scenario 'user sees list' do
-                expect(page).to have_css('#shared-sites')
-                expect(page).to have_content site.url
+            feature 'verified' do
+                before do
+                    site.verification.verified!
+                    visit sites_path
+                end
+
+                scenario 'user sees list' do
+                    expect(page).to have_css('#shared-sites')
+                    expect(page).to have_content site.url
+                end
+
+                scenario 'user does not see edit link' do
+                    expect(page).to_not have_xpath "//a[@href='#{edit_site_path(site)}']"
+                end
+
+                scenario 'user does not see delete link' do
+                    expect(page).to_not have_content 'Delete'
+                end
             end
 
-            # Scenario: Shared sites are not accompanied by edit links
-            #   Given I am signed in
-            #   When I visit the site index page
-            #   Then I see shared sites without edit links
-            scenario 'user does not see edit link' do
-                expect(page).to_not have_xpath "//a[@href='#{edit_site_path(site)}']"
-            end
+            feature 'verified' do
+                before do
+                    visit sites_path
+                end
 
-            # Scenario: Sites are not accompanied by delete links
-            #   Given I am signed in
-            #   When I visit the site index page
-            #   Then I see my sites without delete links
-            scenario 'user does not see delete link' do
-                expect(page).to_not have_content 'Delete'
+                scenario 'user does not see list' do
+                    expect(page).to_not have_css('#shared-sites')
+                end
             end
         end
     end
