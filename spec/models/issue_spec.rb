@@ -20,6 +20,31 @@ describe Issue do
     end
 
     describe :scopes do
+        describe :default do
+            it 'orders issues by type name' do
+                severity = FactoryGirl.create( :issue_type_severity )
+
+                a = FactoryGirl.create( :issue_type,
+                                    name: 'a',
+                                    severity: severity
+                )
+                c = FactoryGirl.create( :issue_type,
+                                        name: 'c',
+                                        severity: severity
+                )
+                b = FactoryGirl.create( :issue_type,
+                                        name: 'b',
+                                        severity: severity
+                )
+
+                c.issues.create
+                a.issues.create
+                b.issues.create
+
+                expect(described_class.all.map(&:type).map(&:name)).to eq %w(a b c)
+            end
+        end
+
         IssueTypeSeverity::SEVERITIES.each do |severity|
             describe "#{severity}_severity" do
                 it "returns #{severity} severity issues" do

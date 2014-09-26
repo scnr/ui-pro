@@ -25,6 +25,8 @@ class Issue < ActiveRecord::Base
         end
     end
 
+    default_scope { includes(:vector).includes(:type).order('issue_types.name asc') }
+
     def self.create_from_arachni( issue, options = {} )
         issue_remarks = []
         issue.remarks.each do |author, remarks|
