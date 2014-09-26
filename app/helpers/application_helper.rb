@@ -65,4 +65,10 @@ module ApplicationHelper
         }
     end
 
+    def scoped_find_each( scope, batch = 1000, &block )
+        (0..scope.size).step( batch ) do |i|
+            scope.offset(i).limit(batch).each(&block)
+        end
+    end
+
 end

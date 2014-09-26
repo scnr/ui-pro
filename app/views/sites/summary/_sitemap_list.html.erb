@@ -1,5 +1,5 @@
 <ul>
-    <% sitemap.find_each do |entry| %>
+    <% scoped_find_each(sitemap) do |entry| %>
         <li
                 class="sitemap-entry sitemap-entry-with<% 'out' if entry.issues.size == 0 %>-issues"
         >

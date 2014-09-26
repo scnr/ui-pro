@@ -1,6 +1,7 @@
 <%
     IssueTypeSeverity::SEVERITIES.each do |severity|
-    issues = @site.issues.send("#{severity}_severity")
+    issues      = @site.issues.send("#{severity}_severity")
+    issues_size = @site.issues.send("#{severity}_severity").size
     last_name = nil
 %>
 
@@ -11,12 +12,12 @@
             <%= severity.capitalize %> severity
 
             <span class="badge-severity badge-severity-<%= severity %>">
-                <%= @site.issues.send("#{severity}_severity").size %>
+                <%= issues_size %>
             </span>
         </h3>
 
         <div class="cascade-container">
-            <% issues.each do |issue| %>
+            <% scoped_find_each( issues ) do |issue| %>
 
             <% if issue.type.name != last_name %>
                 <% if last_name %>
