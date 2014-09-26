@@ -6,7 +6,7 @@ describe Revision do
     let(:scan) { FactoryGirl.create :scan, site: site }
     let(:site) { FactoryGirl.create :site }
 
-    expect_it { to belong_to :scan }
+    expect_it { to belong_to(:scan).counter_cache(true) }
     expect_it { to have_many(:issues).dependent(:destroy) }
     expect_it { to have_many(:sitemap_entries) }
 

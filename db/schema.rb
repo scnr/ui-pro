@@ -386,10 +386,12 @@ ActiveRecord::Schema.define(version: 20140920041348) do
   add_index "revisions", ["scan_id"], name: "index_revisions_on_scan_id"
 
   create_table "scans", force: true do |t|
-    t.integer  "site_id"
-    t.integer  "plan_id"
     t.string   "name"
     t.text     "description"
+    t.integer  "revisions_count", default: 0
+    t.integer  "integer",         default: 0
+    t.integer  "site_id"
+    t.integer  "plan_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "profile_id"
