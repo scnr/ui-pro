@@ -18,6 +18,9 @@ gem 'sidekiq'
 gem 'typhoeus'
 gem 'websocket-rails', '0.6.2'
 
+gem 'd3-rails'
+gem 'c3-rails'
+
 group :doc do
     gem 'sdoc', '~> 0.4.0'
 end
@@ -28,6 +31,8 @@ group :development do
     gem 'binding_of_caller', platforms: [:mri_21]
     gem 'quiet_assets'
     gem 'rails_layout'
+    gem 'bullet'
+    gem 'rails-footnotes'
 end
 
 group :test do
