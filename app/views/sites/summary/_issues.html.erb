@@ -1,6 +1,12 @@
+<%
+    IssueTypeSeverity::SEVERITIES.each do |severity|
+    issues = @site.issues.send("#{severity}_severity")
+    last_name = nil
+%>
+
 <div class="row">
-    <% IssueTypeSeverity::SEVERITIES.each do |severity| %>
-    <div class="col-md-3">
+    <div class="col-md-12">
+
         <h3>
             <%= severity.capitalize %> severity
 
@@ -9,13 +15,43 @@
             </span>
         </h3>
 
-        <ul>
-            <% @site.issues.send("#{severity}_severity").find_each do |issue| %>
-                <li>
-                    <%= issue %>
-                </li>
+        <div class="cascade-container">
+            <% issues.each do |issue| %>
+
+            <% if issue.type.name != last_name %>
+                <% if last_name %>
+                    </ul>
+                    </div>
+                <% end %>
+
+                <div>
+                    <h4>
+                        <%= issue.type.name %>,
+
+                        <small>via:</small>
+                    </h4>
+                <ul>
             <% end %>
-        </ul>
+
+                <li>
+                    <code><%= issue.vector.kind %></code>
+
+                    <% if issue.vector.affected_input_name %>
+                        input <code><%= issue.vector.affected_input_name %></code>,
+                    <% end %>
+
+                    at <%= link_to issue.vector.action, issue.vector.action %>.
+                </li>
+
+            <%
+               last_name = issue.type.name
+               end %>
+
+            </ul>
+            </div>
+        </div>
     </div>
-    <% end %>
 </div>
+
+<hr/>
+<% end %>
