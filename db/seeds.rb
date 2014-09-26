@@ -179,8 +179,8 @@ report.issues.each do |issue|
         solo = variation.to_solo( issue )
         next if !solo.check
 
-        issue = revision.issues.create_from_arachni( solo )
-        issue.sitemap_entry = sitemap_entry
-        issue.save
+        revision.issues.create_from_arachni( solo, sitemap_entry: sitemap_entry )
     end
+
+    # ap sitemap_entry.reload.issues.size
 end

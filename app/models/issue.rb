@@ -25,7 +25,7 @@ class Issue < ActiveRecord::Base
         end
     end
 
-    def self.create_from_arachni( issue )
+    def self.create_from_arachni( issue, options = {} )
         issue_remarks = []
         issue.remarks.each do |author, remarks|
             remarks.each do |remark|
@@ -33,7 +33,7 @@ class Issue < ActiveRecord::Base
             end
         end
 
-        create(
+        create({
             type:           IssueType.find_by_check_shortname( issue.check[:shortname] ),
             digest:         issue.digest.to_s,
             signature:      issue.signature,
@@ -45,6 +45,6 @@ class Issue < ActiveRecord::Base
             vector:         Vector.create_from_arachni( issue.vector ),
             remarks:        issue_remarks,
             platform:       (IssuePlatform.find_by_shortname( issue.platform_name.to_s ) if issue.platform_name),
-        )
+       }.merge(options))
     end
 end
