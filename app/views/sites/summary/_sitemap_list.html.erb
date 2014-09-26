@@ -1,7 +1,15 @@
 <ul>
     <% sitemap.find_each do |entry| %>
-        <li>
-            <%= entry.code %> - <%= entry.url %> (<%= entry.issues.size %>)
+        <li
+                class="sitemap-entry sitemap-entry-with<% 'out' if entry.issues.size == 0 %>-issues"
+        >
+            <code><%= entry.code %></code>
+
+            <%= link_to entry.url, target: '_blank' do %>
+                <i class="fa fa-external-link"></i>
+            <% end%>
+
+            <%= link_to entry.url, '#' %>
         </li>
     <% end %>
 </ul>

@@ -4,7 +4,7 @@
     last_name = nil
 %>
 
-<div class="row">
+<div class="row issue-summary-severity-<%= severity %>">
     <div class="col-md-12">
 
         <h3>
@@ -24,7 +24,7 @@
                     </div>
                 <% end %>
 
-                <div>
+                <div class="issue-summary-check-<%= issue.type.check_shortname %>">
                     <h4>
                         <%= issue.type.name %>,
 
@@ -33,14 +33,16 @@
                 <ul>
             <% end %>
 
-                <li>
+                <li class="issue-summary-vector-<%= issue.vector.kind %>">
                     <code><%= issue.vector.kind %></code>
 
                     <% if issue.vector.affected_input_name %>
                         input <code><%= issue.vector.affected_input_name %></code>
                     <% end %>
 
-                    at <%= link_to issue.vector.action, issue.vector.action %>.
+                    at
+
+                    <%= link_to_url_with_external issue.vector.action, '#' %>
                 </li>
 
             <%

@@ -11,15 +11,7 @@
     <% sites.each do |site| %>
         <tr>
             <td>
-                <% if policy(site).show? %>
-                    <%= link_to site.url, site %>
-                <% else %>
-                    <%= site.url %>
-                <% end %>
-
-                <%= link_to site.url, target: '_blank' do %>
-                    <i class="fa fa-external-link"></i>
-                <% end%>
+                <%= link_to_url_with_external site.url, site %>
             </td>
 
             <td class="state">
