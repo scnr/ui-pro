@@ -167,12 +167,20 @@ revision = scan.revisions.create(
 puts 'Creating issues'
 report.issues.each do |issue|
     ap issue.unique_id
-    issue.variations.each do |variation|
-        revision.issues.create_from_arachni( variation.to_solo( issue ) )
-    end
-end
 
-puts 'Creating sitemap'
-report.sitemap.each do |url, code|
-    revision.sitemap_entries.create( url: url, code: code )
+    sitemap_entry = site.sitemap_entries.find_by_url( issue.variations.first.page.dom.url )
+    sitemap_entry ||= site.sitemap_entries.create(
+        url:      issue.variations.first.page.dom.url,
+        code:     issue.variations.first.response.code,
+        revision: revision
+    )
+
+    issue.variations.each do |variation|
+        solo = variation.to_solo( issue )
+        next if !solo.check
+
+        issue = revision.issues.create_from_arachni( solo )
+        issue.sitemap_entry = sitemap_entry
+        issue.save
+    end
 end

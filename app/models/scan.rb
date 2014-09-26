@@ -12,6 +12,7 @@ class Scan < ActiveRecord::Base
 
     has_many :revisions, dependent: :destroy
     has_many :issues, through: :revisions
+    has_many :sitemap_entries, through: :revisions
 
     validates_associated    :profile_override
     validates_associated    :schedule

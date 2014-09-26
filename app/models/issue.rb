@@ -10,6 +10,8 @@ class Issue < ActiveRecord::Base
     belongs_to :type, class_name: 'IssueType', foreign_key: 'issue_type_id'
     has_one :severity, through: :type
 
+    belongs_to :sitemap_entry, counter_cache: true
+
     belongs_to :platform, class_name: 'IssuePlatform',
                foreign_key: 'issue_platform_id'
 

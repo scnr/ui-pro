@@ -16,6 +16,8 @@ class Site < ActiveRecord::Base
     has_many :revisions, through: :scans
     has_many :issues, through: :scans
 
+    has_many :sitemap_entries, dependent: :destroy
+
     validates_presence_of :protocol
     validates             :protocol, inclusion: {
         in:      PROTOCOL_TYPES,

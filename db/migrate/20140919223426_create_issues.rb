@@ -11,6 +11,7 @@ class CreateIssues < ActiveRecord::Migration
             t.belongs_to :issue_page, index: true
             t.belongs_to :issue_type, index: true
             t.belongs_to :issue_platform, index: true
+            t.belongs_to :sitemap_entry, index: true
 
             t.timestamps
         end

@@ -11,6 +11,7 @@ describe Site, type: :model do
     expect_it { to have_many :scans }
     expect_it { to have_many :revisions }
     expect_it { to have_many :issues }
+    expect_it { to have_many(:sitemap_entries).dependent(:destroy) }
 
     it 'has a default #verification' do
         expect(subject.verification).to be_kind_of SiteVerification
@@ -183,7 +184,7 @@ describe Site, type: :model do
         end
 
         describe :unverified do
-            it 'returns verified sites' do
+            it 'returns unverified sites' do
                 expect(described_class.unverified).to be_any
 
                 subject.verification.verified!

@@ -4,6 +4,7 @@ describe Issue do
     expect_it { to belong_to :revision }
     expect_it { to belong_to(:page).dependent(:destroy) }
     expect_it { to belong_to(:referring_page).dependent(:destroy) }
+    expect_it { to belong_to(:sitemap_entry).counter_cache(true)}
     expect_it { to belong_to :type }
     expect_it { to belong_to :platform }
     expect_it { to have_one :severity  }

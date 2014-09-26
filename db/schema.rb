@@ -247,6 +247,7 @@ ActiveRecord::Schema.define(version: 20140920041348) do
     t.integer  "issue_page_id"
     t.integer  "issue_type_id"
     t.integer  "issue_platform_id"
+    t.integer  "sitemap_entry_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -258,6 +259,7 @@ ActiveRecord::Schema.define(version: 20140920041348) do
   add_index "issues", ["issue_type_id"], name: "index_issues_on_issue_type_id"
   add_index "issues", ["referring_issue_page_id"], name: "index_issues_on_referring_issue_page_id"
   add_index "issues", ["revision_id"], name: "index_issues_on_revision_id"
+  add_index "issues", ["sitemap_entry_id"], name: "index_issues_on_sitemap_entry_id"
   add_index "issues", ["trusted"], name: "index_issues_on_trusted"
 
   create_table "plans", force: true do |t|
@@ -423,12 +425,17 @@ ActiveRecord::Schema.define(version: 20140920041348) do
   create_table "sitemap_entries", force: true do |t|
     t.text     "url"
     t.integer  "code"
+    t.integer  "issues_count", default: 0
+    t.integer  "integer",      default: 0
+    t.integer  "site_id"
     t.integer  "revision_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "sitemap_entries", ["revision_id"], name: "index_sitemap_entries_on_revision_id"
+  add_index "sitemap_entries", ["site_id"], name: "index_sitemap_entries_on_site_id"
+  add_index "sitemap_entries", ["url", "site_id"], name: "index_sitemap_entries_on_url_and_site_id", unique: true
 
   create_table "sites", force: true do |t|
     t.string   "protocol",   default: "http"
