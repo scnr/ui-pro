@@ -83,13 +83,8 @@ feature 'Scan index' do
         #   When I visit a site with scans
         #   Then I see destroy links for the listed scans
         scenario 'user sees destroy links' do
-            expect(page).to have_content scan.name
-            first( :link, 'Delete' ).click
-            expect(page).to_not have_content scan.name
-
-            expect(page).to have_content other_scan.name
-            first( :link, 'Delete' ).click
-            expect(page).to_not have_content other_scan.name
+            expect(page).to have_xpath "//a[@href='#{site_scan_path(scan.site, scan)}' and @data-method='delete']"
+            expect(page).to have_xpath "//a[@href='#{site_scan_path(other_scan.site, other_scan)}' and @data-method='delete']"
         end
     end
 end

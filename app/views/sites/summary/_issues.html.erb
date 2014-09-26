@@ -1,0 +1,21 @@
+<div class="row">
+    <% IssueTypeSeverity::SEVERITIES.each do |severity| %>
+    <div class="col-md-3">
+        <h3>
+            <%= severity.capitalize %> severity
+
+            <span class="badge-severity badge-severity-<%= severity %>">
+                <%= @site.issues.send("#{severity}_severity").size %>
+            </span>
+        </h3>
+
+        <ul>
+            <% @site.issues.send("#{severity}_severity").find_each do |issue| %>
+                <li>
+                    <%= issue %>
+                </li>
+            <% end %>
+        </ul>
+    </div>
+    <% end %>
+</div>

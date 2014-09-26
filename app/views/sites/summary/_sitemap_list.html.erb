@@ -1,0 +1,7 @@
+<ul>
+    <% sitemap.find_each do |entry| %>
+        <li>
+            <%= entry.code %> - <%= entry.url %> (<%= entry.issues.size %>)
+        </li>
+    <% end %>
+</ul>

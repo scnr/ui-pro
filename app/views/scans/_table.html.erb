@@ -1,12 +1,13 @@
-<table>
+<table class="table table-hover table-striped">
     <thead>
-    <tr>
-        <th>Name</th>
-        <th>Profile</th>
-        <th>Description</th>
-        <th>Revisions</th>
-        <th colspan="2"></th>
-    </tr>
+        <tr>
+            <th>Name</th>
+            <th>Profile</th>
+            <th>Pages</th>
+            <th>Issues</th>
+            <th>Revisions</th>
+            <th></th>
+        </tr>
     </thead>
 
     <tbody>
@@ -19,17 +20,28 @@
             <% end %>
 
             <td><%= link_to scan.profile.name, scan.profile %></td>
-            <td><%= scan.description %></td>
+            <td><%= scan.sitemap_entries.size %></td>
+            <td>
+                <%= scan.issues.size %>
+            </td>
             <td><%= scan.revisions.size %></td>
 
-            <% if policy(scan).edit? %>
-                <td><%= link_to 'Edit', edit_site_scan_path( @site, scan ) %></td>
-            <% end %>
+            <td>
+                <% if policy(scan).edit? %>
+                    <%= link_to edit_site_scan_path( @site, scan ),
+                            class: 'btn btn-sm btn-warning' do %>
+                        <i class="fa fa-pencil"></i>
+                    <% end %>
+                <% end %>
 
-            <% if policy(scan).destroy? %>
-                <td><%= link_to 'Delete', [@site, scan], method: :delete,
-                                data: { confirm: 'Are you sure?' } %></td>
-            <% end %>
+                <% if policy(scan).destroy? %>
+                    <%= link_to [@site, scan], method: :delete,
+                            class: 'btn btn-sm btn-danger',
+                            data: { confirm: 'Are you sure?' } do %>
+                        <i class="fa fa-trash"></i>
+                    <% end %>
+                <% end %>
+            </td>
         </tr>
     <% end %>
     </tbody>

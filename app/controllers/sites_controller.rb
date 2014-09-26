@@ -17,8 +17,6 @@ class SitesController < ApplicationController
     # GET /sites/1
     # GET /sites/1.json
     def show
-        @has_scans = false
-
         if @site.scans.empty?
             @scan = @site.scans.new
             @scan.build_schedule
@@ -26,7 +24,6 @@ class SitesController < ApplicationController
             authorize @scan
         else
             @scans = @site.scans
-            @has_scans = true
         end
     end
 

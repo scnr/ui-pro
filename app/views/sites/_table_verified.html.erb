@@ -11,7 +11,15 @@
     <% sites.each do |site| %>
         <tr>
             <td>
-                <%= link_to site.url, site.url %>
+                <% if policy(site).show? %>
+                    <%= link_to site.url, site %>
+                <% else %>
+                    <%= site.url %>
+                <% end %>
+
+                <%= link_to site.url, target: '_blank' do %>
+                    <i class="fa fa-external-link"></i>
+                <% end%>
             </td>
 
             <td class="state">
@@ -53,12 +61,6 @@
             </td>
 
             <td>
-                <% if policy(site).show? %>
-                    <%= link_to site_path( site ) , class: 'btn btn-sm btn-primary' do %>
-                        <i class="fa fa-eye"></i>
-                    <% end %>
-                <% end %>
-
                 <% if policy(site).edit? %>
                     <%= link_to edit_site_path( site ) , class: 'btn btn-sm btn-warning' do %>
                         <i class="fa fa-pencil"></i>

@@ -1,7 +1,71 @@
-<h1><%= link_to @site.url, @site %> </h1>
+<h1>
+    <%= link_to @site.url, @site %>
 
-<% if @has_scans %>
-    <%= refreshable_partial( [:table, @site, :scans] )%>
+    <%= link_to new_site_scan_path(@site), title: 'New scan',
+                class: 'btn btn-xs btn-primary' do %>
+        <i class="fa fa-plus"></i>
+    <% end %>
+
+    <% if policy(@site).edit? %>
+        <%= link_to edit_site_path( @site ), title: 'Edit site',
+                    class: 'btn btn-xs btn-warning' do %>
+            <i class="fa fa-pencil"></i>
+        <% end %>
+    <% end %>
+
+    <% if policy(@site).destroy? %>
+        <%= link_to @site, method: :delete, title: 'Delete site',
+                    class: 'btn btn-xs btn-danger',
+                    data: { confirm: 'Are you sure?' } do %>
+            <i class="fa fa-trash"></i>
+        <% end %>
+    <% end %>
+</h1>
+
+<% if @scans %>
+    <div id="summary-tabs">
+        <ul class="nav nav-tabs">
+            <li class="active">
+                <a href="#summary" role="tab" data-toggle="tab">Summary</a>
+            </li>
+
+            <li>
+                <a href="#scans" role="tab" data-toggle="tab">
+                    Scans
+
+                <span class="badge">
+                    <%= @site.scans.size %>
+                </span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#analytics" role="tab" data-toggle="tab">Analytics</a>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <div class="tab-pane active" id="summary">
+                <%= render partial: 'summary' %>
+            </div>
+
+            <div class="tab-pane" id="scans">
+                <div class="row">
+                    <div class="col-md-4">
+                        <%= refreshable_partial( [:table, @site, :scans] )%>
+                    </div>
+
+                    <div class="col-md-8">
+                        <h4>Click on a row for a quick view of a scan.</h4>
+                        <h4>Showing [scan]</h4>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane" id="analytics">
+            </div>
+        </div>
+    </div>
 <% else %>
     <h2>Create a scan</h2>
     <%= render 'scans/form' %>
