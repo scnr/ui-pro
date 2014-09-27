@@ -18,7 +18,7 @@ describe IssueType do
 
     describe :scopes do
         describe :default do
-            it 'orders by severity' do
+            it 'orders by severity and name' do
                 ha = FactoryGirl.create( :issue_type,
                                          name: 'a1',
                                          severity: high_severity
@@ -71,7 +71,7 @@ describe IssueType do
                                          severity: informational_severity
                 )
 
-                expect(described_class.pluck(:name)).to eq %w(a1 c1 b1 a2 c2 b2 a3 c3 b3 a4 c4 b4)
+                expect(described_class.pluck(:name)).to eq %w(a1 b1 c1 a2 b2 c2 a3 b3 c3 a4 b4 c4)
             end
         end
 
