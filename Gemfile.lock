@@ -356,7 +356,9 @@ DEPENDENCIES
   font-kit-rails
   jbuilder (~> 2.0)
   jquery-rails
+  kramdown
   launchy
+  loofah
   pundit
   quiet_assets
   rails (= 4.1.4)

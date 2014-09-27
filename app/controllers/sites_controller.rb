@@ -1,4 +1,6 @@
 class SitesController < ApplicationController
+    include SitesHelper
+
     before_filter :authenticate_user!
     after_action :verify_authorized
 
@@ -24,6 +26,7 @@ class SitesController < ApplicationController
             authorize @scan
         else
             @scans = @site.scans
+            @chart_data = chart_data
         end
     end
 

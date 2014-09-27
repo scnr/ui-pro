@@ -1,26 +1,31 @@
-<h1>
-    <%= link_to_url_with_external @site.url, @site %>
+<div class="row">
+    <div class="col-md-6">
+        <h1>
+            <%= link_to_url_with_external @site.url, @site %>
 
-    <%= link_to new_site_scan_path(@site), title: 'New scan',
-                class: 'btn btn-xs btn-primary' do %>
-        <i class="fa fa-plus"></i>
-    <% end %>
+            <%= link_to new_site_scan_path(@site), title: 'New scan',
+                        class: 'btn btn-xs btn-primary' do %>
+                <i class="fa fa-plus"></i>
+            <% end %>
 
-    <% if policy(@site).edit? %>
-        <%= link_to edit_site_path( @site ), title: 'Edit site',
-                    class: 'btn btn-xs btn-warning' do %>
-            <i class="fa fa-pencil"></i>
-        <% end %>
-    <% end %>
+            <% if policy(@site).edit? %>
+                <%= link_to edit_site_path( @site ), title: 'Edit site',
+                            class: 'btn btn-xs btn-warning' do %>
+                    <i class="fa fa-pencil"></i>
+                <% end %>
+            <% end %>
 
-    <% if policy(@site).destroy? %>
-        <%= link_to @site, method: :delete, title: 'Delete site',
-                    class: 'btn btn-xs btn-danger',
-                    data: { confirm: 'Are you sure?' } do %>
-            <i class="fa fa-trash"></i>
-        <% end %>
-    <% end %>
-</h1>
+            <% if policy(@site).destroy? %>
+                <%= link_to @site, method: :delete, title: 'Delete site',
+                            class: 'btn btn-xs btn-danger',
+                            data: { confirm: 'Are you sure?' } do %>
+                    <i class="fa fa-trash"></i>
+                <% end %>
+            <% end %>
+        </h1>
+    </div>
+</div>
+
 
 <% if @scans %>
     <div id="summary-tabs">

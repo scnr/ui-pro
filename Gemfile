@@ -18,6 +18,9 @@ gem 'sidekiq'
 gem 'typhoeus'
 gem 'websocket-rails', '0.6.2'
 
+gem 'kramdown'
+gem 'loofah'
+
 gem 'd3-rails'
 gem 'c3-rails'
 

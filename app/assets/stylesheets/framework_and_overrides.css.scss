@@ -1,7 +1,7 @@
-$severity-high-color:          #C9302C;
-$severity-medium-color:        #d45500;
+$severity-high-color:          #d62728;
+$severity-medium-color:        #ff7f0e;
 $severity-low-color:           #f0ad4e;
-$severity-informational-color: #3A87AD;
+$severity-informational-color: #1f77b4;
 
 // import the CSS framework
 @import "bootstrap";
@@ -173,6 +173,42 @@ section {
 
 .label-severity-undetermined {
     @extend .label-default;
+}
+
+.text-severity {
+    @extend .text;
+}
+
+.text-severity-high {
+    color: $severity-high-color;
+}
+
+.text-severity-medium {
+    color: $severity-medium-color;
+}
+
+.text-severity-low {
+    color: $severity-low-color;
+}
+
+.text-severity-informational {
+    color: $severity-informational-color;
+}
+
+.c3-region.severity-high {
+    fill: $severity-high-color;
+}
+
+.c3-region.severity-medium {
+    fill: $severity-medium-color;
+}
+
+.c3-region.severity-low {
+    fill: $severity-low-color;
+}
+
+.c3-region.severity-informational {
+    fill: $severity-informational-color;
 }
 
 .cascade-container {

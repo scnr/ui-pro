@@ -1,60 +1,71 @@
 <%
-    IssueTypeSeverity::SEVERITIES.each do |severity|
-    issues      = @site.issues.send("#{severity}_severity")
-    issues_size = @site.issues.send("#{severity}_severity").size
-    last_name = nil
+    last_severity = nil
+    last_name     = nil
+
+    scoped_find_each( @site.issues ) do |issue|
+    severity    = issue.severity
 %>
 
-<div class="row issue-summary-severity-<%= severity %>">
-    <div class="col-md-12">
+<% if severity.name != last_severity %>
 
-        <h3>
-            <%= severity.capitalize %> severity
-
-            <span class="badge-severity badge-severity-<%= severity %>">
-                <%= issues_size %>
-            </span>
-        </h3>
-
-        <div class="cascade-container">
-            <% scoped_find_each( issues ) do |issue| %>
-
-            <% if issue.type.name != last_name %>
-                <% if last_name %>
-                    </ul>
-                    </div>
-                <% end %>
-
-                <div class="issue-summary-check-<%= issue.type.check_shortname %>">
-                    <h4>
-                        <%= issue.type.name %>,
-
-                        <small>via:</small>
-                    </h4>
-                <ul>
-            <% end %>
-
-                <li class="issue-summary-vector-<%= issue.vector.kind %>">
-                    <code><%= issue.vector.kind %></code>
-
-                    <% if issue.vector.affected_input_name %>
-                        input <code><%= issue.vector.affected_input_name %></code>
-                    <% end %>
-
-                    at
-
-                    <%= link_to_url_with_external issue.vector.action, '#' %>
-                </li>
-
-            <%
-               last_name = issue.type.name
-               end %>
-
+    <%
+       last_name = nil
+       if last_severity %>
             </ul>
             </div>
-        </div>
-    </div>
-</div>
+            </div>
+            </div>
+            </div>
+        <hr/>
+    <% end %>
 
-<hr/>
+    <div class="row" id="issue-summary-severity-<%= severity %>">
+        <div class="col-md-12">
+
+            <h3>
+                <%= severity.capitalize %> severity
+            </h3>
+            <div class="cascade-container">
 <% end %>
+
+        <% if issue.type.name != last_name %>
+            <% if last_name %>
+                </ul>
+                </div>
+            <% end %>
+
+            <div class="issue-summary-check-<%= issue.type.check_shortname %>">
+                <h4>
+                    <%= issue.type.name %>
+
+                    <span class="badge-severity">
+                        <%= @chart_data[:issue_names][issue.type.name] %>
+                    </span>
+
+                    <small>via:</small>
+                </h4>
+            <ul>
+        <% end %>
+
+            <li class="issue-summary-vector-<%= issue.vector.kind %>">
+                <code><%= issue.vector.kind %></code>
+
+                <% if issue.vector.affected_input_name %>
+                    input <code><%= issue.vector.affected_input_name %></code>
+                <% end %>
+
+                at
+
+                <%= link_to_url_with_external issue.vector.action, '#' %>
+            </li>
+
+
+<%
+   last_name = issue.type.name
+   last_severity = issue.severity.name
+   end %>
+</ul>
+</div>
+</div>
+</div>
+</div>

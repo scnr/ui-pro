@@ -1,0 +1,12 @@
+jQuery(function(){
+    window.issuesChart.load({
+        columns: [
+            <%= (['x'] + data[:issue_names].keys).to_json.html_safe %>,
+            <%= (['Issues'] + data[:issue_names].values).to_json.html_safe %>,
+            <%= (['Severity'] + data[:severity_index_for_issue].values).to_json.html_safe %>,
+        ]
+    });
+
+    window.issuesChart.regions.remove();
+    window.issuesChart.regions.add( <%= data[:severity_regions].to_json.html_safe %> );
+});

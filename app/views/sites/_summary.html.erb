@@ -1,9 +1,16 @@
-<%= render partial: 'sites/summary/charts' %>
+<%= render partial: 'sites/summary/statistics' %>
 
 <hr/>
 
 <div class="row">
     <div class="col-md-4 summary-sitemap-container">
+        <h3>
+            Sitemap
+
+            <span class="badge">
+                <%= @site.sitemap_entries.size %>
+            </span>
+        </h3>
         <%= render partial: 'sites/summary/sitemap' %>
     </div>
 

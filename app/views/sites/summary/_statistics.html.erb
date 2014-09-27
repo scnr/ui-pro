@@ -1,0 +1,89 @@
+<% max_severity = @site.issues.max_severity %>
+
+<div id="summary-statistics">
+    <div class="row">
+        <div class="col-md-4">
+            <h3>
+                <strong><%= @site.sitemap_entries.size %></strong>
+                <%= 'page'.pluralize @site.sitemap_entries.size %>
+                with issues,
+
+                <small>
+                    out of
+                    <strong>
+                        <%= @site.sitemap_entries.with_issues.size %>
+                    </strong>
+                </small>
+            </h3>
+        </div>
+
+        <div class="col-md-4">
+            <h3>
+                <strong><%= @site.issues.size %></strong>
+                <%= 'issues'.pluralize @site.issues.size%>,
+
+                <small>
+                    with a maximum severity of
+
+                    <span class="label-severity label-severity-<%= max_severity %>">
+                        <%= max_severity.capitalize %>
+                    </span>
+                </small>
+            </h3>
+        </div>
+
+        <div class="col-md-4">
+            <h3>
+                <strong><%= @site.revisions.size %></strong>
+                <%= 'scan revision'.pluralize @site.revisions.size %>,
+
+                <small>
+                    from <strong><%= @site.scans.size %></strong> base
+                    <%= 'scan'.pluralize(@site.scans.size) %>
+                </small>
+            </h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <h4>
+                Overall, there <%= @site.issues.size == 1 ? 'is' : 'are' %>
+
+                <%
+                    severities_h = {}
+                    severities_a = []
+                    IssueTypeSeverity::SEVERITIES.map do |severity|
+                        issues_size = @site.issues.send("#{severity}_severity").size
+                        next if issues_size == 0
+
+                        severities_h[severity] = issues_size
+                        severities_a << severity
+                    end
+
+                   severities_a.each_with_index do |severity, i|
+                %>
+                    <%= 'and' if severity == severities_a[severities_a.size-1] %>
+
+                    <a href="#issue-summary-severity-<%= severity %>">
+                        <span class="text-severity text-severity-<%= severity %>">
+                            <strong><%= severities_h[severity] %> <%= severity %></strong>
+                        </span>
+                    </a>
+                    <%= ',' unless i > severities_a.size - 3 %>
+                <% end %>
+
+                severity <%= 'issue'.pluralize(@site.issues.size) %>.
+            </h4>
+
+            <div id="summary-charts-issues-container">
+                <div id='chart-issues'>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    <%= render partial: 'sites/summary/chart_load_data.js', locals: { data: @chart_data } %>
+</script>

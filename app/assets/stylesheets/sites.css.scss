@@ -7,7 +7,15 @@
     height: 100px;
 }
 
+#summary-statistics, #summary-charts {
+    text-align: center;
+}
+
 .summary-sitemap-container {
     border-right: 1px solid #eeeeee;
     overflow:     auto;
+}
+
+.highlight {
+    background-color: grey;
 }
