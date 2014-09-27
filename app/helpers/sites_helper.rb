@@ -9,6 +9,9 @@ module SitesHelper
 
         last_severity = nil
         IssueType.all.each do |type|
+            issue_count = @site.issues.where( type: type ).size
+            next if issue_count == 0
+
             data[:issue_names][type.name] = @site.issues.where( type: type ).size
 
             data[:severity_index_for_issue][type.name] ||= 0
