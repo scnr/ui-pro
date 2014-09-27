@@ -10,4 +10,18 @@ class IssueType < ActiveRecord::Base
              foreign_key: 'issue_type_id', dependent: :destroy
 
     has_many :issues
+
+    scope :by_severity, -> do
+        includes(:severity).joins(:severity).order order_by_severity
+    end
+    default_scope { by_severity }
+
+    def self.order_by_severity
+        ret = 'CASE'
+        IssueTypeSeverity::SEVERITIES.each_with_index do |p, i|
+            ret << " WHEN issue_type_severities.name = '#{p}' THEN #{i}"
+        end
+        ret << ' END'
+    end
+
 end
