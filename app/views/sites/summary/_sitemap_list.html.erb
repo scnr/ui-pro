@@ -7,9 +7,14 @@
 
             <%= link_to entry.url, target: '_blank' do %>
                 <i class="fa fa-external-link"></i>
-            <% end%>
+            <% end %>
 
-            <%= link_to entry.url, '#' %>
+            <% if entry.issues.size > 0 %>
+                <%= link_to entry.url, '#' %>
+            <% else %>
+                <%= entry.url %>
+            <% end %>
+
         </li>
     <% end %>
 </ul>
