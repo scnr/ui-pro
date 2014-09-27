@@ -63,7 +63,7 @@
 
                    severities_a.each_with_index do |severity, i|
                 %>
-                    <%= 'and' if severity == severities_a[severities_a.size-1] %>
+                    <%= 'and' if i > 0 && severity == severities_a[severities_a.size-1] %>
 
                     <a href="#issue-summary-severity-<%= severity %>">
                         <span class="text-severity text-severity-<%= severity %>">
