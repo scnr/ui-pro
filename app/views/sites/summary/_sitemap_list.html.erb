@@ -5,14 +5,10 @@
         >
             <code><%= entry.code %></code>
 
-            <%= link_to entry.url, target: '_blank' do %>
-                <i class="fa fa-external-link"></i>
-            <% end %>
-
             <% if entry.issues.size > 0 %>
-                <%= link_to entry.url, '#' %>
+                <%= link_to_url_with_external entry.url, '#' %>
             <% else %>
-                <%= entry.url %>
+                <%= link_to_url_with_external entry.url %>
             <% end %>
 
         </li>

@@ -3,14 +3,10 @@
     <% sites.each do |site| %>
         <tr>
             <td>
-                <%= link_to site.url, target: '_blank' do %>
-                    <i class="fa fa-external-link"></i>
-                <% end%>
-
                 <% if policy(site).show? %>
-                    <%= link_to site.url, site %>
+                    <%= link_to_url_with_external site.url, site %>
                 <% else %>
-                    <%= site.url %>
+                    <%= link_to_url_with_external site.url %>
                 <% end %>
             </td>
 
