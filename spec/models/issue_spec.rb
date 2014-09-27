@@ -12,36 +12,91 @@ describe Issue do
     expect_it { to have_many(:remarks).dependent(:destroy) }
 
     IssueTypeSeverity::SEVERITIES.each do |severity|
-        let(severity) do
-            FactoryGirl.create( :issue_type,
-                severity: FactoryGirl.create( :issue_type_severity, name: severity )
-            ).issues.create
+        let("#{severity}_severity") do
+            FactoryGirl.create( :issue_type_severity, name: severity )
+        end
+
+        let("#{severity}_severity_type") do
+            FactoryGirl.create( :issue_type, severity: send( "#{severity}_severity" ) )
+        end
+
+        let("#{severity}_severity_issue") do
+            send( "#{severity}_severity_type" ).issues.create
         end
     end
 
     describe :scopes do
         describe :default do
-            it 'orders issues by type name' do
-                severity = FactoryGirl.create( :issue_type_severity )
-
-                a = FactoryGirl.create( :issue_type,
-                                    name: 'a',
-                                    severity: severity
+            it 'orders issues by severity and type name' do
+                ha = FactoryGirl.create( :issue_type,
+                                    name: 'a1',
+                                    severity: high_severity
                 )
-                c = FactoryGirl.create( :issue_type,
-                                        name: 'c',
-                                        severity: severity
+                hc = FactoryGirl.create( :issue_type,
+                                         name: 'c1',
+                                         severity: high_severity
                 )
-                b = FactoryGirl.create( :issue_type,
-                                        name: 'b',
-                                        severity: severity
+                hb = FactoryGirl.create( :issue_type,
+                                         name: 'b1',
+                                         severity: high_severity
                 )
 
-                c.issues.create
-                a.issues.create
-                b.issues.create
+                ma = FactoryGirl.create( :issue_type,
+                                        name: 'a2',
+                                        severity: medium_severity
+                )
+                mc = FactoryGirl.create( :issue_type,
+                                         name: 'c2',
+                                         severity: medium_severity
+                )
+                mb = FactoryGirl.create( :issue_type,
+                                         name: 'b2',
+                                         severity: medium_severity
+                )
 
-                expect(described_class.all.map(&:type).map(&:name)).to eq %w(a b c)
+                la = FactoryGirl.create( :issue_type,
+                                        name: 'a3',
+                                        severity: low_severity
+                )
+                lc = FactoryGirl.create( :issue_type,
+                                         name: 'c3',
+                                         severity: low_severity
+                )
+                lb = FactoryGirl.create( :issue_type,
+                                         name: 'b3',
+                                         severity: low_severity
+                )
+
+                ia = FactoryGirl.create( :issue_type,
+                                         name: 'a4',
+                                         severity: informational_severity
+                )
+                ic = FactoryGirl.create( :issue_type,
+                                         name: 'c4',
+                                         severity: informational_severity
+                )
+                ib = FactoryGirl.create( :issue_type,
+                                         name: 'b4',
+                                         severity: informational_severity
+                )
+
+                ha.issues.create
+                hc.issues.create
+                hb.issues.create
+
+                ma.issues.create
+                mc.issues.create
+                mb.issues.create
+
+                la.issues.create
+                lc.issues.create
+                lb.issues.create
+
+                ia.issues.create
+                ic.issues.create
+                ib.issues.create
+
+                expect(described_class.all.map(&:type).map(&:name)).to eq %w(a1 b1 c1 a2 b2 c2 a3 b3 c3 a4 b4 c4)
             end
         end
 
@@ -51,7 +106,7 @@ describe Issue do
 
                     # Create issues of all severities
                     IssueTypeSeverity::SEVERITIES.each do |s|
-                        send( s )
+                        send( "#{s}_severity_issue" )
                     end
 
                     issues = Issue.send( "#{severity}_severity" )

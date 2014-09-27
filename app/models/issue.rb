@@ -25,7 +25,26 @@ class Issue < ActiveRecord::Base
         end
     end
 
-    default_scope { includes(:vector).includes(:type).order('issue_types.name asc') }
+    scope :by_severity, -> { includes(:severity).order order_by_severity }
+    default_scope do
+        includes(:vector).includes(:type).includes(:vector).
+            by_severity.order('issue_types.name asc')
+    end
+
+    def self.order_by_severity
+        ret = 'CASE'
+        IssueTypeSeverity::SEVERITIES.each_with_index do |p, i|
+            ret << " WHEN issue_type_severities.name = '#{p}' THEN #{i}"
+        end
+        ret << ' END'
+    end
+
+    def self.max_severity
+        issue = by_severity.first
+        return if !issue
+
+        issue.severity
+    end
 
     def self.create_from_arachni( issue, options = {} )
         issue_remarks = []
