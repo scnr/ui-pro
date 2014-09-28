@@ -58,10 +58,11 @@ module ApplicationHelper
         [resource, params[:controller]].flatten
     end
 
-    def link_to_url_with_external( external_url, internal_url = nil )
+    def link_to_url_with_external( external_url, internal_url = nil, options = {} )
         render partial: 'shared/link_to_url_with_external', locals: {
             internal_url: internal_url,
-            external_url: external_url
+            external_url: external_url,
+            options:      options
         }
     end
 
