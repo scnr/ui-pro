@@ -10,7 +10,7 @@ class SitesController < ApplicationController
     # GET /sites
     # GET /sites.json
     def index
-        @sites        = current_user.sites
+        @sites        = current_user.sites.includes(:verification)
         @shared_sites = current_user.shared_sites
 
         authorize Site
