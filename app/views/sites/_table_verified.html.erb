@@ -15,7 +15,7 @@
             </td>
 
             <td class="state">
-                <% if site.revisions.any? %>
+                <% if site.scanned_at %>
                     <% if (sz = site.issues.high_severity.size) > 0 %>
                         <span class="label-severity label-lg label-severity-high">Critical</span>
 
