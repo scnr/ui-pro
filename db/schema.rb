@@ -376,6 +376,7 @@ ActiveRecord::Schema.define(version: 20140920041348) do
   create_table "revisions", force: true do |t|
     t.integer  "scan_id"
     t.string   "state"
+    t.integer  "index"
     t.datetime "started_at"
     t.datetime "stopped_at"
     t.string   "snapshot_location"
