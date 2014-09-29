@@ -21,12 +21,22 @@
     font-family: "Open Sans", sans-serif;
 }
 
-ul.info li {
-    list-style:   none;
-    margin-left: -20px;
+.with-list-info {
 }
 
-ul.info li:before {
+ul.list-info li {
+    color:        #777777;
+    list-style:   none;
+    margin-left: -20px;
+    margin-top:  -5px;
+}
+
+ul.list-info li span {
+    margin-top:   3px;
+    position:     absolute;
+    padding-left: 3px;
+}
+
+ul.list-info li:before {
     content: "\02EA";
-    margin: 0px 0px 0 0px;
 }
