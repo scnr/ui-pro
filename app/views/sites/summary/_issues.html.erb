@@ -53,7 +53,7 @@
             <ul class="list-unstyled">
         <% end %>
 
-            <li class="issue-summary-vector-<%= issue.vector.kind %>">
+            <li class="with-list-info issue-summary-vector-<%= issue.vector.kind %>">
                 <code><%= issue.vector.kind %></code>
 
                 <% if issue.vector.affected_input_name %>
@@ -62,14 +62,18 @@
 
                 at
 
-                <%= link_to_url_with_external issue.vector.action, '#' %>
+                <%= link_to_url_with_external external: issue.vector.action,
+                                              internal: '#',
+                                              display_path_only: true %>
 
-                <ul class="issue-summary-info text-muted info">
+                <ul class="issue-summary-info list-info">
                     <li>
-                        Found by the
-                        <%= link_to "#{issue.revision.index.ordinalize} revision", [@site, issue.revision.scan, issue.revision] %>
-                        of
-                        <%= link_to issue.revision.scan.name, [@site, issue.revision.scan] %>.
+                        <span>
+                            Found by the
+                            <%= link_to "#{issue.revision.index.ordinalize} revision", [@site, issue.revision.scan, issue.revision] %>
+                            of
+                            <%= link_to issue.revision.scan.name, [@site, issue.revision.scan] %>.
+                        </span>
                     </li>
                 </ul>
             </li>

@@ -11,7 +11,7 @@
     <% sites.each do |site| %>
         <tr>
             <td>
-                <%= link_to_url_with_external site.url, site %>
+                <%= link_to_url_with_external external: site.url, internal: site %>
             </td>
 
             <td class="state">

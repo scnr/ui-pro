@@ -58,10 +58,16 @@ module ApplicationHelper
         [resource, params[:controller]].flatten
     end
 
-    def link_to_url_with_external( external_url, internal_url = nil, options = {} )
+    def link_to_url_with_external( options = {} )
+        if options[:display_path_only]
+            parsed = Arachni::URI( options[:external] )
+            scheme_host_and_port = "#{parsed.scheme}://#{parsed.host}"
+            scheme_host_and_port << ":#{parsed.port}" if parsed.port
+
+            options[:display] = options[:external].sub( scheme_host_and_port, '' )
+        end
+
         render partial: 'shared/link_to_url_with_external', locals: {
-            internal_url: internal_url,
-            external_url: external_url,
             options:      options
         }
     end

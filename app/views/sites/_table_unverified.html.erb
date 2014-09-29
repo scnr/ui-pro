@@ -4,9 +4,9 @@
         <tr>
             <td>
                 <% if policy(site).show? %>
-                    <%= link_to_url_with_external site.url, site %>
+                    <%= link_to_url_with_external external: site.url, internal: site %>
                 <% else %>
-                    <%= link_to_url_with_external site.url %>
+                    <%= link_to_url_with_external external: site.url %>
                 <% end %>
             </td>
 
