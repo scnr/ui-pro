@@ -59,7 +59,7 @@ module ApplicationHelper
     end
 
     def link_to_url_with_external( options = {} )
-        if options[:display_path_only]
+        if options.delete(:display_path_only)
             parsed = Arachni::URI( options[:external] )
             scheme_host_and_port = "#{parsed.scheme}://#{parsed.host}"
             scheme_host_and_port << ":#{parsed.port}" if parsed.port
