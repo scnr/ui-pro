@@ -2,7 +2,7 @@
     last_severity = nil
     last_name     = nil
 
-    scoped_find_each( @site.issues ) do |issue|
+    scoped_find_each( @site.issues.includes(:revision).includes(revision: :scan) ) do |issue|
     severity    = issue.severity
 %>
 
@@ -23,7 +23,13 @@
         <div class="col-md-12">
 
             <h3>
-                <%= severity.capitalize %> severity
+                <span class="text-severity text-severity-<%= severity %>">
+                    <%= severity.capitalize %> severity
+                </span>
+
+                <span class="badge-severity badge-severity-<%= severity %>">
+                    <%= @chart_data[:severities][severity.to_sym] %>
+                </span>
             </h3>
             <div class="cascade-container">
 <% end %>
@@ -38,13 +44,13 @@
                 <h4>
                     <%= issue.type.name %>
 
-                    <span class="badge-severity">
+                    <span class="badge-severity badge-severity-<%= severity %>">
                         <%= @chart_data[:issue_names][issue.type.name] %>
                     </span>
 
                     <small>via:</small>
                 </h4>
-            <ul>
+            <ul class="list-unstyled">
         <% end %>
 
             <li class="issue-summary-vector-<%= issue.vector.kind %>">
@@ -57,6 +63,15 @@
                 at
 
                 <%= link_to_url_with_external issue.vector.action, '#' %>
+
+                <ul class="issue-summary-info text-muted info">
+                    <li>
+                        Found by the
+                        <%= link_to "#{issue.revision.index.ordinalize} revision", [@site, issue.revision.scan, issue.revision] %>
+                        of
+                        <%= link_to issue.revision.scan.name, [@site, issue.revision.scan] %>.
+                    </li>
+                </ul>
             </li>
 
 

@@ -5,10 +5,10 @@
 <div class="row">
     <div class="col-md-4 summary-sitemap-container">
         <h3>
-            Sitemap
+            Pages with issues
 
             <span class="badge">
-                <%= @site.sitemap_entries.size %>
+                <%= @site.sitemap_entries.with_issues.size %>
             </span>
         </h3>
         <%= render partial: 'sites/summary/sitemap' %>

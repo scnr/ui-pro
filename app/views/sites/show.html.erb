@@ -30,8 +30,10 @@
 <% if @scans %>
     <div id="summary-tabs">
         <ul class="nav nav-tabs">
-            <li class="active">
-                <a href="#summary" role="tab" data-toggle="tab">Summary</a>
+            <li class="active <%= 'disabled' if !@site.scanned? %>">
+                <a href="#summary" role="tab"
+                   <%= 'data-toggle="tab"'.html_safe if @site.scanned? %>
+                >Summary</a>
             </li>
 
             <li>
@@ -45,14 +47,21 @@
             </li>
 
             <li>
-                <a href="#analytics" role="tab" data-toggle="tab">Analytics</a>
+                <a href="#analytics" role="tab"
+                   <%= 'data-toggle="tab"'.html_safe if @site.scanned? %>
+                >
+                    Analytics
+                </a>
             </li>
         </ul>
 
         <div class="tab-content">
-            <div class="tab-pane active" id="summary">
-                <%= render partial: 'summary' %>
-            </div>
+            <% if @site.scanned? %>
+                <div class="tab-pane active" id="summary">
+                    <%= render partial: 'summary' %>
+                </div>
+            <% end %>
+
 
             <div class="tab-pane" id="scans">
                 <div class="row">
@@ -67,8 +76,10 @@
                 </div>
             </div>
 
-            <div class="tab-pane" id="analytics">
-            </div>
+            <% if @site.scanned? %>
+                <div class="tab-pane" id="analytics">
+                </div>
+            <% end %>
         </div>
     </div>
 <% else %>

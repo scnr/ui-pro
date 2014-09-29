@@ -1,16 +1,16 @@
-<ul>
+<ul class="list-unstyled">
     <% scoped_find_each(sitemap) do |entry| %>
         <li
                 class="sitemap-entry sitemap-entry-with<% 'out' if entry.issues.size == 0 %>-issues"
         >
-            <code><%= entry.code %></code>
+            <code>[<%= entry.code %>]</code>
 
             <% if entry.issues.size > 0 %>
-                <%= link_to_url_with_external entry.url, '#' %>
+                <%= link_to_url_with_external entry.url, '#',
+                        class: "text-severity text-severity-#{entry.issues.max_severity}" %>
             <% else %>
                 <%= link_to_url_with_external entry.url %>
             <% end %>
-
         </li>
     <% end %>
 </ul>
