@@ -186,10 +186,11 @@ describe Schedule do
             subject.day_frequency   = 2
             subject.month_frequency = 3
 
-            expect((Time.now + subject.interval).to_s).to eq Time.now.advance(
-                months: subject.month_frequency,
-                days:   subject.day_frequency
-            ).to_s
+            now = Time.now
+            expect((now + subject.interval).to_s).to eq(
+                (now + subject.day_frequency.days +
+                    subject.month_frequency.months
+                ).to_s)
         end
     end
 
