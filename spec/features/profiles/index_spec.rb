@@ -121,7 +121,7 @@ feature 'Profile index page' do
 
             feature 'with revisions' do
                 before do
-                    scan.revisions << FactoryGirl.create(:revision)
+                    scan.revisions << FactoryGirl.create(:revision, scan: scan)
                 end
 
                 feature 'and the user is an admin' do

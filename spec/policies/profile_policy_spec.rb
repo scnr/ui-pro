@@ -101,7 +101,7 @@ describe ProfilePolicy do
                 end
 
                 context 'with revisions' do
-                    before { scan.revisions << FactoryGirl.create(:revision) }
+                    before { scan.revisions << FactoryGirl.create(:revision, scan: scan) }
 
                     context 'when the user' do
                         context 'is the site owner' do

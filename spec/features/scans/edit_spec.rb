@@ -107,7 +107,7 @@ feature 'Edit scan page' do
             before do
                 site.verification.verified!
 
-                scan.revisions << FactoryGirl.create(:revision)
+                scan.revisions << FactoryGirl.create(:revision, scan: scan)
 
                 login_as user, scope: :user
                 visit edit_site_scan_path( site, scan )

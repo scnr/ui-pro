@@ -11,8 +11,8 @@ feature 'Revision page' do
     let(:other_user) { FactoryGirl.create :user, email: 'dd@ss.cc', shared_sites: [site] }
     let(:user_without_sites) { FactoryGirl.create :user, email: 'dd2@ss.cc' }
     let(:site) { FactoryGirl.create :site }
-    let(:scan) { FactoryGirl.create :scan, site: site, revisions: [revision] }
-    let(:revision) { FactoryGirl.create :revision }
+    let(:scan) { FactoryGirl.create :scan, site: site }
+    let(:revision) { FactoryGirl.create :revision, scan: scan }
 
     after(:each) do
         Warden.test_reset!

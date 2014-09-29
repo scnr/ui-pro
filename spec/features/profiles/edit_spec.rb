@@ -11,7 +11,7 @@ feature 'Profile edit page', :devise do
     let(:user) { FactoryGirl.create :user }
     let(:other_user) { FactoryGirl.create(:user, email: 'other@example.com') }
     let(:scan) { FactoryGirl.create :scan, site: site }
-    let(:revision) { FactoryGirl.create :revision }
+    let(:revision) { FactoryGirl.create :revision, scan: scan }
     let(:site) { FactoryGirl.create :site }
 
     after(:each) do

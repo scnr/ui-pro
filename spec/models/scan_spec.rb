@@ -59,17 +59,15 @@ describe Scan do
                                     name: 'stuff5',
                                     schedule_attributes: {
                                         start_at: Time.now
-                                    },
-                                    revisions: [FactoryGirl.create(:revision)]
-                ),
+                                    }
+                ).tap { |s| s.revisions.create },
                 FactoryGirl.create( :scan,
                                     site: site,
                                     name: 'stuff6',
                                     schedule_attributes: {
                                         start_at: Time.now
                                     },
-                                    revisions: [FactoryGirl.create(:revision)]
-                )
+                ).tap { |s| s.revisions.create },
             ]
         end
 
