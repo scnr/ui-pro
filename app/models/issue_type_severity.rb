@@ -10,6 +10,14 @@ class IssueTypeSeverity < ActiveRecord::Base
         end
     end
 
+    def self.order_sql
+        ret = 'CASE'
+        SEVERITIES.each_with_index do |p, i|
+            ret << " WHEN issue_type_severities.name = '#{p}' THEN #{i}"
+        end
+        ret << ' END'
+    end
+
     def to_s
         name
     end

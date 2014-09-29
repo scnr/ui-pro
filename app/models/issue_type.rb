@@ -12,16 +12,9 @@ class IssueType < ActiveRecord::Base
     has_many :issues
 
     scope :by_severity, -> do
-        includes(:severity).joins(:severity).order( order_by_severity ).order(name: :asc)
+        includes(:severity).joins(:severity).
+            order( IssueTypeSeverity.order_sql ).order(name: :asc)
     end
     default_scope { by_severity }
-
-    def self.order_by_severity
-        ret = 'CASE'
-        IssueTypeSeverity::SEVERITIES.each_with_index do |p, i|
-            ret << " WHEN issue_type_severities.name = '#{p}' THEN #{i}"
-        end
-        ret << ' END'
-    end
 
 end
