@@ -20,3 +20,13 @@
 .c3 .tick, .c3-legend-item {
     font-family: "Open Sans", sans-serif;
 }
+
+ul.info li {
+    list-style:   none;
+    margin-left: -20px;
+}
+
+ul.info li:before {
+    content: "\02EA";
+    margin: 0px 0px 0 0px;
+}
