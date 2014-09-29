@@ -52,6 +52,10 @@ class Site < ActiveRecord::Base
     end
     alias :to_s :url
 
+    def scanned?
+        revisions.order( stopped_at: :desc ).limit(1).pluck(:started_at).first
+    end
+
     def scanned_at
         revisions.order( stopped_at: :desc ).limit(1).pluck(:stopped_at).first
     end

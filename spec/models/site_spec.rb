@@ -281,6 +281,30 @@ describe Site, type: :model do
         end
     end
 
+    describe '#scanned?' do
+        context 'when the site has at least one started revision' do
+            it 'returns true' do
+                scan.revisions.create(
+                    started_at: Time.now - 9000
+                )
+                expect(subject).to be_scanned
+            end
+        end
+
+        context 'when the site does not have started revisions' do
+            it 'returns false' do
+                scan.revisions.create
+                expect(subject).to_not be_scanned
+            end
+        end
+
+        context 'when the site has no revisions' do
+            it 'returns false' do
+                expect(subject).to_not be_scanned
+            end
+        end
+    end
+
     describe '#scanned_at' do
         it 'returns the latest stop_time' do
             scan.revisions.create(
