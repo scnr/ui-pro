@@ -30,13 +30,15 @@
 <% if @scans %>
     <div id="summary-tabs">
         <ul class="nav nav-tabs">
-            <li class="active <%= 'disabled' if !@site.scanned? %>">
+            <li class="<%= @site.scanned? ? 'active' : 'disabled' %>">
                 <a href="#summary" role="tab"
                    <%= 'data-toggle="tab"'.html_safe if @site.scanned? %>
                 >Summary</a>
             </li>
 
-            <li>
+            <li
+                class="<%= 'active' if !@site.scanned? %>"
+            >
                 <a href="#scans" role="tab" data-toggle="tab">
                     Scans
 
@@ -46,7 +48,7 @@
                 </a>
             </li>
 
-            <li>
+            <li class="<%= 'disabled' if !@site.scanned? %>">
                 <a href="#analytics" role="tab"
                    <%= 'data-toggle="tab"'.html_safe if @site.scanned? %>
                 >
@@ -62,8 +64,7 @@
                 </div>
             <% end %>
 
-
-            <div class="tab-pane" id="scans">
+            <div class="tab-pane <%= 'active' if !@site.scanned? %>" id="scans">
                 <div class="row">
                     <div class="col-md-4">
                         <%= refreshable_partial( [:table, @site, :scans] )%>
