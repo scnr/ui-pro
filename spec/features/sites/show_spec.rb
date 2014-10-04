@@ -224,6 +224,9 @@ feature 'Site page' do
                     feature 'sitemap' do
                         let(:sitemap) { find '#summary-sitemap' }
 
+                        scenario 'URLs link to the Page page'
+                        scenario 'URLs are color-coded by severity'
+
                         scenario 'user sees amount of pages in the heading' do
                             expect(sitemap.find('h3')).to have_text site.sitemap_entries.with_issues.size
                         end
@@ -239,29 +242,16 @@ feature 'Site page' do
                                 expect(sitemap).to have_text entry.code
                             end
                         end
-
-                        scenario 'URLs are color-coded by severity'
                     end
 
                     feature 'issues' do
                         let(:issues) { find '#summary-issues' }
 
                         feature 'grouped by severity' do
-                            # scenario 'user sees high severity issues' do
-                            #     site.issues.high_severity.each do |issue|
-                            #         expect(issues)
-                            #     end
-                            # end
-                            #
-                            # scenario 'user sees medium severity issues'
-                            # scenario 'user sees low severity issues'
-                            # scenario 'user sees informational severity issues'
-
                             scenario 'user sees color-coded headings' do
                                 IssueTypeSeverity::SEVERITIES.each do |severity|
                                     expect(issues.find("h3 span.text-severity-#{severity}")).to have_content "#{severity.capitalize} severity"
                                 end
-
                             end
 
                             scenario 'user sees amount of issues in the heading' do
