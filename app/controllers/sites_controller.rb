@@ -25,7 +25,12 @@ class SitesController < ApplicationController
 
             authorize @scan
         else
-            @scans = @site.scans
+            @scans  = @site.scans
+            @issues = @site.issues.includes(:referring_page).
+                includes(referring_page: :dom).
+                includes(:revision).
+                includes(revision: :scan)
+
             @chart_data = chart_data
         end
     end

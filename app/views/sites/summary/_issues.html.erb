@@ -2,7 +2,7 @@
     last_severity = nil
     last_name     = nil
 
-    scoped_find_each( @site.issues.includes(:revision).includes(revision: :scan) ) do |issue|
+    scoped_find_each( @issues ) do |issue|
     severity    = issue.severity
 %>
 
