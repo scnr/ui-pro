@@ -62,9 +62,17 @@
 
                 at
 
-                <%= link_to_url_with_external external: issue.vector.action,
+                <%= link_to_url_with_external external: issue.referring_page.dom.url,
                                               internal: '#',
                                               display_path_only: true %>
+
+                <% if issue.referring_page.dom.url != issue.vector.action %>
+                    pointing to
+
+                    <%= link_to_url_with_external external: issue.vector.action,
+                                                  internal: '#',
+                                                  display_path_only: true %>
+                <% end %>
 
                 <ul class="issue-summary-info list-info">
                     <li>
