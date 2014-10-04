@@ -300,6 +300,8 @@ feature 'Site page' do
                                         end
                                     end
 
+                                    scenario 'users sees link to the Issue page'
+
                                     scenario 'user sees vector type' do
                                         site.issues.each do |issue|
                                             expect(issues.find("#summary-issue-#{issue.digest}")).to have_content issue.vector.kind
