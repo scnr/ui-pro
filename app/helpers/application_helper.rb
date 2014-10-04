@@ -58,13 +58,17 @@ module ApplicationHelper
         [resource, params[:controller]].flatten
     end
 
+    def url_without_scheme_host_port( url )
+        parsed = Arachni::URI( url )
+        scheme_host_and_port = "#{parsed.scheme}://#{parsed.host}"
+        scheme_host_and_port << ":#{parsed.port}" if parsed.port
+
+        url.sub( scheme_host_and_port, '' )
+    end
+
     def link_to_url_with_external( options = {} )
         if options.delete(:display_path_only)
-            parsed = Arachni::URI( options[:external] )
-            scheme_host_and_port = "#{parsed.scheme}://#{parsed.host}"
-            scheme_host_and_port << ":#{parsed.port}" if parsed.port
-
-            options[:display] = options[:external].sub( scheme_host_and_port, '' )
+            options[:display] = url_without_scheme_host_port( options[:external] )
         end
 
         render partial: 'shared/link_to_url_with_external', locals: {
@@ -83,4 +87,5 @@ module ApplicationHelper
         Loofah.fragment( html ).scrub!(:prune).to_s
     end
 
+    extend self
 end
