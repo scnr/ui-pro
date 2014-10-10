@@ -3,30 +3,7 @@
    site_scans = @issues_summary[:scans]
 %>
 
-<ul id="sidebar" class="nav nav-pills nav-stacked">
-
-    <li>&nbsp;</li>
-
-    <% if request.path != site_path( @site ) %>
-    <li>
-        <%= link_to @site do %>
-            Site overview
-        <% end %>
-
-        <hr/>
-    </li>
-    <% end %>
-
-    <% if @scan %>
-    <li class="<%= 'active' if request.path == site_scan_path( @site, @scan ) %>">
-        <%= link_to [@site, @scan] do %>
-            Scan overview
-        <% end %>
-
-        <hr/>
-    </li>
-    <% end %>
-
+<ul id="site-sidebar" class="nav nav-pills nav-stacked">
     <li>
         <ul class="nav nav-vertical">
             <% site_scans.each do |scan| %>
@@ -71,23 +48,6 @@
                         <% end %>
                     </small>
                 </p>
-                <% end %>
-
-                <% if @scan && scan.id == @scan.id %>
-                <ul class="nav nav-pills nav-stacked">
-                    <% scan.revisions.each do |revision| %>
-                    <li class="<%= 'active' if @revision && @revision.id == revision.id %>">
-
-                        <%= link_to [revision.scan.site, revision.scan, revision] do %>
-                            #<%= revision.index %>
-
-                            <span class="text-muted">
-                                &ndash; 10 fixed issues, <%= revision.issues.size %> new.
-                            </span>
-                        <% end %>
-                    </li>
-                    <% end %>
-                </ul>
                 <% end %>
             </li>
             <% end %>

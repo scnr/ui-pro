@@ -107,282 +107,308 @@ feature 'Site page' do
                     end
                 end
 
-                feature 'with issues' do
+                feature 'with scans' do
                     before do
                         other_scan.revisions.create
                         site.scans << other_scan
+                    end
 
-                        100.times do |i|
-                            site.sitemap_entries.create(
-                                url:      "#{site.url}/#{i}",
-                                code:     200,
-                                revision: site.revisions.sample
-                            )
+                    feature 'sidebar' do
+                        let(:sidebar) { find '#sidebar' }
+
+                        feature 'scan list' do
+                            let(:scans) { find '#site-sidebar' }
+
+                            scenario 'user sees scans'
+
+                            scenario 'user sees edit button'
+                            scenario 'user sees delete button'
+
+                            scenario 'user sees link'
+                            scenario 'user sees name'
+
+                            scenario 'user sees pages'
+                            scenario 'user sees issues'
+                            scenario 'user sees plan'
+                            scenario 'user sees profile'
+                            scenario 'user sees schedule'
                         end
+                    end
 
-                        @severities = {}
-                        @types      = {}
-                        25.times do |i|
-                            IssueTypeSeverity::SEVERITIES.each do |severity|
-                                @severities[severity] ||=
-                                    FactoryGirl.create(:issue_type_severity,
-                                                   name: severity )
-
-                                type_name = "#{severity}-#{rand(25)}"
-                                type = @types[type_name] ||= FactoryGirl.create(:issue_type,
-                                    severity: @severities[severity],
-                                    name:     "Stuff #{type_name}",
-                                    check_shortname: type_name
-                                )
-
-                                sitemap_entry = site.sitemap_entries.create(
-                                    url:      "#{site.url}/#{severity}/#{i}",
-                                    code:     i,
+                    feature 'with issues' do
+                        before do
+                            100.times do |i|
+                                site.sitemap_entries.create(
+                                    url:      "#{site.url}/#{i}",
+                                    code:     200,
                                     revision: site.revisions.sample
                                 )
-
-                                revision.issues.create(
-                                    type:           type,
-                                    referring_page: FactoryGirl.create(:issue_page),
-                                    vector:         FactoryGirl.create(:vector),
-                                    sitemap_entry:  sitemap_entry,
-                                    digest:         rand(99999999999999).to_s
-                                )
                             end
-                        end
 
-                        visit site_path( site )
-                    end
-
-                    let(:types) { @types.values }
-                    let(:severities) { @severities.values }
-
-                    feature 'statistics' do
-                        let(:statistics) { find '#summary-statistics' }
-
-                        scenario 'user sees amount of pages with issues' do
-                            expect(statistics).to have_text "#{site.sitemap_entries.with_issues.size} pages with issues"
-                        end
-
-                        scenario 'user sees total amount of pages' do
-                            expect(statistics).to have_text "out of #{site.sitemap_entries.size}"
-                        end
-
-                        scenario 'user sees amount of issues' do
-                            expect(statistics).to have_text "#{site.issues.size} issues"
-                        end
-
-                        scenario 'user sees maximum severity of issues' do
-                            expect(statistics).to have_text "maximum severity of #{site.issues.max_severity.capitalize}"
-                        end
-
-                        scenario 'user sees amount of scan revisions' do
-                            expect(statistics).to have_text "#{site.revisions.size} scan revisions"
-                        end
-
-                        scenario 'user sees amount of scans' do
-                            expect(statistics).to have_text "#{site.scans.size} base scans"
-                        end
-
-                        scenario 'user sees amount of issues by severity' do
-                            IssueTypeSeverity::SEVERITIES.each do |severity|
-                                elem = statistics.find(".text-severity-#{severity}")
-
-                                expectation =
-                                    "#{site.issues.send("#{severity}_severity").size} #{severity}"
-
-                                expect(elem).to have_text expectation
-                            end
-                        end
-                    end
-
-                    feature 'sitemap' do
-                        let(:sitemap) { find '#summary-sitemap' }
-
-                        scenario 'URLs link to the Page page'
-                        scenario 'URLs are color-coded by severity'
-
-                        scenario 'user sees amount of pages in the heading' do
-                            expect(sitemap.find('h3')).to have_text site.sitemap_entries.with_issues.size
-                        end
-
-                        scenario 'includes pages with issues' do
-                            site.sitemap_entries.with_issues.each do |entry|
-                                expect(sitemap).to have_text ApplicationHelper.url_without_scheme_host_port( entry.url )
-                            end
-                        end
-
-                        scenario 'includes HTTP response status code' do
-                            site.sitemap_entries.with_issues.each do |entry|
-                                expect(sitemap).to have_text entry.code
-                            end
-                        end
-                    end
-
-                    feature 'issues' do
-                        let(:issues) { find '#summary-issues' }
-
-                        feature 'grouped by severity' do
-                            scenario 'user sees color-coded headings' do
+                            @severities = {}
+                            @types      = {}
+                            25.times do |i|
                                 IssueTypeSeverity::SEVERITIES.each do |severity|
-                                    expect(issues.find("h3 span.text-severity-#{severity}")).to have_content "#{severity.capitalize} severity"
+                                    @severities[severity] ||=
+                                        FactoryGirl.create(:issue_type_severity,
+                                                       name: severity )
+
+                                    type_name = "#{severity}-#{rand(25)}"
+                                    type = @types[type_name] ||= FactoryGirl.create(:issue_type,
+                                        severity: @severities[severity],
+                                        name:     "Stuff #{type_name}",
+                                        check_shortname: type_name
+                                    )
+
+                                    sitemap_entry = site.sitemap_entries.create(
+                                        url:      "#{site.url}/#{severity}/#{i}",
+                                        code:     i,
+                                        revision: site.revisions.sample
+                                    )
+
+                                    revision.issues.create(
+                                        type:           type,
+                                        referring_page: FactoryGirl.create(:issue_page),
+                                        vector:         FactoryGirl.create(:vector),
+                                        sitemap_entry:  sitemap_entry,
+                                        digest:         rand(99999999999999).to_s
+                                    )
                                 end
                             end
 
-                            scenario 'user sees amount of issues in the heading' do
+                            visit site_path( site )
+                        end
+
+                        let(:types) { @types.values }
+                        let(:severities) { @severities.values }
+
+                        feature 'statistics' do
+                            let(:statistics) { find '#summary-statistics' }
+
+                            scenario 'user sees amount of pages with issues' do
+                                expect(statistics).to have_text "#{site.sitemap_entries.with_issues.size} pages with issues"
+                            end
+
+                            scenario 'user sees total amount of pages' do
+                                expect(statistics).to have_text "out of #{site.sitemap_entries.size}"
+                            end
+
+                            scenario 'user sees amount of issues' do
+                                expect(statistics).to have_text "#{site.issues.size} issues"
+                            end
+
+                            scenario 'user sees maximum severity of issues' do
+                                expect(statistics).to have_text "maximum severity of #{site.issues.max_severity.capitalize}"
+                            end
+
+                            scenario 'user sees amount of scan revisions' do
+                                expect(statistics).to have_text "#{site.revisions.size} scan revisions"
+                            end
+
+                            scenario 'user sees amount of scans' do
+                                expect(statistics).to have_text "#{site.scans.size} base scans"
+                            end
+
+                            scenario 'user sees amount of issues by severity' do
                                 IssueTypeSeverity::SEVERITIES.each do |severity|
-                                    expect(issues.find("h3 span.badge-severity-#{severity}")).to have_content site.issues.send("#{severity}_severity").size
+                                    elem = statistics.find(".text-severity-#{severity}")
+
+                                    expectation =
+                                        "#{site.issues.send("#{severity}_severity").size} #{severity}"
+
+                                    expect(elem).to have_text expectation
+                                end
+                            end
+                        end
+
+                        feature 'sitemap' do
+                            let(:sitemap) { find '#summary-sitemap' }
+
+                            scenario 'URLs link to the Page page'
+                            scenario 'URLs are color-coded by severity'
+
+                            scenario 'user sees amount of pages in the heading' do
+                                expect(sitemap.find('h3')).to have_text site.sitemap_entries.with_issues.size
+                            end
+
+                            scenario 'includes pages with issues' do
+                                site.sitemap_entries.with_issues.each do |entry|
+                                    expect(sitemap).to have_text ApplicationHelper.url_without_scheme_host_port( entry.url )
                                 end
                             end
 
-                            feature 'and by issue type' do
-                                scenario 'user sees issue type headings' do
-                                    types.each do |type|
-                                        expect(issues.find(".issue-summary-check-#{type.check_shortname} h4")).to have_content type.name
+                            scenario 'includes HTTP response status code' do
+                                site.sitemap_entries.with_issues.each do |entry|
+                                    expect(sitemap).to have_text entry.code
+                                end
+                            end
+                        end
+
+                        feature 'issues' do
+                            let(:issues) { find '#summary-issues' }
+
+                            feature 'grouped by severity' do
+                                scenario 'user sees color-coded headings' do
+                                    IssueTypeSeverity::SEVERITIES.each do |severity|
+                                        expect(issues.find("h3 span.text-severity-#{severity}")).to have_content "#{severity.capitalize} severity"
                                     end
                                 end
 
                                 scenario 'user sees amount of issues in the heading' do
-                                    types.each do |type|
-                                        expect(issues.find(".issue-summary-check-#{type.check_shortname} h4 span.badge-severity-#{type.severity.name}")).to have_content type.issues.size
+                                    IssueTypeSeverity::SEVERITIES.each do |severity|
+                                        expect(issues.find("h3 span.badge-severity-#{severity}")).to have_content site.issues.send("#{severity}_severity").size
                                     end
                                 end
 
-                                feature 'for each issue' do
-                                    feature 'scan info' do
-                                        scenario 'user sees scan name' do
-                                            site.issues.each do |issue|
-                                                expect(issues.find("#summary-issue-#{issue.digest} ul.issue-summary-info")).to have_content issue.revision.scan.name
-                                            end
-                                        end
-
-                                        scenario 'user sees scan link' do
-                                            site.issues.each do |issue|
-                                                expect(issues.find("#summary-issue-#{issue.digest} ul.issue-summary-info li span")).to have_xpath "//a[@href='#{site_scan_path(issue.revision.scan.site, issue.revision.scan)}']"
-                                            end
-                                        end
-
-                                        scenario 'user sees revision index' do
-                                            site.issues.each do |issue|
-                                                expect(issues.find("#summary-issue-#{issue.digest} ul.issue-summary-info")).to have_content issue.revision.index
-                                            end
-                                        end
-
-                                        scenario 'user sees revision link' do
-                                            site.issues.each do |issue|
-                                                expect(issues.find("#summary-issue-#{issue.digest} ul.issue-summary-info li span")).to have_xpath "//a[@href='#{site_scan_revision_path(issue.revision.scan.site, issue.revision.scan, issue.revision)}']"
-                                            end
+                                feature 'and by issue type' do
+                                    scenario 'user sees issue type headings' do
+                                        types.each do |type|
+                                            expect(issues.find(".issue-summary-check-#{type.check_shortname} h4")).to have_content type.name
                                         end
                                     end
 
-                                    scenario 'users sees link to the Issue page'
-
-                                    scenario 'user sees vector type' do
-                                        site.issues.each do |issue|
-                                            expect(issues.find("#summary-issue-#{issue.digest}")).to have_content issue.vector.kind
+                                    scenario 'user sees amount of issues in the heading' do
+                                        types.each do |type|
+                                            expect(issues.find(".issue-summary-check-#{type.check_shortname} h4 span.badge-severity-#{type.severity.name}")).to have_content type.issues.size
                                         end
                                     end
 
-                                    scenario 'user sees the referring page URL without scheme, host and port' do
-                                        site.issues.each do |issue|
-                                            url = ApplicationHelper.url_without_scheme_host_port( issue.referring_page.dom.url )
-                                            expect(issues.find("#summary-issue-#{issue.digest}")).to have_content "at #{url}"
-                                        end
-                                    end
+                                    feature 'for each issue' do
+                                        feature 'scan info' do
+                                            scenario 'user sees scan name' do
+                                                site.issues.each do |issue|
+                                                    expect(issues.find("#summary-issue-#{issue.digest} ul.issue-summary-info")).to have_content issue.revision.scan.name
+                                                end
+                                            end
 
-                                    feature 'when the vector action is' do
-                                        feature 'the same as the referring page' do
+                                            scenario 'user sees scan link' do
+                                                site.issues.each do |issue|
+                                                    expect(issues.find("#summary-issue-#{issue.digest} ul.issue-summary-info li span")).to have_xpath "//a[@href='#{site_scan_path(issue.revision.scan.site, issue.revision.scan)}']"
+                                                end
+                                            end
+
+                                            scenario 'user sees revision index' do
+                                                site.issues.each do |issue|
+                                                    expect(issues.find("#summary-issue-#{issue.digest} ul.issue-summary-info")).to have_content issue.revision.index
+                                                end
+                                            end
+
+                                            scenario 'user sees revision link' do
+                                                site.issues.each do |issue|
+                                                    expect(issues.find("#summary-issue-#{issue.digest} ul.issue-summary-info li span")).to have_xpath "//a[@href='#{site_scan_revision_path(issue.revision.scan.site, issue.revision.scan, issue.revision)}']"
+                                                end
+                                            end
+                                        end
+
+                                        scenario 'users sees link to the Issue page'
+
+                                        scenario 'user sees vector type' do
+                                            site.issues.each do |issue|
+                                                expect(issues.find("#summary-issue-#{issue.digest}")).to have_content issue.vector.kind
+                                            end
+                                        end
+
+                                        scenario 'user sees the referring page URL without scheme, host and port' do
+                                            site.issues.each do |issue|
+                                                url = ApplicationHelper.url_without_scheme_host_port( issue.referring_page.dom.url )
+                                                expect(issues.find("#summary-issue-#{issue.digest}")).to have_content "at #{url}"
+                                            end
+                                        end
+
+                                        feature 'when the vector action is' do
+                                            feature 'the same as the referring page' do
+                                                before do
+                                                    issue
+                                                    visit site_path( site )
+                                                end
+
+                                                let(:issue) do
+                                                    issue = revision.issues.create(
+                                                        type:           types.first,
+                                                        referring_page: FactoryGirl.create(:issue_page),
+                                                        vector:         FactoryGirl.create(:vector, affected_input_name: 'stuff'),
+                                                        sitemap_entry:  site.sitemap_entries.first,
+                                                        digest:         rand(99999999999999).to_s
+                                                    )
+
+                                                    issue.referring_page.dom.url = issue.vector.action
+                                                    issue.referring_page.dom.save
+                                                    issue
+                                                end
+
+                                                scenario 'user does not see vector action URL' do
+                                                    url = ApplicationHelper.url_without_scheme_host_port( issue.vector.action )
+                                                    expect(issues.find("#summary-issue-#{issue.digest}")).to_not have_content "pointing to #{url}"
+                                                end
+                                            end
+
+                                            feature 'different from the referring page' do
+                                                before do
+                                                    issue
+                                                    visit site_path( site )
+                                                end
+
+                                                let(:issue) do
+                                                    issue = revision.issues.create(
+                                                        type:           types.first,
+                                                        referring_page: FactoryGirl.create(:issue_page),
+                                                        vector:         FactoryGirl.create(:vector, affected_input_name: 'stuff'),
+                                                        sitemap_entry:  site.sitemap_entries.first,
+                                                        digest:         rand(99999999999999).to_s
+                                                    )
+
+                                                    issue.referring_page.dom.url = "#{issue.vector.action}/2"
+                                                    issue.referring_page.dom.save
+                                                    issue
+                                                end
+
+                                                scenario 'user sees vector action URL without scheme, host and port' do
+                                                    url = ApplicationHelper.url_without_scheme_host_port( issue.vector.action )
+                                                    expect(issues.find("#summary-issue-#{issue.digest}")).to have_content "pointing to #{url}"
+                                                end
+                                            end
+                                        end
+
+                                        feature 'when the vector has an affected input' do
                                             before do
                                                 issue
                                                 visit site_path( site )
                                             end
 
                                             let(:issue) do
-                                                issue = revision.issues.create(
+                                                revision.issues.create(
                                                     type:           types.first,
                                                     referring_page: FactoryGirl.create(:issue_page),
                                                     vector:         FactoryGirl.create(:vector, affected_input_name: 'stuff'),
                                                     sitemap_entry:  site.sitemap_entries.first,
                                                     digest:         rand(99999999999999).to_s
                                                 )
-
-                                                issue.referring_page.dom.url = issue.vector.action
-                                                issue.referring_page.dom.save
-                                                issue
                                             end
 
-                                            scenario 'user does not see vector action URL' do
-                                                url = ApplicationHelper.url_without_scheme_host_port( issue.vector.action )
-                                                expect(issues.find("#summary-issue-#{issue.digest}")).to_not have_content "pointing to #{url}"
+                                            scenario 'it includes input info' do
+                                                expect(issues.find("#summary-issue-#{issue.digest}")).to have_content issue.vector.affected_input_name
                                             end
                                         end
 
-                                        feature 'different from the referring page' do
+                                        feature 'when the vector does not have an affected input' do
                                             before do
                                                 issue
                                                 visit site_path( site )
                                             end
 
                                             let(:issue) do
-                                                issue = revision.issues.create(
+                                                revision.issues.create(
                                                     type:           types.first,
                                                     referring_page: FactoryGirl.create(:issue_page),
-                                                    vector:         FactoryGirl.create(:vector, affected_input_name: 'stuff'),
+                                                    vector:         FactoryGirl.create(:vector, affected_input_name: nil),
                                                     sitemap_entry:  site.sitemap_entries.first,
                                                     digest:         rand(99999999999999).to_s
                                                 )
-
-                                                issue.referring_page.dom.url = "#{issue.vector.action}/2"
-                                                issue.referring_page.dom.save
-                                                issue
                                             end
 
-                                            scenario 'user sees vector action URL without scheme, host and port' do
-                                                url = ApplicationHelper.url_without_scheme_host_port( issue.vector.action )
-                                                expect(issues.find("#summary-issue-#{issue.digest}")).to have_content "pointing to #{url}"
+                                            scenario 'it does not include input info' do
+                                                expect(issues.find("#summary-issue-#{issue.digest}")).to_not have_content 'input'
                                             end
-                                        end
-                                    end
-
-                                    feature 'when the vector has an affected input' do
-                                        before do
-                                            issue
-                                            visit site_path( site )
-                                        end
-
-                                        let(:issue) do
-                                            revision.issues.create(
-                                                type:           types.first,
-                                                referring_page: FactoryGirl.create(:issue_page),
-                                                vector:         FactoryGirl.create(:vector, affected_input_name: 'stuff'),
-                                                sitemap_entry:  site.sitemap_entries.first,
-                                                digest:         rand(99999999999999).to_s
-                                            )
-                                        end
-
-                                        scenario 'it includes input info' do
-                                            expect(issues.find("#summary-issue-#{issue.digest}")).to have_content issue.vector.affected_input_name
-                                        end
-                                    end
-
-                                    feature 'when the vector does not have an affected input' do
-                                        before do
-                                            issue
-                                            visit site_path( site )
-                                        end
-
-                                        let(:issue) do
-                                            revision.issues.create(
-                                                type:           types.first,
-                                                referring_page: FactoryGirl.create(:issue_page),
-                                                vector:         FactoryGirl.create(:vector, affected_input_name: nil),
-                                                sitemap_entry:  site.sitemap_entries.first,
-                                                digest:         rand(99999999999999).to_s
-                                            )
-                                        end
-
-                                        scenario 'it does not include input info' do
-                                            expect(issues.find("#summary-issue-#{issue.digest}")).to_not have_content 'input'
                                         end
                                     end
                                 end
