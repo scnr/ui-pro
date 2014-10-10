@@ -1,5 +1,6 @@
-jQuery(function(){
-    window.issuesChart.load({
+var chart_loader = function(){
+    var chart = window.generateIssuesChart();
+    chart.load({
         columns: [
             <%= (['x'] + data[:issue_names].keys).to_json.html_safe %>,
             <%= (['Issues'] + data[:issue_names].values).to_json.html_safe %>,
@@ -7,6 +8,8 @@ jQuery(function(){
         ]
     });
 
-    window.issuesChart.regions.remove();
-    window.issuesChart.regions.add( <%= data[:severity_regions].to_json.html_safe %> );
-});
+    chart.regions.remove();
+    chart.regions.add( <%= data[:severity_regions].to_json.html_safe %> );
+};
+
+$(document).ready(chart_loader);

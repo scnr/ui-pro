@@ -26,25 +26,14 @@
     </div>
 </div>
 
-
-<% if @scans %>
+<% if @issues_summary %>
     <div id="summary-tabs">
         <ul class="nav nav-tabs">
-            <li class="<%= @site.scanned? ? 'active' : 'disabled' %>">
+            <li class="active">
                 <a href="#summary" role="tab"
                    <%= 'data-toggle="tab"'.html_safe if @site.scanned? %>
-                >Summary</a>
-            </li>
-
-            <li
-                class="<%= 'active' if !@site.scanned? %>"
-            >
-                <a href="#scans" role="tab" data-toggle="tab">
-                    Scans
-
-                <span class="badge">
-                    <%= @site.scans.size %>
-                </span>
+                >
+                    Overview
                 </a>
             </li>
 
@@ -58,29 +47,20 @@
         </ul>
 
         <div class="tab-content">
-            <% if @site.scanned? %>
-                <div class="tab-pane active" id="summary">
-                    <%= render partial: 'summary' %>
-                </div>
-            <% end %>
-
-            <div class="tab-pane <%= 'active' if !@site.scanned? %>" id="scans">
+            <div class="tab-pane active" id="summary">
                 <div class="row">
-                    <div class="col-md-4">
-                        <%= refreshable_partial( [:table, @site, :scans] )%>
+                    <div class="col-md-2">
+                        <%= render partial: 'shared/issues_summary/sidebar' %>
                     </div>
 
-                    <div class="col-md-8">
-                        <h4>Click on a row for a quick view of a scan.</h4>
-                        <h4>Showing [scan]</h4>
+                    <div class="col-md-10">
+                        <%= render partial: 'shared/issues_summary' %>
                     </div>
                 </div>
             </div>
 
-            <% if @site.scanned? %>
-                <div class="tab-pane" id="analytics">
-                </div>
-            <% end %>
+            <div class="tab-pane" id="analytics">
+            </div>
         </div>
     </div>
 <% else %>

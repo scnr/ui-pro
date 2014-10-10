@@ -27,8 +27,7 @@ class Issue < ActiveRecord::Base
 
     scope :by_severity, -> { includes(:severity).order IssueTypeSeverity.order_sql }
     default_scope do
-        includes(:vector).includes(:type).includes(:vector).
-            by_severity.order('issue_types.name asc')
+        includes(:type).includes(:vector).by_severity.order('issue_types.name asc')
     end
 
     def self.max_severity

@@ -1,4 +1,6 @@
 class RevisionsController < ApplicationController
+    include IssuesSummary
+
     before_filter :authenticate_user!
     after_action :verify_authorized
 
@@ -8,6 +10,13 @@ class RevisionsController < ApplicationController
     # GET /revisions/1
     # GET /revisions/1.json
     def show
+        @issues_summary = issues_summary_data(
+            site:      @scan.site,
+            sitemap:   @revision.sitemap_entries,
+            scans:     [@revision.scan],
+            revisions: [@revision],
+            issues:    @revision.issues
+        )
     end
 
     # DELETE /revisions/1
@@ -29,6 +38,8 @@ class RevisionsController < ApplicationController
         @scan = policy_scope(Scan).find_by_id( params[:scan_id] )
 
         raise ActionController::RoutingError.new( 'Scan not found.' ) if !@scan
+
+        @site = @scan.site
 
         authorize @scan
     end

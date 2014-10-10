@@ -1,5 +1,5 @@
 class SitesController < ApplicationController
-    include SitesHelper
+    include IssuesSummary
 
     before_filter :authenticate_user!
     after_action :verify_authorized
@@ -25,13 +25,14 @@ class SitesController < ApplicationController
 
             authorize @scan
         else
-            @scans  = @site.scans
-            @issues = @site.issues.includes(:referring_page).
-                includes(referring_page: :dom).
-                includes(:revision).
-                includes(revision: :scan)
-
-            @chart_data = chart_data
+            @scans = @site.scans
+            @issues_summary = issues_summary_data(
+                site:      @site,
+                sitemap:   @site.sitemap_entries,
+                scans:     @site.scans,
+                revisions: @site.revisions,
+                issues:    @site.issues
+            )
         end
     end
 

@@ -1,0 +1,44 @@
+<%
+   site    = @issues_summary[:site]
+   sitemap = @issues_summary[:sitemap_with_issues]
+%>
+
+<h3>
+    Pages with issues
+
+    <span class="badge">
+        <%= sitemap.size %>
+    </span>
+</h3>
+
+<ul class="list-unstyled">
+    <li>
+        <%= link_to 'All', '#' %>
+    </li>
+
+    <% scoped_find_each(sitemap) do |entry| %>
+        <li
+        class="with-list-info sitemap-entry
+            sitemap-entry-with<% 'out' if entry.issues.size == 0 %>-issues"
+        >
+            <code>[<%= entry.code %>]</code>
+
+            <%= link_to_url_with_external external: entry.url, internal: '#',
+              display_path_only: true,
+              class: "text-severity text-severity-#{entry.issues.max_severity}" %>
+
+            <ul class="list-info">
+                <li>
+                    <span>
+                        Has <%= pluralize entry.issues.size, 'issue' %>
+                        and was originally found by the
+                        <%= link_to "#{entry.revision.index.ordinalize} revision",
+                                    [site, entry.revision.scan, entry.revision] %>
+                        of
+                        <%= link_to entry.revision.scan.name, [site, entry.revision.scan] %>.
+                    </span>
+                </li>
+            </ul>
+        </li>
+    <% end %>
+</ul>

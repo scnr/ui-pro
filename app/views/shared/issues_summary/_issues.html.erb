@@ -2,8 +2,11 @@
     last_severity = nil
     last_name     = nil
 
-    scoped_find_each( @issues ) do |issue|
-    severity    = issue.severity
+    chart_data = @issues_summary[:chart_data]
+    site       = @issues_summary[:site]
+
+    scoped_find_each( @issues_summary[:issues] ) do |issue|
+        severity    = issue.severity
 %>
 
 <% if severity.name != last_severity %>
@@ -28,7 +31,7 @@
                 </span>
 
                 <span class="badge-severity badge-severity-<%= severity %>">
-                    <%= @chart_data[:severities][severity.to_sym] %>
+                    <%= chart_data[:severities][severity.to_sym] %>
                 </span>
             </h3>
             <div class="cascade-container">
@@ -45,7 +48,7 @@
                     <%= issue.type.name %>
 
                     <span class="badge-severity badge-severity-<%= severity %>">
-                        <%= @chart_data[:issue_names][issue.type.name] %>
+                        <%= chart_data[:issue_names][issue.type.name] %>
                     </span>
 
                     <small>via:</small>
@@ -78,16 +81,22 @@
                                                   display_path_only: true %>
                 <% end %>
 
-                <ul class="issue-summary-info list-info">
-                    <li>
-                        <span>
-                            Found by the
-                            <%= link_to "#{issue.revision.index.ordinalize} revision", [@site, issue.revision.scan, issue.revision] %>
-                            of
-                            <%= link_to issue.revision.scan.name, [@site, issue.revision.scan] %>.
-                        </span>
-                    </li>
-                </ul>
+                <% if !@revision %>
+                    <ul class="issue-summary-info list-info">
+                        <li>
+                            <span>
+                                Found by the
+                                <%= link_to "#{issue.revision.index.ordinalize} revision",
+                                            [site, issue.revision.scan, issue.revision] %>
+
+                                <% if !@scan %>
+                                    of
+                                    <%= link_to issue.revision.scan.name, [site, issue.revision.scan] %>.
+                                <% end %>
+                            </span>
+                        </li>
+                    </ul>
+                <% end %>
             </li>
 
 

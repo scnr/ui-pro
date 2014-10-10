@@ -1,12 +1,46 @@
-<h1>
-    <%= link_to @scan.name.capitalize, [@scan.site, @scan] %> scan for
-    <%= link_to @scan.site, @scan.site %>
-</h1>
+<div class="row">
+    <div class="col-md-12">
+        <h1>
+            <%= link_to @scan.name.capitalize, [@scan.site, @scan] %> scan for
+            <%= link_to_url_with_external external: @site.url, internal: @site %>
 
-<%= render @scan %>
+            <% if policy(@scan).edit? %>
+                <%= link_to edit_site_scan_path( @site, @scan ),
+                            class: 'btn btn-xs btn-warning' do %>
+                    <i class="fa fa-pencil"></i>
+                <% end %>
+            <% end %>
 
-<% if policy(@scan).edit? %>
-    <%= link_to 'Edit', edit_site_scan_path(@site, @scan) %> |
-<%  end%>
+            <% if policy(@scan).destroy? %>
+                <%= link_to [@site, @scan], method: :delete,
+                            class: 'btn btn-xs btn-danger',
+                            data: { confirm: 'Are you sure?' } do %>
+                    <i class="fa fa-trash"></i>
+                <% end %>
+            <% end %>
+        </h1>
 
-<%= link_to 'Back', site_scans_path %>
+        <p class="text-muted">
+            On <%= link_to @scan.plan.name, '#' %> plan, using
+            <%= link_to @scan.profile, @scan.profile %>.
+
+            <% if @scan.schedule.recurring? %>
+                Running <%= link_to @scan.schedule, '#' %>.
+            <% end %>
+        </p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-2">
+        <%= render partial: 'shared/issues_summary/sidebar' %>
+    </div>
+
+    <div class="col-md-10">
+        <% if @issues_summary %>
+            <%= render partial: 'shared/issues_summary' %>
+        <% else %>
+            No revisions...
+        <% end %>
+    </div>
+</div>

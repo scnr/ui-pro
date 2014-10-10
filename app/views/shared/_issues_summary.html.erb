@@ -1,0 +1,18 @@
+<% if @site.scanned? %>
+
+    <%= render partial: 'shared/issues_summary/statistics' %>
+
+    <hr/>
+
+    <div class="row">
+        <div class="col-md-4 summary-sitemap-container" id="summary-sitemap">
+            <%= render partial: 'shared/issues_summary/sitemap' %>
+        </div>
+
+        <div class="col-md-8 summary-issues-container" id="summary-issues">
+            <%= render partial: 'shared/issues_summary/issues' %>
+        </div>
+    </div>
+<% else %>
+    No scan has started yet...
+<% end %>

@@ -1,4 +1,6 @@
 class ScansController < ApplicationController
+    include IssuesSummary
+
     before_filter :authenticate_user!
     after_action :verify_authorized
 
@@ -14,6 +16,13 @@ class ScansController < ApplicationController
     # GET /scans/1
     # GET /scans/1.json
     def show
+        @issues_summary = issues_summary_data(
+            site:      @site,
+            sitemap:   @scan.sitemap_entries,
+            scans:     [@scan],
+            revisions: @scan.revisions,
+            issues:    @scan.issues
+        )
     end
 
     # GET /scans/new

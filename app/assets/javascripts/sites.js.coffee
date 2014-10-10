@@ -8,7 +8,7 @@ addHighlight = (selector) ->
 removeHighlight = (selector) ->
     $(selector).removeClass('label-info');
 
-generateIssuesChart = () ->
+window.generateIssuesChart = () ->
     c3.generate
         bindto: '#chart-issues',
         size:
@@ -43,10 +43,3 @@ generateIssuesChart = () ->
             bottom: 40
         color:
             pattern: [ '#1f77b4', '#ff7f0e' ]
-
-jQuery ->
-    $('#highlight-forms').mouseover ->
-        addHighlight('.issue-summary-vector-form')
-    $('#highlight-forms').mouseout ->
-        removeHighlight('.issue-summary-vector-form')
-    window.issuesChart = generateIssuesChart()

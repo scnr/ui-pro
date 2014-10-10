@@ -25,6 +25,7 @@ class Scan < ActiveRecord::Base
     validates_presence_of   :profile
 
     before_save :build_profile_override
+    before_save :build_schedule
 
     scope :scheduled,   -> do
         joins(:schedule).where.not( schedules: { start_at: nil } )

@@ -36,6 +36,22 @@ class Schedule < ActiveRecord::Base
 
     scope :due, -> { where( 'start_at <= ?', Time.now ) }
 
+    def to_s
+        return '' if !recurring?
+
+        s = 'every'
+
+        if day_frequency
+            s << "#{day_frequency} #{'days'.pluralize(day_frequency)}"
+        end
+
+        if month_frequency
+            s << "#{month_frequency} #{'months'.pluralize(month_frequency)}"
+        end
+
+        s
+    end
+
     def recurring?
         interval > 0
     end
