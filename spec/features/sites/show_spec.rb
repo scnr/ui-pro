@@ -28,39 +28,6 @@ feature 'Site page' do
         expect { visit site_path( other_site ) }.to raise_error ActionController::RoutingError
     end
 
-    feature 'when the site has scans' do
-        before do
-            site.verification.verified!
-
-            scan
-            user.sites << site
-
-            login_as user, scope: :user
-        end
-
-        feature 'with revisions' do
-            before do
-                revision
-                visit site_path( site )
-            end
-
-            scenario 'the Summary tab is active' do
-                expect(page).to have_xpath "//div[@id='summary' and @class='tab-pane active']"
-            end
-        end
-
-        feature 'without revisions' do
-            before do
-                visit site_path( site )
-            end
-
-            scenario 'the Scans tab is active' do
-                expect(page).to have_xpath "//div[@id='scans' and @class='tab-pane active']"
-            end
-        end
-
-    end
-
     feature 'when the site has no scans' do
         before do
             site.verification.verified!
@@ -126,9 +93,17 @@ feature 'Site page' do
             end
 
             feature 'Summary tab' do
-                feature 'without issues' do
+                feature 'without revisions' do
+                    before do
+                        site.scans.first.revisions.clear
+                        user.sites << site
+
+                        login_as user, scope: :user
+                        visit site_path( site )
+                    end
+
                     scenario 'user sees notice' do
-                        expect(page).to have_text 'No issues'
+                        expect(page).to have_text 'No scan has started yet'
                     end
                 end
 
