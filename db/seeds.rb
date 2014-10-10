@@ -132,12 +132,17 @@ FrameworkHelper.framework do |f|
     end
 end
 
+scans_size         = 2
+revisions_per_scan = 3
+
 [
     '/home/zapotek/workspace/arachni/spec/support/fixtures/report.afr',
     '/home/zapotek/Downloads/report.afr'
 ].each do |afr|
+    sitemap    = nil
     report     = Arachni::Report.load( afr )
     parsed_url = Arachni::URI( report.url )
+    issues     = report.issues.shuffle.chunk( scans_size * revisions_per_scan )
 
     puts 'Creating site'
     site = user.sites.create(
@@ -150,50 +155,59 @@ end
     admin.shared_sites = [site]
     admin.save
 
-    puts 'Creating scan'
-    scan = site.scans.create(
-        profile:     p,
-        name:        'my scan',
-        description: 'my description',
-        plan:        plan
-    )
+    scans_size.times do |i|
+        break if issues.empty?
 
-    scan.build_schedule
-    scan.save
-
-    puts 'Creating revision'
-    revision = scan.revisions.create(
-        state:      'started',
-        started_at: Time.now - 8000,
-        stopped_at: Time.now - 4000
-    )
-
-    report.sitemap.each do |url, code|
-        site.sitemap_entries.create(
-            url:      url,
-            code:     code,
-            revision: revision
-        )
-    end
-
-    puts 'Creating issues'
-    report.issues.each do |issue|
-        ap issue.unique_id
-
-        sitemap_entry = site.sitemap_entries.find_by_url( issue.variations.first.page.dom.url )
-        sitemap_entry ||= site.sitemap_entries.create(
-            url:      issue.variations.first.page.dom.url,
-            code:     issue.variations.first.response.code,
-            revision: revision
+        puts "[#{i}] Creating scan"
+        scan = site.scans.create(
+            profile:     p,
+            name:        "my scan #{i}",
+            description: 'my description',
+            plan:        plan
         )
 
-        issue.variations.each do |variation|
-            solo = variation.to_solo( issue )
-            next if !solo.check
+        scan.build_schedule
+        scan.save
 
-            revision.issues.create_from_arachni( solo, sitemap_entry: sitemap_entry )
+        revisions_per_scan.times do |j|
+            break if issues.empty?
+
+            puts "[#{i} - #{j}] Creating revision"
+            revision = scan.revisions.create(
+                state:      'started',
+                started_at: Time.now - 8000,
+                stopped_at: Time.now - 4000
+            )
+
+            sitemap ||= report.sitemap.each do |url, code|
+                site.sitemap_entries.create(
+                    url:      url,
+                    code:     code,
+                    revision: revision
+                )
+            end
+
+            puts "[#{i} - #{j}] Creating issues"
+            issues.pop.each do |issue|
+                sitemap_entry = site.sitemap_entries.find_by_url( issue.variations.first.page.dom.url )
+                sitemap_entry ||= site.sitemap_entries.create(
+                    url:      issue.variations.first.page.dom.url,
+                    code:     issue.variations.first.response.code,
+                    revision: revision
+                )
+
+                issue.variations.each do |variation|
+                    ap issue.unique_id
+                    ap issue.variations.first.page.dom.url
+
+                    solo = variation.to_solo( issue )
+                    next if !solo.check
+
+                    revision.issues.create_from_arachni( solo, sitemap_entry: sitemap_entry )
+                end
+
+                # ap sitemap_entry.reload.issues.size
+            end
         end
-
-        # ap sitemap_entry.reload.issues.size
     end
 end
