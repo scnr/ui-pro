@@ -3,14 +3,13 @@ module IssuesSummary
     def issues_summary_data( data )
         if !data[:scans].is_a?( Array )
             data[:scans] = data[:scans].includes(:revisions).includes(:schedule).
-                includes(:profile).includes(:plan)
+                includes(:profile)
         end
 
         {
             site:       data[:site],
             site_scans: data[:site].scans.includes(:revisions).
-                            includes(:schedule).includes(:profile).
-                            includes(:plan),
+                            includes(:schedule).includes(:profile),
             scans:      data[:scans],
             revisions:  data[:revisions],
             sitemap:    data[:sitemap].includes(:revision).

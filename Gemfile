@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '2.1.2'
+ruby '2.2.1'
 
 gem 'rails', '4.1.4'
 gem 'sass-rails', '~> 4.0.3'
@@ -12,10 +12,8 @@ gem 'bootstrap-sass'
 gem 'font-awesome-rails'
 gem 'font-kit-rails'
 gem 'devise'
-gem 'pundit'
 gem 'simple_form'
 gem 'sidekiq'
-gem 'typhoeus'
 gem 'websocket-rails', '0.6.2'
 
 gem 'kramdown'
@@ -53,11 +51,11 @@ group :test do
 end
 
 group :development, :test do
-    gem 'thin'
+    gem 'puma'
     gem 'sqlite3'
     gem 'awesome_print'
 end
 
 gem 'activeadmin', github: 'activeadmin'
 
-gem 'arachni', path: File.dirname( __FILE__ ) + '/../../../arachni'
+gem 'arachni', path: File.dirname( __FILE__ ) + '/../../arachni'

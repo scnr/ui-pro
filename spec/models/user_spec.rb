@@ -22,21 +22,4 @@ describe User, type: :model do
             expect(User.new( email: email ).email).to match email
         end
     end
-
-    describe '#has_shared_site?' do
-        context 'when the site has been shared with the user' do
-            before { subject.shared_sites << site }
-
-            it 'returns true' do
-                expect(subject.has_shared_site?( site )).to be_truthy
-            end
-        end
-
-        context 'when the site has not been shared with the user' do
-            it 'returns false' do
-                expect(subject.has_shared_site?( site )).to be_falsey
-            end
-        end
-    end
-
 end

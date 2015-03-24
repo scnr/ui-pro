@@ -15,21 +15,10 @@
             <td><%= profile.name %></td>
             <td><%= profile.scans.size %></td>
 
-            <% if policy(profile).show? %>
-                <td><%= link_to 'Show', profile %></td>
-            <% end %>
-
-            <% if policy(profile).edit? %>
-                <td><%= link_to 'Edit', edit_profile_path(profile) %></td>
-            <% end %>
-
-            <% if policy(profile).copy? %>
-                <td><%= link_to 'Copy', copy_profile_path(profile) %></td>
-            <% end %>
-
-            <% if policy(profile).destroy? %>
-                <td><%= link_to 'Delete', profile, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-            <% end %>
+            <td><%= link_to 'Show', profile %></td>
+            <td><%= link_to 'Edit', edit_profile_path(profile) %></td>
+            <td><%= link_to 'Copy', copy_profile_path(profile) %></td>
+            <td><%= link_to 'Delete', profile, method: :delete, data: { confirm: 'Are you sure?' } %></td>
         </tr>
     <% end %>
     </tbody>
@@ -37,6 +26,4 @@
 
 <br>
 
-<% if policy(Profile).new? %>
-    <%= link_to 'New Profile', new_profile_path %>
-<% end %>
+<%= link_to 'New Profile', new_profile_path %>

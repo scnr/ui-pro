@@ -13,6 +13,7 @@ module ProfileAttributes
         validate :validate_audit_link_templates
         validate :validate_scope_url_rewrites
 
+        serialize :plugins, Hash
         serialize :http_cookies,                   Hash
         serialize :http_request_headers,           Hash
         serialize :scope_exclude_path_patterns,    Array

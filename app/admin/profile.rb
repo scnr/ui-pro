@@ -1,3 +1,3 @@
 ActiveAdmin.register Profile do
-    permit_params { policy( Profile ).permitted_attributes }
+    permit_params {  }
 end

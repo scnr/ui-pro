@@ -3,8 +3,7 @@ FactoryGirl.define do
         site nil
         name { "MyString #{rand(99999)}" }
         description 'MyText'
-        profile FactoryGirl.create( :profile, name: 'My profile' )
-        plan { FactoryGirl.create( :plan, name: 'My plan' ) }
+        profile { FactoryGirl.create( :profile, name: "MyString #{rand(99999)}" ) }
         # site { FactoryGirl.create( :site, user: FactoryGirl.create( :user ) ) }
     end
 end

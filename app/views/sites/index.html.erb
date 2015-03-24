@@ -8,32 +8,9 @@
 </h1>
 
 <div id="owned-sites">
-    <% if @shared_sites.verified.any? %>
-        <h2>Yours</h2>
-    <% end %>
-
-    <% if @sites.unverified.any? %>
-        <div class="row">
-            <div class="col-md-3">
-                <h3>Pending verification of ownership:</h3>
-
-                <p class="text-muted">
-                    Please verify ownership of the these sites to enable scanning.
-                </p>
-            </div>
-
-            <div class="col-md-9">
-                <%= render 'table_unverified', sites: @sites.unverified %>
-            </div>
-        </div>
-
-        <hr/>
-    <% end %>
-
-    <% if @sites.verified.any? %>
     <div class="row">
         <div class="col-md-4">
-            <%= render 'table_verified', sites: @sites.verified %>
+            <%= render 'table', sites: @sites %>
         </div>
 
         <div class="col-md-8">
@@ -41,13 +18,4 @@
             <h4>Showing [site url]</h4>
         </div>
     </div>
-    <% end %>
 </div>
-
-<% if @shared_sites.verified.any? %>
-    <div id="shared-sites">
-        <h2>Shared</h2>
-
-        <%= render 'table_verified', sites: @shared_sites.verified %>
-    </div>
-<% end %>

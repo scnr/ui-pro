@@ -7,25 +7,18 @@
     <li>
         <ul class="nav nav-vertical">
             <% site_scans.each do |scan| %>
-            <% next if !policy(scan).show? %>
-
             <li class="with-list-info">
-
                 <% if !@scan %>
                 <span class="sidebar-scan-actions">
-                    <% if policy(scan).edit? %>
-                        <%= link_to edit_site_scan_path( site, scan ),
-                                    class: 'btn btn-xs btn-warning' do %>
-                            <i class="fa fa-pencil"></i>
-                        <% end %>
+                    <%= link_to edit_site_scan_path( site, scan ),
+                                class: 'btn btn-xs btn-warning' do %>
+                        <i class="fa fa-pencil"></i>
                     <% end %>
 
-                    <% if policy(scan).destroy? %>
-                        <%= link_to [site, scan], method: :delete,
-                                    class: 'btn btn-xs btn-danger',
-                                    data: { confirm: 'Are you sure?' } do %>
-                            <i class="fa fa-trash"></i>
-                        <% end %>
+                    <%= link_to [site, scan], method: :delete,
+                                class: 'btn btn-xs btn-danger',
+                                data: { confirm: 'Are you sure?' } do %>
+                        <i class="fa fa-trash"></i>
                     <% end %>
                 </span>
 
@@ -33,19 +26,19 @@
                     <%= scan.name %>
 
                     <span class="text-muted">
-                        &ndash; <%= pluralize scan.sitemap_entries.size, 'page' %>,
-                        <%= pluralize scan.issues.size, 'issue' %>.
+                        &ndash;
+                        <% if scan.revisions.size > 0 %>
+                            <%= pluralize scan.sitemap_entries.size, 'page' %>,
+                            <%= pluralize scan.issues.size, 'issue' %>.
+                        <% else %>
+                            Has not run.
+                        <% end %>
                     </span>
                 <% end %>
 
                 <p class="text-muted">
                     <small>
-                        On <%= link_to scan.plan.name, '#' %> plan, using
-                        <%= link_to scan.profile, scan.profile %>.
-
-                        <% if scan.schedule.recurring? %>
-                            Running <%= link_to scan.schedule, '#' %>.
-                        <% end %>
+                        Using <%= link_to scan.profile, scan.profile %>.
                     </small>
                 </p>
                 <% end %>

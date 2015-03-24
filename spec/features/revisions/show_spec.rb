@@ -8,8 +8,6 @@ Warden.test_mode!
 feature 'Revision page' do
 
     let(:user) { FactoryGirl.create :user, sites: [site] }
-    let(:other_user) { FactoryGirl.create :user, email: 'dd@ss.cc', shared_sites: [site] }
-    let(:user_without_sites) { FactoryGirl.create :user, email: 'dd2@ss.cc' }
     let(:site) { FactoryGirl.create :site }
     let(:scan) { FactoryGirl.create :scan, site: site }
     let(:revision) { FactoryGirl.create :revision, scan: scan }
@@ -20,54 +18,20 @@ feature 'Revision page' do
 
     before do
         site.verification.verified!
+        login_as user, scope: :user
+        visit site_scan_revision_path( site, scan, revision )
     end
 
-    feature 'user is the site owner' do
-        before do
-            login_as user, scope: :user
-            visit site_scan_revision_path( site, scan, revision )
-        end
-
-        scenario 'user sees the revision index in heading' do
-            expect(find('h1').text).to match "##{revision.index}"
-        end
-
-        scenario 'user sees the scan name in heading' do
-            expect(find('h1').text).to match scan.name
-        end
-
-        scenario 'user sees site url in heading' do
-            expect(find('h1').text).to match site.url
-        end
+    scenario 'user sees the revision index in heading' do
+        expect(find('h1').text).to match "##{revision.index}"
     end
 
-    feature 'user has the shared site' do
-        before do
-            login_as other_user, scope: :user
-            visit site_scan_revision_path( site, scan, revision )
-        end
-
-        scenario 'user sees the revision index in heading' do
-            expect(find('h1').text).to match "##{revision.index}"
-        end
-
-        scenario 'user sees the scan name in heading' do
-            expect(find('h1').text).to match scan.name
-        end
-
-        scenario 'user sees site url in heading' do
-            expect(find('h1').text).to match site.url
-        end
+    scenario 'user sees the scan name in heading' do
+        expect(find('h1').text).to match scan.name
     end
 
-    feature 'user is not associated with the site' do
-        before do
-            login_as user_without_sites, scope: :user
-            visit site_scan_revision_path( site, scan, revision )
-        end
-
-        scenario 'user gets redirected to the homepage' do
-            expect(current_url).to eq root_url
-        end
+    scenario 'user sees site url in heading' do
+        expect(find('h1').text).to match site.url
     end
+
 end

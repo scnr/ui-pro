@@ -2,7 +2,6 @@ class RevisionsController < ApplicationController
     include IssuesSummary
 
     before_filter :authenticate_user!
-    after_action :verify_authorized
 
     before_action :set_scan
     before_action :set_revision, only: [:show, :destroy]
@@ -35,22 +34,20 @@ class RevisionsController < ApplicationController
     private
 
     def set_scan
-        @scan = policy_scope(Scan).find_by_id( params[:scan_id] )
+        @scan = Scan.find_by_id( params[:scan_id] )
 
         raise ActionController::RoutingError.new( 'Scan not found.' ) if !@scan
 
         @site = @scan.site
-
-        authorize @scan
     end
 
     # Use callbacks to share common setup or constraints between actions.
     def set_revision
-        authorize @revision = @scan.revisions.find( params[:id] )
+        @revision = @scan.revisions.find( params[:id] )
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def revision_params
-        params.require(:revision).permit( *policy(Revision).permitted_attributes )
+        params.require(:revision).permit
     end
 end

@@ -23,7 +23,6 @@
     <li>
         <ul class="nav nav-vertical">
             <% site_scans.each do |scan| %>
-            <% next if !policy(scan).show? %>
 
             <li class="with-list-info">
                 <ul class="nav nav-pills nav-stacked">

@@ -1,14 +1,11 @@
 class ProfilesController < ApplicationController
     before_filter :authenticate_user!
-    after_action :verify_authorized
-
     before_action :set_profile, only: [:show, :copy, :edit, :update, :destroy]
 
     # GET /profiles
     # GET /profiles.json
     def index
         @profiles = current_user.profiles
-        authorize Profile
     end
 
     # GET /profiles/1
@@ -18,7 +15,7 @@ class ProfilesController < ApplicationController
 
     # GET /profiles/new
     def new
-        authorize @profile = current_user.profiles.new
+        @profile = current_user.profiles.new
     end
 
     # GET /profiles/1/edit
@@ -35,7 +32,6 @@ class ProfilesController < ApplicationController
     # POST /profiles.json
     def create
         @profile = current_user.profiles.new(profile_params)
-        authorize @profile
 
         respond_to do |format|
             if @profile.save
@@ -79,13 +75,50 @@ class ProfilesController < ApplicationController
         @profile = current_user.profiles.find_by_id( params[:id] )
 
         raise ActionController::RoutingError.new( 'Profile not found.' ) if !@profile
-
-        authorize @profile
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def profile_params
-        params.require( :profile ).
-            permit( *policy(@profile || Profile).permitted_attributes )
+        params.require( :profile ).permit( *permitted_attributes )
     end
+
+    def permitted_attributes
+        [
+            :name,
+            :description,
+            { checks:    [] },
+            { platforms: [] },
+            :no_fingerprinting,
+            :input_values,
+            :audit_links,
+            :audit_forms,
+            :audit_cookies,
+            :audit_headers,
+            :audit_link_templates,
+            :audit_with_both_http_methods,
+            :audit_exclude_vector_patterns,
+            :audit_include_vector_patterns,
+            :http_user_agent,
+            :http_cookies,
+            :http_request_headers,
+            :scope_page_limit,
+            :scope_extend_paths,
+            :scope_restrict_paths,
+            :scope_include_path_patterns,
+            :scope_exclude_path_patterns,
+            :scope_redundant_path_patterns,
+            :scope_exclude_content_patterns,
+            :scope_exclude_vector_patterns,
+            :scope_include_vector_patterns,
+            :scope_include_subdomains,
+            :scope_url_rewrites,
+            :session_check_pattern,
+            :session_check_url,
+            :http_authentication_username,
+            :http_authentication_password,
+            :browser_cluster_screen_width,
+            :browser_cluster_screen_height
+        ]
+    end
+
 end

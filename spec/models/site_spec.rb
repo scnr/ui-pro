@@ -4,18 +4,12 @@ describe Site, type: :model do
     let(:other_scan) { FactoryGirl.create :scan, site: subject }
     let(:user) { FactoryGirl.create :user }
 
-    expect_it { to have_one :profile_override }
-    expect_it { to have_one :verification }
     expect_it { to belong_to :user }
     expect_it { to have_and_belong_to_many :users }
     expect_it { to have_many :scans }
     expect_it { to have_many :revisions }
     expect_it { to have_many :issues }
     expect_it { to have_many(:sitemap_entries).dependent(:destroy) }
-
-    it 'has a default #verification' do
-        expect(subject.verification).to be_kind_of SiteVerification
-    end
 
     describe :validations do
         describe '#protocol' do
@@ -171,28 +165,6 @@ describe Site, type: :model do
         it 'as URL with Arachni::URI'
     end
 
-    describe :scopes do
-        before { subject }
-
-        describe :verified do
-            it 'returns verified sites' do
-                expect(described_class.verified).to be_empty
-
-                subject.verification.verified!
-                expect(described_class.verified).to be_any
-            end
-        end
-
-        describe :unverified do
-            it 'returns unverified sites' do
-                expect(described_class.unverified).to be_any
-
-                subject.verification.verified!
-                expect(described_class.unverified).to be_empty
-            end
-        end
-    end
-
     describe '#url' do
         context 'when protocol is' do
             context 'http' do
@@ -249,22 +221,6 @@ describe Site, type: :model do
                         end
                     end
                 end
-            end
-        end
-    end
-
-    describe '#verified?' do
-        context 'when the site has been verified' do
-            before { subject.verification.verified! }
-
-            it 'returns true' do
-                expect(subject).to be_verified
-            end
-        end
-
-        context 'when the site has not been verified' do
-            it 'returns false' do
-                expect(subject).to_not be_verified
             end
         end
     end

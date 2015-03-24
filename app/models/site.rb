@@ -1,14 +1,6 @@
 class Site < ActiveRecord::Base
     PROTOCOL_TYPES = %w(http https)
 
-    has_one :profile_override, as: :profile_overridable, dependent: :destroy,
-            autosave: true
-    accepts_nested_attributes_for :profile_override
-
-    has_one :verification, dependent: :destroy, autosave: true,
-            foreign_key: 'site_id', class: SiteVerification
-    before_create :build_verification
-
     belongs_to :user
     has_and_belongs_to_many :users
 
@@ -31,15 +23,6 @@ class Site < ActiveRecord::Base
     validates_presence_of     :port
     validates_numericality_of :port
 
-    before_save :build_profile_override
-
-    scope :verified, -> do
-        joins(:verification).where( site_verifications: { state: :verified } )
-    end
-    scope :unverified, -> do
-        joins(:verification).where.not( site_verifications: { state: :verified } )
-    end
-
     def url
         u = "#{protocol}://#{host}"
 
@@ -58,14 +41,6 @@ class Site < ActiveRecord::Base
 
     def scanned_at
         revisions.order( stopped_at: :desc ).limit(1).pluck(:stopped_at).first
-    end
-
-    def verified?
-        verification.verified?
-    end
-
-    def unverified?
-        verification.unverified?
     end
 
 end

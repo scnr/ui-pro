@@ -5,7 +5,6 @@ feature 'Dashboard index page' do
 
     let(:user) { FactoryGirl.create :user }
     let(:site) { FactoryGirl.create :site }
-    let(:other_site) { FactoryGirl.create :site, host: 'gg.gg' }
 
     after(:each) do
         Warden.test_reset!
@@ -21,11 +20,8 @@ feature 'Dashboard index page' do
     end
 
     feature 'user sees latest notifications' do
-        scenario 'of own scans'
-        scenario 'of shared scans'
-
-        scenario 'of own issues'
-        scenario 'of shared issues'
+        scenario 'of scans'
+        scenario 'of issues'
     end
 
 end

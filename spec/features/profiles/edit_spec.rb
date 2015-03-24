@@ -9,7 +9,6 @@ feature 'Profile edit page', :devise do
 
     subject { FactoryGirl.create :profile, scans: [scan] }
     let(:user) { FactoryGirl.create :user }
-    let(:other_user) { FactoryGirl.create(:user, email: 'other@example.com') }
     let(:scan) { FactoryGirl.create :scan, site: site }
     let(:revision) { FactoryGirl.create :revision, scan: scan }
     let(:site) { FactoryGirl.create :site }
@@ -52,19 +51,6 @@ feature 'Profile edit page', :devise do
                 scenario 'user gets redirected back to the homepage' do
                     expect(current_url).to eq root_url
                 end
-            end
-        end
-
-        feature 'visits non-owned profile' do
-            before do
-                user.profiles << subject
-                login_as( other_user, scope: :user )
-            end
-
-            scenario 'gets a 404 error' do
-                expect do
-                    visit edit_profile_path( subject )
-                end.to raise_error ActionController::RoutingError
             end
         end
     end

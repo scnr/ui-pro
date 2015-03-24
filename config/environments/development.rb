@@ -55,7 +55,7 @@ Rails.application.configure do
     config.middleware.delete Rack::Lock
 
     config.after_initialize do
-        Bullet.enable        = true
+        Bullet.enable        = false
         Bullet.alert         = true
         Bullet.bullet_logger = true
         Bullet.console       = true

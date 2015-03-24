@@ -53,17 +53,13 @@
             </td>
 
             <td>
-                <% if policy(site).edit? %>
-                    <%= link_to edit_site_path( site ) , class: 'btn btn-sm btn-warning' do %>
-                        <i class="fa fa-pencil"></i>
-                    <% end %>
+                <%= link_to edit_site_path( site ) , class: 'btn btn-sm btn-warning' do %>
+                    <i class="fa fa-pencil"></i>
                 <% end %>
 
-                <% if policy(site).destroy? %>
-                    <%= link_to site, method: :delete, class: 'btn btn-sm btn-danger',
-                                data: { confirm: 'Are you sure?' } do %>
-                        <i class="fa fa-trash"></i>
-                    <% end %>
+                <%= link_to site, method: :delete, class: 'btn btn-sm btn-danger',
+                            data: { confirm: 'Are you sure?' } do %>
+                    <i class="fa fa-trash"></i>
                 <% end %>
             </td>
         </tr>

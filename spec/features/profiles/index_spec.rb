@@ -122,67 +122,30 @@ feature 'Profile index page' do
             feature 'with revisions' do
                 before do
                     scan.revisions << FactoryGirl.create(:revision, scan: scan)
+                    profile.scans << scan
+                    visit profiles_path
                 end
 
-                feature 'and the user is an admin' do
-                    before do
-                        admin.profiles << profile
-                        profile.scans << scan
-
-                        login_as( admin, scope: :user )
-                        visit profiles_path
-                    end
-
-                    # Scenario: Profiles with scans are not accompanied by edit links
-                    #   Given I am signed in
-                    #   When I visit the profile index page
-                    #   And the profile has associated scans
-                    #   Then I don't see edit links
-                    scenario 'can edit' do
-                        expect(page).to have_xpath "//a[@href='#{edit_profile_path(profile)}']"
-                    end
-
-                    scenario 'can copy' do
-                        expect(page).to have_xpath "//a[@href='#{copy_profile_path( profile )}']"
-                    end
-
-                    # Scenario: Profiles with scans are not accompanied by delete links
-                    #   Given I am signed in
-                    #   When I visit the profile index page
-                    #   And the profile has associated scans
-                    #   Then I don't see delete links
-                    scenario 'can delete' do
-                        expect(page).to have_selector(:link_or_button, 'Delete')
-                    end
+                # Scenario: Profiles with scans are not accompanied by edit links
+                #   Given I am signed in
+                #   When I visit the profile index page
+                #   And the profile has associated scans
+                #   Then I don't see edit links
+                scenario 'cannot edit' do
+                    expect(page).to_not have_xpath "//a[@href='#{edit_profile_path(profile)}']"
                 end
 
-                feature 'and the user is not an admin' do
-                    before do
-                        profile.scans << scan
-                        visit profiles_path
-                    end
+                scenario 'can copy' do
+                    expect(page).to have_xpath "//a[@href='#{copy_profile_path( profile )}']"
+                end
 
-                    # Scenario: Profiles with scans are not accompanied by edit links
-                    #   Given I am signed in
-                    #   When I visit the profile index page
-                    #   And the profile has associated scans
-                    #   Then I don't see edit links
-                    scenario 'cannot edit' do
-                        expect(page).to_not have_xpath "//a[@href='#{edit_profile_path(profile)}']"
-                    end
-
-                    scenario 'can copy' do
-                        expect(page).to have_xpath "//a[@href='#{copy_profile_path( profile )}']"
-                    end
-
-                    # Scenario: Profiles with scans are not accompanied by delete links
-                    #   Given I am signed in
-                    #   When I visit the profile index page
-                    #   And the profile has associated scans
-                    #   Then I don't see delete links
-                    scenario 'cannot delete' do
-                        expect(page).to_not have_selector(:link_or_button, 'Delete')
-                    end
+                # Scenario: Profiles with scans are not accompanied by delete links
+                #   Given I am signed in
+                #   When I visit the profile index page
+                #   And the profile has associated scans
+                #   Then I don't see delete links
+                scenario 'cannot delete' do
+                    expect(page).to_not have_selector(:link_or_button, 'Delete')
                 end
             end
         end

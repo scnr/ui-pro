@@ -7,8 +7,7 @@
         </h1>
 
         <p class="text-muted">
-            On <%= link_to @scan.plan.name, '#' %> plan, using
-            <%= link_to @scan.profile, @scan.profile %>.
+            Using <%= link_to @scan.profile, @scan.profile %>.
 
             <% if @scan.schedule.recurring? %>
                 Running <%= link_to @scan.schedule, '#' %>.

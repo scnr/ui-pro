@@ -28,27 +28,6 @@ ActiveRecord::Schema.define(version: 20140920041348) do
   add_index "active_admin_comments", ["namespace"], name: "index_active_admin_comments_on_namespace"
   add_index "active_admin_comments", ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id"
 
-  create_table "global_profiles", force: true do |t|
-    t.integer  "scope_directory_depth_limit"
-    t.integer  "http_request_redirect_limit"
-    t.integer  "http_request_concurrency"
-    t.integer  "http_response_max_size"
-    t.boolean  "scope_include_subdomains"
-    t.text     "plugins"
-    t.boolean  "scope_exclude_binaries"
-    t.integer  "scope_auto_redundant_paths"
-    t.boolean  "scope_https_only"
-    t.integer  "http_request_timeout"
-    t.integer  "http_request_queue_size"
-    t.integer  "scope_dom_depth_limit"
-    t.integer  "browser_cluster_pool_size"
-    t.integer  "browser_cluster_job_timeout"
-    t.integer  "browser_cluster_worker_time_to_live"
-    t.boolean  "browser_cluster_ignore_images"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "http_requests", force: true do |t|
     t.text     "url"
     t.string   "http_method"
@@ -262,18 +241,13 @@ ActiveRecord::Schema.define(version: 20140920041348) do
   add_index "issues", ["sitemap_entry_id"], name: "index_issues_on_sitemap_entry_id"
   add_index "issues", ["trusted"], name: "index_issues_on_trusted"
 
-  create_table "plans", force: true do |t|
+  create_table "profiles", force: true do |t|
+    t.integer  "user_id"
+    t.boolean  "default"
     t.string   "name"
     t.text     "description"
-    t.float    "price"
-    t.integer  "profile_id"
-    t.boolean  "enabled"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "profile_overrides", force: true do |t|
     t.text     "scope_redundant_path_patterns"
+    t.boolean  "audit_parameter_values"
     t.boolean  "audit_links"
     t.boolean  "audit_forms"
     t.boolean  "audit_cookies"
@@ -318,51 +292,9 @@ ActiveRecord::Schema.define(version: 20140920041348) do
     t.boolean  "scope_include_subdomains"
     t.text     "plugins"
     t.integer  "scope_page_limit"
-    t.integer  "profile_overridable_id"
-    t.string   "profile_overridable_type"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  create_table "profiles", force: true do |t|
-    t.integer  "user_id"
-    t.integer  "plan_id"
-    t.boolean  "default"
-    t.string   "name"
-    t.text     "description"
-    t.text     "scope_redundant_path_patterns"
-    t.boolean  "audit_links"
-    t.boolean  "audit_forms"
-    t.boolean  "audit_cookies"
-    t.boolean  "audit_headers"
-    t.text     "checks"
-    t.text     "http_cookies"
-    t.text     "http_user_agent"
-    t.text     "scope_exclude_path_patterns"
-    t.text     "scope_exclude_content_patterns"
-    t.text     "audit_exclude_vector_patterns"
-    t.text     "scope_include_path_patterns"
-    t.text     "http_request_headers"
-    t.text     "scope_restrict_paths"
-    t.text     "scope_extend_paths"
-    t.boolean  "audit_with_both_http_methods"
-    t.text     "session_check_url"
-    t.text     "session_check_pattern"
-    t.boolean  "no_fingerprinting"
-    t.text     "platforms"
-    t.string   "http_authentication_username"
-    t.string   "http_authentication_password"
-    t.text     "input_values"
-    t.text     "audit_link_templates"
-    t.text     "audit_include_vector_patterns"
-    t.text     "scope_url_rewrites"
-    t.integer  "browser_cluster_screen_width"
-    t.integer  "browser_cluster_screen_height"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "profiles", ["plan_id"], name: "index_profiles_on_plan_id"
 
   create_table "reports", force: true do |t|
     t.integer  "revision_id"
@@ -415,16 +347,6 @@ ActiveRecord::Schema.define(version: 20140920041348) do
 
   add_index "schedules", ["scan_id"], name: "index_schedules_on_scan_id"
 
-  create_table "site_verifications", force: true do |t|
-    t.string   "filename"
-    t.string   "state",      default: "pending"
-    t.text     "code"
-    t.text     "message"
-    t.integer  "site_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "sitemap_entries", force: true do |t|
     t.text     "url"
     t.integer  "code"
@@ -474,7 +396,6 @@ ActiveRecord::Schema.define(version: 20140920041348) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "name"
-    t.integer  "role"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true

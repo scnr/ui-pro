@@ -1,6 +1,5 @@
 class UsersController < ApplicationController
     before_filter :authenticate_user!
-    after_action :verify_authorized
 
     before_action :set_user, only: [:show, :update, :destroy]
 
@@ -28,11 +27,11 @@ class UsersController < ApplicationController
     private
 
     def set_user
-        authorize @user = User.find( params[:id] )
+        @user = current_user
     end
 
     def user_params
-        params.require(:user).permit(*policy(@user || User).permitted_attributes)
+        params.require(:user).permit
     end
 
 end

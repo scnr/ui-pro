@@ -9,7 +9,6 @@ feature 'Profile page', :devise do
 
     subject { FactoryGirl.create :profile, scans: [scan] }
     let(:user) { FactoryGirl.create :user }
-    let(:other_user) { FactoryGirl.create(:user, email: 'other@example.com') }
     let(:scan) { FactoryGirl.create :scan, site: site }
     let(:site) { FactoryGirl.create :site }
     let(:revision) { FactoryGirl.create :revision }
@@ -39,19 +38,6 @@ feature 'Profile page', :devise do
                     expect(page).to have_content scan.name
                     expect(page).to have_content scan.site.to_s
                 end
-            end
-        end
-
-        feature 'visits non-owned profile' do
-            before do
-                user.profiles << subject
-                login_as( other_user, scope: :user )
-            end
-
-            scenario 'gets redirected' do
-                expect do
-                    visit profile_path( subject )
-                end.to raise_error ActionController::RoutingError
             end
         end
     end

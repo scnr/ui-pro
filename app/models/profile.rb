@@ -14,6 +14,7 @@ class Profile < ActiveRecord::Base
     validates_uniqueness_of :name, scope: :user
 
     RPC_OPTS = [
+        :plugins,
         :checks,
         :platforms,
         :no_fingerprinting,
@@ -24,6 +25,9 @@ class Profile < ActiveRecord::Base
         :audit_include_vector_patterns,
         :audit_link_templates,
         :audit_links,
+        :audit_xmls,
+        :audit_jsons,
+        :audit_parameter_values,
         :browser_cluster_screen_height,
         :browser_cluster_screen_width,
         :http_authentication_password,
@@ -31,6 +35,10 @@ class Profile < ActiveRecord::Base
         :http_cookies,
         :http_request_headers,
         :http_user_agent,
+        :http_request_queue_size,
+        :http_request_concurrency,
+        :http_request_redirect_limit,
+        :http_request_timeout,
         :session_check_pattern,
         :session_check_url,
         :scope_exclude_content_patterns,
@@ -39,7 +47,23 @@ class Profile < ActiveRecord::Base
         :scope_include_path_patterns,
         :scope_redundant_path_patterns,
         :scope_restrict_paths,
-        :scope_url_rewrites
+        :scope_url_rewrites,
+        :scope_dom_depth_limit,
+        :scope_auto_redundant_paths,
+        :scope_directory_depth_limit,
+        :scope_exclude_binaries,
+        :scope_include_subdomains,
+        :scope_https_only,
+        :scope_dom_depth_limit,
+        :http_request_concurrency,
+        :http_request_redirect_limit,
+        :http_request_timeout,
+        :http_request_queue_size,
+        :http_response_max_size,
+        :browser_cluster_pool_size,
+        :browser_cluster_job_timeout,
+        :browser_cluster_worker_time_to_live,
+        :browser_cluster_ignore_images
     ]
 
     def export( serializer = YAML )

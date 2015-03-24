@@ -2,7 +2,6 @@ class ScansController < ApplicationController
     include IssuesSummary
 
     before_filter :authenticate_user!
-    after_action :verify_authorized
 
     before_action :set_site
     before_action :set_scan, only: [:show, :edit, :update, :destroy]
@@ -29,8 +28,6 @@ class ScansController < ApplicationController
     def new
         @scan = @site.scans.new
         @scan.build_schedule
-
-        authorize @scan
     end
 
     # GET /scans/1/edit
@@ -41,7 +38,6 @@ class ScansController < ApplicationController
     # POST /scans.json
     def create
         @scan = @site.scans.new(scan_params)
-        authorize @scan
 
         respond_to do |format|
             if @scan.save
@@ -87,11 +83,9 @@ class ScansController < ApplicationController
     private
 
     def set_site
-        @site = policy_scope(Site).find_by_id( params[:site_id] )
+        @site = current_user.sites.find_by_id( params[:site_id] )
 
         raise ActionController::RoutingError.new( 'Site not found.' ) if !@site
-
-        authorize @site
 
         @scans = @site.scans
     end
@@ -101,14 +95,11 @@ class ScansController < ApplicationController
         @scan = @site.scans.find( params[:id] )
 
         raise ActionController::RoutingError.new( 'Scan not found.' ) if !@scan
-
-        authorize @scan
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def scan_params
-        permitted = params.require(:scan).
-            permit( *policy(@scan || Scan).permitted_attributes )
+        permitted = params.require(:scan).permit( permitted_attributes )
 
         # TODO: Write specs for this.
         if permitted[:profile_id].to_i > 0
@@ -117,6 +108,11 @@ class ScansController < ApplicationController
         end
 
         permitted
+    end
+
+    def permitted_attributes
+        [:name, :description, :profile_id,
+         { schedule_attributes: [:month_frequency, :day_frequency, :start_at, :stop_after_hours, :stop_suspend] }]
     end
 
     def refresh_scan_table_partial

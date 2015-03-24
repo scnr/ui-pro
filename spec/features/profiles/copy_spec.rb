@@ -8,7 +8,6 @@ feature 'Profile copy page', :devise do
 
     subject { FactoryGirl.create :profile, scans: [scan] }
     let(:user) { FactoryGirl.create :user }
-    let(:other_user) { FactoryGirl.create(:user, email: 'other@example.com') }
     let(:scan) { FactoryGirl.create :scan, site: site }
     let(:site) { FactoryGirl.create :site }
 
@@ -36,19 +35,6 @@ feature 'Profile copy page', :devise do
                 click_button 'Create'
 
                 expect(Profile.all.last.name).to eq name
-            end
-        end
-
-        feature 'visits non-owned profile' do
-            before do
-                user.profiles << subject
-                login_as( other_user, scope: :user )
-            end
-
-            scenario 'gets a 404 error' do
-                expect do
-                    visit edit_profile_path( subject )
-                end.to raise_error ActionController::RoutingError
             end
         end
     end

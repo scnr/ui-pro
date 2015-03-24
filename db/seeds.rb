@@ -5,9 +5,6 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
-admin = CreateAdminService.new.call
-puts 'CREATED ADMIN USER: ' << admin.email
-
 user = User.create(
     email:                 'test@stuff.com',
     password:              'testtest',
@@ -15,7 +12,7 @@ user = User.create(
 )
 
 arachni_defaults = {}
-profile_columns  = Profile.column_names
+ap profile_columns  = Profile.column_names
 
 Arachni::Options.to_rpc_data.each do |name, value|
     name = name.to_sym
@@ -78,15 +75,6 @@ p = Profile.create! arachni_defaults.merge(
 )
 puts 'SQLi profile created: ' << p.name
 
-plan = Plan.create!(
-    name:        'My plan',
-    description: 'Plan description.',
-    price:       20,
-    profile_override_attributes: {
-        scope_page_limit: 1_000
-    }
-)
-
 puts 'Creating platforms'
 Arachni::Platform::Manager::TYPES.each do |shortname, name|
     IssuePlatformType.create( shortname: shortname, name: name )
@@ -136,7 +124,7 @@ scans_size         = 2
 revisions_per_scan = 3
 
 [
-    '/home/zapotek/workspace/arachni/spec/support/fixtures/report.afr',
+    # '/home/zapotek/workspace/arachni/spec/support/fixtures/report.afr',
     '/home/zapotek/Downloads/report.afr'
 ].each do |afr|
     sitemap    = nil
@@ -150,10 +138,6 @@ revisions_per_scan = 3
         host:     parsed_url.host,
         port:     parsed_url.port || 80
     )
-    site.verification.verified!
-
-    admin.shared_sites = [site]
-    admin.save
 
     scans_size.times do |i|
         break if issues.empty?
@@ -162,8 +146,7 @@ revisions_per_scan = 3
         scan = site.scans.create(
             profile:     p,
             name:        "my scan #{i}",
-            description: 'my description',
-            plan:        plan
+            description: 'my description'
         )
 
         scan.build_schedule
