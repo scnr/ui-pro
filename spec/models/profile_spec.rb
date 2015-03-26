@@ -368,7 +368,7 @@ describe Profile do
         end
 
         context 'when the file format is' do
-            context YAML do
+            context 'YAML' do
                 let(:serializer) { YAML }
 
                 it 'loads it' do
@@ -378,7 +378,7 @@ describe Profile do
                 end
             end
 
-            context JSON do
+            context 'JSON' do
                 let(:serializer) { JSON }
 
                 it 'loads it' do

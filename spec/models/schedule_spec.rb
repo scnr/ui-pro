@@ -6,7 +6,7 @@ describe Schedule do
 
     expect_it { to belong_to :scan }
 
-    describe :scopes do
+    describe 'scopes' do
         let(:due) do
             [
                 FactoryGirl.create( :scan,
@@ -49,7 +49,7 @@ describe Schedule do
             ]
         end
 
-        describe :due do
+        describe 'due' do
             it 'returns scans that are due' do
                 due
                 not_due
@@ -59,7 +59,7 @@ describe Schedule do
         end
     end
 
-    describe :validations do
+    describe 'validations' do
         describe '#day_frequency' do
             it 'is numeric' do
                 subject.day_frequency = 'stuff'

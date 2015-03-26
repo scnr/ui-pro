@@ -10,7 +10,7 @@ class Vector < ActiveRecord::Base
 
     def self.create_from_arachni( vector )
         h = {}
-        [:action, :http_method, :seed, :inputs, :affected_input_name, :html,
+        [:action, :http_method, :seed, :inputs, :affected_input_name, :source,
          :default_inputs].each do |attr|
             h[attr] = vector.send(attr) if vector.respond_to?( attr )
         end

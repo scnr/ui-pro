@@ -12,7 +12,7 @@ FactoryGirl.define do
         arachni_class "Arachni::Element::Form"
         kind "form"
         action "http://test.com/"
-        html "<form>stuff</form>"
+        source "<form>stuff</form>"
         http_method "POST"
         affected_input_name "pname1"
     end

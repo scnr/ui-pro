@@ -17,14 +17,16 @@ class Scan < ActiveRecord::Base
     validates_presence_of   :site
     validates_presence_of   :profile
 
+    before_save :ensure_schedule
+
     scope :scheduled,   -> do
         joins(:schedule).where.not( schedules: { start_at: nil } )
     end
-    scope :unscheduled, -> do
-        where.not(
-            Schedule.where( 'schedules.scan_id = scans.id' ).limit(1).arel.exists
-        )
-    end
+    # scope :unscheduled, -> do
+    #     where.not(
+    #         Schedule.where( 'schedules.scan_id = scans.id' ).limit(1).arel.exists
+    #     )
+    # end
 
     scope :with_revisions, -> { joins(:revisions).where( 'revisions.id IS NOT NULL' ) }
 
@@ -36,6 +38,12 @@ class Scan < ActiveRecord::Base
         options = profile.to_rpc_options
         options.merge!( 'authorized_by' => site.user.email )
         options
+    end
+
+    private
+
+    def ensure_schedule
+        self.schedule ||= build_schedule
     end
 
 end

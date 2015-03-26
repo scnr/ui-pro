@@ -88,11 +88,11 @@ end
 # require 'arachni'
 
 # arachni_root_dir = Gem::Specification.find_by_name( 'arachni' ).gem_dir
-arachni_root_dir = '../../../arachni'
+arachni_root_dir = File.expand_path( "#{File.basename(__FILE__)}/../../../arachni" )
 
 require_relative "#{arachni_root_dir}/lib/arachni"
 
 support_path     = "#{arachni_root_dir}/spec/support"
 
 require_relative "#{support_path}/lib/factory"
-Dir.glob( "#{support_path}/{factories}/**/*.rb" ).each { |f| require f }
+Dir.glob( "#{support_path}/factories/**/*.rb" ).each { |f| require f }

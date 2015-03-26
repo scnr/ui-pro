@@ -17,7 +17,6 @@ feature 'Revision page' do
     end
 
     before do
-        site.verification.verified!
         login_as user, scope: :user
         visit site_scan_revision_path( site, scan, revision )
     end

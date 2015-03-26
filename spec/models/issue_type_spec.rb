@@ -16,8 +16,8 @@ describe IssueType do
         end
     end
 
-    describe :scopes do
-        describe :default do
+    describe 'scopes' do
+        describe 'default' do
             it 'orders by severity and name' do
                 ha = FactoryGirl.create( :issue_type,
                                          name: 'a1',

@@ -1,6 +1,9 @@
 class ProfilesController < ApplicationController
     before_filter :authenticate_user!
-    before_action :set_profile, only: [:show, :copy, :edit, :update, :destroy]
+
+    before_action :set_profile,       only: [:show, :copy, :edit, :update, :destroy]
+    before_action :authorize_edit,    only: [:edit, :update]
+    before_action :authorize_destroy, only: [:destroy]
 
     # GET /profiles
     # GET /profiles.json
@@ -77,12 +80,25 @@ class ProfilesController < ApplicationController
         raise ActionController::RoutingError.new( 'Profile not found.' ) if !@profile
     end
 
+    def authorize_edit
+        return if @profile.revisions.empty?
+        redirect_to @profile, error: 'Cannot edit a profile that has associated revisions.'
+    end
+
+    def authorize_destroy
+        return if @profile.scans.empty?
+        redirect_to @profile, error: 'Cannot delete a profile that has associated scans.'
+    end
+
     # Never trust parameters from the scary internet, only allow the white list through.
     def profile_params
         params.require( :profile ).permit( *permitted_attributes )
     end
 
     def permitted_attributes
+        self.class.permitted_attributes
+    end
+    def self.permitted_attributes
         [
             :name,
             :description,

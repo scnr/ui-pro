@@ -27,18 +27,21 @@
               display_path_only: true,
               class: "text-severity text-severity-#{entry.issues.max_severity}" %>
 
-            <ul class="list-info">
-                <li>
-                    <span>
-                        Has <%= pluralize entry.issues.size, 'issue' %>
-                        and was originally found by the
-                        <%= link_to "#{entry.revision.index.ordinalize} revision",
-                                    [site, entry.revision.scan, entry.revision] %>
-                        of
-                        <%= link_to entry.revision.scan.name, [site, entry.revision.scan] %>.
-                    </span>
-                </li>
-            </ul>
+            <% if entry.revision %>
+                <ul class="list-info">
+                    <li>
+                        <span>
+
+                            Has <%= pluralize entry.issues.size, 'issue' %>
+                            and was originally found by the
+                            <%= link_to "#{entry.revision.index.ordinalize} revision",
+                                        [site, entry.revision.scan, entry.revision] %>
+                            of
+                            <%= link_to entry.revision.scan.name, [site, entry.revision.scan] %>.
+                        </span>
+                    </li>
+                </ul>
+            <% end %>
         </li>
     <% end %>
 </ul>

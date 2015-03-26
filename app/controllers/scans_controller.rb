@@ -104,7 +104,7 @@ class ScansController < ApplicationController
         # TODO: Write specs for this.
         if permitted[:profile_id].to_i > 0
             # Fail if user tries to set a profile they do not own.
-            policy_scope(Profile).find( params[:scan][:profile_id] )
+            current_user.profiles.find( params[:scan][:profile_id] )
         end
 
         permitted

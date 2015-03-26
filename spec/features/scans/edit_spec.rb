@@ -23,8 +23,6 @@ feature 'Edit scan page' do
     end
 
     before do
-        site.verification.verified!
-
         login_as user, scope: :user
         visit edit_site_scan_path( site, scan )
     end
@@ -42,8 +40,8 @@ feature 'Edit scan page' do
         fill_in 'Description', with: description
         select profile.name, from: 'Profile'
 
-        select '2015', from: 'scan_schedule_attributes_start_at_1i'
-        select 'March', from: 'scan_schedule_attributes_start_at_2i'
+        select '2016', from: 'scan_schedule_attributes_start_at_1i'
+        select 'November', from: 'scan_schedule_attributes_start_at_2i'
         select '15', from: 'scan_schedule_attributes_start_at_3i'
         select '21', from: 'scan_schedule_attributes_start_at_4i'
         select '50', from: 'scan_schedule_attributes_start_at_5i'
@@ -64,7 +62,7 @@ feature 'Edit scan page' do
 
         schedule = scan.schedule
 
-        expect(schedule.start_at.to_s).to eq '2015-03-15 21:50:00 UTC'
+        expect(schedule.start_at.to_s).to eq '2016-11-15 21:50:00 UTC'
         expect(schedule.stop_after_hours).to eq 1.5
         expect(schedule.day_frequency).to eq 10
         expect(schedule.month_frequency).to eq 11
@@ -102,8 +100,6 @@ feature 'Edit scan page' do
 
     feature 'when the scan has at least one revision' do
         before do
-            site.verification.verified!
-
             scan.revisions << FactoryGirl.create(:revision, scan: scan)
 
             login_as user, scope: :user

@@ -45,7 +45,6 @@ feature 'Profile index page' do
             visit profiles_path
 
             expect(page).to have_content profile.scans.size
-            expect(page).to_not have_content other_profile.scans.size
         end
 
         # Scenario: Page contains a "New Profile" link
@@ -111,11 +110,8 @@ feature 'Profile index page' do
                 #   When I visit the profile index page
                 #   And the profile has no associated scans with revisions
                 #   Then I see profiles with delete links
-                scenario 'can delete' do
-                    click_link 'Delete'
-                    visit profiles_path
-
-                    expect(page).to_not have_content profile.name
+                scenario 'cannot delete' do
+                    expect(page).to_not have_selector(:link_or_button, 'Delete')
                 end
             end
 

@@ -17,8 +17,6 @@ feature 'Scan page' do
     end
 
     before do
-        site.verification.verified!
-
         login_as user, scope: :user
         visit site_scan_path( site, scan )
     end
@@ -41,28 +39,11 @@ feature 'Scan page' do
 
     scenario 'user sees schedule'
 
-    scenario 'user sees the amount of revisions in an h2' do
-        expect(find('h2').text).to match "#{scan.revisions.size} revisions"
-    end
-
-    scenario 'user sees the revisions' do
-        expect(page).to have_css '.scan-revisions-table'
-    end
+    scenario 'user sees the revisions'
 
     feature 'user is the site owner' do
         scenario 'user can see edit link' do
             expect(page).to have_xpath "//a[@href='#{edit_site_scan_path(site, scan)}']"
-        end
-    end
-
-    feature 'user has the shared site' do
-        before do
-            login_as other_user, scope: :user
-            visit site_scan_path( site, scan )
-        end
-
-        scenario 'user cannot see edit link' do
-            expect(page).to_not have_xpath "//a[@href='#{edit_site_scan_path(site, scan)}']"
         end
     end
 end

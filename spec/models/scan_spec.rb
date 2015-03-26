@@ -23,7 +23,7 @@ describe Scan do
         expect(subject.schedule.month_frequency).to eq 10
     end
 
-    describe :scopes do
+    describe 'scopes' do
         let(:scheduled) do
             [
                 FactoryGirl.create( :scan,
@@ -76,7 +76,7 @@ describe Scan do
             ]
         end
 
-        describe :scheduled do
+        describe 'scheduled' do
             it "returns scans with #{Scan}#start_at" do
                 scheduled
                 unscheduled
@@ -85,18 +85,18 @@ describe Scan do
             end
         end
 
-        describe :unscheduled do
-            before { described_class.delete_all }
+        # describe 'unscheduled' do
+        #     before { described_class.delete_all }
+        #
+        #     it "returns scans without #{Scan}#start_at" do
+        #         scheduled
+        #         unscheduled
+        #
+        #         expect(described_class.unscheduled).to eq unscheduled
+        #     end
+        # end
 
-            it "returns scans without #{Scan}#start_at" do
-                scheduled
-                unscheduled
-
-                expect(described_class.unscheduled).to eq unscheduled
-            end
-        end
-
-        describe :with_revisions do
+        describe 'with_revisions' do
             it "returns scans with #{Revision}" do
                 with_revisions
                 without_revisions
@@ -106,7 +106,7 @@ describe Scan do
         end
     end
 
-    describe :validations do
+    describe 'validations' do
         it 'validates the #schedule' do
             subject.build_schedule
             subject.schedule.start_at = 'stuff'
@@ -176,32 +176,9 @@ describe Scan do
                 expect(subject.save).to be_truthy
             end
         end
-
-        describe '#plan' do
-            let(:plan) { FactoryGirl.create :plan }
-
-            it 'is required' do
-                subject.plan = nil
-
-                expect(subject.save).to be_falsey
-                expect(subject.errors).to include :plan
-
-                subject.plan = plan
-
-                expect(subject.save).to be_truthy
-            end
-        end
     end
 
     describe '#rpc_options' do
-        before :all do
-            FactoryGirl.create :global_profile
-            plan = FactoryGirl.create :plan
-            plan.build_profile_override
-            plan.profile_override.scope_page_limit = 1_000
-            subject.plan = plan
-        end
-
         before :each do
             Arachni::Options.reset
         end

@@ -19,16 +19,14 @@ feature 'Site page' do
 
     feature 'when the site has no scans' do
         before do
-            user.sites << site
+            user.sites << other_site
 
             login_as user, scope: :user
-            visit site_path( site )
+            visit site_path( other_site )
         end
 
-        feature 'the Scans tab is active' do
-            scenario 'and shows the new scan form' do
-                expect(page).to have_xpath "//form[@id='new_scan']"
-            end
+        scenario 'user sees the new scan form' do
+            expect(page).to have_xpath "//form[@id='new_scan']"
         end
     end
 

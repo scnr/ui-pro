@@ -408,7 +408,7 @@ ActiveRecord::Schema.define(version: 20140920041348) do
     t.string   "arachni_class"
     t.string   "kind"
     t.text     "action"
-    t.text     "html"
+    t.text     "source"
     t.string   "http_method"
     t.text     "affected_input_name"
     t.integer  "with_vector_id"

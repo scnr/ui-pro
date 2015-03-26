@@ -4,6 +4,7 @@ class Profile < ActiveRecord::Base
 
     belongs_to :user
     has_many   :scans
+    has_many   :revisions, through: :scans
 
     DESCRIPTIONS_FILE = "#{Rails.root}/config/profile/attributes.yml"
 

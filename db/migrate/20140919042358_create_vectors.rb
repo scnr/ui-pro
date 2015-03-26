@@ -7,7 +7,7 @@ class CreateVectors < ActiveRecord::Migration
             t.string :arachni_class
             t.string :kind
             t.text :action
-            t.text :html
+            t.text :source
             t.string :http_method
             t.text :affected_input_name
             t.belongs_to :with_vector, polymorphic: true, index: true

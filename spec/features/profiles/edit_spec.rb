@@ -48,8 +48,8 @@ feature 'Profile edit page', :devise do
                     visit edit_profile_path( subject )
                 end
 
-                scenario 'user gets redirected back to the homepage' do
-                    expect(current_url).to eq root_url
+                scenario 'user gets redirected back to the profile page' do
+                    expect(current_url).to eq profile_url( subject )
                 end
             end
         end

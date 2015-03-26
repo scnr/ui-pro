@@ -18,8 +18,6 @@ feature 'Scan index' do
     end
 
     before do
-        site.verification.verified!
-
         login_as user, scope: :user
         visit site_scans_path( site )
     end
