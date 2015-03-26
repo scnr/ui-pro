@@ -44,6 +44,7 @@ feature 'Profile page', :devise do
 
     feature 'non authenticated user' do
         before do
+            user
             visit profile_path( subject )
         end
 

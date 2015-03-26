@@ -41,6 +41,7 @@ feature 'Profile copy page', :devise do
 
     feature 'non authenticated user' do
         before do
+            user
             visit edit_profile_path( subject )
         end
 
