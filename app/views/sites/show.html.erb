@@ -22,41 +22,16 @@
     </div>
 </div>
 
+<hr/>
+
 <% if @issues_summary %>
-    <div id="summary-tabs">
-        <ul class="nav nav-tabs">
-            <li class="active">
-                <a href="#summary" role="tab"
-                   <%= 'data-toggle="tab"'.html_safe if @site.scanned? %>
-                >
-                    Overview
-                </a>
-            </li>
+    <div class="row">
+        <div id="sidebar" class="col-md-2">
+            <%= render partial: 'sidebar' %>
+        </div>
 
-            <li class="<%= 'disabled' if !@site.scanned? %>">
-                <a href="#analytics" role="tab"
-                   <%= 'data-toggle="tab"'.html_safe if @site.scanned? %>
-                >
-                    Analytics
-                </a>
-            </li>
-        </ul>
-
-        <div class="tab-content">
-            <div class="tab-pane active" id="summary">
-                <div class="row">
-                    <div id="sidebar" class="col-md-2">
-                        <%= render partial: 'sidebar' %>
-                    </div>
-
-                    <div class="col-md-10">
-                        <%= render partial: 'shared/issues_summary' %>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tab-pane" id="analytics">
-            </div>
+        <div class="col-md-10">
+            <%= render partial: 'shared/issues_summary' %>
         </div>
     </div>
 <% else %>
