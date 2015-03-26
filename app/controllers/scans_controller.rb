@@ -41,8 +41,6 @@ class ScansController < ApplicationController
 
         respond_to do |format|
             if @scan.save
-                refresh_scan_table_partial
-
                 format.html { redirect_to [@site, @scan], notice: 'Scan was successfully created.' }
                 format.json { render :show, status: :created, location: @scan }
             else
@@ -57,8 +55,6 @@ class ScansController < ApplicationController
     def update
         respond_to do |format|
             if @scan.update(scan_params)
-                refresh_scan_table_partial
-
                 format.html { redirect_to [@site, @scan], notice: 'Scan was successfully updated.' }
                 format.json { render :show, status: :ok, location: @scan }
             else
@@ -72,7 +68,6 @@ class ScansController < ApplicationController
     # DELETE /scans/1.json
     def destroy
         @scan.destroy
-        refresh_scan_table_partial
 
         respond_to do |format|
             format.html { redirect_to site_scans_url, notice: 'Scan was successfully destroyed.' }
@@ -115,7 +110,4 @@ class ScansController < ApplicationController
          { schedule_attributes: [:month_frequency, :day_frequency, :start_at, :stop_after_hours, :stop_suspend] }]
     end
 
-    def refresh_scan_table_partial
-        refresh_partial [:table, @site, :scans]
-    end
 end
