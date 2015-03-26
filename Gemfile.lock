@@ -131,6 +131,10 @@ GEM
       responders
       thread_safe (~> 0.1)
       warden (~> 1.2.3)
+    devise_security_extension (0.8.1)
+      devise (>= 2.0.0)
+      devise_security_extension
+      rails (>= 3.1.1)
     diff-lcs (1.2.5)
     em-synchrony (1.0.4)
       eventmachine (>= 1.0.0.beta.1)
@@ -620,6 +624,7 @@ DEPENDENCIES
   d3-rails
   database_cleaner
   devise
+  devise_security_extension
   factory_girl_rails
   faker
   font-awesome-rails

@@ -8,7 +8,7 @@ class User < ActiveRecord::Base
     # Include default devise modules. Others available are:
     # :confirmable, :lockable, :timeoutable and :omniauthable
     devise :database_authenticatable, :rememberable, :trackable, :registerable,
-           :validatable
+           :validatable, :session_limitable
 
     def notify_browser( *args )
         WebsocketRails.users[self.id].send_message( *args )
