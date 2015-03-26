@@ -58,4 +58,15 @@ feature 'Sign Up', :devise do
         expect(page).to have_content "Password confirmation doesn't match"
     end
 
+    context 'when a user has already registered' do
+        scenario 'user sees error' do
+            sign_up_with('test@example.com', 'please123', 'please123')
+            logout :user
+
+            expect do
+                visit new_user_registration_path
+            end.to raise_error
+        end
+    end
+
 end

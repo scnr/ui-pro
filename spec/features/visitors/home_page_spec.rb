@@ -6,13 +6,19 @@ feature 'Home page' do
 
     let(:user) { FactoryGirl.create(:user) }
 
-    # Scenario: Visit the home page
-    #   Given I am a visitor
-    #   When I visit the home page
-    #   I am redirect to the sign-in page
-    scenario 'logged out user is redirected to log-in screen' do
-        visit root_path
-        expect(current_path).to eq new_user_session_path
+    context 'when no user has registered' do
+        scenario 'user is redirected to sign-up screen' do
+            visit root_path
+            expect(current_path).to eq new_user_registration_path
+        end
+    end
+
+    context 'when a user has registered' do
+        scenario 'user is redirected to sign-in screen' do
+            user
+            visit root_path
+            expect(current_path).to eq new_user_session_path
+        end
     end
 
     # Scenario: Visit the home page
