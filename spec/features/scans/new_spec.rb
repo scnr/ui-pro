@@ -76,6 +76,17 @@ feature 'New scan page' do
         end
     end
 
+    feature 'when stop_after_hours is not numeric' do
+        scenario 'user sees an error' do
+            fill_in 'Name', with: name
+            fill_in 'scan_schedule_attributes_stop_after_hours', with: 'stuff'
+
+            click_button 'Create'
+
+            expect(find(:div, '.scan_schedule_stop_after_hours.has-error')).to be_truthy
+        end
+    end
+
     feature 'when start_at is missing' do
         scenario 'the scan is not scheduled' do
             fill_in 'Name', with: name
