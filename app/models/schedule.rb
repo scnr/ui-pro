@@ -39,7 +39,7 @@ class Schedule < ActiveRecord::Base
     def to_s
         return '' if !recurring?
 
-        s = 'every'
+        s = []
 
         if day_frequency
             s << "#{day_frequency} #{'days'.pluralize(day_frequency)}"
@@ -49,7 +49,7 @@ class Schedule < ActiveRecord::Base
             s << "#{month_frequency} #{'months'.pluralize(month_frequency)}"
         end
 
-        s
+        'every ' + s.join( ' & ' )
     end
 
     def recurring?
