@@ -1,0 +1,11 @@
+<h2>Active</h2>
+
+<%= render partial: 'scans/tables/active', locals: { scans: @scans } %>
+
+<h2>Suspended</h2>
+
+<%= render partial: 'scans/tables/suspended', locals: { scans: @scans } %>
+
+<h2>Finished</h2>
+
+<%= render partial: 'scans/tables/finished', locals: { scans: @scans } %>

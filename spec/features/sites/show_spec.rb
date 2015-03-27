@@ -13,6 +13,14 @@ feature 'Site page' do
     let(:revision) { FactoryGirl.create :revision, scan: scan }
     let(:other_scan) { FactoryGirl.create :scan, site: site, profile: profile, name: 'Blah' }
 
+    before do
+        revision
+        user.sites << site
+
+        login_as user, scope: :user
+        visit site_path( site )
+    end
+
     after(:each) do
         Warden.test_reset!
     end
@@ -30,25 +38,14 @@ feature 'Site page' do
         end
     end
 
-    before do
-        revision
-        user.sites << site
-
-        login_as user, scope: :user
-        visit site_path( site )
-    end
-
     scenario 'user sees the site URL as a heading' do
         expect(find('h1').text).to match site.url
     end
 
-    feature 'Summary tab' do
+    feature 'Overview tab' do
         feature 'without revisions' do
             before do
                 site.scans.first.revisions.clear
-                user.sites << site
-
-                login_as user, scope: :user
                 visit site_path( site )
             end
 
@@ -61,6 +58,8 @@ feature 'Site page' do
             before do
                 other_scan.revisions.create
                 site.scans << other_scan
+                scan.reload
+                visit site_path( site )
             end
 
             feature 'sidebar' do
@@ -69,16 +68,20 @@ feature 'Site page' do
                 feature 'scan list' do
                     let(:scans) { find '#site-sidebar' }
 
-                    scenario 'user sees edit button' do
-                        expect(scans).to have_xpath "//a[@href='#{edit_site_scan_path( site, scan )}']"
-                    end
-
-                    scenario 'user sees delete button' do
-                        expect(scans).to have_xpath "//a[@href='#{site_scan_path( site, scan )}' and @data-method='delete']"
-                    end
-
                     scenario 'user sees name' do
                         expect(scans).to have_content scan.name
+                    end
+
+                    scenario 'user sees amount of revisions' do
+                        expect(scans).to have_content "#{scan.revisions.size} revision"
+                    end
+
+                    scenario 'user sees amount of pages' do
+                        expect(scans).to have_content "#{scan.sitemap_entries.size} pages"
+                    end
+
+                    scenario 'user sees amount of issues' do
+                        expect(scans).to have_content "#{scan.issues.size} issues"
                     end
 
                     scenario 'user sees profile' do
@@ -176,11 +179,11 @@ feature 'Site page' do
                     end
 
                     scenario 'user sees amount of scan revisions' do
-                        expect(statistics).to have_text "#{site.revisions.size} scan revisions"
+                        expect(statistics).to have_text "#{site.revisions.size} revisions"
                     end
 
                     scenario 'user sees amount of scans' do
-                        expect(statistics).to have_text "#{site.scans.size} base scans"
+                        expect(statistics).to have_text "#{site.scans.size} scans"
                     end
 
                     scenario 'user sees amount of issues by severity' do
@@ -387,6 +390,79 @@ feature 'Site page' do
                             end
                         end
                     end
+                end
+            end
+        end
+    end
+
+    feature 'Scans tab' do
+        before do
+            click_link 'Scans'
+        end
+
+        feature 'without scans'
+
+        feature 'with scans' do
+            before do
+                other_scan.revisions.create
+                site.scans << other_scan
+            end
+
+            feature 'that are active' do
+                let(:scans) { find '#scans-active' }
+
+                scenario 'user sees scan name'
+                scenario 'user sees scan profile'
+                scenario 'user sees scan status'
+                scenario 'user sees amount of pages'
+                scenario 'user sees amount of issues'
+                scenario 'user sees amount of revisions'
+                scenario 'user sees pause button'
+                scenario 'user sees suspend button'
+
+                scenario 'user sees edit button' do
+                    expect(scans).to have_xpath "//a[@href='#{edit_site_scan_path( site, scan )}']"
+                end
+
+                scenario 'user sees abort button'
+            end
+
+            feature 'that are suspended' do
+                let(:scans) { find '#scans-suspended' }
+
+                scenario 'user sees scan name'
+                scenario 'user sees scan profile'
+                scenario 'user sees amount of pages'
+                scenario 'user sees amount of issues'
+                scenario 'user sees amount of revisions'
+                scenario 'user sees repeat button'
+                scenario 'user sees resume button'
+
+                scenario 'user sees edit button' do
+                    expect(scans).to have_xpath "//a[@href='#{edit_site_scan_path( site, scan )}']"
+                end
+
+                scenario 'user sees delete button' do
+                    expect(scans).to have_xpath "//a[@href='#{site_scan_path( site, scan )}' and @data-method='delete']"
+                end
+            end
+
+            feature 'that are finished' do
+                let(:scans) { find '#scans-finished' }
+
+                scenario 'user sees scan name'
+                scenario 'user sees scan profile'
+                scenario 'user sees amount of pages'
+                scenario 'user sees amount of issues'
+                scenario 'user sees amount of revisions'
+                scenario 'user sees repeat button'
+
+                scenario 'user sees edit button' do
+                    expect(scans).to have_xpath "//a[@href='#{edit_site_scan_path( site, scan )}']"
+                end
+
+                scenario 'user sees delete button' do
+                    expect(scans).to have_xpath "//a[@href='#{site_scan_path( site, scan )}' and @data-method='delete']"
                 end
             end
         end

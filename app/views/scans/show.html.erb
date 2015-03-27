@@ -1,7 +1,9 @@
 <div class="row">
     <div class="col-md-12">
         <h1>
-            <%= link_to @scan.name.capitalize, [@scan.site, @scan] %> scan for
+            <%= link_to @scan.name.capitalize, [@scan.site, @scan] %>
+            (<%= link_to @scan.profile, @scan.profile %>)
+            for
             <%= link_to_url_with_external external: @site.url, internal: @site %>
 
             <%= link_to edit_site_scan_path( @site, @scan ),
@@ -21,8 +23,6 @@
         </p>
 
         <p class="text-muted">
-            Using <%= link_to @scan.profile, @scan.profile %>.
-
             <% if @scan.schedule.recurring? %>
                 Running <%= link_to @scan.schedule, '#' %>.
             <% end %>
@@ -37,7 +37,7 @@
         <%= render partial: 'sidebar' %>
     </div>
 
-    <div class="col-md-10">
+    <div id="scan-data" class="col-md-10">
         <% if @issues_summary %>
             <%= render partial: 'shared/issues_summary' %>
         <% else %>

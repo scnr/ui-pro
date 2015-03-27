@@ -13,8 +13,8 @@
     </li>
 
     <li class="<%= 'active' if request.path == site_scan_path( @site, @scan ) %>">
-        <%= link_to [@site, @scan] do %>
-            Scan overview
+        <%= link_to [@scan.site, @scan] do %>
+            <%= @scan.name %>
         <% end %>
 
         <hr/>

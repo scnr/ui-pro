@@ -1,17 +1,17 @@
-<table class="table table-hover table-striped">
+<table id="scans-finished" class="table table-hover table-striped table-condensed">
     <thead>
-        <tr>
-            <th>Name</th>
-            <th>Profile</th>
-            <th>Pages</th>
-            <th>Issues</th>
-            <th>Revisions</th>
-            <th></th>
-        </tr>
+    <tr>
+        <th>Name</th>
+        <th>Profile</th>
+        <th>Pages</th>
+        <th>Issues</th>
+        <th>Revisions</th>
+        <th></th>
+    </tr>
     </thead>
 
     <tbody>
-    <% @scans.each do |scan| %>
+    <% scans.each do |scan| %>
         <tr>
             <td><%= link_to scan.name, [@site, scan] %></td>
             <td><%= link_to scan.profile.name, scan.profile %></td>
@@ -22,14 +22,18 @@
             <td><%= scan.revisions.size %></td>
 
             <td>
+                <a class="btn btn-sm btn-success" title="Repeat scan" href="#">
+                    <i class="fa fa-repeat"></i>
+                </a>
+
                 <%= link_to edit_site_scan_path( @site, scan ),
-                        class: 'btn btn-sm btn-warning' do %>
+                            class: 'btn btn-sm btn-warning' do %>
                     <i class="fa fa-pencil"></i>
                 <% end %>
 
                 <%= link_to [@site, scan], method: :delete,
-                        class: 'btn btn-sm btn-danger',
-                        data: { confirm: 'Are you sure?' } do %>
+                            class: 'btn btn-sm btn-danger',
+                            data: { confirm: 'Are you sure?' } do %>
                     <i class="fa fa-trash"></i>
                 <% end %>
             </td>

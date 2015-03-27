@@ -27,7 +27,7 @@
         <div class="col-md-4">
             <h3>
                 <strong><%= issues.size %></strong>
-                <%= 'issues'.pluralize issues.size %>
+                <%= 'issues'.pluralize issues.size %>,
 
                 <% if issues.size > 0 %>
                     <small>
@@ -44,10 +44,10 @@
         <div class="col-md-4">
             <h3>
                 <strong><%= revisions.size %></strong>
-                <%= 'scan revision'.pluralize revisions.size %>,
+                <%= 'revision'.pluralize revisions.size %>,
 
                 <small>
-                    from <strong><%= scans.size %></strong> base
+                    from <strong><%= scans.size %></strong>
                     <%= 'scan'.pluralize(scans.size) %>
                 </small>
             </h3>

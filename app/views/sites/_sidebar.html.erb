@@ -1,49 +1,37 @@
 <%
-   site       = @issues_summary[:site]
    site_scans = @issues_summary[:scans]
 %>
-
 <ul id="site-sidebar" class="nav nav-pills nav-stacked">
-    <li>
-        <ul class="nav nav-vertical">
-            <% site_scans.each do |scan| %>
-            <li class="with-list-info">
-                <% if !@scan %>
-                <span class="sidebar-scan-actions">
-                    <%= link_to edit_site_scan_path( site, scan ),
-                                class: 'btn btn-xs btn-warning' do %>
-                        <i class="fa fa-pencil"></i>
-                    <% end %>
+    <li>&nbsp;</li>
 
-                    <%= link_to [site, scan], method: :delete,
-                                class: 'btn btn-xs btn-danger',
-                                data: { confirm: 'Are you sure?' } do %>
-                        <i class="fa fa-trash"></i>
+    <li class="<%= 'active' if request.path == site_path( @site ) %>">
+        <%= link_to @site do %>
+            Site overview
+        <% end %>
+
+        <hr/>
+    </li>
+
+    <% site_scans.each do |scan| %>
+    <li>
+        <%= link_to [scan.site, scan] do %>
+            <%= scan.name %>
+        <% end %>
+    </li>
+
+        <li>
+            <small>
+                <span class="text-muted">
+                    <% if scan.revisions.size > 0 %>
+                        <%= pluralize scan.revisions.size, 'revision' %>,
+                        <%= pluralize scan.sitemap_entries.size, 'page' %> &
+                        <%= pluralize scan.issues.size, 'issue' %>
+                        using <%= link_to scan.profile, scan.profile %>.
+                    <% else %>
+                        Has not run.
                     <% end %>
                 </span>
-
-                <%= link_to [scan.site, scan], class: 'with-actions' do %>
-                    <%= scan.name %>
-
-                    <span class="text-muted">
-                        &ndash;
-                        <% if scan.revisions.size > 0 %>
-                            <%= pluralize scan.sitemap_entries.size, 'page' %>,
-                            <%= pluralize scan.issues.size, 'issue' %>.
-                        <% else %>
-                            Has not run.
-                        <% end %>
-                    </span>
-                <% end %>
-
-                <p class="text-muted">
-                    <small>
-                        Using <%= link_to scan.profile, scan.profile %>.
-                    </small>
-                </p>
-                <% end %>
-            </li>
-            <% end %>
-        </ul>
-    </li>
+            </small>
+        </li>
+    <% end %>
 </ul>
