@@ -20,6 +20,4 @@ Rails.application.routes.draw do
     end
 
     resources :schedules, only: [:index]
-
-    resources :plans
 end
