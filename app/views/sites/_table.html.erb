@@ -3,6 +3,9 @@
         <tr>
             <th>URL</th>
             <th>State</th>
+            <th>Issues</th>
+            <th>Revisions</th>
+            <th>Scans</th>
             <th>Last scanned</th>
             <th></th>
         </tr>
@@ -44,6 +47,18 @@
                 <% end %>
             </td>
 
+            <td>
+                <%= site.issues.size %>
+            </td>
+
+            <td>
+                <%= site.revisions.count %>
+            </td>
+
+            <td>
+                <%= site.scans.size %>
+            </td>
+
             <td class="last-scanned">
                 <% if site.scanned_at %>
                     <%= time_ago_in_words site.scanned_at %> ago
@@ -53,10 +68,6 @@
             </td>
 
             <td>
-                <%= link_to edit_site_path( site ) , class: 'btn btn-sm btn-warning' do %>
-                    <i class="fa fa-pencil"></i>
-                <% end %>
-
                 <%= link_to site, method: :delete, class: 'btn btn-sm btn-danger',
                             data: { confirm: 'Are you sure?' } do %>
                     <i class="fa fa-trash"></i>

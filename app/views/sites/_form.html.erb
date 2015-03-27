@@ -1,0 +1,22 @@
+<div class="row-fluid">
+    <div class="col-md-12">
+        <%= simple_form_for @site, html: { class: 'form-inline' } do |f| %>
+            <%= f.error_notification %>
+
+            <div class="form-group">
+                <%= f.input :protocol, label: false, as: :select, default: :http, collection: [:http, :https] %>
+            </div>
+            <div class="form-group">
+                <%= f.input :host, label: false, placeholder: 'www.example.com' %>
+            </div>
+
+            <div class="form-group">
+                <%= f.input :port, label: false %>
+            </div>
+
+            <div class="form-group">
+                <%= f.button :submit, value: 'Add' %>
+            </div>
+        <% end %>
+    </div>
+</div>

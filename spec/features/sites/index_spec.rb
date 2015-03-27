@@ -35,14 +35,6 @@ feature 'Site index page' do
         expect(page).to have_xpath "//a[@href='#{site_path( site )}' and not(@data-method)]"
     end
 
-    # Scenario: Sites which are verified are accompanied by edit links
-    #   Given I am signed in
-    #   When I visit the site index page
-    #   Then I see my verified sites with edit links
-    scenario 'user can see edit links' do
-        expect(page).to have_xpath "//a[@href='#{edit_site_path( site )}']"
-    end
-
     # Scenario: Sites which are verified are accompanied by delete links
     #   Given I am signed in
     #   When I visit the site index page
@@ -122,6 +114,21 @@ feature 'Site index page' do
                 end
             end
         end
+    end
+
+    scenario 'user can add new site' do
+        select 'http', from: 'site[protocol]'
+        fill_in 'site[host]', with: 'example.com'
+        fill_in 'site[port]', with: 8080
+        click_button 'Add'
+
+        expect(page).to have_content 'Site was successfully created.'
+
+        site = Site.last
+
+        expect(site.protocol).to eq 'http'
+        expect(site.host).to eq 'example.com'
+        expect(site.port).to eq 8080
     end
 
 end

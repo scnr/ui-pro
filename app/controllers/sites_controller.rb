@@ -8,8 +8,8 @@ class SitesController < ApplicationController
     # GET /sites
     # GET /sites.json
     def index
-        @sites        = current_user.sites
-        @shared_sites = current_user.shared_sites
+        set_sites
+        @site = Site.new
     end
 
     # GET /sites/1
@@ -30,15 +30,6 @@ class SitesController < ApplicationController
         end
     end
 
-    # GET /sites/new
-    def new
-        @site = current_user.sites.new
-    end
-
-    # GET /sites/1/edit
-    def edit
-    end
-
     # POST /sites
     # POST /sites.json
     def create
@@ -50,7 +41,9 @@ class SitesController < ApplicationController
                 format.html { redirect_to site_url(@site), notice: 'Site was successfully created.' }
                 format.json { render :show, status: :created, location: @site }
             else
-                format.html { render :new }
+                set_sites
+
+                format.html { render :index }
                 format.json { render json: @site.errors, status: :unprocessable_entity }
             end
         end
@@ -60,6 +53,7 @@ class SitesController < ApplicationController
     # DELETE /sites/1.json
     def destroy
         @site.destroy
+
         respond_to do |format|
             format.html { redirect_to sites_url, notice: 'Site was successfully destroyed.' }
             format.json { head :no_content }
@@ -73,6 +67,10 @@ class SitesController < ApplicationController
         @site = current_user.sites.find_by_id( params[:id] )
 
         raise ActionController::RoutingError.new( 'Site not found.' ) if !@site
+    end
+
+    def set_sites
+        @sites = current_user.sites
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

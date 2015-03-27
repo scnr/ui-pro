@@ -1,21 +1,13 @@
 <h1>
     Sites
-
-    <%= link_to new_site_path, title: 'New site',
-                class: 'btn btn-xs btn-primary' do %>
-        <i class="fa fa-plus"></i>
-    <% end %>
 </h1>
 
-<div id="owned-sites">
-    <div class="row">
-        <div class="col-md-4">
-            <%= render 'table', sites: @sites %>
-        </div>
+<%= render 'form' %>
 
-        <div class="col-md-8">
-            <h4>Click on a row for a quick view of a site's unresolved issues.</h4>
-            <h4>Showing [site url]</h4>
+<div id="sites">
+    <div class="row">
+        <div class="col-md-12">
+            <%= render 'table', sites: @sites %>
         </div>
     </div>
 </div>

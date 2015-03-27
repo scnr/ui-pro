@@ -31,9 +31,7 @@ describe Site, type: :model do
 
             context 'other' do
                 it 'is not accepted' do
-                    subject.protocol = 'gg'
-                    subject.save
-                    expect(subject.errors).to include :protocol
+                    expect { subject.protocol = 'gg' }.to raise_error
                 end
             end
 

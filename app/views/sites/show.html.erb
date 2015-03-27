@@ -8,11 +8,6 @@
                 <i class="fa fa-plus"></i>
             <% end %>
 
-            <%= link_to edit_site_path( @site ), title: 'Edit site',
-                        class: 'btn btn-xs btn-warning' do %>
-                <i class="fa fa-pencil"></i>
-            <% end %>
-
             <%= link_to @site, method: :delete, title: 'Delete site',
                         class: 'btn btn-xs btn-danger',
                         data: { confirm: 'Are you sure?' } do %>

@@ -1,6 +1,8 @@
 class Site < ActiveRecord::Base
     PROTOCOL_TYPES = %w(http https)
 
+    enum protocol: [ :http, :https ]
+
     belongs_to :user
     has_and_belongs_to_many :users
 
@@ -11,10 +13,6 @@ class Site < ActiveRecord::Base
     has_many :sitemap_entries, dependent: :destroy
 
     validates_presence_of :protocol
-    validates             :protocol, inclusion: {
-        in:      PROTOCOL_TYPES,
-        message: "Acceptable types are: #{PROTOCOL_TYPES.join( ', ' )}"
-    }
 
     validates_presence_of   :host
     validates_format_of     :host, with: /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}\z/

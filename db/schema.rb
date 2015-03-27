@@ -363,7 +363,7 @@ ActiveRecord::Schema.define(version: 20140920041348) do
   add_index "sitemap_entries", ["url", "site_id"], name: "index_sitemap_entries_on_url_and_site_id", unique: true
 
   create_table "sites", force: true do |t|
-    t.string   "protocol",   default: "http"
+    t.integer  "protocol"
     t.string   "host"
     t.integer  "port",       default: 80
     t.integer  "user_id"
@@ -371,7 +371,7 @@ ActiveRecord::Schema.define(version: 20140920041348) do
     t.datetime "updated_at"
   end
 
-  add_index "sites", ["host", "port"], name: "index_sites_on_host_and_port"
+  add_index "sites", ["protocol", "host", "port"], name: "index_sites_on_protocol_and_host_and_port"
   add_index "sites", ["user_id"], name: "index_sites_on_user_id"
 
   create_table "sites_users", id: false, force: true do |t|
