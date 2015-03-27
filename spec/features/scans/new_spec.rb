@@ -31,7 +31,7 @@ feature 'New scan page' do
     scenario 'user can set the schedule' do
         fill_in 'Name', with: name
         fill_in 'Description', with: description
-        select profile.name, from: 'Profile'
+        select profile.name, from: 'scan_profile_id'
 
         select '2016', from: 'scan_schedule_attributes_start_at_1i'
         select 'November', from: 'scan_schedule_attributes_start_at_2i'
@@ -39,9 +39,9 @@ feature 'New scan page' do
         select '21', from: 'scan_schedule_attributes_start_at_4i'
         select '50', from: 'scan_schedule_attributes_start_at_5i'
 
-        fill_in 'Stop after hours', with: 1.5
-        fill_in 'scan_schedule_attributes_day_frequency', with: 10
-        fill_in 'scan_schedule_attributes_month_frequency', with: 11
+        fill_in 'scan_schedule_attributes_stop_after_hours', with: 1.5
+        select 10, from: 'scan_schedule_attributes_day_frequency'
+        select 11, from: 'scan_schedule_attributes_month_frequency'
 
         click_button 'Create'
 
@@ -65,75 +65,25 @@ feature 'New scan page' do
 
     scenario 'user sees own profiles in select box' do
         FactoryGirl.create :profile, name: 'Other user profile'
-        expect(page).to have_select 'Profile', [profile.name, other_profile.name]
+        expect(page).to have_select 'scan_profile_id', [profile.name, other_profile.name]
     end
 
     feature 'when the name is missing' do
         scenario 'user sees an error' do
             click_button 'Create'
 
-            expect(find(:div, '.scan_name.error')).to have_content "can't be blank"
-        end
-    end
-
-    feature 'when the profile is missing' do
-        scenario 'user sees an error' do
-            click_button 'Create'
-
-            expect(find(:div, '.scan_profile.error')).to have_content "can't be blank"
+            expect(find(:div, '.scan_name.has-error')).to be_truthy
         end
     end
 
     feature 'when start_at is missing' do
         scenario 'the scan is not scheduled' do
             fill_in 'Name', with: name
-            select profile.name, from: 'Profile'
+            select profile.name, from: 'scan_profile_id'
 
             click_button 'Create'
 
             expect(site.scans.last.reload).to_not be_scheduled
-        end
-    end
-
-    feature 'when stop_after_hours is not numeric' do
-        scenario 'user sees an error' do
-            fill_in 'Stop after hours', with: 'stuff'
-
-            click_button 'Create'
-
-            expect(find(:div, '.scan_schedule_stop_after_hours.error')).to have_content 'is not a number'
-        end
-    end
-
-    feature 'when day_frequency is' do
-        feature 'not numeric' do
-            scenario 'user sees an error'
-        end
-
-        feature 'out of range' do
-            scenario 'user sees an error' do
-                fill_in 'scan_schedule_attributes_day_frequency', with: -1
-
-                click_button 'Create'
-
-                expect(find(:div, '.scan_schedule_day_frequency.error')).to have_content 'Accepted values: 1-29.'
-            end
-        end
-    end
-
-    feature 'when month_frequency is' do
-        feature 'not numeric' do
-            scenario 'user sees an error'
-        end
-
-        feature 'out of range' do
-            scenario 'user sees an error' do
-                fill_in 'scan_schedule_attributes_month_frequency', with: -1
-
-                click_button 'Create'
-
-                expect(find(:div, '.scan_schedule_month_frequency.error')).to have_content 'Accepted values: 1-12.'
-            end
         end
     end
 end

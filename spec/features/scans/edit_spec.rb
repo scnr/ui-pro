@@ -38,7 +38,7 @@ feature 'Edit scan page' do
     scenario 'user can change the schedule' do
         fill_in 'Name', with: name
         fill_in 'Description', with: description
-        select profile.name, from: 'Profile'
+        select profile.name, from: 'scan_profile_id'
 
         select '2016', from: 'scan_schedule_attributes_start_at_1i'
         select 'November', from: 'scan_schedule_attributes_start_at_2i'
@@ -46,9 +46,9 @@ feature 'Edit scan page' do
         select '21', from: 'scan_schedule_attributes_start_at_4i'
         select '50', from: 'scan_schedule_attributes_start_at_5i'
 
-        fill_in 'Stop after hours', with: 1.5
-        fill_in 'scan_schedule_attributes_day_frequency', with: 10
-        fill_in 'scan_schedule_attributes_month_frequency', with: 11
+        fill_in 'scan_schedule_attributes_stop_after_hours', with: 1.5
+        select 10, from: 'scan_schedule_attributes_day_frequency'
+        select 11, from: 'scan_schedule_attributes_month_frequency'
 
         click_button 'Update'
 
@@ -92,7 +92,7 @@ feature 'Edit scan page' do
     end
 
     scenario 'user can change the profile' do
-        select profile.name, from: 'Profile'
+        select profile.name, from: 'scan_profile_id'
         click_button 'Update'
 
         expect(scan.reload.profile).to eq profile

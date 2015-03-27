@@ -1,4 +1,4 @@
-<%= simple_form_for( [@site, @scan], html: { class: 'form-horizontal' } ) do |f| %>
+<%= simple_form_for( [@site, @scan], html: { class: 'form-inline' } ) do |f| %>
     <%= f.error_notification %>
 
     <div class="row">
@@ -6,8 +6,10 @@
             <%= f.input :name, placeholder: 'Name', label: false %>
 
             <%= f.association :profile,
+                              label: false,
                               disabled: @scan.revisions.any?,
                               collection: current_user.profiles,
+                              default: current_user.profiles.first,
                               hint: ('The profile will remain editable until the
                               first time the scan runs.' if @scan.revisions.empty?)
             %>
@@ -15,51 +17,52 @@
             <%= f.input :description, placeholder: 'Description', label: false %>
         </div>
 
-        <div class="form-inputs col-md-8">
+        <div class="form-inputs col-md-6">
             <%= f.simple_fields_for :schedule do |sf| %>
 
-            <div class="row-fluid">
-                <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-8">
                     <fieldset>
                         <legend>Schedule</legend>
                         <%= sf.input :start_at,
                                      include_blank: true,
                                      start_year: Date.today.year,
                                      end_year: Date.today.year + 1,
-                                     hint: 'You can skip this for now, the scan
-                                        will not run until it is scheduled.'
+                                     hint: 'If no date is specified the scan will start ASAP.'
                         %>
 
-                        <%= sf.input :stop_after_hours, placeholder: 'hours' %>
-                        <%= sf.input :stop_suspend %>
+                        <%= sf.input :stop_after_hours, label: 'Stop after' %> hours
+                        &mdash;
+                        <%= sf.input :stop_suspend, label: 'Suspend instead of aborting' %>
                     </fieldset>
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <fieldset>
                         <legend>Frequency</legend>
+                        Every
                         <%= sf.input :day_frequency,
                                           collection: (1..29),
-                                          as: :integer,
+                                          as: :select,
                                           label: false,
                                           placeholder: 'Days (1-29)'
-                        %>
+                        %> days and
                         <%= sf.input :month_frequency,
                                           collection: (1..12),
-                                          as: :integer,
+                                          as: :select,
                                           label: false,
                                           placeholder: 'Months (1-12)'
                         %>
+                        months.
                     </fieldset>
                 </div>
             </div>
             <% end %>
         </div>
-
     </div>
 
-    <div class="row-fluid">
-        <div class="form-actions">
+    <div class="row">
+        <div class="form-actions col-md-12">
             <%= f.button :submit %>
         </div>
     </div>

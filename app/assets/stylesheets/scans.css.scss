@@ -9,3 +9,32 @@
 #summary-issues {
     border-left: 1px solid #eeeeee;
 }
+
+.scan_name, #scan_name, .scan_profile, #scan_profile_id,
+.scan_description, #scan_description {
+    width: 100%;
+}
+
+#scan_schedule_attributes_start_at_1i {
+    width: 100px
+}
+
+#scan_schedule_attributes_start_at_2i {
+    width: 100px
+}
+
+#scan_schedule_attributes_start_at_3i {
+    width: 100px
+}
+
+#scan_schedule_attributes_start_at_4i {
+    width: 100px
+}
+
+#scan_schedule_attributes_start_at_5i {
+    width: 100px
+}
+
+#scan_schedule_attributes_stop_after_hours {
+    width: 75px;
+}
