@@ -6,6 +6,7 @@
 
     <li>
         <%= link_to @site do %>
+            <i class="fa fa-arrow-left"></i>
             Site overview
         <% end %>
 
@@ -14,7 +15,7 @@
 
     <li class="<%= 'active' if request.path == site_scan_path( @site, @scan ) %>">
         <%= link_to [@scan.site, @scan] do %>
-            <%= @scan.name %>
+            Scan overview
         <% end %>
 
         <hr/>
@@ -33,7 +34,9 @@
                             #<%= revision.index %>
 
                             <span class="text-muted">
-                                &ndash; 10 fixed issues, <%= revision.issues.size %> new.
+                                &ndash;
+                                <%= pluralize revision.sitemap_entries.size, 'new page' %>,
+                                10 fixed issues, <%= revision.issues.size %> new.
                             </span>
                         <% end %>
                     </li>
