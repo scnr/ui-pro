@@ -40,3 +40,17 @@ ul.list-info li span {
 ul.list-info li:before {
     content: "\02EA";
 }
+
+#loading {
+    position: fixed;
+    z-index:  2000;
+    top:      0px;
+    left:     0;
+    height:   5px;
+    width:    100%;
+    display:  none;
+}
+
+#loading .progress-bar {
+    width: 100%;
+}

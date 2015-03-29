@@ -22,3 +22,23 @@
 String.prototype.endsWith = function(suffix) {
     return this.indexOf(suffix, this.length - suffix.length) !== -1;
 };
+
+function loading(){
+    $('#loading').show();
+}
+
+function loaded(){
+    $('#loading').hide();
+}
+
+$(document).on( 'page:fetch', function( $ ) {
+    loading();
+});
+
+$(document).ajaxStop( function() {
+    loaded();
+});
+
+$(window).bind( "page:restore", function () {
+    loaded();
+});

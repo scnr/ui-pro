@@ -1,19 +1,46 @@
 class ProfilesController < ApplicationController
     before_filter :authenticate_user!
 
-    before_action :set_profile,       only: [:show, :copy, :edit, :update, :destroy]
+    before_action :set_profiles,      only: [:index, :default]
+    before_action :set_profile,       only: [:show, :copy, :edit, :update,
+                                             :default, :destroy]
     before_action :authorize_edit,    only: [:edit, :update]
     before_action :authorize_destroy, only: [:destroy]
+
+    PROFILE_EXPORT_PREFIX = 'Arachni Pro Profile'
 
     # GET /profiles
     # GET /profiles.json
     def index
-        @profiles = current_user.profiles
     end
 
     # GET /profiles/1
     # GET /profiles/1.json
     def show
+        set_download_header = proc do |extension|
+            name = @profile.name
+            [ "\n", "\r", '"' ].each { |k| name.gsub!( k, '' ) }
+
+            headers['Content-Disposition'] =
+                "attachment; filename=\"#{PROFILE_EXPORT_PREFIX} - #{name}.#{extension}\""
+        end
+
+        respond_to do |format|
+            format.html # show.html.erb
+            format.js { render @profile }
+            format.json do
+                set_download_header.call 'json'
+                render text: @profile.export( JSON )
+            end
+            format.yaml do
+                set_download_header.call 'yaml'
+                render text: @profile.export( YAML )
+            end
+            format.afp do
+                set_download_header.call 'afp'
+                render text: @profile.to_rpc_options.to_yaml
+            end
+        end
     end
 
     # GET /profiles/new
@@ -47,6 +74,27 @@ class ProfilesController < ApplicationController
         end
     end
 
+    # POST /profiles/import
+    def import
+        if !params[:profile] || !params[:profile][:file].is_a?( ActionDispatch::Http::UploadedFile )
+            redirect_to profiles_url, alert: 'No file selected for import.'
+            return
+        end
+
+        @profile = Profile.import( params[:profile][:file] )
+
+        if !@profile
+            redirect_to profiles_url,
+                        alert: 'Could not understand the Profile format, please' <<
+                                   ' ensure that you are using a v0.5 profile.'
+            return
+        end
+
+        respond_to do |format|
+            format.html { render 'edit' }
+        end
+    end
+
     # PATCH/PUT /profiles/1
     # PATCH/PUT /profiles/1.json
     def update
@@ -59,6 +107,12 @@ class ProfilesController < ApplicationController
                 format.json { render json: @profile.errors, status: :unprocessable_entity }
             end
         end
+    end
+
+    # PUT /profiles/1/default
+    def default
+        @profile.default!
+        render partial: 'table', formats: :js
     end
 
     # DELETE /profiles/1
@@ -78,6 +132,10 @@ class ProfilesController < ApplicationController
         @profile = current_user.profiles.find_by_id( params[:id] )
 
         raise ActionController::RoutingError.new( 'Profile not found.' ) if !@profile
+    end
+
+    def set_profiles
+        @profiles = current_user.profiles
     end
 
     def authorize_edit

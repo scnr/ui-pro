@@ -16,7 +16,9 @@ Rails.application.routes.draw do
     devise_for :users, controllers: { registrations: 'registrations' }
 
     resources :profiles do
-        get :copy, on: :member
+        post  :import,  on: :collection
+        patch :default, on: :member
+        get   :copy,    on: :member
     end
 
     resources :schedules, only: [:index]

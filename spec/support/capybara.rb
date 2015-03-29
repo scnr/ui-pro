@@ -6,3 +6,5 @@
 #
 # Capybara.asset_host        = 'http://localhost:3000'
 # Capybara.javascript_driver = :chrome
+
+Capybara.javascript_driver = :webkit

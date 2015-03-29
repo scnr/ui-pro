@@ -9,9 +9,15 @@
     <%= csrf_meta_tags %>
 </head>
 <body>
+
+<div id="loading" class="progress progress-striped active">
+    <div class="progress-bar"></div>
+</div>
+
 <header>
     <%= render 'layouts/navigation' %>
 </header>
+
 <main role="main">
     <%= render 'layouts/messages' %>
     <%= yield %>

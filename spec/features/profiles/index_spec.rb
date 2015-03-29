@@ -29,6 +29,103 @@ feature 'Profile index page' do
             visit profiles_path
         end
 
+        scenario 'can set a default profile', js: true do
+            profile
+            other_profile
+
+            user.profiles << other_profile
+
+            visit profiles_path
+
+            expect(profile).to_not be_default
+
+            choose "id_#{profile.id}"
+            sleep(2)
+
+            expect(profile.reload).to be_default
+            expect(find( "#id_#{profile.id}" )).to be_checked
+            expect(find( "#id_#{other_profile.id}" )).to_not be_checked
+        end
+
+        feature 'can export profile as' do
+            scenario 'JSON' do
+                find_button('profile-export-button').click
+                click_link 'JSON'
+
+                expect(page.body).to eq profile.export( JSON )
+            end
+
+            scenario 'YAML' do
+                find_button('profile-export-button').click
+                click_link 'YAML'
+
+                expect(page.body).to eq profile.export( YAML )
+            end
+
+            scenario 'AFR' do
+                find_button('profile-export-button').click
+                click_link 'AFP (Suitable for the CLI interface.)'
+
+                expect(page.body).to eq profile.to_rpc_options.to_yaml
+            end
+        end
+
+        feature 'can import profile as' do
+            let(:file) do
+                file = Tempfile.new( described_class.to_s )
+
+                serialized = (serializer == :afr ? profile.to_rpc_options.to_yaml :
+                    profile.export( serializer ))
+
+                file.write serialized
+
+                file.rewind
+
+                allow(file).to receive(:original_filename) do
+                    File.basename( file.path )
+                end
+
+                file
+            end
+
+            feature 'JSON' do
+                let(:serializer) { JSON }
+
+                scenario 'fills in the form' do
+                    find(:xpath, "//a[@href='#profile-import']").click
+                    find('#profile_file').set file.path
+                    click_button 'Import'
+
+                    expect(find('input#profile_name').value).to eq profile.name
+                end
+            end
+
+            feature 'YAML' do
+                let(:serializer) { YAML }
+
+                scenario 'fills in the form' do
+                    find(:xpath, "//a[@href='#profile-import']").click
+                    find('#profile_file').set file.path
+                    click_button 'Import'
+
+                    expect(find('input#profile_name').value).to eq profile.name
+                end
+            end
+
+            feature 'AFR' do
+                let(:serializer) { :afr }
+
+                scenario 'fills in the form' do
+                    find(:xpath, "//a[@href='#profile-import']").click
+                    find('#profile_file').set file.path
+                    click_button 'Import'
+
+                    expect(find('input#profile_name').value).to eq File.basename( file.path )
+                    expect(find('textarea#profile_description').value).to start_with 'Imported from'
+                end
+            end
+        end
+
         # Scenario: Profile listed on index page
         #   Given I am signed in
         #   When I visit the profile index page
@@ -76,10 +173,7 @@ feature 'Profile index page' do
             #   And the profile has no associated scans
             #   Then I see profiles with delete links
             scenario 'can delete' do
-                click_link 'Delete'
-                visit profiles_path
-
-                expect(page).to_not have_content profile.name
+                expect(page).to have_xpath "//a[@href='#{profile_path( profile )}' and @data-method='delete']"
             end
         end
 
@@ -111,7 +205,7 @@ feature 'Profile index page' do
                 #   And the profile has no associated scans with revisions
                 #   Then I see profiles with delete links
                 scenario 'cannot delete' do
-                    expect(page).to_not have_selector(:link_or_button, 'Delete')
+                    expect(page).to_not have_xpath "//a[@href='#{profile_path( profile )}' and @data-method='delete']"
                 end
             end
 
@@ -141,7 +235,24 @@ feature 'Profile index page' do
                 #   And the profile has associated scans
                 #   Then I don't see delete links
                 scenario 'cannot delete' do
-                    expect(page).to_not have_selector(:link_or_button, 'Delete')
+                    expect(page).to_not have_xpath "//a[@href='#{profile_path( profile )}' and @data-method='delete']"
+                end
+            end
+
+            feature 'when a profile is default' do
+                before do
+                    profile.default!
+                    profile.scans << scan
+                    visit profiles_path
+                end
+
+                # Scenario: Profiles with scans are not accompanied by delete links
+                #   Given I am signed in
+                #   When I visit the profile index page
+                #   And the profile has associated scans
+                #   Then I don't see delete links
+                scenario 'cannot delete' do
+                    expect(page).to_not have_xpath "//a[@href='#{profile_path( profile )}' and @data-method='delete']"
                 end
             end
         end

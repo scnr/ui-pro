@@ -129,6 +129,21 @@ section {
     background-color: $severity-informational-color;
 }
 
+.btn-inverse {
+    background-color: #363636;
+    background-image: linear-gradient(to bottom, #444444, #222222);
+    background-repeat: repeat-x;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    color: white;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+
+.btn-inverse:hover, .btn-inverse:focus, .btn-inverse:active, .btn-inverse.active,
+.btn-inverse.disabled, .btn-inverse[disabled] {
+    background-color: #222222;
+    color: white;
+}
+
 .btn-severity {
     @extend .btn;
     color: white;

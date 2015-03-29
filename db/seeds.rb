@@ -57,7 +57,7 @@ arachni_defaults.merge!(
 #                         description: 'Sensible, default settings.',
 #                         checks:      :all
 #                     )
-# p.make_default
+# p.default!
 # puts 'Default profile created: ' << p.name
 
 p = Profile.create! arachni_defaults.merge(

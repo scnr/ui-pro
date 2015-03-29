@@ -9,7 +9,7 @@
                               label: false,
                               disabled: @scan.revisions.any?,
                               collection: current_user.profiles,
-                              default: current_user.profiles.first,
+                              selected: current_user.profiles.default,
                               hint: ('The profile will remain editable until the
                               first time the scan runs.' if @scan.revisions.empty?)
             %>
