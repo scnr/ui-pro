@@ -1,65 +1,74 @@
-<div class="accordion">
+<div class="panel-group" role="tablist" aria-multiselectable="true">
     <% components.each do |shortname, info| %>
-        <div class="accordion-group profile-<%= input %>">
-            <div class="accordion-heading">
+        <div class="panel-heading profile-<%= input %>">
+            <h4 class="panel-title" data-toggle="collapse"
+                role="tab" data-target="#<%= shortname %>">
+                <%= info[:name] %> (<code><%= shortname %></code>)
+            </h4>
 
-                <input id="profile_<%= input %>_<%= shortname %>"
-                       <% if input.to_s != 'checks' %>
-                        name="profile[selected_<%=input%>][]"
-                       <% else %>
-                        name="profile[<%=input%>][]"
-                       <% end %>
+            <input id="profile_<%= input %>_<%= shortname %>"
+                   <% if input.to_s != 'checks' %>
+                   name="profile[selected_<%=input%>][]"
+                   <% else %>
+                   name="profile[<%=input%>][]"
+                   <% end %>
 
-                    <%='checked' if selected.include? shortname %> type="checkbox"
-                    value="<%=shortname%>">
+                   <%='checked' if selected.include? shortname %> type="checkbox"
+                   value="<%=shortname%>">
 
-                <a class="accordion-toggle accordion-component-title" data-toggle="collapse"
-                   data-parent="#modules-accordion" href="#<%= shortname %>">
-                    <%= info[:name] %> (<%= shortname %>)
-                </a>
-            </div>
-            <div style="height: 0px;" id="<%= shortname %>" class="accordion-body collapse">
-                <div class="accordion-inner">
-                    <pre> <%= prepare_description info[:description] %> </pre>
-                </div>
-
-                <div class="accordion-inner">
-                    <strong>Version:</strong> <%= info[:version] %><br/>
-                    <strong>Authors:</strong>
-
-                    <ul>
-                        <% info[:authors].each do |author| %>
-                        <li><%= author %></li>
-                        <% end %>
-                    </ul>
-                </div>
-
-                <% if info[:targets].is_a? Array %>
+            <div style="height: 0px;" id="<%= shortname %>" class="panel-collapse collapse">
+                <div class="panel-body">
                     <div>
-                        <strong>Supported platforms:</strong>
-                        <ul>
-                            <% info[:targets].each do |platform| %>
-                                <li><%= platform %></li>
-                            <% end %>
-                        </ul>
+                        <%= md info[:description] %>
                     </div>
-                <% end %>
 
-                <% if info[:options] %>
-                <div class="accordion-inner">
-                    <strong>Options</strong>
+                    <% if info[:options] %>
+                        <hr/>
 
-                    <div class="plugin-options">
-                        <%= render partial: 'plugin_options',
-                                   locals: {
-                                       plugin_info:   info,
-                                       plugin_name:   shortname,
-                                       configuration: @profile.plugins[shortname] || {},
-                                   } %>
-                    </div>
+                        <div class="plugin-options">
+                            <%= render partial: 'plugin_options',
+                                       locals: {
+                                           plugin_info:   info,
+                                           plugin_name:   shortname,
+                                           configuration: @profile.plugins[shortname] || {},
+                                       } %>
+                        </div>
+
+                        <hr/>
+                    <%end%>
+
+                    <table class="table table-borderless table-condensed">
+                        <tr>
+                            <th>Version:</th>
+                            <td><%= info[:version] %></td>
+                        </tr>
+
+                        <tr>
+                            <th>Authors:</th>
+                            <td>
+                                <ul class="list-unstyled">
+                                    <% info[:authors].each do |author| %>
+                                        <li><%= author %></li>
+                                    <% end %>
+                                </ul>
+                            </td>
+                        </tr>
+
+                        <% if info[:platforms].is_a? Array %>
+                            <tr>
+                                <th>Supported platforms:</th>
+                                <td>
+                                    <ul class="list-unstyled">
+                                        <% info[:platforms].each do |platform| %>
+                                            <li><%= platform_fullname platform %></li>
+                                        <% end %>
+                                    </ul>
+                                </td>
+                            </tr>
+                        <% end %>
+                    </table>
+
                 </div>
-                <%end%>
-
             </div>
         </div>
     <%end%>

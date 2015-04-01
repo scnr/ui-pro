@@ -1,4 +1,4 @@
-<div class="row-fluid">
+<div class="row">
     <div class="col-md-12">
         <div class="page-header">
             <h1><%= profile.name %></h1>
@@ -9,7 +9,7 @@
 </div>
 
 <% if @profile.scans.any? %>
-    <div class="row-fluid">
+    <div class="row">
         <div class="col-md-12">
             <h2>
                 <%= @profile.scans.size %> associated
@@ -34,7 +34,7 @@
         <small>Rules about which resources to include</small>
     </h2>
 
-    <div class="row-fluid">
+    <div class="row">
         <% if profile.scope_redundant_path_patterns.any? %>
             <div class="col-md-6">
                 <div>
@@ -62,7 +62,7 @@
         <% end %>
     </div>
 
-    <div class="row-fluid">
+    <div class="row">
         <% if profile.scope_url_rewrites.any? %>
             <div class="col-md-6">
                 <div>
@@ -89,7 +89,7 @@
             </div>
         <% end %>
     </div>
-    <div class="row-fluid">
+    <div class="row">
         <% if profile.scope_exclude_path_patterns.any? %>
             <div class="col-md-6">
                 <p>
@@ -112,7 +112,7 @@
             </div>
         <% end %>
     </div>
-    <div class="row-fluid">
+    <div class="row">
         <% if profile.scope_restrict_paths.any? %>
             <div class="col-md-6">
                 <p>
@@ -135,7 +135,7 @@
             </div>
         <% end %>
     </div>
-    <div class="row-fluid">
+    <div class="row">
         <% if profile.scope_exclude_content_patterns.any? %>
             <div class="col-md-6">
                 <p>
@@ -157,7 +157,7 @@
         <small>How the scanner will audit web application inputs</small>
     </h2>
 
-    <div class="row-fluid">
+    <div class="row">
         <div class="col-md-6">
             <p>
                 <b>Forms:</b>
@@ -175,7 +175,7 @@
             <%= messages_for :audit_links %>
         </div>
     </div>
-    <div class="row-fluid">
+    <div class="row">
         <div class="col-md-6">
             <p>
                 <b>Cookies:</b>
@@ -186,7 +186,7 @@
         </div>
     </div>
 
-    <div class="row-fluid">
+    <div class="row">
         <% if profile.audit_exclude_vector_patterns.any? %>
             <div class="col-md-6">
                 <p>
@@ -210,7 +210,7 @@
         <% end %>
     </div>
 
-    <div class="row-fluid">
+    <div class="row">
         <% if profile.audit_link_templates.any? %>
             <div class="col-md-6">
                 <p>
@@ -232,7 +232,7 @@
         <small>Values to use to fill in inputs</small>
     </h2>
 
-    <div class="row-fluid">
+    <div class="row">
         <div class="col-md-6">
             <div>
                 <b>Input values:</b>
@@ -268,7 +268,7 @@
     </h2>
 
     <% if !profile.http_authentication_username.to_s.empty? && !profile.http_authentication_password.to_s.empty? %>
-        <div class="row-fluid">
+        <div class="row">
             <div class="col-md-6">
                 <p>
                     <b>HTTP username:</b>
@@ -286,7 +286,7 @@
         </div>
     <% end %>
 
-    <div class="row-fluid">
+    <div class="row">
         <div class="col-md-6">
             <p>
                 <b>User agent:</b>
@@ -295,7 +295,7 @@
             <%= messages_for :http_user_agent %>
         </div>
     </div>
-    <div class="row-fluid">
+    <div class="row">
         <% if profile.http_cookies.any? %>
             <div class="col-md-6">
                 <p>
@@ -327,7 +327,7 @@
             <small>What platforms should the scanner anticipate</small>
         </h2>
 
-        <div class="row-fluid">
+        <div class="row">
             <div class="col-md-12">
                 <b>Disable fingerprinting:</b>
                 <input <%= 'checked' if profile.no_fingerprinting %>
@@ -342,7 +342,7 @@
         </h4>
 
 
-        <div class="row-fluid">
+        <div class="row">
             <% [:os, :db, :servers, :languages, :frameworks].each_with_index do |type, i| %>
 
                 <div class="col-md-2">
@@ -386,7 +386,7 @@
         <small>Browser-related options</small>
     </h2>
 
-    <div class="row-fluid">
+    <div class="row">
         <div class="col-md-6">
             <p>
                 <b>Screen width:</b>
@@ -413,7 +413,7 @@
         <small>How the scanner will determine its session's validity</small>
     </h2>
 
-    <div class="row-fluid">
+    <div class="row">
         <% if !profile.session_check_url.to_s.empty? && !profile.session_check_pattern.to_s.empty? %>
             <div class="col-md-6">
                 <p>

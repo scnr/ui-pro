@@ -1,0 +1,21 @@
+<%
+   opts = local_assigns[:opts] || {}
+%>
+
+<div id="sidebar-container">
+    <ul id="sidebar" class="affix nav nav-pills nav-stacked sidenav">
+        <li>
+            <a href="#top" class="scroll">
+                <i class="fa fa-chevron-up"></i>
+                <%= opts[:top] || 'Top' %>
+            </a>
+        </li>
+        <% sections.each do |id, title| %>
+            <li>
+                <a href="#<%= id.to_s %>" class="scroll">
+                    <%= title.to_s.html_safe %>
+                </a>
+            </li>
+        <% end %>
+    </ul>
+</div>

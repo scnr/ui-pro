@@ -67,6 +67,35 @@ describe ProfileAttributes do
                 expect(subject.save).to be_falsey
                 expect(subject.errors).to include :scope_redundant_path_patterns
             end
+
+            it 'does not allow invalid patterns' do
+                subject.scope_redundant_path_patterns = {
+                    '(stuff' => 2
+                }
+
+                expect(subject.save).to be_falsey
+                expect(subject.errors).to include :scope_redundant_path_patterns
+            end
+        end
+
+        describe '#input_values' do
+            it 'does not allow empty patterns' do
+                subject.input_values = {
+                    '' => 'blah'
+                }
+
+                expect(subject.save).to be_falsey
+                expect(subject.errors).to include :input_values
+            end
+
+            it 'does not allow invalid patterns' do
+                subject.input_values = {
+                    '(stuff' => '2'
+                }
+
+                expect(subject.save).to be_falsey
+                expect(subject.errors).to include :input_values
+            end
         end
 
         describe '#http_cookies' do
@@ -127,9 +156,39 @@ describe ProfileAttributes do
                 subject.audit_link_templates = 'input1/(?<input1>\w+)/input2/(?<input2>\w+)'
                 expect(subject.save).to be_truthy
             end
+
+            it 'does not allow invalid patterns' do
+                subject.audit_link_templates = '(vdvdv'
+
+                expect(subject.save).to be_falsey
+                expect(subject.errors).to include :audit_link_templates
+            end
         end
 
         describe '#scope_url_rewrites' do
+            it 'sets rewrite rules' do
+                subject.scope_url_rewrites = {
+                    'articles\/[\w-]+\/(\d+)' => 'articles.php?id=\1'
+                }
+                expect(subject.save).to be_truthy
+            end
+
+            it 'must not have empty pattern' do
+                subject.scope_url_rewrites = {
+                    '' => 'articles.php?id=\1'
+                }
+
+                expect(subject.save).to be_falsey
+                expect(subject.errors).to include :scope_url_rewrites
+
+                subject.scope_url_rewrites = {
+                    ' ' => 'articles.php?id=\1'
+                }
+
+                expect(subject.save).to be_falsey
+                expect(subject.errors).to include :scope_url_rewrites
+            end
+
             it 'must not have empty substitutions' do
                 subject.scope_url_rewrites = {
                     'articles\/[\w-]+\/(\d+)' => ''
@@ -144,11 +203,24 @@ describe ProfileAttributes do
 
                 expect(subject.save).to be_falsey
                 expect(subject.errors).to include :scope_url_rewrites
+            end
 
+            it 'must have substitution with substitutions' do
                 subject.scope_url_rewrites = {
-                    'articles\/[\w-]+\/(\d+)' => 'articles.php?id=\1'
+                    'articles\/[\w-]+\/(\d+)' => 'stuff'
                 }
-                expect(subject.save).to be_truthy
+
+                expect(subject.save).to be_falsey
+                expect(subject.errors).to include :scope_url_rewrites
+            end
+
+            it 'does not allow invalid patterns' do
+                subject.scope_url_rewrites = {
+                    '(articles\/[\w-]+\/(\d+)' => 'stuff'
+                }
+
+                expect(subject.save).to be_falsey
+                expect(subject.errors).to include :scope_url_rewrites
             end
         end
 
@@ -186,6 +258,7 @@ describe ProfileAttributes do
                 subject.session_check_pattern = nil
             end
 
+
             context 'when it has a #session_check_url' do
                 context 'but not a #session_check_pattern' do
                     it 'is invalid' do
@@ -194,6 +267,16 @@ describe ProfileAttributes do
                         expect(subject.save).to be_falsey
                         expect(subject.errors).to include :session_check_pattern
                     end
+                end
+            end
+
+            context 'when #session_check_pattern is invalid' do
+                it 'is invalid' do
+                    subject.session_check_url = 'http://test.com'
+                    subject.session_check_pattern = '(stuff'
+
+                    expect(subject.save).to be_falsey
+                    expect(subject.errors).to include :session_check_pattern
                 end
             end
 
@@ -269,10 +352,8 @@ describe ProfileAttributes do
         end
     end
 
-    %w(scope_exclude_path_patterns scope_exclude_content_patterns
-        scope_include_path_patterns scope_extend_paths scope_restrict_paths
-        audit_exclude_vector_patterns audit_include_vector_patterns
-        audit_link_templates checks platforms).each do |attr|
+    %w(scope_extend_paths scope_restrict_paths audit_link_templates checks
+        platforms).each do |attr|
 
         describe "#{attr}" do
             it 'is a Array' do
@@ -281,4 +362,21 @@ describe ProfileAttributes do
         end
     end
 
+    %w(scope_exclude_path_patterns scope_exclude_content_patterns
+        scope_include_path_patterns audit_exclude_vector_patterns
+        audit_include_vector_patterns).each do |attr|
+
+        describe "#{attr}" do
+            it 'is a Array' do
+                expect(subject.send(attr)).to be_kind_of Array
+            end
+
+            it 'does not allow invalid patterns' do
+                subject.send( "#{attr}=", ['(stuff'] )
+
+                expect(subject.save).to be_falsey
+                expect(subject.errors).to include attr.to_sym
+            end
+        end
+    end
 end

@@ -8,7 +8,8 @@
     <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
     <%= csrf_meta_tags %>
 </head>
-<body>
+
+<body data-spy="scroll" id="top" data-target="#sidebar-container" data-offset="50">
 
 <div id="loading" class="progress progress-striped active">
     <div class="progress-bar"></div>

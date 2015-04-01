@@ -1,38 +1,53 @@
-<%= simple_form_for( @profile ) do |f| %>
+<%= simple_form_for @profile, html: { class: 'profile-form' } do |f| %>
     <%= f.error_notification %>
 
     <% if f.error_notification %>
         <div class="alert alert-error fade in">
             <ul>
-                <%  @profile.errors.each do |attribute| %>
+                <%  @profile.errors.messages.each do |attribute, messages| %>
                     <% if attribute != :plugins %>
-                        <li><%= attribute.to_s.humanize %> <%= f.error attribute %></li>
+                        <li>
+                            <%= attribute.to_s.humanize %>
+                            <% if messages.size == 1 %>
+                                <%= messages.first %>
+                            <% else %>
+                                <ul class="list-unstyled">
+                                    <% messages.each do |message| %>
+                                        <li>
+                                            <span class="help-block">
+                                                <%= message %>
+                                            </span>
+                                        </li>
+                                    <% end %>
+                                </ul>
+                            <% end %>
+                        </li>
                     <% else  %>
-                        <li><%= attribute.to_s.humanize %> <pre class="alert-error"><%= f.error attribute %></pre></li>
+                        <li>
+                            <%= attribute.to_s.humanize %>
+                            <pre class="alert-error"><%= f.error attribute %></pre>
+                        </li>
                     <% end  %>
                 <% end %>
             </ul>
         </div>
     <% end %>
 
-    <header class="jumbotron subhead" id="overview">
-        <div class="row-fluid">
-            <div class="col-md-6">
-                <%= f.input :name, label: false, placeholder: '(Required) Name' %>
-            </div>
+    <div class="row">
+        <div class="col-md-12">
+            <%= f.input :name, label: false, placeholder: '(Required) Name' %>
         </div>
-
-        <div class="row-fluid">
-            <div class="col-md-6">
-                <%= f.input :description, label: false, placeholder: '(Required) Description',
-                            hint: 'You can use Markdown for text formatting.',
-                            input_html: { rows: 5, cols: 100 } %>
-            </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <%= f.input :description, label: false, placeholder: '(Required) Description',
+                        hint: 'You can use Markdown for text formatting.',
+                        input_html: { rows: 5, cols: 100 } %>
         </div>
-    </header>
+    </div>
 
     <% if @profile.scans.any? %>
-        <div class="row-fluid">
+        <div class="row">
             <div class="col-md-12">
                 <h2>
                     <%= @profile.scans.size %> associated
@@ -51,85 +66,157 @@
         </div>
     <% end %>
 
-    <section id="scope">
+    <div id="scope">
         <fieldset>
-            <legend id="scope-h">
+            <h2 id="scope-h">
                 Scope
-                <small>Rules about which resources to include</small>
-            </legend>
-            <div class="row-fluid">
-                <div class="col-md-6">
-                    <%= f.input :scope_redundant_path_patterns, input_html: {
-                            value: @profile.scope_redundant_path_patterns.
-                                           map { |k, v| "#{k}:#{v}" }.join( "\n" )
-                    } %>
+                <small>Are there any restrictions regarding the scope of the scan?</small>
+            </h2>
 
-                    <%= messages_for( :scope_redundant_path_patterns ) %>
-                    <p class="alert alert-info">
-                        Rules take the format of <em>pattern:times</em>,
-                        input each rule in its own line.
-                    </p>
+            <div class="row">
+                <div class="col-md-6">
+                    <%= f.input :scope_page_limit, label: 'Page limit' %>
+                    <%= messages_for( :scope_page_limit ) %>
                 </div>
                 <div class="col-md-6">
-                    <%= f.input :scope_exclude_content_patterns, input_html: { value: @profile.scope_exclude_content_patterns.join( "\n" ) } %>
-
-                    <%= messages_for( :scope_exclude_content_patterns ) %>
-                    <p class="alert alert-info">Input each rule in its own line.</p>
+                    <%= f.input :scope_directory_depth_limit, label: 'Directory depth limit' %>
+                    <%= messages_for( :scope_directory_depth_limit ) %>
                 </div>
             </div>
-            <div class="row-fluid">
+
+            <div class="row">
                 <div class="col-md-6">
-                    <%= f.input :scope_exclude_path_patterns, input_html: { value: @profile.scope_exclude_path_patterns.join( "\n" ) } %>
-                    <%= messages_for( :scope_exclude_path_patterns ) %>
-                    <p class="alert alert-info">Input each rule in its own line.</p>
-                </div>
-                <div class="col-md-6">
-                    <%= f.input :scope_include_path_patterns, input_html: { value: @profile.scope_include_path_patterns.join( "\n" ) } %>
+                    <%= f.input :scope_include_path_patterns,
+                                label: 'Path inclusion patterns',
+                                input_html: { value: @profile.scope_include_path_patterns.join( "\n" ) } %>
                     <%= messages_for( :scope_include_path_patterns ) %>
-                    <p class="alert alert-info">Input each rule in its own line.</p>
+                    <p class="help-block alert alert-info">Input each rule in its own line.</p>
+                </div>
+                <div class="col-md-6">
+                    <%= f.input :scope_exclude_path_patterns,
+                                label: 'Path exclusion patterns',
+                                input_html: { value: @profile.scope_exclude_path_patterns.join( "\n" ) } %>
+                    <%= messages_for( :scope_exclude_path_patterns ) %>
+                    <p class="help-block alert alert-info">Input each rule in its own line.</p>
                 </div>
             </div>
-            <div class="row-fluid">
-                <div class="col-md-6">
-                    <%= f.input :scope_restrict_paths, input_html: { value: @profile.scope_restrict_paths.join( "\n" ) } %>
-                    <%= messages_for( :scope_restrict_paths ) %>
-                    <p class="alert alert-info">Input each path in its own line.</p>
-                </div>
-                <div class="col-md-6">
-                    <%= f.input :scope_extend_paths, input_html: { value: @profile.scope_extend_paths.join( "\n" ) } %>
-                    <%= messages_for( :scope_extend_paths ) %>
-                    <p class="alert alert-info">Input each path in its own line.</p>
-                </div>
-            </div>
-            <div class="row-fluid">
-                <div class="col-md-6">
-                    <%= f.input :scope_url_rewrites, input_html: {
-                            value: @profile.scope_url_rewrites.
-                                           map { |k, v| "#{k}:#{v}" }.join( "\n" )
-                    } %>
-                    <%= messages_for( :scope_url_rewrites ) %>
-                    <p class="alert alert-info">
-                        Rules take the format of <em>pattern:substitution</em>,
-                        input each rule in its own line.<br/>
 
-                        For example, to convert <code>http://test.com/articles/some-stuff/23</code> to
-                        <code>http://test.com/articles.php?id=23</code> use
-                        <code>/articles\/[\w-]+\/(\d+)/:articles.php?id=\1</code>.
+            <div class="row">
+                <div class="col-md-12">
+                    <button class="btn btn-sm btn-primary" type="button" data-toggle="collapse"
+                            data-target="#scope-advanced" aria-expanded="false"
+                            aria-controls="collapseExample">
+                        Advanced
+                    </button>
+                    <p class="help-block">
+                        In case there are redundant/infinite pages, rewrite rules or you want to provide
+                        your own sitemap.
                     </p>
+
+                    <div class="collapse" id="scope-advanced">
+                        <div class="well well-sm">
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <%= f.input :scope_exclude_binaries, label: 'Ignore binary content' %>
+                                    <%= messages_for( :scope_exclude_binaries ) %>
+                                </div>
+                                <div class="col-md-6">
+                                    <%= f.input :scope_https_only, label: 'Only follow HTTPS URLs' %>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <%= f.input :scope_dom_depth_limit, label: 'DOM depth limit' %>
+                                    <%= messages_for( :scope_dom_depth_limit ) %>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <%= f.input :scope_exclude_content_patterns,
+                                                label: 'Content exclusion patterns',
+                                                input_html: { value: @profile.scope_exclude_content_patterns.join( "\n" ) } %>
+
+                                    <%= messages_for( :scope_exclude_content_patterns ) %>
+                                    <p class="help-block alert alert-info">Input each rule in its own line.</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <%= f.input :scope_url_rewrites,
+                                                label: 'URL rewrite rules',
+                                                input_html: {
+                                                        value: @profile.scope_url_rewrites.
+                                                                       map { |k, v| "#{k}:#{v}" }.join( "\n" )
+                                                } %>
+                                    <%= messages_for( :scope_url_rewrites ) %>
+                                    <p class="help-block alert alert-info">
+                                        Rules take the format of <em>pattern:substitution</em>,
+                                        input each rule in its own line.<br/>
+
+                                        For example, to convert <code>http://test.com/articles/some-stuff/23</code> to
+                                        <code>http://test.com/articles.php?id=23</code> use
+                                        <code>/articles\/[\w-]+\/(\d+)/:articles.php?id=\1</code>.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <%= f.input :scope_extend_paths,
+                                                label: 'Extend paths',
+                                                input_html: { value: @profile.scope_extend_paths.join( "\n" ) } %>
+                                    <%= messages_for( :scope_extend_paths ) %>
+                                    <p class="help-block alert alert-info">Input each path in its own line.</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <%= f.input :scope_restrict_paths,
+                                                label: 'Restrict paths',
+                                                input_html: { value: @profile.scope_restrict_paths.join( "\n" ) } %>
+                                    <%= messages_for( :scope_restrict_paths ) %>
+                                    <p class="help-block alert alert-info">Input each path in its own line.</p>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <%= f.input :scope_redundant_path_patterns,
+                                                label: 'Path redundancy patterns',
+                                                input_html: {
+                                                        value: @profile.scope_redundant_path_patterns.
+                                                                       map { |k, v| "#{k}:#{v}" }.join( "\n" )
+                                                } %>
+
+                                    <%= messages_for( :scope_redundant_path_patterns ) %>
+                                    <p class="help-block alert alert-info">
+                                        Rules take the format of <em>pattern:times</em>,
+                                        input each rule in its own line.
+                                    </p>
+                                </div>
+                                <div class="col-md-6">
+                                    <%= f.input :scope_auto_redundant_paths,
+                                                label: 'Parameter redundancy limit' %>
+                                    <%= messages_for( :scope_auto_redundant_paths ) %>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
             </div>
-
         </fieldset>
-    </section>
+    </div>
 
-    <section id="audit">
+    <hr/>
+
+    <div id="audit">
         <fieldset>
-            <legend id="audit-h">
+            <h2 id="audit-h">
                 Audit
-                <small>How the scanner will audit web application inputs</small>
-            </legend>
+                <small>How shall the web application be audited?</small>
+            </h2>
 
-            <div class="row-fluid">
+            <div class="row">
                 <div class="col-md-6">
                     <%= f.input :audit_forms %>
                     <%= messages_for( :audit_forms ) %>
@@ -139,145 +226,283 @@
                     <%= messages_for( :audit_links ) %>
                 </div>
             </div>
-            <div class="row-fluid">
+            <div class="row">
                 <div class="col-md-6">
                     <%= f.input :audit_cookies %>
                     <%= messages_for( :audit_cookies ) %>
                 </div>
                 <div class="col-md-6">
+                    <%= f.input :audit_headers %>
+                    <%= messages_for( :audit_headers ) %>
                 </div>
             </div>
-            <div class="row-fluid">
+            <div class="row">
                 <div class="col-md-6">
-                    <%= f.input :audit_exclude_vector_patterns,
-                                input_html: { value: @profile.audit_exclude_vector_patterns.join( "\n" ) } %>
-
-                    <%= messages_for( :audit_exclude_vector_patterns ) %>
-                    <p class="alert alert-info">Input one pattern per line.</p>
+                    <%= f.input :audit_xmls, label: 'Audit XML inputs' %>
+                    <%= messages_for( :audit_xmls ) %>
                 </div>
                 <div class="col-md-6">
-                    <%= f.input :audit_include_vector_patterns,
-                                input_html: { value: @profile.audit_include_vector_patterns.join( "\n" ) } %>
 
-                    <%= messages_for( :audit_include_vector_patterns ) %>
-                    <p class="alert alert-info">Input one pattern per line.</p>
+                    <%= f.input :audit_jsons, label: 'Audit JSON inputs' %>
+                    <%= messages_for( :audit_jsons ) %>
                 </div>
             </div>
-            <div class="row-fluid">
-                <div class="col-md-6">
-                    <%= f.input :audit_link_templates, input_html: { value: @profile.audit_link_templates.join( "\n" ) } %>
 
-                    <%= messages_for( :audit_link_templates ) %>
-                    <p class="alert alert-info">
-                        For example, to extract the <code>input1</code> and <code>input2</code> inputs from
-                        <code>http://test.com/input1/value1/input2/value2</code> use
-                        <code>/input1\/(?&lt;input1&gt;\w+)\/input2\/(?&lt;input2&gt;\w+)/</code>.
+            <div class="row">
+                <div class="col-md-12">
+                    <button class="btn btn-sm btn-primary" type="button" data-toggle="collapse"
+                            data-target="#audit-advanced" aria-expanded="false"
+                            aria-controls="collapseExample">
+                        Advanced
+                    </button>
+                    <p class="help-block">
+                        In case there are inputs that need to be included/excluded or more extensively
+                        audited.
                     </p>
+
+                    <div class="collapse" id="audit-advanced">
+                        <div class="well well-sm">
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <%= f.input :audit_with_both_http_methods %>
+                                    <%= messages_for( :audit_with_both_http_methods ) %>
+                                </div>
+                                <div class="col-md-6">
+                                    <%= f.input :audit_cookies_extensively %>
+                                    <%= messages_for( :audit_cookies_extensively ) %>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <%= f.input :audit_with_extra_parameter %>
+                                    <%= messages_for( :audit_with_extra_parameter ) %>
+                                </div>
+                                <div class="col-md-6">
+                                    <%= f.input :audit_parameter_names %>
+                                    <%= messages_for( :audit_parameter_names ) %>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <%= f.input :audit_exclude_vector_patterns,
+                                                label: 'Parameter exclusion patterns',
+                                                input_html: { value: @profile.audit_exclude_vector_patterns.join( "\n" ) } %>
+
+                                    <%= messages_for( :audit_exclude_vector_patterns ) %>
+                                    <p class="help-block alert alert-info">Input one pattern per line.</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <%= f.input :audit_include_vector_patterns,
+                                                label: 'Parameter inclusion patterns',
+                                                input_html: { value: @profile.audit_include_vector_patterns.join( "\n" ) } %>
+
+                                    <%= messages_for( :audit_include_vector_patterns ) %>
+                                    <p class="help-block alert alert-info">Input one pattern per line.</p>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <%= f.input :audit_link_templates,
+                                                label: 'Link templates',
+                                                input_html: { value: @profile.audit_link_templates.join( "\n" ) } %>
+
+                                    <%= messages_for( :audit_link_templates ) %>
+                                    <p class="help-block alert alert-info">
+                                        For example, to extract the <code>input1</code> and <code>input2</code> inputs from
+                                        <code>http://test.com/input1/value1/input2/value2</code> use
+                                        <code>/input1\/(?&lt;input1&gt;\w+)\/input2\/(?&lt;input2&gt;\w+)/</code>.
+                                    </p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
             </div>
 
         </fieldset>
-    </section>
+    </div>
 
-    <section id="input">
+    <hr/>
+
+    <div id="inputs">
         <fieldset>
-            <legend id="input-h">
-                Input
-                <small>Values to use to fill in inputs</small>
-            </legend>
+            <h2 id="inputs-h">
+                Input values
+                <small>Are there any special values for certain inputs?</small>
+            </h2>
 
-            <div class="row-fluid">
-                <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-12">
                     <%= f.input :input_values, input_html: {
                             value: @profile.input_values.
                                            map { |k, v| "#{k}=#{v}" }.join( "\n" )
                     } %>
                     <%= messages_for( :input_values ) %>
-                    <p class="alert alert-info">
-                        Rules take the format of <em>name=value</em>,
-                        input each rule in its own line -- <kbd>name</kbd> can be a pattern.
+                    <p class="help-block alert alert-info">
+                        Rules take the format of <em>pattern=value</em>,
+                        input each rule in its own line &mdash; <kbd>pattern</kbd>
+                        will be matched against input names.
                     </p>
                 </div>
             </div>
         </fieldset>
-    </section>
+    </div>
 
-    <section id="http">
+    <hr/>
+
+    <div id="http">
         <fieldset>
-            <legend id="http-h">
+            <h2 id="http-h">
                 HTTP
-                <small>How the scanner will communicate with the web application</small>
-            </legend>
+                <small>How shall the scanner communicate with the remote server?</small>
+            </h2>
 
-            <div class="row-fluid">
+            <div class="row">
                 <div class="col-md-6">
-                    <%= f.input :http_authentication_username %>
+                    <%= f.input :http_user_agent, as: :string, label: 'User-agent' %>
+                    <%= messages_for( :http_user_agent ) %>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <%= f.input :http_authentication_username, label: 'Username' %>
                     <%= messages_for( :http_authentication_username ) %>
                 </div>
                 <div class="col-md-6">
-                    <%= f.input :http_authentication_password, as: :string %>
+                    <%= f.input :http_authentication_password, as: :string, label: 'Password' %>
                     <%= messages_for( :http_authentication_password ) %>
                 </div>
             </div>
-            <div class="row-fluid">
+
+            <div class="row">
                 <div class="col-md-6">
-                    <%= f.input :http_user_agent, as: :string %>
-                    <%= messages_for( :http_user_agent ) %>
+                    <%= f.input :http_proxy_host, label: 'Proxy host' %>
+                    <%= messages_for( :http_proxy_host ) %>
                 </div>
                 <div class="col-md-6">
+                    <%= f.input :http_proxy_port, label: 'Proxy port' %>
+                    <%= messages_for( :http_proxy_port ) %>
                 </div>
             </div>
-            <div class="row-fluid">
-                <div class="col-md-6">
-                    <%= f.input :http_cookies, input_html: {
-                            value: @profile.http_cookies.map { |k, v| "#{k}=#{v}" }.join( "\n" )
-                    } %>
 
-                    <%= messages_for( :http_cookies ) %>
-                    <p class="alert alert-info">
-                        Cookies take the format of <em>name=value</em>,
-                        input each cookie in its own line.
-                    </p>
+            <div class="row">
+                <div class="col-md-6">
+                    <%= f.input :http_proxy_username, label: 'Proxy username' %>
+                    <%= messages_for( :http_proxy_username ) %>
                 </div>
                 <div class="col-md-6">
-                    <%= f.input :http_request_headers, input_html: {
-                            value: @profile.http_request_headers.map { |k, v| "#{k}=#{v}" }.join( "\n" )
-                    } %>
-
-                    <%= messages_for( :http_request_headers ) %>
-                    <p class="alert alert-info">
-                        Headers take the format of <em>name=value</em>,
-                        input each header in its own line.
-                    </p>
+                    <%= f.input :http_proxy_password, as: :string, label: 'Proxy password' %>
+                    <%= messages_for( :http_proxy_password ) %>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <button class="btn btn-sm btn-primary" type="button" data-toggle="collapse"
+                            data-target="#http-advanced" aria-expanded="false"
+                            aria-controls="collapseExample">
+                        Advanced
+                    </button>
+                    <p class="help-block">
+                        In case there are special cookies, headers, performance or networking
+                        settings that need to be set.
+                    </p>
+
+                    <div class="collapse" id="http-advanced">
+                        <div class="well well-sm">
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <%= f.input :http_cookies,
+                                                label: 'Cookies',
+                                                input_html: {
+                                                        value: @profile.http_cookies.
+                                                                       map { |k, v| "#{k}=#{v}" }.join( "\n" )
+                                                } %>
+
+                                    <%= messages_for( :http_cookies ) %>
+                                    <p class="help-block alert alert-info">
+                                        Cookies take the format of <em>name=value</em>,
+                                        input each cookie in its own line.
+                                    </p>
+                                </div>
+                                <div class="col-md-6">
+                                    <%= f.input :http_request_headers,
+                                                label: 'Headers',
+                                                input_html: {
+                                                        value: @profile.http_request_headers.
+                                                                       map { |k, v| "#{k}=#{v}" }.join( "\n" )
+                                                } %>
+
+                                    <%= messages_for( :http_request_headers ) %>
+                                    <p class="help-block alert alert-info">
+                                        Headers take the format of <em>name=value</em>,
+                                        input each header in its own line.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <%= f.input :http_request_queue_size, label: 'Request queue size' %>
+                                    <%= messages_for( :http_request_queue_size ) %>
+                                </div>
+                                <div class="col-md-6">
+                                    <%= f.input :http_request_timeout, label: 'Request timeout' %>
+                                    <%= messages_for( :http_request_timeout ) %>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <%= f.input :http_request_redirect_limit, label: 'Redirect limit' %>
+                                    <%= messages_for( :http_request_redirect_limit ) %>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <%= f.input :http_request_concurrency, label: 'Request concurrency' %>
+                                    <%= messages_for( :http_request_concurrency ) %>
+                                </div>
+                                <div class="col-md-6">
+                                    <%= f.input :http_response_max_size, label: 'Maximum response size' %>
+                                    <%= messages_for( :http_response_max_size ) %>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </fieldset>
-    </section>
+    </div>
 
-    <section id="fingerprinting">
+    <hr/>
+
+    <div id="platforms">
         <fieldset>
-            <legend id="fingerprinting-h">
-                Platform fingerprinting
-                <small>What platforms should the scanner anticipate</small>
-            </legend>
+            <h2 id="platforms-h">
+                Platforms
+                <small>What platforms should the scanner anticipate?</small>
+            </h2>
 
-            <div class="row-fluid">
-                <div class="col-md-6">
-                    <%= f.input :no_fingerprinting,
-                                label: 'Disable fingerprinting'
-                    %>
-                </div>
+            <div class="help-block alert alert-info">
+                Providing as much platform information as possible will result
+                in a much faster and focused scan.
             </div>
 
-            <h4>
-                Platforms
-                <small>Explicitly specify platforms to improve efficiency</small>
-            </h4>
-
-            <div class="row-fluid">
+            <div id="platforms-list" class="row">
                 <% [:os, :db, :servers, :languages, :frameworks].each_with_index do |type, i| %>
                     <div class="col-md-2">
-                        <h5><%= platform_type_fullname( type ) %></h5>
+                        <h3><%= platform_type_fullname( type ) %></h3>
                         <%= f.input :platforms, collection: valid_platforms( type ),
                                     label:  false,
                                     as: :check_boxes,
@@ -287,108 +512,217 @@
                 <% end %>
             </div>
 
-        </fieldset>
-    </section>
+            <div class="row">
+                <div class="col-md-12">
+                    <button class="btn btn-sm btn-primary" type="button" data-toggle="collapse"
+                            data-target="#platforms-advanced" aria-expanded="false"
+                            aria-controls="collapseExample">
+                        Advanced
+                    </button>
+                    <div class="collapse" id="platforms-advanced">
+                        <div class="well well-sm">
 
-    <section id="checks">
-        <fieldset>
-            <legend id="checks-h">
-                Checks
-                <small>The security checks to be run again the web application</small>
-            </legend>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <%= f.input :no_fingerprinting,
+                                                label: 'Disable fingerprinting'
+                                    %>
+                                    <%= messages_for( :no_fingerprinting ) %>
+                                </div>
+                            </div>
 
-            <div class="row-fluid">
-                <div class="col-md-3">
-                    <input id="search" type="text" class="string optional"
-                           placeholder="Filter modules by name or description">
-                </div>
-
-                <div class="col-md-2">
-                    <button class="btn btn-small check">Check all</button>
-                    <button class="btn btn-small uncheck">Uncheck all</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <h4>
-                Active
-                <small>These checks will actively engage the web application via its inputs (links, forms, etc.)</small>
-            </h4>
-            <% active = checks.select { |n, i| i[:path].include?( '/checks/active' ) } %>
-            <% if active.any? %>
-                <%= render partial: '/shared/components_twin_accordion_form',
-                           locals: {
-                                   components: active,
-                                   form:       f,
-                                   selected:   @profile.checks,
-                                   input:      :checks,
-                                   class_name: 'col-md-6'
-                           } %>
-            <% else %>
-                <p class="alert alert-info">No active checks are available.</p>
-            <% end %>
-
-            <h4>
-                Passive
-                <small>These checks will passively collect data</small>
-            </h4>
-            <% passive = checks.select { |n, i| i[:path].include?( '/checks/passive' ) } %>
-            <% if passive.any? %>
-                <%= render partial: '/shared/components_twin_accordion_form',
-                           locals: {
-                                   components: passive,
-                                   form:       f,
-                                   selected:   @profile.checks,
-                                   input:      :checks,
-                                   class_name: 'col-md-6'
-                           } %>
-            <% else %>
-                <p class="alert alert-info">No passive checks are available.</p>
-            <% end %>
-
         </fieldset>
-    </section>
+    </div>
 
-    <section id="browser_cluster">
+    <hr/>
+
+    <div id="checks">
         <fieldset>
-            <legend id="browser_cluster-h">
-                Browser cluster
-                <small>Browser-related options</small>
-            </legend>
+            <h2 id="checks-h">
+                Checks
+                <small>What security checks should be performed?</small>
+            </h2>
 
-            <div class="row-fluid">
+            <div class="row">
+                <div class="col-md-4">
+                    <input id="search" type="text" class="string form-control string optional"
+                           placeholder="Search checks by name, description, platforms and more.">
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-sm btn-default check">Check all</button>
+                    <button class="btn btn-sm btn-default uncheck">Uncheck all</button>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>
+                        Active
+                        <small>These checks will actively engage the web application via its inputs (links, forms, etc.).</small>
+                    </h3>
+                    <% active = checks.select { |n, i| i[:path].include?( '/checks/active' ) } %>
+                    <% if active.any? %>
+                        <%= render partial: '/shared/components_twin_accordion_form',
+                                   locals: {
+                                           components: active,
+                                           form:       f,
+                                           selected:   @profile.checks,
+                                           input:      :checks,
+                                           class_name: 'col-md-6'
+                                   } %>
+                    <% else %>
+                        <p class="help-block alert alert-info">No active checks are available.</p>
+                    <% end %>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>
+                        Passive
+                        <small>These checks will passively collect data.</small>
+                    </h3>
+                    <% passive = checks.select { |n, i| i[:path].include?( '/checks/passive' ) } %>
+                    <% if passive.any? %>
+                        <%= render partial: '/shared/components_twin_accordion_form',
+                                   locals: {
+                                           components: passive,
+                                           form:       f,
+                                           selected:   @profile.checks,
+                                           input:      :checks,
+                                           class_name: 'col-md-6'
+                                   } %>
+                    <% else %>
+                        <p class="help-block alert alert-info">No passive checks are available.</p>
+                    <% end %>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
+    <hr/>
+
+    <div id="plugins">
+        <fieldset>
+            <h2 id="plugins-h">
+                Plugins
+                <small>Assisting components to be enabled during the process.</small>
+            </h2>
+
+            <p class="alert">
+                Plugins which require an option of type <em>file</em> are
+                not supported and thus are not listed.
+            </p>
+
+            <% if errors = @profile.errors.messages[:plugins] || [] %>
+                <% errors.each do |message| %>
+                    <pre class="alert alert-error"><%= message %></pre>
+                <%end%>
+            <%end%>
+
+            <% if plugins.any? %>
+                <%= render partial: '/shared/components_twin_accordion_form',
+                           locals: {
+                                   components: plugins,
+                                   form:       f,
+                                   selected:   @profile.plugins,
+                                   input:      :plugins,
+                                   class_name: 'col-md-6'
+                           } %>
+            <% end %>
+        </fieldset>
+    </div>
+
+    <hr/>
+
+    <div id="browser_cluster">
+        <fieldset>
+            <h2 id="browser_cluster-h">
+                Browser
+                <small>Browser-related options.</small>
+            </h2>
+
+            <div class="row">
                 <div class="col-md-6">
-                    <%= f.input :browser_cluster_screen_width %>
+                    <%= f.input :browser_cluster_screen_width, label: 'Screen width' %>
                     <%= messages_for( :browser_cluster_screen_width ) %>
                 </div>
                 <div class="col-md-6">
-                    <%= f.input :browser_cluster_screen_height %>
+                    <%= f.input :browser_cluster_screen_height, label: 'Screen height' %>
                     <%= messages_for( :browser_cluster_screen_height ) %>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <button class="btn btn-sm btn-primary" type="button" data-toggle="collapse"
+                            data-target="#browser_cluster-advanced" aria-expanded="false"
+                            aria-controls="collapseExample">
+                        Advanced
+                    </button>
+                    <p class="help-block">
+                        In case there are special performance settings that need to be set.
+                    </p>
+
+                    <div class="collapse" id="browser_cluster-advanced">
+                        <div class="well well-sm">
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <%= f.input :browser_cluster_ignore_images, label: "Don't load images" %>
+                                    <%= messages_for( :browser_cluster_ignore_images ) %>
+                                </div>
+                                <div class="col-md-6">
+                                    <%= f.input :browser_cluster_pool_size, label: 'Processes' %>
+                                    <%= messages_for( :browser_cluster_pool_size ) %>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <%= f.input :browser_cluster_worker_time_to_live, label: 'Time to live' %>
+                                    <%= messages_for( :browser_cluster_worker_time_to_live ) %>
+                                </div>
+                                <div class="col-md-6">
+                                    <%= f.input :browser_cluster_job_timeout, label: 'Timeout' %>
+                                    <%= messages_for( :browser_cluster_job_timeout ) %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </fieldset>
-    </section>
+    </div>
 
-    <section id="login">
+    <hr/>
+
+    <div id="session">
         <fieldset>
-            <legend id="login-h">
-                Login check
-                <small>How the scanner will determine its session's validity</small>
-            </legend>
+            <h2 id="session-h">
+                Session check
+                <small>How will scanner determine its session's validity?</small>
+            </h2>
 
-            <div class="row-fluid">
+            <div class="row">
                 <div class="col-md-6">
                     <%= f.input :session_check_url, as: :string, label: false,
-                                placeholder: 'Login check URL' %>
+                                placeholder: 'Session check URL' %>
                     <%= messages_for( :session_check_url ) %>
                 </div>
                 <div class="col-md-6">
                     <%= f.input :session_check_pattern, as: :string, label: false,
-                                placeholder: 'Login check pattern' %>
+                                placeholder: 'Session check pattern' %>
                     <%= messages_for( :session_check_pattern ) %>
                 </div>
             </div>
         </fieldset>
-    </section>
+    </div>
 
     <div class="form-actions">
         <%= f.button :submit %>

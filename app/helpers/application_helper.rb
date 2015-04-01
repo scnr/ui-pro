@@ -84,7 +84,7 @@ module ApplicationHelper
 
     def md( markdown )
         html = Kramdown::Document.new( markdown ).to_html.recode
-        Loofah.fragment( html ).scrub!(:prune).to_s
+        Loofah.fragment( html ).scrub!(:prune).to_s.html_safe
     end
 
     extend self

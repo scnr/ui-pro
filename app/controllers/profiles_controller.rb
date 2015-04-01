@@ -1,5 +1,6 @@
 class ProfilesController < ApplicationController
     before_filter :authenticate_user!
+    before_filter :prepare_plugin_params
 
     before_action :set_profiles,      only: [:index, :default]
     before_action :set_profile,       only: [:show, :copy, :edit, :update,
@@ -157,42 +158,93 @@ class ProfilesController < ApplicationController
         self.class.permitted_attributes
     end
     def self.permitted_attributes
+        plugins_with_options = []
+        plugins_with_info = ::FrameworkHelper.plugins
+        plugins_with_info.each do |name, info|
+            plugins_with_options << (info[:options] ?
+                { name => info[:options].map( &:name ) } : name)
+        end
+
         [
             :name,
             :description,
+
             { checks:    [] },
+            { plugins:   plugins_with_options },
             { platforms: [] },
+
             :no_fingerprinting,
             :input_values,
+
             :audit_links,
             :audit_forms,
             :audit_cookies,
+            :audit_cookies_extensively,
             :audit_headers,
+            :audit_jsons,
+            :audit_xmls,
             :audit_link_templates,
+            :audit_parameter_names,
+            :audit_with_extra_parameter,
             :audit_with_both_http_methods,
             :audit_exclude_vector_patterns,
             :audit_include_vector_patterns,
+
             :http_user_agent,
             :http_cookies,
             :http_request_headers,
+            :http_request_timeout,
+            :http_authentication_username,
+            :http_authentication_password,
+            :http_request_queue_size,
+            :http_request_redirect_limit,
+            :http_request_concurrency,
+            :http_response_max_size,
+            :http_proxy_host,
+            :http_proxy_port,
+            :http_proxy_username,
+            :http_proxy_password,
+
             :scope_page_limit,
             :scope_extend_paths,
             :scope_restrict_paths,
             :scope_include_path_patterns,
             :scope_exclude_path_patterns,
             :scope_redundant_path_patterns,
+            :scope_auto_redundant_paths,
             :scope_exclude_content_patterns,
-            :scope_exclude_vector_patterns,
-            :scope_include_vector_patterns,
-            :scope_include_subdomains,
             :scope_url_rewrites,
+            :scope_directory_depth_limit,
+            :scope_dom_depth_limit,
+            :scope_https_only,
+            :scope_exclude_binaries,
+
             :session_check_pattern,
             :session_check_url,
-            :http_authentication_username,
-            :http_authentication_password,
+
             :browser_cluster_screen_width,
-            :browser_cluster_screen_height
+            :browser_cluster_screen_height,
+            :browser_cluster_pool_size,
+            :browser_cluster_job_timeout,
+            :browser_cluster_worker_time_to_live,
+            :browser_cluster_ignore_images
         ]
+    end
+
+    def prepare_plugin_params
+        return if !params[:profile]
+
+        if params[:profile][:selected_plugins]
+            selected_plugins = {}
+            (params[:profile][:selected_plugins] || []).each do |plugin|
+                selected_plugins[plugin] = params[:profile][:plugins][plugin]
+            end
+
+            params[:profile][:plugins] = selected_plugins
+            params[:profile].delete( :selected_plugins )
+        else
+            params[:profile][:plugins] = {}
+        end
     end
 
 end

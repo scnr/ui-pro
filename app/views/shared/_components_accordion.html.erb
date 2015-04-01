@@ -1,16 +1,16 @@
-<div class="accordion">
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
     <% components.each do |shortname, info| %>
-        <div class="accordion-group">
-            <div class="accordion-heading">
+        <div class="panel-heading" role="tab">
+            <h4 class="panel-title">
                 <a class="accordion-toggle" data-toggle="collapse"
-                   data-parent="#modules-accordion" href="#<%= shortname %>">
+                   data-parent="#component-accordion" href="#<%= shortname %>">
                     <%= info[:name] %> (<%= shortname %>)
                 </a>
-            </div>
-            <div style="height: 0px;" id="<%= shortname %>" class="accordion-body collapse">
-                <div class="accordion-inner">
+            </h4>
+            <div style="height: 0px;" id="<%= shortname %>" class="panel-collapse collapse">
+                <div class="panel-body">
                     <div>
-                        <pre><%= prepare_description info[:description] %></pre>
+                        <%= md info[:description] %>
                     </div>
 
                     <hr/>
@@ -29,7 +29,7 @@
                         </ul>
                     </div>
 
-                    <% if info[:targets].is_a? Array %>
+                    <% if info[:platforms].is_a? Array %>
                         <div>
                             <strong>Supported platforms:</strong>
                             <ul>

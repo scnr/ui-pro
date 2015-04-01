@@ -19,6 +19,11 @@
 //= require websocket_rails/main
 //= require_tree .
 
+$.expr[':'].icontains = function(obj, index, meta, stack){
+    return (obj.textContent || obj.innerText || jQuery(obj).text() || '').
+        toLowerCase().indexOf(meta[3].toLowerCase()) >= 0;
+};
+
 String.prototype.endsWith = function(suffix) {
     return this.indexOf(suffix, this.length - suffix.length) !== -1;
 };
@@ -31,8 +36,24 @@ function loaded(){
     $('#loading').hide();
 }
 
+function setupScroll(){
+    $( '.scroll' ).click( function( event ) {
+        event.preventDefault();
+        $( 'html,body' ).animate( { scrollTop: $( this.hash ).offset().top -
+            $( 'header' ).height() - 20 }, 500 );
+    });
+}
+
+$(document).ready( function( $ ) {
+    setupScroll();
+});
+
 $(document).on( 'page:fetch', function( $ ) {
     loading();
+});
+
+$(document).on( 'page:load', function( $ ) {
+    setupScroll();
 });
 
 $(document).ajaxStop( function() {
@@ -41,4 +62,5 @@ $(document).ajaxStop( function() {
 
 $(window).bind( "page:restore", function () {
     loaded();
+    setupScroll();
 });

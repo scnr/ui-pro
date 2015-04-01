@@ -39,15 +39,15 @@ module FrameworkHelper
     end
 
     def checks
-        components_for( :checks )
+        @_checks ||= components_for( :checks )
     end
 
     def plugins
-        components_for( :plugins )
+        @_plugins ||= (components_for( :plugins ).reject { |k,_| default_plugins.include? k } )
     end
 
     def default_plugins
-        components_for( :plugins, :default )
+        @_default_plugins ||= components_for( :plugins, :default )
     end
 
     def content_type_for_report( format )

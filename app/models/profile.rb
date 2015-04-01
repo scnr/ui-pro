@@ -4,12 +4,11 @@ class Profile < ActiveRecord::Base
     include ProfileImport
     include ProfileExport
     include ProfileDefaultHelpers
+    include ProfileAttributeMessages
 
     belongs_to :user
     has_many   :scans
     has_many   :revisions, through: :scans
-
-    DESCRIPTIONS_FILE = "#{Rails.root}/config/profile/attributes.yml"
 
     validates_presence_of   :description
     validate :validate_description
