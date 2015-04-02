@@ -1,6 +1,7 @@
 <div class="panel-group" role="tablist" aria-multiselectable="true">
     <% components.each do |shortname, info| %>
-        <div class="panel-heading profile-<%= input %>">
+        <div class="panel-heading profile-<%= input %>"
+             id="profile-<%= input %>-<%= shortname %>-container">
             <h4 class="panel-title" data-toggle="collapse"
                 role="tab" data-target="#<%= shortname %>">
                 <%= info[:name] %> (<code><%= shortname %></code>)

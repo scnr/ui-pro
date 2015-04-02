@@ -6,6 +6,8 @@ module ProfileAttributes
     included do
         validate :validate_checks
         validate :validate_platforms
+        validate :validate_plugins
+        validate :validate_plugin_options
         validate :validate_http_cookies
         validate :validate_http_request_headers
         validate :validate_scope_url_rewrites
@@ -207,6 +209,31 @@ module ProfileAttributes
         platforms.each do |platform|
             next if available.include? platform.to_s
             errors.add :platforms, "'#{platform}' does not exist"
+        end
+    end
+
+    def validate_plugins
+        available = ::FrameworkHelper.plugins.keys.map( &:to_s )
+        plugins.keys.each do |plugin|
+            next if available.include? plugin.to_s
+            errors.add :plugins, "'#{plugin}' does not exist"
+        end
+    end
+
+    def validate_plugin_options
+        available = ::FrameworkHelper.plugins.keys.map( &:to_s )
+        ::FrameworkHelper.framework do |f|
+            plugins.each do |plugin, options|
+                next if !available.include? plugin.to_s
+
+                begin
+                    f.plugins.prepare_options( plugin, f.plugins[plugin],
+                                               (options || {}).reject { |k, v| v.empty? }
+                    )
+                rescue Arachni::Component::Options::Error::Invalid => e
+                    errors.add :plugins, e.to_s
+                end
+            end
         end
     end
 

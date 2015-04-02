@@ -238,6 +238,43 @@ describe ProfileAttributes do
             end
         end
 
+        describe '#plugins' do
+            context 'when a plugin does not exist' do
+                it 'is invalid' do
+                    subject.plugins = { 'stuff' => {} }
+
+                    expect(subject.save).to be_falsey
+                    expect(subject.errors).to include :plugins
+                end
+            end
+
+            context 'when given invalid options' do
+                it 'is invalid' do
+                    subject.plugins = { 'beep_notify' => {
+                        'interval' => 'ddd'
+                    }}
+
+                    expect(subject.save).to be_falsey
+                    expect(subject.errors).to include :plugins
+
+                    expect(subject.errors.messages[:plugins].first).to include 'Invalid options for component: beep_notify'
+                end
+            end
+
+            context 'when given missing options' do
+                it 'is invalid' do
+                    subject.plugins = { 'autologin' => {
+                        'url' => ''
+                    }}
+
+                    expect(subject.save).to be_falsey
+                    expect(subject.errors).to include :plugins
+
+                    expect(subject.errors.messages[:plugins].first).to include 'Missing value: url'
+                end
+            end
+        end
+
         describe '#platforms' do
             context 'when a platform does not exist' do
                 it 'is invalid' do

@@ -37,6 +37,11 @@ function loaded(){
 }
 
 function setupScroll(){
+    $('[data-spy="scroll"]').each(function () {
+        $(this).scrollspy( { offset: 50 } );
+        $(this).scrollspy( 'refresh' );
+    });
+
     $( '.scroll' ).click( function( event ) {
         event.preventDefault();
         $( 'html,body' ).animate( { scrollTop: $( this.hash ).offset().top -

@@ -1,13 +1,8 @@
 module FrameworkHelper
 
-    def framework( opts = Arachni::Options.instance, &block )
+    def framework( &block )
         fail 'This method requires a block.' if !block_given?
-        f = Arachni::Framework.new( opts )
-        begin
-            block.call f
-        ensure
-            f.reset
-        end
+        block.call ArachniFramework
     end
 
     def valid_platforms( type = nil )
@@ -75,7 +70,7 @@ module FrameworkHelper
                 (manager = f.send( type )).send( list ).inject( {} ) do |h, name|
                     h[name] = manager[name].info.merge( path: manager.name_to_path( name ) )
 
-                    h[name][:author]    = [ h[name][:author] ].flatten
+                    h[name][:author]    = [ h[name][:author] ].flatten.map(&:strip)
                     h[name][:authors]   = h[name][:author]
 
                     if manager[name] <= Arachni::Reporter::Base && manager[name].has_outfile?

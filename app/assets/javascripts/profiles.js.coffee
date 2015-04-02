@@ -11,8 +11,9 @@ searchChecks = ( val ) ->
     else
         $(".profile-checks").show()
 
-jQuery ->
-    $('.profile-form input#search').keyup ->
+
+setup = () ->
+    $('.profile-form input#profile-checks-search').keyup ->
         searchChecks $(this).val()
 
     $('.profile-form button.check').click ->
@@ -22,3 +23,6 @@ jQuery ->
     $('.profile-form button.uncheck').click ->
         $('.profile-checks input:visible:checkbox').prop('checked', '')
         false
+
+$(document).on 'page:load', setup
+jQuery setup

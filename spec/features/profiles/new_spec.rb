@@ -889,6 +889,366 @@ feature 'Profile new page', :devise do
                     end
                 end
             end
+
+            feature 'Checks' do
+                feature 'can be searched' do
+                    scenario 'by name'
+                    scenario 'by description'
+                    scenario 'by platforms'
+                    scenario 'by combination'
+                end
+
+                FrameworkHelper.checks.each do |shortname, info|
+                    feature info[:name] do
+                        scenario 'can be set' do
+                            check "profile_checks_#{shortname}"
+                            click_button 'Create Profile'
+
+                            expect(Profile.last.checks).to include shortname
+                        end
+
+                        scenario 'has description'
+
+                        scenario 'has version' do
+                            expect(find("#profile-checks-#{shortname}-container").text).to include info[:version]
+                        end
+
+                        scenario 'has authors' do
+                            info[:authors].each do |author|
+                                expect(find("#profile-checks-#{shortname}-container").text).to include author
+                            end
+                        end
+
+                        scenario 'has platforms', if: info[:platforms] do
+                            info[:platforms].each do |platform|
+                                fullname = FrameworkHelper.platform_fullname( platform )
+
+                                expect(find("#profile-checks-#{shortname}-container").text).to include fullname
+                            end
+                        end
+                    end
+                end
+            end
+
+            feature 'Plugins' do
+                feature 'AutoLogin' do
+                    before do
+                        check 'profile_plugins_autologin'
+                    end
+
+                    scenario 'can be set' do
+                        fill_in 'profile_plugins_autologin_url', with: 'http://test.com'
+                        fill_in 'profile_plugins_autologin_parameters', with: 'username=user&password=pass'
+                        fill_in 'profile_plugins_autologin_check', with: 'logout'
+
+                        click_button 'Create Profile'
+
+                        expect(Profile.last.plugins['autologin']).to eq ({
+                            'url'        => 'http://test.com',
+                            'parameters' => 'username=user&password=pass',
+                            'check'      => 'logout'
+                        })
+                    end
+
+                    feature 'when missing url' do
+                        scenario 'it shows error' do
+                            fill_in 'profile_plugins_autologin_parameters', with: 'username=user&password=pass'
+                            fill_in 'profile_plugins_autologin_check', with: 'logout'
+
+                            click_button 'Create Profile'
+
+                            expect(find("#plugins .alert-error").text).to include 'Invalid options for component: autologin'
+                            expect(find("#plugins .alert-error").text).to include 'Missing value: url'
+                        end
+                    end
+
+                    feature 'when missing parameters' do
+                        scenario 'it shows error' do
+                            fill_in 'profile_plugins_autologin_url', with: 'http://test.com'
+                            fill_in 'profile_plugins_autologin_check', with: 'logout'
+
+                            click_button 'Create Profile'
+
+                            expect(find("#plugins .alert-error").text).to include 'Invalid options for component: autologin'
+                            expect(find("#plugins .alert-error").text).to include 'Missing value: parameters'
+                        end
+                    end
+
+                    feature 'when missing check' do
+                        scenario 'it shows error' do
+                            fill_in 'profile_plugins_autologin_url', with: 'http://test.com'
+                            fill_in 'profile_plugins_autologin_parameters', with: 'username=user&password=pass'
+
+                            click_button 'Create Profile'
+
+                            expect(find("#plugins .alert-error").text).to include 'Invalid options for component: autologin'
+                            expect(find("#plugins .alert-error").text).to include 'Missing value: check'
+                        end
+                    end
+                end
+
+                feature 'Beep notify' do
+                    scenario 'is not listed'
+                end
+
+                feature 'Content-types' do
+                    before do
+                        check 'profile_plugins_content_types'
+                    end
+
+                    scenario 'can be set without options' do
+                        click_button 'Create Profile'
+
+                        expect(Profile.last.plugins['content_types']).to eq ({
+                            'exclude' => 'text'
+                        })
+                    end
+
+                    scenario 'can be set with options' do
+                        fill_in 'profile_plugins_content_types_exclude', with: 'stuff'
+                        click_button 'Create Profile'
+
+                        expect(Profile.last.plugins['content_types']).to eq ({
+                            'exclude' => 'stuff'
+                        })
+                    end
+                end
+
+                feature 'Cookie collector' do
+                    scenario 'is not listed'
+                end
+
+                feature 'E-mail notify' do
+                    scenario 'is not listed'
+                end
+
+                feature 'Headers collector' do
+                    before do
+                        check 'profile_plugins_headers_collector'
+                    end
+
+                    scenario 'can be set without options' do
+                        click_button 'Create Profile'
+
+                        expect(Profile.last.plugins['headers_collector']).to eq ({
+                            'include' => '',
+                            'exclude' => ''
+                        })
+                    end
+
+                    scenario 'can be set with options' do
+                        fill_in 'profile_plugins_headers_collector_include', with: 'include_stuff'
+                        fill_in 'profile_plugins_headers_collector_exclude', with: 'exclude_stuff'
+                        click_button 'Create Profile'
+
+                        expect(Profile.last.plugins['headers_collector']).to eq ({
+                            'include' => 'include_stuff',
+                            'exclude' => 'exclude_stuff'
+                        })
+                    end
+                end
+
+                feature 'Login script' do
+                    before do
+                        check 'profile_plugins_login_script'
+                    end
+
+                    scenario 'can be set' do
+                        pending
+
+                        find('#profile_plugins_login_script_script').set 'path'
+                        click_button 'Create Profile'
+
+                        expect(Profile.last.plugins['profile_plugins_login_script']).to eq ({
+                            'script' => 'path'
+                        })
+                    end
+
+                    feature 'when missing the script' do
+                        scenario 'it shows error' do
+                            pending
+                            click_button 'Create Profile'
+
+                            expect(find("#plugins .alert-error").text).to include 'Invalid options for component: login_script'
+                            expect(find("#plugins .alert-error").text).to include 'Missing value: script'
+                        end
+                    end
+
+                    feature 'when the script script location is invalid' do
+                        scenario 'it shows error' do
+                            pending
+
+                            find('#profile_plugins_login_script_script').set 'path'
+                            click_button 'Create Profile'
+
+                            expect(find("#plugins .alert-error").text).to include 'Invalid options for component: login_script'
+                            expect(find("#plugins .alert-error").text).to include 'Missing value: script'
+                        end
+                    end
+
+                end
+
+                feature 'Proxy' do
+                    before do
+                        check 'profile_plugins_proxy'
+                    end
+
+                    scenario 'can be set without options' do
+                        click_button 'Create Profile'
+
+                        expect(Profile.last.plugins['proxy']).to eq ({
+                            'port'             => '8282',
+                            'bind_address'     => '0.0.0.0',
+                            'session_token'    => '',
+                            'timeout'          => '20000'
+                        })
+                    end
+
+                    scenario 'can be set with options' do
+                        fill_in 'profile_plugins_proxy_port', with: '8080'
+                        fill_in 'profile_plugins_proxy_bind_address', with: '127.0.0.1'
+                        check 'profile_plugins_proxy_ignore_responses'
+                        fill_in 'profile_plugins_proxy_session_token', with: 'secret'
+                        fill_in 'profile_plugins_proxy_timeout', with: '10'
+                        click_button 'Create Profile'
+
+                        expect(Profile.last.plugins['proxy']).to eq ({
+                            'port'             => '8080',
+                            'bind_address'     => '127.0.0.1',
+                            'ignore_responses' => 'on',
+                            'session_token'    => 'secret',
+                            'timeout'          => '10'
+                        })
+                    end
+                end
+
+                feature 'Script' do
+                    scenario 'is not listed'
+                end
+
+                feature 'Uncommon headers' do
+                    before do
+                        check 'profile_plugins_uncommon_headers'
+                    end
+
+                    scenario 'can be set' do
+                        click_button 'Create Profile'
+
+                        expect(Profile.last.plugins).to include 'uncommon_headers'
+                    end
+                end
+
+                feature 'Vector collector' do
+                    scenario 'is not listed'
+                end
+
+                feature 'Vector feed' do
+                    scenario 'is not listed'
+                end
+
+                feature 'WAF Detector' do
+                    scenario 'is not listed'
+                end
+            end
+
+            feature 'Browser' do
+                scenario 'can set Screen width' do
+                    fill_in 'Screen width', with: 1000
+                    click_button 'Create Profile'
+
+                    expect(Profile.last.browser_cluster_screen_width).to eq 1000
+                end
+
+                scenario 'can set Screen height' do
+                    fill_in 'Screen height', with: 2000
+                    click_button 'Create Profile'
+
+                    expect(Profile.last.browser_cluster_screen_height).to eq 2000
+                end
+
+                feature 'Advanced' do
+                    scenario "can set Don't load images" do
+                        check "Don't load images"
+                        click_button 'Create Profile'
+
+                        expect(Profile.last.browser_cluster_ignore_images).to be true
+                    end
+
+                    scenario 'can set Processes' do
+                        fill_in 'Processes', with: 10
+                        click_button 'Create Profile'
+
+                        expect(Profile.last.browser_cluster_pool_size).to eq 10
+                    end
+
+                    scenario 'can set Time to live' do
+                        fill_in 'Time to live', with: 10
+                        click_button 'Create Profile'
+
+                        expect(Profile.last.browser_cluster_worker_time_to_live).to eq 10
+                    end
+
+                    scenario 'can set Timeout' do
+                        fill_in 'profile_browser_cluster_job_timeout', with: 10
+                        click_button 'Create Profile'
+
+                        expect(Profile.last.browser_cluster_job_timeout).to eq 10
+                    end
+                end
+            end
+
+            feature 'Session check' do
+                scenario 'can set options' do
+                    fill_in 'profile_session_check_url', with: 'http://test.com'
+                    fill_in 'profile_session_check_pattern', with: 'test'
+                    click_button 'Create Profile'
+
+                    expect(Profile.last.session_check_url).to eq 'http://test.com'
+                    expect(Profile.last.session_check_pattern).to eq 'test'
+                end
+
+                feature 'when the profile_session_check_pattern' do
+                    feature 'is missing' do
+                        scenario 'it shows error' do
+                            fill_in 'profile_session_check_url', with: 'http://test.com'
+                            click_button 'Create Profile'
+
+                            expect(find('.profile_session_check_pattern.has-error').text).to include 'cannot be blank'
+                        end
+                    end
+
+                    feature 'is invalid' do
+                        scenario 'it shows error' do
+                            fill_in 'profile_session_check_url', with: 'http://test.com'
+                            fill_in 'profile_session_check_pattern', with: '(test'
+                            click_button 'Create Profile'
+
+                            expect(find('.profile_session_check_pattern.has-error').text).to include 'invalid pattern'
+                        end
+                    end
+                end
+
+                feature 'profile_session_check_url' do
+                    feature 'is missing' do
+                        scenario 'can set options' do
+                            fill_in 'profile_session_check_pattern', with: 'test'
+                            click_button 'Create Profile'
+
+                            expect(find('.profile_session_check_url.has-error').text).to include 'not a valid absolute URL'
+                        end
+                    end
+
+                    feature 'is invalid' do
+                        scenario 'can set options' do
+                            fill_in 'profile_session_check_url', with: 'test'
+                            fill_in 'profile_session_check_pattern', with: 'test'
+                            click_button 'Create Profile'
+
+                            expect(find('.profile_session_check_url.has-error').text).to include 'not a valid absolute URL'
+                        end
+                    end
+                end
+            end
         end
     end
 

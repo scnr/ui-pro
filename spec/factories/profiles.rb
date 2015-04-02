@@ -70,9 +70,9 @@ FactoryGirl.define do
         http_response_max_size 200_000
         scope_include_subdomains false
         plugins(
-            'myplugin'     => nil,
-            'other_plugin' => {
-                'my-option' => 'stuff'
+            'uncommon_headers' => nil,
+            'beep_notify'      => {
+                'repeat' => '10'
             }
         )
         scope_exclude_binaries true
