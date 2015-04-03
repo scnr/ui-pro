@@ -2,12 +2,12 @@
     <%= f.error_notification %>
 
     <% if f.error_notification %>
-        <div class="alert alert-error fade in">
+        <div>
             <ul>
-                <%  @profile.errors.messages.each do |attribute, messages| %>
-                    <% if attribute != :plugins %>
-                        <li>
-                            <%= attribute.to_s.humanize %>
+                <% @profile.errors.messages.each do |attribute, messages| %>
+                    <li>
+                        <%= link_to attribute.to_s.humanize, "#profile_#{attribute}", class: 'scroll' %>
+                        <% if attribute != :plugins %>
                             <% if messages.size == 1 %>
                                 <%= messages.first %>
                             <% else %>
@@ -21,13 +21,20 @@
                                     <% end %>
                                 </ul>
                             <% end %>
-                        </li>
-                    <% else  %>
-                        <li>
-                            <%= attribute.to_s.humanize %>
-                            <pre class="alert-error"><%= f.error attribute %></pre>
-                        </li>
-                    <% end  %>
+                        <% else %>
+                            <% if messages.size == 1 %>
+                                <pre class="alert alert-danger"><%= messages.first %></pre>
+                            <% else %>
+                                <ul class="list-unstyled">
+                                    <% messages.each do |message| %>
+                                        <li>
+                                            <pre><%= message %></pre>
+                                        </li>
+                                    <% end %>
+                                </ul>
+                            <% end %>
+                        <% end %>
+                    </li>
                 <% end %>
             </ul>
         </div>
@@ -608,20 +615,16 @@
     <hr/>
 
     <div id="plugins">
+        <span id="profile_plugins"></span>
         <fieldset>
             <h2 id="plugins-h">
                 Plugins
                 <small>Assisting components to be enabled during the process.</small>
             </h2>
 
-            <p class="alert">
-                Plugins which require an option of type <em>file</em> are
-                not supported and thus are not listed.
-            </p>
-
-            <% if errors = @profile.errors.messages[:plugins] || [] %>
+            <% if errors = @profile.errors.messages[:plugins]%>
                 <% errors.each do |message| %>
-                    <pre class="alert alert-error"><%= message %></pre>
+                    <pre class="alert alert-danger"><%= message %></pre>
                 <%end%>
             <%end%>
 
