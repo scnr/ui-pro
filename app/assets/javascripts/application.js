@@ -45,7 +45,7 @@ function setupScroll(){
     $( '.scroll' ).click( function( event ) {
         event.preventDefault();
         $( 'html,body' ).animate( { scrollTop: $( this.hash ).offset().top -
-            $( 'header' ).height() - 20 }, 500 );
+            $( 'header' ).height() - 45 }, 500 );
     });
 }
 
