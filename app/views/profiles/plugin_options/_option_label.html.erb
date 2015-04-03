@@ -3,5 +3,5 @@
         <abbr title="Required">*</abbr>
     <%end%>
 
-    <%= option.name.to_s.gsub( '_', ' ' ).capitalize %>
+    <%= option.name.to_s.humanize %>
 </label>
