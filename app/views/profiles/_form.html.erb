@@ -82,11 +82,14 @@
 
             <div class="row">
                 <div class="col-md-6">
-                    <%= f.input :scope_page_limit, label: 'Page limit' %>
+                    <%= f.input :scope_page_limit, label: 'Page limit',
+                                placeholder: 'Infinite' %>
                     <%= messages_for( :scope_page_limit ) %>
                 </div>
                 <div class="col-md-6">
-                    <%= f.input :scope_directory_depth_limit, label: 'Directory depth limit' %>
+                    <%= f.input :scope_directory_depth_limit,
+                                label: 'Directory depth limit',
+                                placeholder: 'Infinite' %>
                     <%= messages_for( :scope_directory_depth_limit ) %>
                 </div>
             </div>
@@ -95,6 +98,7 @@
                 <div class="col-md-6">
                     <%= f.input :scope_include_path_patterns,
                                 label: 'Path inclusion patterns',
+                                placeholder: 'Include all resources',
                                 input_html: { value: @profile.scope_include_path_patterns.join( "\n" ) } %>
                     <%= messages_for( :scope_include_path_patterns ) %>
                     <p class="help-block alert alert-info">Input each rule in its own line.</p>
@@ -102,6 +106,7 @@
                 <div class="col-md-6">
                     <%= f.input :scope_exclude_path_patterns,
                                 label: 'Path exclusion patterns',
+                                placeholder: 'Do not exclude any resources',
                                 input_html: { value: @profile.scope_exclude_path_patterns.join( "\n" ) } %>
                     <%= messages_for( :scope_exclude_path_patterns ) %>
                     <p class="help-block alert alert-info">Input each rule in its own line.</p>
@@ -125,33 +130,29 @@
 
                             <div class="row">
                                 <div class="col-md-6">
-                                    <%= f.input :scope_exclude_binaries, label: 'Ignore binary content' %>
+                                    <%= f.input :scope_exclude_binaries %>
                                     <%= messages_for( :scope_exclude_binaries ) %>
                                 </div>
                                 <div class="col-md-6">
-                                    <%= f.input :scope_https_only, label: 'Only follow HTTPS URLs' %>
+                                    <%= f.input :scope_https_only,
+                                                label: 'Only follow HTTPS URLs' %>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-6">
-                                    <%= f.input :scope_dom_depth_limit, label: 'DOM depth limit' %>
+                                    <%= f.input :scope_dom_depth_limit,
+                                                label: 'DOM depth limit',
+                                                placeholder: 'Infinite' %>
                                     <%= messages_for( :scope_dom_depth_limit ) %>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-6">
-                                    <%= f.input :scope_exclude_content_patterns,
-                                                label: 'Content exclusion patterns',
-                                                input_html: { value: @profile.scope_exclude_content_patterns.join( "\n" ) } %>
-
-                                    <%= messages_for( :scope_exclude_content_patterns ) %>
-                                    <p class="help-block alert alert-info">Input each rule in its own line.</p>
-                                </div>
-                                <div class="col-md-6">
                                     <%= f.input :scope_url_rewrites,
                                                 label: 'URL rewrite rules',
+                                                placeholder: 'No URL rewriting',
                                                 input_html: {
                                                         value: @profile.scope_url_rewrites.
                                                                        map { |k, v| "#{k}:#{v}" }.join( "\n" )
@@ -166,21 +167,33 @@
                                         <code>/articles\/[\w-]+\/(\d+)/:articles.php?id=\1</code>.
                                     </p>
                                 </div>
+                                <div class="col-md-6">
+                                    <%= f.input :scope_exclude_content_patterns,
+                                                label: 'Content exclusion patterns',
+                                                placeholder: 'Include all pages',
+                                                input_html: {
+                                                        value: @profile.scope_exclude_content_patterns.join( "\n" )
+                                                } %>
+                                    <%= messages_for( :scope_exclude_content_patterns ) %>
+                                    <p class="help-block alert alert-info">Input each rule in its own line.</p>
+                                </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-6">
-                                    <%= f.input :scope_extend_paths,
-                                                label: 'Extend paths',
-                                                input_html: { value: @profile.scope_extend_paths.join( "\n" ) } %>
-                                    <%= messages_for( :scope_extend_paths ) %>
+                                    <%= f.input :scope_restrict_paths,
+                                                label: 'Restrict paths',
+                                                placeholder: 'Use paths discovered by the crawl',
+                                                input_html: { value: @profile.scope_restrict_paths.join( "\n" ) } %>
+                                    <%= messages_for( :scope_restrict_paths ) %>
                                     <p class="help-block alert alert-info">Input each path in its own line.</p>
                                 </div>
                                 <div class="col-md-6">
-                                    <%= f.input :scope_restrict_paths,
-                                                label: 'Restrict paths',
-                                                input_html: { value: @profile.scope_restrict_paths.join( "\n" ) } %>
-                                    <%= messages_for( :scope_restrict_paths ) %>
+                                    <%= f.input :scope_extend_paths,
+                                                label: 'Extend paths',
+                                                placeholder: 'Only use paths discovered by the crawl',
+                                                input_html: { value: @profile.scope_extend_paths.join( "\n" ) } %>
+                                    <%= messages_for( :scope_extend_paths ) %>
                                     <p class="help-block alert alert-info">Input each path in its own line.</p>
                                 </div>
                             </div>
@@ -189,6 +202,7 @@
                                 <div class="col-md-6">
                                     <%= f.input :scope_redundant_path_patterns,
                                                 label: 'Path redundancy patterns',
+                                                placeholder: 'Process all resources identically',
                                                 input_html: {
                                                         value: @profile.scope_redundant_path_patterns.
                                                                        map { |k, v| "#{k}:#{v}" }.join( "\n" )
@@ -202,7 +216,8 @@
                                 </div>
                                 <div class="col-md-6">
                                     <%= f.input :scope_auto_redundant_paths,
-                                                label: 'Parameter redundancy limit' %>
+                                                label: 'Parameter redundancy limit',
+                                                placeholder: 'Infinite' %>
                                     <%= messages_for( :scope_auto_redundant_paths ) %>
                                 </div>
                             </div>
@@ -294,19 +309,21 @@
 
                             <div class="row">
                                 <div class="col-md-6">
-                                    <%= f.input :audit_exclude_vector_patterns,
-                                                label: 'Parameter exclusion patterns',
-                                                input_html: { value: @profile.audit_exclude_vector_patterns.join( "\n" ) } %>
-
-                                    <%= messages_for( :audit_exclude_vector_patterns ) %>
-                                    <p class="help-block alert alert-info">Input one pattern per line.</p>
-                                </div>
-                                <div class="col-md-6">
                                     <%= f.input :audit_include_vector_patterns,
                                                 label: 'Parameter inclusion patterns',
+                                                placeholder: 'Include all parameters',
                                                 input_html: { value: @profile.audit_include_vector_patterns.join( "\n" ) } %>
 
                                     <%= messages_for( :audit_include_vector_patterns ) %>
+                                    <p class="help-block alert alert-info">Input one pattern per line.</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <%= f.input :audit_exclude_vector_patterns,
+                                                label: 'Parameter exclusion patterns',
+                                                placeholder: 'Do not exclude any parameters',
+                                                input_html: { value: @profile.audit_exclude_vector_patterns.join( "\n" ) } %>
+
+                                    <%= messages_for( :audit_exclude_vector_patterns ) %>
                                     <p class="help-block alert alert-info">Input one pattern per line.</p>
                                 </div>
                             </div>
@@ -315,6 +332,7 @@
                                 <div class="col-md-6">
                                     <%= f.input :audit_link_templates,
                                                 label: 'Link templates',
+                                                placeholder: 'Custom inputs not necessary',
                                                 input_html: { value: @profile.audit_link_templates.join( "\n" ) } %>
 
                                     <%= messages_for( :audit_link_templates ) %>
@@ -345,8 +363,10 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    <%= f.input :input_values, input_html: {
-                            value: @profile.input_values.
+                    <%= f.input :input_values,
+                                placeholder: 'No need for special values',
+                                input_html: {
+                                    value: @profile.input_values.
                                            map { |k, v| "#{k}=#{v}" }.join( "\n" )
                     } %>
                     <%= messages_for( :input_values ) %>
@@ -371,25 +391,35 @@
 
             <div class="row">
                 <div class="col-md-6">
-                    <%= f.input :http_user_agent, as: :string, label: 'User-agent' %>
+                    <%= f.input :http_user_agent, as: :string,
+                                label: 'User-agent',
+                                placeholder: Arachni::Options.http.user_agent
+                    %>
                     <%= messages_for( :http_user_agent ) %>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-6">
-                    <%= f.input :http_authentication_username, label: 'Username' %>
+                    <%= f.input :http_authentication_username,
+                                placeholder: 'No authentication',
+                                label: 'Username' %>
                     <%= messages_for( :http_authentication_username ) %>
                 </div>
                 <div class="col-md-6">
-                    <%= f.input :http_authentication_password, as: :string, label: 'Password' %>
+                    <%= f.input :http_authentication_password, as: :string,
+                                placeholder: 'No authentication',
+                                label: 'Password' %>
                     <%= messages_for( :http_authentication_password ) %>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-6">
-                    <%= f.input :http_proxy_host, label: 'Proxy host' %>
+                    <%= f.input :http_proxy_host,
+                                label: 'Proxy host',
+                                placeholder: 'Direct connection'
+                    %>
                     <%= messages_for( :http_proxy_host ) %>
                 </div>
                 <div class="col-md-6">
@@ -400,11 +430,16 @@
 
             <div class="row">
                 <div class="col-md-6">
-                    <%= f.input :http_proxy_username, label: 'Proxy username' %>
+                    <%= f.input :http_proxy_username,
+                                label: 'Proxy username',
+                                placeholder: 'No proxy authentication'
+                    %>
                     <%= messages_for( :http_proxy_username ) %>
                 </div>
                 <div class="col-md-6">
-                    <%= f.input :http_proxy_password, as: :string, label: 'Proxy password' %>
+                    <%= f.input :http_proxy_password, as: :string,
+                                label: 'Proxy password',
+                                placeholder: 'No proxy authentication' %>
                     <%= messages_for( :http_proxy_password ) %>
                 </div>
             </div>
@@ -428,6 +463,7 @@
                                 <div class="col-md-6">
                                     <%= f.input :http_cookies,
                                                 label: 'Cookies',
+                                                placeholder: 'No need for special cookies',
                                                 input_html: {
                                                         value: @profile.http_cookies.
                                                                        map { |k, v| "#{k}=#{v}" }.join( "\n" )
@@ -442,6 +478,7 @@
                                 <div class="col-md-6">
                                     <%= f.input :http_request_headers,
                                                 label: 'Headers',
+                                                placeholder: 'No need for special headers',
                                                 input_html: {
                                                         value: @profile.http_request_headers.
                                                                        map { |k, v| "#{k}=#{v}" }.join( "\n" )
@@ -457,29 +494,44 @@
 
                             <div class="row">
                                 <div class="col-md-6">
-                                    <%= f.input :http_request_queue_size, label: 'Request queue size' %>
+                                    <%= f.input :http_request_queue_size,
+                                                label: 'Request queue size',
+                                                placeholder: Arachni::Options.http.request_queue_size.to_s
+                                    %>
                                     <%= messages_for( :http_request_queue_size ) %>
                                 </div>
                                 <div class="col-md-6">
-                                    <%= f.input :http_request_timeout, label: 'Request timeout' %>
+                                    <%= f.input :http_request_timeout,
+                                                label: 'Request timeout',
+                                                placeholder: Arachni::Options.http.request_timeout.to_s
+                                    %>
                                     <%= messages_for( :http_request_timeout ) %>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-6">
-                                    <%= f.input :http_request_redirect_limit, label: 'Redirect limit' %>
+                                    <%= f.input :http_request_redirect_limit,
+                                                label: 'Redirect limit',
+                                                placeholder: Arachni::Options.http.request_redirect_limit.to_s
+                                    %>
                                     <%= messages_for( :http_request_redirect_limit ) %>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-6">
-                                    <%= f.input :http_request_concurrency, label: 'Request concurrency' %>
+                                    <%= f.input :http_request_concurrency,
+                                                label: 'Request concurrency',
+                                                placeholder: Arachni::Options.http.request_concurrency.to_s
+                                    %>
                                     <%= messages_for( :http_request_concurrency ) %>
                                 </div>
                                 <div class="col-md-6">
-                                    <%= f.input :http_response_max_size, label: 'Maximum response size' %>
+                                    <%= f.input :http_response_max_size,
+                                                label: 'Maximum response size',
+                                                placeholder: 'Infinite'
+                                    %>
                                     <%= messages_for( :http_response_max_size ) %>
                                 </div>
                             </div>
@@ -652,11 +704,17 @@
 
             <div class="row">
                 <div class="col-md-6">
-                    <%= f.input :browser_cluster_screen_width, label: 'Screen width' %>
+                    <%= f.input :browser_cluster_screen_width,
+                                label: 'Screen width',
+                                placeholder: Arachni::Options.browser_cluster.screen_width.to_s
+                    %>
                     <%= messages_for( :browser_cluster_screen_width ) %>
                 </div>
                 <div class="col-md-6">
-                    <%= f.input :browser_cluster_screen_height, label: 'Screen height' %>
+                    <%= f.input :browser_cluster_screen_height,
+                                label: 'Screen height',
+                                placeholder: Arachni::Options.browser_cluster.screen_height.to_s
+                    %>
                     <%= messages_for( :browser_cluster_screen_height ) %>
                 </div>
             </div>
@@ -681,17 +739,26 @@
                                     <%= messages_for( :browser_cluster_ignore_images ) %>
                                 </div>
                                 <div class="col-md-6">
-                                    <%= f.input :browser_cluster_pool_size, label: 'Processes' %>
+                                    <%= f.input :browser_cluster_pool_size,
+                                                label: 'Processes',
+                                                placeholder: Arachni::Options.browser_cluster.pool_size.to_s
+                                    %>
                                     <%= messages_for( :browser_cluster_pool_size ) %>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <%= f.input :browser_cluster_worker_time_to_live, label: 'Time to live' %>
+                                    <%= f.input :browser_cluster_worker_time_to_live,
+                                                label: 'Time to live',
+                                                placeholder: Arachni::Options.browser_cluster.worker_time_to_live.to_s
+                                    %>
                                     <%= messages_for( :browser_cluster_worker_time_to_live ) %>
                                 </div>
                                 <div class="col-md-6">
-                                    <%= f.input :browser_cluster_job_timeout, label: 'Timeout' %>
+                                    <%= f.input :browser_cluster_job_timeout,
+                                                label: 'Timeout',
+                                                placeholder: Arachni::Options.browser_cluster.job_timeout.to_s
+                                    %>
                                     <%= messages_for( :browser_cluster_job_timeout ) %>
                                 </div>
                             </div>
