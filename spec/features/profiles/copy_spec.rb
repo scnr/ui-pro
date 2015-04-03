@@ -15,6 +15,10 @@ feature 'Profile copy page', :devise do
         Warden.test_reset!
     end
 
+    def submit
+        find( :xpath, "//input[@type='submit']" ).click
+    end
+
     feature 'authenticated user' do
         feature 'visits copy page' do
             before do
@@ -32,7 +36,7 @@ feature 'Profile copy page', :devise do
                 name = 'New name here'
 
                 fill_in 'profile_name', with: name
-                click_button 'Create'
+                submit
 
                 expect(Profile.all.last.name).to eq name
             end

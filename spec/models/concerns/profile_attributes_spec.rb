@@ -250,14 +250,14 @@ describe ProfileAttributes do
 
             context 'when given invalid options' do
                 it 'is invalid' do
-                    subject.plugins = { 'beep_notify' => {
-                        'interval' => 'ddd'
+                    subject.plugins = { 'proxy' => {
+                        'port' => 'ddd'
                     }}
 
                     expect(subject.save).to be_falsey
                     expect(subject.errors).to include :plugins
 
-                    expect(subject.errors.messages[:plugins].first).to include 'Invalid options for component: beep_notify'
+                    expect(subject.errors.messages[:plugins].first).to include 'Invalid options for component: proxy'
                 end
             end
 

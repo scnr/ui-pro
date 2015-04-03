@@ -71,8 +71,8 @@ FactoryGirl.define do
         scope_include_subdomains false
         plugins(
             'uncommon_headers' => nil,
-            'beep_notify'      => {
-                'repeat' => '10'
+            'headers_collector'  => {
+                'include' => 'text/html'
             }
         )
         scope_exclude_binaries true

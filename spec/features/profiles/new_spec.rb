@@ -1002,7 +1002,9 @@ feature 'Profile new page' do
                 end
 
                 feature 'Beep notify' do
-                    scenario 'is not listed'
+                    scenario 'is not listed' do
+                        expect(page).to_not have_selector( '#profile_plugins_beep_notify' )
+                    end
                 end
 
                 feature 'Content-types' do
@@ -1029,11 +1031,15 @@ feature 'Profile new page' do
                 end
 
                 feature 'Cookie collector' do
-                    scenario 'is not listed'
+                    scenario 'is not listed' do
+                        expect(page).to_not have_selector( '#profile_plugins_cookie_collector' )
+                    end
                 end
 
                 feature 'E-mail notify' do
-                    scenario 'is not listed'
+                    scenario 'is not listed' do
+                        expect(page).to_not have_selector( '#profile_plugins_email_notify' )
+                    end
                 end
 
                 feature 'Headers collector' do
@@ -1137,7 +1143,9 @@ feature 'Profile new page' do
                 end
 
                 feature 'Script' do
-                    scenario 'is not listed'
+                    scenario 'is not listed' do
+                        expect(page).to_not have_selector( '#profile_plugins_script' )
+                    end
                 end
 
                 feature 'Uncommon headers' do
@@ -1153,15 +1161,21 @@ feature 'Profile new page' do
                 end
 
                 feature 'Vector collector' do
-                    scenario 'is not listed'
+                    scenario 'is not listed' do
+                        expect(page).to_not have_selector( '#profile_plugins_vector_collector' )
+                    end
                 end
 
                 feature 'Vector feed' do
-                    scenario 'is not listed'
+                    scenario 'is not listed' do
+                        expect(page).to_not have_selector( '#profile_plugins_vector_feed' )
+                    end
                 end
 
                 feature 'WAF Detector' do
-                    scenario 'is not listed'
+                    scenario 'is not listed' do
+                        expect(page).to_not have_selector( '#profile_plugins_waf_detector' )
+                    end
                 end
             end
 

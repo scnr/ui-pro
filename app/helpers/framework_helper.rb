@@ -38,11 +38,7 @@ module FrameworkHelper
     end
 
     def plugins
-        @_plugins ||= (components_for( :plugins ).reject { |k,_| default_plugins.include? k } )
-    end
-
-    def default_plugins
-        @_default_plugins ||= components_for( :plugins, :default )
+        @_plugins ||= components_for( :plugins )
     end
 
     def content_type_for_report( format )
@@ -67,7 +63,7 @@ module FrameworkHelper
 
         if !File.exists?( path )
             components = framework do |f|
-                (manager = f.send( type )).send( list ).inject( {} ) do |h, name|
+                (manager = f.send( type )).loaded.inject( {} ) do |h, name|
                     h[name] = manager[name].info.merge( path: manager.name_to_path( name ) )
 
                     h[name][:author]    = [ h[name][:author] ].flatten.map(&:strip)
