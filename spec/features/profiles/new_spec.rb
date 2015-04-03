@@ -1,7 +1,7 @@
 include Warden::Test::Helpers
 Warden.test_mode!
 
-feature 'Profile new page', :devise do
+feature 'Profile new page' do
 
     subject { FactoryGirl.create :profile, scans: [scan] }
     let(:user) { FactoryGirl.create :user }
@@ -13,6 +13,10 @@ feature 'Profile new page', :devise do
         Warden.test_reset!
     end
 
+    def submit
+        find( :xpath, "//input[@type='submit']" ).click
+    end
+
     feature 'authenticated user' do
         before do
             user.profiles << subject
@@ -22,7 +26,17 @@ feature 'Profile new page', :devise do
         end
 
         scenario 'sees profile form' do
-            expect(find('h1')).to be_truthy
+            expect(find('.profile-form')).to be_truthy
+        end
+
+        scenario 'can submit form using sidebar button', js: true do
+            fill_in 'profile_name', with: 'My name'
+            fill_in 'profile_description', with: 'My description'
+
+            find('#sidebar button').click
+            sleep 1
+
+            expect(Profile.last.name).to eq 'My name'
         end
 
         feature 'option' do
@@ -36,7 +50,7 @@ feature 'Profile new page', :devise do
                     fill_in 'profile_name', with: 'My name'
                     fill_in 'profile_description', with: 'My description'
 
-                    click_button 'Create Profile'
+                    submit
 
                     expect(Profile.last.name).to eq 'My name'
                 end
@@ -45,7 +59,7 @@ feature 'Profile new page', :devise do
                     fill_in 'profile_name', with: ''
                     fill_in 'profile_description', with: 'My description'
 
-                    click_button 'Create Profile'
+                    submit
 
                     expect(find('.profile_name.has-error').text).to include "can't be blank"
                 end
@@ -56,7 +70,7 @@ feature 'Profile new page', :devise do
                     fill_in 'profile_name', with: 'My name'
                     fill_in 'profile_description', with: 'My description'
 
-                    click_button 'Create Profile'
+                    submit
 
                     expect(Profile.last.description).to eq 'My description'
                 end
@@ -65,7 +79,7 @@ feature 'Profile new page', :devise do
                     fill_in 'profile_name', with: 'My name'
                     fill_in 'profile_description', with: ''
 
-                    click_button 'Create Profile'
+                    submit
 
                     expect(find('.profile_description.has-error').text).to include "can't be blank"
                 end
@@ -74,14 +88,14 @@ feature 'Profile new page', :devise do
             feature 'Scope' do
                 scenario 'can set Page limit' do
                     fill_in 'Page limit', with: '10'
-                    click_button 'Create Profile'
+                    submit
 
                     expect(Profile.last.scope_page_limit).to eq 10
                 end
 
                 scenario 'can set Directory depth limit' do
                     fill_in 'Page limit', with: '10'
-                    click_button 'Create Profile'
+                    submit
 
                     expect(Profile.last.scope_page_limit).to eq 10
                 end
@@ -89,7 +103,7 @@ feature 'Profile new page', :devise do
                 feature 'Path inclusion patterns' do
                     scenario 'can be set' do
                         fill_in 'Path inclusion patterns', with: "test\\w+\ninclude this (.*)"
-                        click_button 'Create Profile'
+                        submit
 
                         expect(Profile.last.scope_include_path_patterns).to eq [
                             /test\w+/.source,
@@ -103,7 +117,7 @@ feature 'Profile new page', :devise do
                             exp = 'invalid pattern "(test" (end pattern with unmatched parenthesis: /(test/) and invalid pattern "test4)" (unmatched close parenthesis: /test4)/)'
 
                             fill_in 'Path inclusion patterns', with: rules
-                            click_button 'Create Profile'
+                            submit
 
                             expect(find('.profile_scope_include_path_patterns.has-error').text).to include exp
                         end
@@ -113,7 +127,7 @@ feature 'Profile new page', :devise do
                 feature 'Path exclusion patterns' do
                     scenario 'can be set' do
                         fill_in 'Path exclusion patterns', with: "test\\w+\ninclude this (.*)"
-                        click_button 'Create Profile'
+                        submit
 
                         expect(Profile.last.scope_exclude_path_patterns).to eq [
                             /test\w+/.source,
@@ -127,7 +141,7 @@ feature 'Profile new page', :devise do
                             exp = 'invalid pattern "(test" (end pattern with unmatched parenthesis: /(test/) and invalid pattern "test4)" (unmatched close parenthesis: /test4)/)'
 
                             fill_in 'Path exclusion patterns', with: rules
-                            click_button 'Create Profile'
+                            submit
 
                             expect(find('.profile_scope_exclude_path_patterns.has-error').text).to include exp
                         end
@@ -137,21 +151,21 @@ feature 'Profile new page', :devise do
                 feature 'Advanced' do
                     scenario 'can set Ignore binary content' do
                         check 'Ignore binary content'
-                        click_button 'Create Profile'
+                        submit
 
                         expect(Profile.last.scope_exclude_binaries).to eq true
                     end
 
                     scenario 'can set Only follow HTTPS URLs' do
                         check 'Only follow HTTPS URLs'
-                        click_button 'Create Profile'
+                        submit
 
                         expect(Profile.last.scope_https_only).to eq true
                     end
 
                     scenario 'can set DOM depth limit' do
                         fill_in 'DOM depth limit', with: '10'
-                        click_button 'Create Profile'
+                        submit
 
                         expect(Profile.last.scope_dom_depth_limit).to eq 10
                     end
@@ -159,7 +173,7 @@ feature 'Profile new page', :devise do
                     feature 'Content exclusion patterns' do
                         scenario 'can be set ' do
                             fill_in 'Content exclusion patterns', with: "test\\w+\ninclude this (.*)"
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.scope_exclude_content_patterns).to eq [
                                 /test\w+/.source,
@@ -173,7 +187,7 @@ feature 'Profile new page', :devise do
                                 exp = 'invalid pattern "(test" (end pattern with unmatched parenthesis: /(test/) and invalid pattern "test4)" (unmatched close parenthesis: /test4)/)'
 
                                 fill_in 'Content exclusion patterns', with: rules
-                                click_button 'Create Profile'
+                                submit
 
                                 expect(find('.profile_scope_exclude_content_patterns.has-error').text).to include exp
                             end
@@ -186,7 +200,7 @@ feature 'Profile new page', :devise do
                             rules << "/photos\/[\w-]+\/(\d+)/:photos.php?id=\\1"
 
                             fill_in 'URL rewrite rules', with: rules
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.scope_url_rewrites).to eq ({
                                 '/articles/[w-]+/(d+)/' => 'articles.php?id=\1',
@@ -199,7 +213,7 @@ feature 'Profile new page', :devise do
                                 rules = "/articles\/[\w-]+\/\d+/:articles.php?id=\1\n"
 
                                 fill_in 'URL rewrite rules', with: rules
-                                click_button 'Create Profile'
+                                submit
 
                                 expect(find('.profile_scope_url_rewrites.has-error').text).to include "includes no captures"
                             end
@@ -210,7 +224,7 @@ feature 'Profile new page', :devise do
                                 rules = "/articles\/[\w-]+\/(\d+)/:articles.php?id=\n"
 
                                 fill_in 'URL rewrite rules', with: rules
-                                click_button 'Create Profile'
+                                submit
 
                                 expect(find('.profile_scope_url_rewrites.has-error').text).to include "includes no substitutions"
                             end
@@ -221,7 +235,7 @@ feature 'Profile new page', :devise do
                                 rules = ":articles.php?id=\1\n"
 
                                 fill_in 'URL rewrite rules', with: rules
-                                click_button 'Create Profile'
+                                submit
 
                                 expect(find('.profile_scope_url_rewrites.has-error').text).to include "cannot be empty"
                             end
@@ -232,7 +246,7 @@ feature 'Profile new page', :devise do
                                 rules = "/articles\/[\w-]+\/(\d+)/:"
 
                                 fill_in 'URL rewrite rules', with: rules
-                                click_button 'Create Profile'
+                                submit
 
                                 expect(find('.profile_scope_url_rewrites.has-error').text).to include "cannot be empty"
                             end
@@ -243,7 +257,7 @@ feature 'Profile new page', :devise do
                                 rules = "/(articles\/[\w-]+\/(\d+)/:\1"
 
                                 fill_in 'URL rewrite rules', with: rules
-                                click_button 'Create Profile'
+                                submit
 
                                 expect(find('.profile_scope_url_rewrites.has-error').text).to include 'invalid pattern'
                             end
@@ -252,7 +266,7 @@ feature 'Profile new page', :devise do
 
                     scenario 'can set Extend paths' do
                         fill_in 'Extend paths', with: "test\ntest2"
-                        click_button 'Create Profile'
+                        submit
 
                         expect(Profile.last.scope_extend_paths).to eq [
                             'test', 'test2'
@@ -261,7 +275,7 @@ feature 'Profile new page', :devise do
 
                     scenario 'can set Restrict paths' do
                         fill_in 'Restrict paths', with: "test\ntest2"
-                        click_button 'Create Profile'
+                        submit
 
                         expect(Profile.last.scope_restrict_paths).to eq [
                             'test', 'test2'
@@ -274,7 +288,7 @@ feature 'Profile new page', :devise do
                             rules << 'blah:4'
 
                             fill_in 'Path redundancy patterns', with: rules
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.scope_redundant_path_patterns).to eq ({
                                 'stuff' => '3',
@@ -285,7 +299,7 @@ feature 'Profile new page', :devise do
                         feature 'when missing the pattern' do
                             scenario 'shows error' do
                                 fill_in 'Path redundancy patterns', with: ':2'
-                                click_button 'Create Profile'
+                                submit
 
                                 expect(find('.profile_scope_redundant_path_patterns.has-error').text).to include "pattern cannot be empty"
                             end
@@ -294,7 +308,7 @@ feature 'Profile new page', :devise do
                         feature 'when missing the counter' do
                             scenario 'shows error' do
                                 fill_in 'Path redundancy patterns', with: "stuff:"
-                                click_button 'Create Profile'
+                                submit
 
                                 expect(find('.profile_scope_redundant_path_patterns.has-error').text).to include "needs an integer counter greater than 0"
                             end
@@ -303,7 +317,7 @@ feature 'Profile new page', :devise do
                         feature 'when given invalid pattern' do
                             scenario 'shows error' do
                                 fill_in 'Path redundancy patterns', with: '(articles:1'
-                                click_button 'Create Profile'
+                                submit
 
                                 expect(find('.profile_scope_redundant_path_patterns.has-error').text).to include 'invalid pattern'
                             end
@@ -313,7 +327,7 @@ feature 'Profile new page', :devise do
                     feature 'Parameter redundancy limit' do
                         scenario 'can be set' do
                             fill_in 'Parameter redundancy limit', with: 10
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.scope_auto_redundant_paths).to eq 10
                         end
@@ -324,42 +338,42 @@ feature 'Profile new page', :devise do
             feature 'Audit' do
                 scenario 'can set Audit forms' do
                     check 'Audit forms'
-                    click_button 'Create Profile'
+                    submit
 
                     expect(Profile.last.audit_forms).to eq true
                 end
 
                 scenario 'can set Audit links' do
                     check 'Audit links'
-                    click_button 'Create Profile'
+                    submit
 
                     expect(Profile.last.audit_links).to eq true
                 end
 
                 scenario 'can set Audit cookies' do
                     check 'Audit cookies'
-                    click_button 'Create Profile'
+                    submit
 
                     expect(Profile.last.audit_cookies).to eq true
                 end
 
                 scenario 'can set Audit headers' do
                     check 'Audit headers'
-                    click_button 'Create Profile'
+                    submit
 
                     expect(Profile.last.audit_headers).to eq true
                 end
 
                 scenario 'can set Audit JSON inputs' do
                     check 'Audit JSON inputs'
-                    click_button 'Create Profile'
+                    submit
 
                     expect(Profile.last.audit_jsons).to eq true
                 end
 
                 scenario 'can set Audit XML inputs' do
                     check 'Audit XML inputs'
-                    click_button 'Create Profile'
+                    submit
 
                     expect(Profile.last.audit_xmls).to eq true
                 end
@@ -367,28 +381,28 @@ feature 'Profile new page', :devise do
                 feature 'Advanced' do
                     scenario 'can set Audit with both http methods' do
                         check 'Audit with both http methods'
-                        click_button 'Create Profile'
+                        submit
 
                         expect(Profile.last.audit_with_both_http_methods).to eq true
                     end
 
                     scenario 'can set Audit cookies extensively' do
                         check 'Audit cookies extensively'
-                        click_button 'Create Profile'
+                        submit
 
                         expect(Profile.last.audit_cookies_extensively).to eq true
                     end
 
                     scenario 'can set Audit with extra parameter' do
                         check 'Audit with extra parameter'
-                        click_button 'Create Profile'
+                        submit
 
                         expect(Profile.last.audit_with_extra_parameter).to eq true
                     end
 
                     scenario 'can set Audit parameter names' do
                         check 'Audit parameter names'
-                        click_button 'Create Profile'
+                        submit
 
                         expect(Profile.last.audit_parameter_names).to eq true
                     end
@@ -396,7 +410,7 @@ feature 'Profile new page', :devise do
                     feature 'Parameter exclusion patterns' do
                         scenario 'can be set' do
                             fill_in 'Parameter exclusion patterns', with: "test\ntest2"
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.audit_exclude_vector_patterns).to eq [
                                 'test', 'test2'
@@ -406,7 +420,7 @@ feature 'Profile new page', :devise do
                         feature 'when given invalid pattern' do
                             scenario 'shows error' do
                                 fill_in 'Parameter exclusion patterns', with: '(articles'
-                                click_button 'Create Profile'
+                                submit
 
                                 expect(find('.profile_audit_exclude_vector_patterns.has-error').text).to include 'invalid pattern'
                             end
@@ -416,7 +430,7 @@ feature 'Profile new page', :devise do
                     feature 'Parameter inclusion patterns' do
                         scenario 'can be set' do
                             fill_in 'Parameter inclusion patterns', with: "test\ntest2"
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.audit_include_vector_patterns).to eq [
                                 'test', 'test2'
@@ -426,7 +440,7 @@ feature 'Profile new page', :devise do
                         feature 'when given invalid pattern' do
                             scenario 'shows error' do
                                 fill_in 'Parameter inclusion patterns', with: '(articles'
-                                click_button 'Create Profile'
+                                submit
 
                                 expect(find('.profile_audit_include_vector_patterns.has-error').text).to include 'invalid pattern'
                             end
@@ -439,7 +453,7 @@ feature 'Profile new page', :devise do
                             rules << "/input3\/(?<input3>\w+)\/input4\/(?<input4>\w+)/"
 
                             fill_in 'Link templates', with: rules
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.audit_link_templates).to eq [
                                 "/input1/(?<input1>w+)/input2/(?<input2>w+)/",
@@ -452,7 +466,7 @@ feature 'Profile new page', :devise do
                                 rules = "/input1\/(\w+)\/input2\/(\w+)/\n"
 
                                 fill_in 'Link templates', with: rules
-                                click_button 'Create Profile'
+                                submit
 
                                 expect(find('.profile_audit_link_templates.has-error').text).to include "has no named captures"
                             end
@@ -463,7 +477,7 @@ feature 'Profile new page', :devise do
                                 rules = "(/input1\/(\w+)\/input2\/(\w+)/\n"
 
                                 fill_in 'Link templates', with: rules
-                                click_button 'Create Profile'
+                                submit
 
                                 expect(find('.profile_audit_link_templates.has-error').text).to include 'invalid pattern'
                             end
@@ -476,7 +490,7 @@ feature 'Profile new page', :devise do
             feature 'Input values' do
                 scenario 'can be set' do
                     fill_in 'Input values', with: "test=1\ntest2=2"
-                    click_button 'Create Profile'
+                    submit
 
                     expect(Profile.last.input_values).to eq ({
                         'test'  => '1',
@@ -487,7 +501,7 @@ feature 'Profile new page', :devise do
                 feature 'when given invalid pattern' do
                     scenario 'shows error' do
                         fill_in 'Input values', with: '(test=33'
-                        click_button 'Create Profile'
+                        submit
 
                         expect(find('.profile_input_values.has-error').text).to include 'invalid pattern'
                     end
@@ -498,49 +512,49 @@ feature 'Profile new page', :devise do
             feature 'HTTP' do
                 scenario 'can set User-agent' do
                     fill_in 'User-agent', with: 'Stuff here'
-                    click_button 'Create Profile'
+                    submit
 
                     expect(Profile.last.http_user_agent).to eq 'Stuff here'
                 end
 
                 scenario 'can set Username' do
                     fill_in 'Username', with: 'Stuff here'
-                    click_button 'Create Profile'
+                    submit
 
                     expect(Profile.last.http_authentication_username).to eq 'Stuff here'
                 end
 
                 scenario 'can set Password' do
                     fill_in 'Password', with: 'Stuff here'
-                    click_button 'Create Profile'
+                    submit
 
                     expect(Profile.last.http_authentication_password).to eq 'Stuff here'
                 end
 
                 scenario 'can set Proxy host' do
                     fill_in 'Proxy host', with: 'stuff.com'
-                    click_button 'Create Profile'
+                    submit
 
                     expect(Profile.last.http_proxy_host).to eq 'stuff.com'
                 end
 
                 scenario 'can set Proxy port' do
                     fill_in 'Proxy port', with: '8080'
-                    click_button 'Create Profile'
+                    submit
 
                     expect(Profile.last.http_proxy_port).to eq 8080
                 end
 
                 scenario 'can set Proxy username' do
                     fill_in 'Proxy username', with: 'blah'
-                    click_button 'Create Profile'
+                    submit
 
                     expect(Profile.last.http_proxy_username).to eq 'blah'
                 end
 
                 scenario 'can set Proxy password' do
                     fill_in 'Proxy password', with: 'blah'
-                    click_button 'Create Profile'
+                    submit
 
                     expect(Profile.last.http_proxy_password).to eq 'blah'
                 end
@@ -548,7 +562,7 @@ feature 'Profile new page', :devise do
                 feature 'Advanced' do
                     scenario 'can set Cookies' do
                         fill_in 'Cookies', with: "cookie1=blah1\ncookie2=blah2"
-                        click_button 'Create Profile'
+                        submit
 
                         expect(Profile.last.http_cookies).to eq ({
                             'cookie1' => 'blah1',
@@ -558,7 +572,7 @@ feature 'Profile new page', :devise do
 
                     scenario 'can set Headers' do
                         fill_in 'Headers', with: "header1=blah1\nheader2=blah2"
-                        click_button 'Create Profile'
+                        submit
 
                         expect(Profile.last.http_request_headers).to eq ({
                             'header1' => 'blah1',
@@ -568,35 +582,35 @@ feature 'Profile new page', :devise do
 
                     scenario 'can set Request queue size' do
                         fill_in 'Request queue size', with: 20
-                        click_button 'Create Profile'
+                        submit
 
                         expect(Profile.last.http_request_queue_size).to eq 20
                     end
 
                     scenario 'can set Request timeout' do
                         fill_in 'Request timeout', with: 2000
-                        click_button 'Create Profile'
+                        submit
 
                         expect(Profile.last.http_request_timeout).to eq 2000
                     end
 
                     scenario 'can set Redirect limit' do
                         fill_in 'Redirect limit', with: 10
-                        click_button 'Create Profile'
+                        submit
 
                         expect(Profile.last.http_request_redirect_limit).to eq 10
                     end
 
                     scenario 'can set Request concurrency' do
                         fill_in 'Request concurrency', with: 100
-                        click_button 'Create Profile'
+                        submit
 
                         expect(Profile.last.http_request_concurrency).to eq 100
                     end
 
                     scenario 'can set Maximum response size' do
                         fill_in 'Maximum response size', with: 1000
-                        click_button 'Create Profile'
+                        submit
 
                         expect(Profile.last.http_response_max_size).to eq 1000
                     end
@@ -606,42 +620,42 @@ feature 'Profile new page', :devise do
                     feature 'Operating systems' do
                         scenario 'can set Generic Unix family' do
                             check 'Generic Unix family'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.platforms).to include 'unix'
                         end
 
                         scenario 'can set Linux' do
                             check 'Linux'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.platforms).to include 'linux'
                         end
 
                         scenario 'can set Generic BSD family' do
                             check 'Generic BSD family'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.platforms).to include 'bsd'
                         end
 
                         scenario 'can set IBM AIX' do
                             check 'IBM AIX'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.platforms).to include 'aix'
                         end
 
                         scenario 'can set Solaris' do
                             check 'Solaris'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.platforms).to include 'solaris'
                         end
 
                         scenario 'can set MS Windows' do
                             check 'MS Windows'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.platforms).to include 'windows'
                         end
@@ -650,133 +664,133 @@ feature 'Profile new page', :devise do
                     feature 'Databases' do
                         scenario 'can set Generic SQL family' do
                             check 'Generic SQL family'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.platforms).to include 'sql'
                         end
 
                         scenario 'can set MySQL' do
                             check 'MySQL'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.platforms).to include 'mysql'
                         end
 
                         scenario 'can set Postgresql' do
                             check 'Postgresql'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.platforms).to include 'pgsql'
                         end
 
                         scenario 'can set MSSQL' do
                             check 'MSSQL'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.platforms).to include 'mssql'
                         end
 
                         scenario 'can set Oracle' do
                             check 'Oracle'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.platforms).to include 'oracle'
                         end
 
                         scenario 'can set SQLite' do
                             check 'SQLite'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.platforms).to include 'sqlite'
                         end
 
                         scenario 'can set IngresDB' do
                             check 'IngresDB'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.platforms).to include 'ingres'
                         end
 
                         scenario 'can set EMC' do
                             check 'EMC'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.platforms).to include 'emc'
                         end
 
                         scenario 'can set DB2' do
                             check 'DB2'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.platforms).to include 'db2'
                         end
 
                         scenario 'can set InterBase' do
                             check 'InterBase'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.platforms).to include 'interbase'
                         end
 
                         scenario 'can set Informix' do
                             check 'Informix'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.platforms).to include 'informix'
                         end
 
                         scenario 'can set Firebird' do
                             check 'Firebird'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.platforms).to include 'firebird'
                         end
 
                         scenario 'can set SaP Max DB' do
                             check 'SaP Max DB'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.platforms).to include 'maxdb'
                         end
 
                         scenario 'can set Sybase' do
                             check 'Sybase'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.platforms).to include 'sybase'
                         end
 
                         scenario 'can set Frontbase' do
                             check 'Frontbase'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.platforms).to include 'frontbase'
                         end
 
                         scenario 'can set HSQLDB' do
                             check 'HSQLDB'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.platforms).to include 'hsqldb'
                         end
 
                         scenario 'can set MS Access' do
                             check 'MS Access'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.platforms).to include 'access'
                         end
 
                         scenario 'can set Generic NoSQL family' do
                             check 'Generic NoSQL family'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.platforms).to include 'nosql'
                         end
 
                         scenario 'can set MongoDB' do
                             check 'MongoDB'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.platforms).to include 'mongodb'
                         end
@@ -785,35 +799,35 @@ feature 'Profile new page', :devise do
                     feature 'Web servers' do
                         scenario 'can set Apache' do
                             check 'Apache'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.platforms).to include 'apache'
                         end
 
                         scenario 'can set IIS' do
                             check 'IIS'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.platforms).to include 'iis'
                         end
 
                         scenario 'can set Jetty' do
                             check 'Jetty'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.platforms).to include 'jetty'
                         end
 
                         scenario 'can set Nginx' do
                             check 'Nginx'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.platforms).to include 'nginx'
                         end
 
                         scenario 'can set TomCat' do
                             check 'TomCat'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.platforms).to include 'tomcat'
                         end
@@ -822,49 +836,49 @@ feature 'Profile new page', :devise do
                     feature 'Programming languages' do
                         scenario 'can set ASP' do
                             check 'ASP'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.platforms).to include 'asp'
                         end
 
                         scenario 'can set ASP.NET' do
                             check 'ASP.NET'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.platforms).to include 'aspx'
                         end
 
                         scenario 'can set JSP' do
                             check 'JSP'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.platforms).to include 'jsp'
                         end
 
                         scenario 'can set Perl' do
                             check 'Perl'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.platforms).to include 'perl'
                         end
 
                         scenario 'can set PHP' do
                             check 'PHP'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.platforms).to include 'php'
                         end
 
                         scenario 'can set Python' do
                             check 'Python'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.platforms).to include 'python'
                         end
 
                         scenario 'can set Ruby' do
                             check 'Ruby'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.platforms).to include 'ruby'
                         end
@@ -873,7 +887,7 @@ feature 'Profile new page', :devise do
                     feature 'Frameworks' do
                         scenario 'can set Rack' do
                             check 'Rack'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.platforms).to include 'rack'
                         end
@@ -883,7 +897,7 @@ feature 'Profile new page', :devise do
                 feature 'Advanced' do
                     scenario 'can set Disable fingerprinting' do
                         check 'Disable fingerprinting'
-                        click_button 'Create Profile'
+                        submit
 
                         expect(Profile.last.no_fingerprinting).to eq true
                     end
@@ -902,7 +916,7 @@ feature 'Profile new page', :devise do
                     feature info[:name] do
                         scenario 'can be set' do
                             check "profile_checks_#{shortname}"
-                            click_button 'Create Profile'
+                            submit
 
                             expect(Profile.last.checks).to include shortname
                         end
@@ -941,7 +955,7 @@ feature 'Profile new page', :devise do
                         fill_in 'profile_plugins_autologin_parameters', with: 'username=user&password=pass'
                         fill_in 'profile_plugins_autologin_check', with: 'logout'
 
-                        click_button 'Create Profile'
+                        submit
 
                         expect(Profile.last.plugins['autologin']).to eq ({
                             'url'        => 'http://test.com',
@@ -955,10 +969,10 @@ feature 'Profile new page', :devise do
                             fill_in 'profile_plugins_autologin_parameters', with: 'username=user&password=pass'
                             fill_in 'profile_plugins_autologin_check', with: 'logout'
 
-                            click_button 'Create Profile'
+                            submit
 
-                            expect(find("#plugins .alert-error").text).to include 'Invalid options for component: autologin'
-                            expect(find("#plugins .alert-error").text).to include 'Missing value: url'
+                            expect(find("#plugins .alert-danger").text).to include 'Invalid options for component: autologin'
+                            expect(find("#plugins .alert-danger").text).to include 'Missing value: url'
                         end
                     end
 
@@ -967,10 +981,10 @@ feature 'Profile new page', :devise do
                             fill_in 'profile_plugins_autologin_url', with: 'http://test.com'
                             fill_in 'profile_plugins_autologin_check', with: 'logout'
 
-                            click_button 'Create Profile'
+                            submit
 
-                            expect(find("#plugins .alert-error").text).to include 'Invalid options for component: autologin'
-                            expect(find("#plugins .alert-error").text).to include 'Missing value: parameters'
+                            expect(find("#plugins .alert-danger").text).to include 'Invalid options for component: autologin'
+                            expect(find("#plugins .alert-danger").text).to include 'Missing value: parameters'
                         end
                     end
 
@@ -979,10 +993,10 @@ feature 'Profile new page', :devise do
                             fill_in 'profile_plugins_autologin_url', with: 'http://test.com'
                             fill_in 'profile_plugins_autologin_parameters', with: 'username=user&password=pass'
 
-                            click_button 'Create Profile'
+                            submit
 
-                            expect(find("#plugins .alert-error").text).to include 'Invalid options for component: autologin'
-                            expect(find("#plugins .alert-error").text).to include 'Missing value: check'
+                            expect(find("#plugins .alert-danger").text).to include 'Invalid options for component: autologin'
+                            expect(find("#plugins .alert-danger").text).to include 'Missing value: check'
                         end
                     end
                 end
@@ -997,7 +1011,7 @@ feature 'Profile new page', :devise do
                     end
 
                     scenario 'can be set without options' do
-                        click_button 'Create Profile'
+                        submit
 
                         expect(Profile.last.plugins['content_types']).to eq ({
                             'exclude' => 'text'
@@ -1006,7 +1020,7 @@ feature 'Profile new page', :devise do
 
                     scenario 'can be set with options' do
                         fill_in 'profile_plugins_content_types_exclude', with: 'stuff'
-                        click_button 'Create Profile'
+                        submit
 
                         expect(Profile.last.plugins['content_types']).to eq ({
                             'exclude' => 'stuff'
@@ -1028,7 +1042,7 @@ feature 'Profile new page', :devise do
                     end
 
                     scenario 'can be set without options' do
-                        click_button 'Create Profile'
+                        submit
 
                         expect(Profile.last.plugins['headers_collector']).to eq ({
                             'include' => '',
@@ -1039,7 +1053,7 @@ feature 'Profile new page', :devise do
                     scenario 'can be set with options' do
                         fill_in 'profile_plugins_headers_collector_include', with: 'include_stuff'
                         fill_in 'profile_plugins_headers_collector_exclude', with: 'exclude_stuff'
-                        click_button 'Create Profile'
+                        submit
 
                         expect(Profile.last.plugins['headers_collector']).to eq ({
                             'include' => 'include_stuff',
@@ -1057,7 +1071,7 @@ feature 'Profile new page', :devise do
                         pending
 
                         find('#profile_plugins_login_script_script').set 'path'
-                        click_button 'Create Profile'
+                        submit
 
                         expect(Profile.last.plugins['profile_plugins_login_script']).to eq ({
                             'script' => 'path'
@@ -1067,10 +1081,10 @@ feature 'Profile new page', :devise do
                     feature 'when missing the script' do
                         scenario 'it shows error' do
                             pending
-                            click_button 'Create Profile'
+                            submit
 
-                            expect(find("#plugins .alert-error").text).to include 'Invalid options for component: login_script'
-                            expect(find("#plugins .alert-error").text).to include 'Missing value: script'
+                            expect(find("#plugins .alert-danger").text).to include 'Invalid options for component: login_script'
+                            expect(find("#plugins .alert-danger").text).to include 'Missing value: script'
                         end
                     end
 
@@ -1079,10 +1093,10 @@ feature 'Profile new page', :devise do
                             pending
 
                             find('#profile_plugins_login_script_script').set 'path'
-                            click_button 'Create Profile'
+                            submit
 
-                            expect(find("#plugins .alert-error").text).to include 'Invalid options for component: login_script'
-                            expect(find("#plugins .alert-error").text).to include 'Missing value: script'
+                            expect(find("#plugins .alert-danger").text).to include 'Invalid options for component: login_script'
+                            expect(find("#plugins .alert-danger").text).to include 'Missing value: script'
                         end
                     end
 
@@ -1094,7 +1108,7 @@ feature 'Profile new page', :devise do
                     end
 
                     scenario 'can be set without options' do
-                        click_button 'Create Profile'
+                        submit
 
                         expect(Profile.last.plugins['proxy']).to eq ({
                             'port'             => '8282',
@@ -1110,7 +1124,7 @@ feature 'Profile new page', :devise do
                         check 'profile_plugins_proxy_ignore_responses'
                         fill_in 'profile_plugins_proxy_session_token', with: 'secret'
                         fill_in 'profile_plugins_proxy_timeout', with: '10'
-                        click_button 'Create Profile'
+                        submit
 
                         expect(Profile.last.plugins['proxy']).to eq ({
                             'port'             => '8080',
@@ -1132,7 +1146,7 @@ feature 'Profile new page', :devise do
                     end
 
                     scenario 'can be set' do
-                        click_button 'Create Profile'
+                        submit
 
                         expect(Profile.last.plugins).to include 'uncommon_headers'
                     end
@@ -1154,14 +1168,14 @@ feature 'Profile new page', :devise do
             feature 'Browser' do
                 scenario 'can set Screen width' do
                     fill_in 'Screen width', with: 1000
-                    click_button 'Create Profile'
+                    submit
 
                     expect(Profile.last.browser_cluster_screen_width).to eq 1000
                 end
 
                 scenario 'can set Screen height' do
                     fill_in 'Screen height', with: 2000
-                    click_button 'Create Profile'
+                    submit
 
                     expect(Profile.last.browser_cluster_screen_height).to eq 2000
                 end
@@ -1169,28 +1183,28 @@ feature 'Profile new page', :devise do
                 feature 'Advanced' do
                     scenario "can set Don't load images" do
                         check "Don't load images"
-                        click_button 'Create Profile'
+                        submit
 
                         expect(Profile.last.browser_cluster_ignore_images).to be true
                     end
 
                     scenario 'can set Processes' do
                         fill_in 'Processes', with: 10
-                        click_button 'Create Profile'
+                        submit
 
                         expect(Profile.last.browser_cluster_pool_size).to eq 10
                     end
 
                     scenario 'can set Time to live' do
                         fill_in 'Time to live', with: 10
-                        click_button 'Create Profile'
+                        submit
 
                         expect(Profile.last.browser_cluster_worker_time_to_live).to eq 10
                     end
 
                     scenario 'can set Timeout' do
                         fill_in 'profile_browser_cluster_job_timeout', with: 10
-                        click_button 'Create Profile'
+                        submit
 
                         expect(Profile.last.browser_cluster_job_timeout).to eq 10
                     end
@@ -1201,7 +1215,7 @@ feature 'Profile new page', :devise do
                 scenario 'can set options' do
                     fill_in 'profile_session_check_url', with: 'http://test.com'
                     fill_in 'profile_session_check_pattern', with: 'test'
-                    click_button 'Create Profile'
+                    submit
 
                     expect(Profile.last.session_check_url).to eq 'http://test.com'
                     expect(Profile.last.session_check_pattern).to eq 'test'
@@ -1211,7 +1225,7 @@ feature 'Profile new page', :devise do
                     feature 'is missing' do
                         scenario 'it shows error' do
                             fill_in 'profile_session_check_url', with: 'http://test.com'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(find('.profile_session_check_pattern.has-error').text).to include 'cannot be blank'
                         end
@@ -1221,7 +1235,7 @@ feature 'Profile new page', :devise do
                         scenario 'it shows error' do
                             fill_in 'profile_session_check_url', with: 'http://test.com'
                             fill_in 'profile_session_check_pattern', with: '(test'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(find('.profile_session_check_pattern.has-error').text).to include 'invalid pattern'
                         end
@@ -1232,7 +1246,7 @@ feature 'Profile new page', :devise do
                     feature 'is missing' do
                         scenario 'can set options' do
                             fill_in 'profile_session_check_pattern', with: 'test'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(find('.profile_session_check_url.has-error').text).to include 'not a valid absolute URL'
                         end
@@ -1242,7 +1256,7 @@ feature 'Profile new page', :devise do
                         scenario 'can set options' do
                             fill_in 'profile_session_check_url', with: 'test'
                             fill_in 'profile_session_check_pattern', with: 'test'
-                            click_button 'Create Profile'
+                            submit
 
                             expect(find('.profile_session_check_url.has-error').text).to include 'not a valid absolute URL'
                         end

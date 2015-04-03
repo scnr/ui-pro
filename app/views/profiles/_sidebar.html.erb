@@ -1,13 +1,29 @@
 <%
-   opts = local_assigns[:opts] || {}
+   sections = {
+        scope: 'Scope <small>&mdash; Rules about which resources to include</small>',
+        audit: 'Audit <small>&mdash; Fuzzing settings</small>',
+        inputs: 'Input values <small>&mdash; Sample values for inputs</small>',
+        http: 'HTTP <small>&mdash; Network settings</small>',
+        platforms: 'Platforms<small>&mdash; Applicable platforms</small>',
+        checks: 'Checks <small>&mdash; Security checks</small>',
+        plugins: 'Plugins <small>&mdash; Extra functionality</small>',
+        browser_cluster: 'Browser <small>&mdash; Browser-related settings</small>',
+        session: 'Session <small>&mdash; Session settings</small>'
+}
 %>
 
 <div id="sidebar-container">
     <ul id="sidebar" class="affix nav nav-pills nav-stacked sidenav">
         <li>
+            <button class="btn btn-default btn-primary" onclick="$('.profile-form').submit()">
+                <%= @profile.id ? 'Update' : 'Create' %>
+            </button>
+        </li>
+
+        <li>
             <a href="#top" class="scroll">
                 <i class="fa fa-chevron-up"></i>
-                <%= opts[:top] || 'Top' %>
+                Top
             </a>
         </li>
         <% sections.each do |id, title| %>

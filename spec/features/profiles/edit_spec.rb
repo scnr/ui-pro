@@ -18,7 +18,7 @@ feature 'Profile edit page', :devise do
     end
 
     feature 'authenticated user' do
-        feature 'edits own profile' do
+        feature 'edits profile' do
             before do
                 user.profiles << subject
 
@@ -26,7 +26,18 @@ feature 'Profile edit page', :devise do
                 visit edit_profile_path( subject )
             end
 
-            scenario 'sees the profile options'
+            scenario 'sees profile form' do
+                expect(find('.profile-form')).to be_truthy
+            end
+
+            scenario 'can submit form using sidebar button', js: true do
+                fill_in 'profile_name', with: 'My name'
+
+                find('#sidebar button').click
+                sleep 1
+
+                expect(Profile.last.name).to eq 'My name'
+            end
 
             scenario 'sees the associated scans' do
                 subject.scans << scan

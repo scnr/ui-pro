@@ -728,6 +728,7 @@
     </div>
 
     <div class="form-actions">
-        <%= f.button :submit %>
+        <%= f.button :submit, class: 'hide',
+                     value: (@profile.id ? 'Update' : 'Create') %>
     </div>
 <% end %>
