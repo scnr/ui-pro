@@ -617,6 +617,38 @@ feature 'Profile new page' do
                 end
 
                 feature 'Platforms' do
+                    feature 'preset' do
+                        feature 'Linux, Apache, MySQL, PHP' do
+                            scenario 'sets Linux'
+                            scenario 'sets Apache'
+                            scenario 'sets MySQL'
+                            scenario 'sets PHP'
+                        end
+
+                        feature 'Linux, Nginx, Postgresql, Ruby, Rack' do
+                            scenario 'sets Linux'
+                            scenario 'sets Nginx'
+                            scenario 'sets Postgresql'
+                            scenario 'sets Ruby'
+                            scenario 'sets Rack'
+                        end
+
+                        feature 'Linux, TomCat, Generic SQL family, JSP' do
+                            scenario 'sets Linux'
+                            scenario 'sets TomCat'
+                            scenario 'sets Generic SQL family'
+                            scenario 'sets JSP'
+                        end
+
+                        feature 'MS Windows, IIS, MSSQL, ASP, ASP.NET' do
+                            scenario 'sets MS Windows'
+                            scenario 'sets IIS'
+                            scenario 'sets MSSQL'
+                            scenario 'sets ASP'
+                            scenario 'sets ASP.NET'
+                        end
+                    end
+
                     feature 'Operating systems' do
                         scenario 'can set Generic Unix family' do
                             check 'Generic Unix family'
@@ -688,97 +720,6 @@ feature 'Profile new page' do
                             submit
 
                             expect(Profile.last.platforms).to include 'mssql'
-                        end
-
-                        scenario 'can set Oracle' do
-                            check 'Oracle'
-                            submit
-
-                            expect(Profile.last.platforms).to include 'oracle'
-                        end
-
-                        scenario 'can set SQLite' do
-                            check 'SQLite'
-                            submit
-
-                            expect(Profile.last.platforms).to include 'sqlite'
-                        end
-
-                        scenario 'can set IngresDB' do
-                            check 'IngresDB'
-                            submit
-
-                            expect(Profile.last.platforms).to include 'ingres'
-                        end
-
-                        scenario 'can set EMC' do
-                            check 'EMC'
-                            submit
-
-                            expect(Profile.last.platforms).to include 'emc'
-                        end
-
-                        scenario 'can set DB2' do
-                            check 'DB2'
-                            submit
-
-                            expect(Profile.last.platforms).to include 'db2'
-                        end
-
-                        scenario 'can set InterBase' do
-                            check 'InterBase'
-                            submit
-
-                            expect(Profile.last.platforms).to include 'interbase'
-                        end
-
-                        scenario 'can set Informix' do
-                            check 'Informix'
-                            submit
-
-                            expect(Profile.last.platforms).to include 'informix'
-                        end
-
-                        scenario 'can set Firebird' do
-                            check 'Firebird'
-                            submit
-
-                            expect(Profile.last.platforms).to include 'firebird'
-                        end
-
-                        scenario 'can set SaP Max DB' do
-                            check 'SaP Max DB'
-                            submit
-
-                            expect(Profile.last.platforms).to include 'maxdb'
-                        end
-
-                        scenario 'can set Sybase' do
-                            check 'Sybase'
-                            submit
-
-                            expect(Profile.last.platforms).to include 'sybase'
-                        end
-
-                        scenario 'can set Frontbase' do
-                            check 'Frontbase'
-                            submit
-
-                            expect(Profile.last.platforms).to include 'frontbase'
-                        end
-
-                        scenario 'can set HSQLDB' do
-                            check 'HSQLDB'
-                            submit
-
-                            expect(Profile.last.platforms).to include 'hsqldb'
-                        end
-
-                        scenario 'can set MS Access' do
-                            check 'MS Access'
-                            submit
-
-                            expect(Profile.last.platforms).to include 'access'
                         end
 
                         scenario 'can set Generic NoSQL family' do

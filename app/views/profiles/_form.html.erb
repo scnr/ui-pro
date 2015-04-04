@@ -558,15 +558,48 @@
                 in a much faster and focused scan.
             </div>
 
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            Popular stacks
+                        </div>
+
+                        <div class="panel-body">
+                            <div class="btn-group">
+                                <button class="btn btn-default platforms-preset">
+                                    Linux, Apache, MySQL, PHP
+                                </button>
+                                <button class="btn btn-default platforms-preset">
+                                    Linux, Nginx, Postgresql, Ruby, Rack
+                                </button>
+                                <button class="btn btn-default platforms-preset">
+                                    Linux, TomCat, Generic SQL family, JSP
+                                </button>
+                                <button class="btn btn-default platforms-preset">
+                                    MS Windows, IIS, MSSQL, ASP, ASP.NET
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div id="platforms-list" class="row">
-                <% [:os, :db, :servers, :languages, :frameworks].each_with_index do |type, i| %>
+                <% [:os, :servers, :db, :languages, :frameworks].each_with_index do |type, i| %>
                     <div class="col-md-2">
-                        <h3><%= platform_type_fullname( type ) %></h3>
-                        <%= f.input :platforms, collection: valid_platforms( type ),
-                                    label:  false,
-                                    as: :check_boxes,
-                                    label_method: lambda { |p| platform_fullname( p ) }
-                        %>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <%= platform_type_fullname( type ) %>
+                            </div>
+                            <div class="panel-body">
+                                <%= f.input :platforms, collection: valid_platforms( type ),
+                                            label:  false,
+                                            as: :check_boxes,
+                                            label_method: lambda { |p| platform_fullname( p ) }
+                                %>
+                            </div>
+                        </div>
                     </div>
                 <% end %>
             </div>
@@ -613,8 +646,8 @@
                            placeholder="Search checks by name, description, platforms and more.">
                 </div>
                 <div class="col-md-2">
-                    <button class="btn btn-sm btn-default check">Check all</button>
-                    <button class="btn btn-sm btn-default uncheck">Uncheck all</button>
+                    <button class="btn btn-sm btn-default check">Check</button>
+                    <button class="btn btn-sm btn-default uncheck">Uncheck</button>
                 </div>
             </div>
 

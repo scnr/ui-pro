@@ -1,12 +1,33 @@
 module FrameworkHelper
 
+    # We may be able to identify lots of different DBs but that's just based
+    # on the errors string matches by the generic sql_injection check.
+    #
+    # These are the actual platforms which can help us narrow down the audit.
+    AUDITABLE_DB_PLATFORMS = [
+        :sql,
+        :mysql,
+        :pgsql,
+        :mssql,
+        :nosql,
+        :mongodb
+    ]
+
     def framework( &block )
         fail 'This method requires a block.' if !block_given?
         block.call ArachniFramework
     end
 
     def valid_platforms( type = nil )
-        (type.nil? ? platform_manager.valid : platform_manager.send( type ).valid).map( &:to_s )
+        if type.nil?
+            platforms = platform_manager.valid
+        elsif type == :db
+            platforms = AUDITABLE_DB_PLATFORMS
+        else
+            platforms = platform_manager.send( type ).valid
+        end
+
+        platforms.map( &:to_s )
     end
 
     def platform_type_fullname( type )

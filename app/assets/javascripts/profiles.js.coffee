@@ -11,6 +11,16 @@ searchChecks = ( val ) ->
     else
         $(".profile-checks").show()
 
+findLabelForByText = ( string ) ->
+    $('#platforms-list label').filter( ->
+        $.trim(this.firstChild.nodeValue) == $.trim(string);
+    ).attr('for')
+
+selectPlatforms = ( platforms ) ->
+    $('#platforms-list .check_boxes').prop('checked', '')
+
+    for platform in platforms.split( /,/ )
+        $('#' + findLabelForByText(platform)).prop('checked', 'checked')
 
 setup = () ->
     $('.profile-form input#profile-checks-search').keyup ->
@@ -22,6 +32,10 @@ setup = () ->
 
     $('.profile-form button.uncheck').click ->
         $('.profile-checks input:visible:checkbox').prop('checked', '')
+        false
+
+    $('.profile-form button.platforms-preset').click ->
+        selectPlatforms $(this).html()
         false
 
 $(document).on 'page:load', setup

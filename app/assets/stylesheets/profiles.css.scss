@@ -26,14 +26,6 @@
         right: 15px;
     }
 
-    #platforms-list {
-        input[type="checkbox"] {
-            position: relative;
-            right: 15px;
-            top: 20px;
-        }
-    }
-
     input#profile_plugins, input#profile_checks {
         float: left;
         margin-right: 10px;
@@ -142,6 +134,14 @@
                 margin-left: 10px;
             }
         }
+
+        .check_boxes {
+            display: none;
+        }
+
+        .check_boxes:checked + label {
+            font-weight: bold;
+        }
     }
 
     #checks, #plugins {
@@ -159,7 +159,6 @@
         .panel-title {
             cursor: pointer;
         }
-
     }
 
     .numeric {
