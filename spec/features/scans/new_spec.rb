@@ -29,8 +29,8 @@ feature 'New scan page' do
     end
 
     scenario 'user can set the schedule' do
-        fill_in 'Name', with: name
-        fill_in 'Description', with: description
+        fill_in 'scan_name', with: name
+        fill_in 'scan_description', with: description
         select profile.name, from: 'scan_profile_id'
 
         select '2016', from: 'scan_schedule_attributes_start_at_1i'
@@ -78,7 +78,7 @@ feature 'New scan page' do
 
     feature 'when stop_after_hours is not numeric' do
         scenario 'user sees an error' do
-            fill_in 'Name', with: name
+            fill_in 'scan_name', with: name
             fill_in 'scan_schedule_attributes_stop_after_hours', with: 'stuff'
 
             click_button 'Create'
@@ -89,7 +89,7 @@ feature 'New scan page' do
 
     feature 'when start_at is missing' do
         scenario 'the scan is not scheduled' do
-            fill_in 'Name', with: name
+            fill_in 'scan_name', with: name
             select profile.name, from: 'scan_profile_id'
 
             click_button 'Create'

@@ -36,8 +36,8 @@ feature 'Edit scan page' do
     end
 
     scenario 'user can change the schedule' do
-        fill_in 'Name', with: name
-        fill_in 'Description', with: description
+        fill_in 'scan_name', with: name
+        fill_in 'scan_description', with: description
         select profile.name, from: 'scan_profile_id'
 
         select '2016', from: 'scan_schedule_attributes_start_at_1i'
@@ -71,21 +71,21 @@ feature 'Edit scan page' do
     end
 
     scenario 'user sees verification message' do
-        fill_in 'Name', with: name
+        fill_in 'scan_name', with: name
         click_button 'Update'
 
         expect(page).to have_content 'Scan was successfully updated.'
     end
 
     scenario 'user can change the name' do
-        fill_in 'Name', with: name
+        fill_in 'scan_name', with: name
         click_button 'Update'
 
         expect(scan.reload.name).to eq name
     end
 
     scenario 'user can change the description' do
-        fill_in 'Description', with: description
+        fill_in 'scan_description', with: description
         click_button 'Update'
 
         expect(scan.reload.description).to eq description
