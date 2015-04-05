@@ -5,6 +5,7 @@ describe Site, type: :model do
     let(:user) { FactoryGirl.create :user }
 
     expect_it { to belong_to :user }
+    expect_it { to have_one  :profile }
     expect_it { to have_and_belong_to_many :users }
     expect_it { to have_many :scans }
     expect_it { to have_many :revisions }

@@ -1,0 +1,298 @@
+<%= simple_form_for @site, html: { class: 'profile-form' } do |pf| %>
+    <%= pf.error_notification %>
+
+    <% if pf.error_notification %>
+        <div>
+            <ul>
+                <% @site.profile.errors.messages.each do |attribute, messages| %>
+                    <li>
+                        <%= link_to attribute.to_s.humanize, "#site_profile_attributes_#{attribute}", class: 'scroll' %>
+                        <% if messages.size == 1 %>
+                            <%= messages.first %>
+                        <% else %>
+                            <ul class="list-unstyled">
+                                <% messages.each do |message| %>
+                                    <li>
+                                        <span class="help-block">
+                                            <%= message %>
+                                        </span>
+                                    </li>
+                                <% end %>
+                            </ul>
+                        <% end %>
+                    </li>
+                <% end %>
+            </ul>
+        </div>
+    <% end %>
+
+<%= pf.simple_fields_for :profile do |f| %>
+        <div id="platforms">
+            <fieldset>
+                <h2 id="platforms-h">
+                    Software stack
+                    <small>What platforms does the application use?</small>
+                </h2>
+
+                <div class="help-block alert alert-info">
+                    Providing as much platform information as possible will result
+                    in a much faster and focused scan.
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                Popular configurations
+                            </div>
+
+                            <div class="panel-body">
+                                <div class="btn-group">
+                                    <button class="btn btn-default platforms-preset">
+                                        Linux, Apache, MySQL, PHP
+                                    </button>
+                                    <button class="btn btn-default platforms-preset">
+                                        Linux, Nginx, Postgresql, Ruby, Rack
+                                    </button>
+                                    <button class="btn btn-default platforms-preset">
+                                        Linux, TomCat, Generic SQL family, JSP
+                                    </button>
+                                    <button class="btn btn-default platforms-preset">
+                                        MS Windows, IIS, MSSQL, ASP, ASP.NET
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="platforms-list" class="row">
+                    <% [:os, :servers, :db, :languages, :frameworks].each_with_index do |type, i| %>
+                        <div class="col-md-2">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <%= platform_type_fullname( type ) %>
+                                </div>
+                                <div class="panel-body">
+                                    <%= f.input :platforms, collection: valid_platforms( type ),
+                                                label:  false,
+                                                as: :check_boxes,
+                                                label_method: lambda { |p| platform_fullname( p ) }
+                                    %>
+                                </div>
+                            </div>
+                        </div>
+                    <% end %>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <button class="btn btn-sm btn-primary" type="button" data-toggle="collapse"
+                                data-target="#platforms-advanced" aria-expanded="false"
+                                aria-controls="collapseExample">
+                            Advanced
+                        </button>
+                        <div class="collapse" id="platforms-advanced">
+                            <div class="well well-sm">
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <%= f.input :no_fingerprinting,
+                                                    label: 'Disable fingerprinting'
+                                        %>
+                                        <%= messages_for( :no_fingerprinting ) %>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </fieldset>
+        </div>
+
+        <hr/>
+
+        <div id="scope">
+        <fieldset>
+            <h2 id="scope-h">
+                Scope
+                <small>Are there any special considerations regarding the scope of the scan?</small>
+            </h2>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <%= f.input :scope_redundant_path_patterns,
+                                label: 'Path redundancy patterns',
+                                placeholder: 'Process all resources identically',
+                                input_html: {
+                                        value: @site.profile.scope_redundant_path_patterns.
+                                                       map { |k, v| "#{k}:#{v}" }.join( "\n" )
+                                } %>
+
+                    <%= messages_for( :scope_redundant_path_patterns ) %>
+                    <p class="help-block alert alert-info">
+                        Rules take the format of <em>pattern:times</em>,
+                        input each rule in its own line.
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <%= f.input :scope_auto_redundant_paths,
+                                label: 'Parameter redundancy limit',
+                                placeholder: 'Infinite' %>
+                    <%= messages_for( :scope_auto_redundant_paths ) %>
+                </div>
+            </div>
+
+            <div class="row">
+                <% if @site.https? %>
+                    <div class="col-md-6">
+                        <%= f.input :scope_https_only,
+                                    label: 'Only follow HTTPS URLs' %>
+                    </div>
+                <% end %>
+            </div>
+
+        </fieldset>
+    </div>
+
+    <hr/>
+    <div id="inputs">
+        <fieldset>
+            <h2 id="inputs-h">
+                Inputs
+                <small>Does the application require special input handling?</small>
+            </h2>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <%= f.input :audit_link_templates,
+                                label: 'Custom inputs',
+                                placeholder: 'Custom inputs not necessary',
+                                input_html: { value: @site.profile.audit_link_templates.join( "\n" ) } %>
+
+                    <%= messages_for( :audit_link_templates ) %>
+                    <p class="help-block alert alert-info">
+                        For example, to extract the <code>input1</code> and <code>input2</code> inputs from
+                        <code>http://test.com/input1/value1/input2/value2</code> use
+                        <code>/input1\/(?&lt;input1&gt;\w+)\/input2\/(?&lt;input2&gt;\w+)/</code>.
+                    </p>
+                </div>
+
+                <div class="col-md-6">
+                    <%= f.input :scope_url_rewrites,
+                                label: 'URL rewrite rules',
+                                placeholder: 'No URL rewriting',
+                                input_html: {
+                                        value: @site.profile.scope_url_rewrites.
+                                                       map { |k, v| "#{k}:#{v}" }.join( "\n" )
+                                } %>
+                    <%= messages_for( :scope_url_rewrites ) %>
+                    <p class="help-block alert alert-info">
+                        Rules take the format of <em>pattern:substitution</em>,
+                        input each rule in its own line.<br/>
+
+                        For example, to convert <code>http://test.com/articles/some-stuff/23</code> to
+                        <code>http://test.com/articles.php?id=23</code> use
+                        <code>/articles\/[\w-]+\/(\d+)/:articles.php?id=\1</code>.
+                    </p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <%= f.input :input_values,
+                                label: 'Fill-in values',
+                                placeholder: 'No need for special values',
+                                input_html: {
+                                        value: @site.profile.input_values.
+                                                       map { |k, v| "#{k}=#{v}" }.join( "\n" )
+                                } %>
+                    <%= messages_for( :input_values ) %>
+                    <p class="help-block alert alert-info">
+                        Rules take the format of <em>pattern=value</em>,
+                        input each rule in its own line &mdash; <kbd>pattern</kbd>
+                        will be matched against input names.
+                    </p>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
+    <hr/>
+
+    <div id="http">
+        <fieldset>
+            <h2 id="http-h">
+                HTTP
+                <small>Is special request configuration required?</small>
+            </h2>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <%= f.input :http_cookies,
+                                label: 'Cookies',
+                                placeholder: 'No need for special cookies',
+                                input_html: {
+                                        value: @site.profile.http_cookies.
+                                                       map { |k, v| "#{k}=#{v}" }.join( "\n" )
+                                } %>
+
+                    <%= messages_for( :http_cookies ) %>
+                    <p class="help-block alert alert-info">
+                        Cookies take the format of <em>name=value</em>,
+                        input each cookie in its own line.
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <%= f.input :http_request_headers,
+                                label: 'Headers',
+                                placeholder: 'No need for special headers',
+                                input_html: {
+                                        value: @site.profile.http_request_headers.
+                                                       map { |k, v| "#{k}=#{v}" }.join( "\n" )
+                                } %>
+
+                    <%= messages_for( :http_request_headers ) %>
+                    <p class="help-block alert alert-info">
+                        Headers take the format of <em>name=value</em>,
+                        input each header in its own line.
+                    </p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <button class="btn btn-sm btn-primary" type="button" data-toggle="collapse"
+                            data-target="#http-advanced" aria-expanded="false"
+                            aria-controls="collapseExample">
+                        Advanced
+                    </button>
+                    <div class="collapse" id="http-advanced">
+                        <div class="well well-sm">
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <%= f.input :http_request_concurrency,
+                                                label: 'Request concurrency',
+                                                placeholder: Arachni::Options.http.request_concurrency.to_s
+                                    %>
+                                    <%= messages_for( :http_request_concurrency ) %>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </fieldset>
+    </div>
+
+<% end %>
+
+    <div class="form-actions">
+        <%= pf.button :submit, class: 'hide' %>
+    </div>
+<% end %>

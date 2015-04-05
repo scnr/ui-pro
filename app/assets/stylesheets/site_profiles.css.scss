@@ -1,0 +1,53 @@
+// Place all the styles related to the Sites controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.profile-form {
+    .site_profile_platforms {
+        label {
+            clear: both;
+
+            input {
+                margin-left: 10px;
+            }
+        }
+
+        .check_boxes {
+            display: none;
+        }
+
+        .check_boxes:checked + label {
+            font-weight: bold;
+        }
+    }
+
+    #site_profile_attributes_input_values {
+        width:  100%;
+        height: 250px;
+    }
+
+    #site_profile_attributes_scope_redundant_path_patterns {
+        width:  100%;
+        height: 150px;
+    }
+
+    #site_profile_attributes_audit_link_templates {
+        width:  100%;
+        height: 150px;
+    }
+
+    #site_profile_attributes_scope_url_rewrites {
+        width:  100%;
+        height: 150px;
+    }
+
+    #site_profile_attributes_http_cookies {
+        width:  100%;
+        height: 150px;
+    }
+
+    #site_profile_attributes_http_request_headers {
+        width:  100%;
+        height: 150px;
+    }
+}

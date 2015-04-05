@@ -1,10 +1,9 @@
 <%
    sections = {
-       scope: 'Scope <small>&mdash; Rules about which resources to include</small>',
-       audit: 'Audit <small>&mdash; Fuzzing settings</small>',
-       http: 'HTTP <small>&mdash; Network settings</small>',
-       checks: 'Checks <small>&mdash; Security checks</small>',
-       plugins: 'Plugins <small>&mdash; Extra functionality</small>',
+        platforms: 'Platforms<small>&mdash; Information about the software stack</small>',
+        scope:     'Scope <small>&mdash; Special handling of resources</small>',
+        inputs:    'Inputs <small>&mdash; Custom inputs and fill-in values</small>',
+        http:      'HTTP <small>&mdash; Special request settings</small>',
 }
 %>
 
@@ -12,7 +11,7 @@
     <ul id="sidebar" class="affix nav nav-pills nav-stacked sidenav">
         <li>
             <button class="btn btn-default btn-primary" onclick="$('.profile-form').submit()">
-                <%= @profile.id ? 'Update' : 'Create' %>
+                Save
             </button>
         </li>
 

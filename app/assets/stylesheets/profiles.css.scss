@@ -43,16 +43,6 @@
         height: 150px;
     }
 
-    #profile_scope_redundant_path_patterns {
-        width:  100%;
-        height: 150px;
-    }
-
-    #profile_scope_url_rewrites {
-        width:  100%;
-        height: 150px;
-    }
-
     #profile_scope_restrict_paths {
         width:  100%;
         height: 150px;
@@ -78,18 +68,8 @@
         height: 150px;
     }
 
-    #profile_http_cookies {
-        width:  100%;
-        height: 150px;
-    }
-
     #profile_checks {
         display: inline;
-    }
-
-    #profile_http_request_headers {
-        width:  100%;
-        height: 150px;
     }
 
     #profile_http_response_max_size {
@@ -106,16 +86,6 @@
         height: 150px;
     }
 
-    #profile_audit_link_templates {
-        width:  100%;
-        height: 150px;
-    }
-
-    #profile_input_values {
-        width:  100%;
-        height: 250px;
-    }
-
     #profile_session_check_url {
         width:  90%;
         float: left;
@@ -124,24 +94,6 @@
     #profile_session_check_pattern {
         width:  90%;
         float: left;
-    }
-
-    .profile_platforms {
-        label {
-            clear: both;
-
-            input {
-                margin-left: 10px;
-            }
-        }
-
-        .check_boxes {
-            display: none;
-        }
-
-        .check_boxes:checked + label {
-            font-weight: bold;
-        }
     }
 
     #checks, #plugins {

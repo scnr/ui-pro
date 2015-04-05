@@ -6,6 +6,10 @@ class Site < ActiveRecord::Base
     belongs_to :user
     has_and_belongs_to_many :users
 
+    has_one :profile, autosave: true, dependent: :destroy,
+            foreign_key: 'site_id', class: SiteProfile
+    accepts_nested_attributes_for :profile
+
     has_many :scans, dependent: :destroy
     has_many :revisions, through: :scans
     has_many :issues, through: :scans
@@ -20,6 +24,8 @@ class Site < ActiveRecord::Base
 
     validates_presence_of     :port
     validates_numericality_of :port
+
+    before_save :ensure_profile
 
     def url
         u = "#{protocol}://#{host}"
@@ -41,4 +47,13 @@ class Site < ActiveRecord::Base
         revisions.order( stopped_at: :desc ).limit(1).pluck(:stopped_at).first
     end
 
+    def https?
+        protocol == 'https'
+    end
+
+    private
+
+    def ensure_profile
+        self.profile ||= build_profile
+    end
 end

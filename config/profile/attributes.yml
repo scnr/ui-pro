@@ -48,7 +48,10 @@ scope_restrict_paths: 'Uses the given paths instead of crawling.'
 http_request_headers: 'Adds custom headers to every HTTP request.'
 http_request_concurrency:
     description: 'Maximum HTTP request concurrency.'
-    warning: 'Using a high concurrency could kill the web server and lead to corrupted results.'
+    notice: >
+      If the web server is powerful and responsive, a high setting will lead to
+      a much faster scan; for a less powerful server however, a lower setting is recommended.
+    warning: 'Using a very high concurrency setting could kill the web server and lead to corrupted results.'
 http_request_queue_size:
     description: 'Maximum amount of HTTP requests to keep in the queue.'
     warning: 'More means better scheduling and better performance, fewer means less RAM consumption.'

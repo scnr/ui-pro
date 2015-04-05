@@ -17,45 +17,95 @@
     </div>
 </div>
 
+<div id="site-tabs">
 <% if @issues_summary %>
-    <div id="site-tabs">
+    <ul class="nav nav-tabs">
+        <li class="active">
+            <a href="#overview" role="tab"
+               <%= 'data-toggle="tab"'.html_safe if @site.scanned? %>
+            >
+                Overview
+            </a>
+        </li>
+
+        <li class="<%= 'disabled' if !@site.scanned? %>">
+            <a href="#scans" role="tab"
+               <%= 'data-toggle="tab"'.html_safe if @site.scanned? %>
+            >
+                Scans
+            </a>
+        </li>
+
+        <li>
+            <a href="#settings" role="tab" data-toggle="tab">
+                Settings
+            </a>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <div class="tab-pane active" id="overview">
+            <div class="row">
+                <div id="sidebar" class="col-md-2">
+                    <%= render partial: 'sidebar' %>
+                </div>
+
+                <div id="scan-data" class="col-md-10">
+                    <%= render partial: 'shared/issues_summary' %>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane" id="scans">
+            <%= render partial: 'scans/tables' %>
+        </div>
+
+        <div class="tab-pane" id="settings">
+            <div class="row">
+                <div class="col-md-2">
+                    <%= render partial: 'sites/profile/sidebar' %>
+                </div>
+                <div class="col-md-10">
+                    <%= render partial: 'sites/profile/form' %>
+                </div>
+            </div>
+        </div>
+    </div>
+<% else %>
         <ul class="nav nav-tabs">
             <li class="active">
-                <a href="#overview" role="tab"
-                   <%= 'data-toggle="tab"'.html_safe if @site.scanned? %>
-                >
-                    Overview
+                <a href="#scan-form" role="tab" data-toggle="tab" >
+                    New scan
                 </a>
             </li>
 
-            <li class="<%= 'disabled' if !@site.scanned? %>">
-                <a href="#scans" role="tab"
-                   <%= 'data-toggle="tab"'.html_safe if @site.scanned? %>
-                >
-                    Scans
+            <li>
+                <a href="#settings" role="tab" data-toggle="tab">
+                    Settings
                 </a>
             </li>
         </ul>
 
         <div class="tab-content">
-            <div class="tab-pane active" id="overview">
+            <div class="tab-pane active" id="scan-form">
                 <div class="row">
-                    <div id="sidebar" class="col-md-2">
-                        <%= render partial: 'sidebar' %>
-                    </div>
-
-                    <div id="scan-data" class="col-md-10">
-                        <%= render partial: 'shared/issues_summary' %>
+                    <div class="col-md-12">
+                        <%= render 'scans/form' %>
                     </div>
                 </div>
             </div>
 
-            <div class="tab-pane" id="scans">
-                <%= render partial: 'scans/tables' %>
+            <div class="tab-pane" id="settings">
+                <div class="row">
+                    <div class="col-md-2">
+                        <%= render partial: 'sites/profile/sidebar' %>
+                    </div>
+                    <div class="col-md-10">
+                        <%= render partial: 'sites/profile/form' %>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-<% else %>
-    <h2>Create a scan</h2>
-    <%= render 'scans/form' %>
+
 <% end %>
+</div>

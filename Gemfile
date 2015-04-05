@@ -57,6 +57,4 @@ group :development, :test do
     gem 'awesome_print'
 end
 
-gem 'activeadmin', github: 'activeadmin'
-
 gem 'arachni', path: File.dirname( __FILE__ ) + '/../../arachni'

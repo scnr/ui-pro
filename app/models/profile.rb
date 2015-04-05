@@ -4,7 +4,6 @@ class Profile < ActiveRecord::Base
     include ProfileImport
     include ProfileExport
     include ProfileDefaultHelpers
-    include ProfileAttributeMessages
 
     belongs_to :user
     has_many   :scans

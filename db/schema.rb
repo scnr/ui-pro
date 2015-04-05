@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140920041348) do
+ActiveRecord::Schema.define(version: 20150404082757) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -248,9 +248,7 @@ ActiveRecord::Schema.define(version: 20140920041348) do
     t.text     "description"
     t.text     "checks"
     t.text     "plugins"
-    t.text     "platforms"
     t.boolean  "no_fingerprinting"
-    t.text     "input_values"
     t.boolean  "audit_links"
     t.boolean  "audit_forms"
     t.boolean  "audit_cookies"
@@ -258,35 +256,26 @@ ActiveRecord::Schema.define(version: 20140920041348) do
     t.boolean  "audit_headers"
     t.boolean  "audit_jsons"
     t.boolean  "audit_xmls"
-    t.text     "audit_link_templates"
     t.boolean  "audit_parameter_names"
     t.boolean  "audit_with_extra_parameter"
     t.boolean  "audit_with_both_http_methods"
     t.text     "audit_exclude_vector_patterns"
     t.text     "audit_include_vector_patterns"
     t.integer  "scope_page_limit"
-    t.text     "scope_redundant_path_patterns"
-    t.integer  "scope_auto_redundant_paths"
     t.text     "scope_exclude_path_patterns"
     t.text     "scope_exclude_content_patterns"
     t.boolean  "scope_exclude_binaries"
     t.text     "scope_include_path_patterns"
     t.text     "scope_restrict_paths"
     t.text     "scope_extend_paths"
-    t.text     "scope_url_rewrites"
     t.integer  "scope_dom_depth_limit"
     t.integer  "scope_directory_depth_limit"
-    t.boolean  "scope_include_subdomains"
-    t.boolean  "scope_https_only"
-    t.text     "http_cookies"
     t.text     "http_user_agent"
-    t.text     "http_request_headers"
     t.integer  "http_request_timeout"
     t.string   "http_authentication_username"
     t.string   "http_authentication_password"
     t.integer  "http_request_queue_size"
     t.integer  "http_request_redirect_limit"
-    t.integer  "http_request_concurrency"
     t.integer  "http_response_max_size"
     t.string   "http_proxy_host"
     t.integer  "http_proxy_port"
@@ -332,13 +321,11 @@ ActiveRecord::Schema.define(version: 20140920041348) do
     t.integer  "revisions_count", default: 0
     t.integer  "integer",         default: 0
     t.integer  "site_id"
-    t.integer  "plan_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "profile_id"
   end
 
-  add_index "scans", ["plan_id"], name: "index_scans_on_plan_id"
   add_index "scans", ["profile_id"], name: "index_scans_on_profile_id"
   add_index "scans", ["site_id"], name: "index_scans_on_site_id"
 
@@ -354,6 +341,26 @@ ActiveRecord::Schema.define(version: 20140920041348) do
   end
 
   add_index "schedules", ["scan_id"], name: "index_schedules_on_scan_id"
+
+  create_table "site_profiles", force: true do |t|
+    t.text     "platforms"
+    t.boolean  "no_fingerprinting"
+    t.text     "input_values"
+    t.text     "audit_link_templates"
+    t.text     "scope_redundant_path_patterns"
+    t.integer  "scope_auto_redundant_paths"
+    t.text     "scope_url_rewrites"
+    t.boolean  "scope_https_only"
+    t.boolean  "scope_include_subdomains"
+    t.text     "http_cookies"
+    t.text     "http_request_headers"
+    t.integer  "http_request_concurrency"
+    t.integer  "site_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "site_profiles", ["site_id"], name: "index_site_profiles_on_site_id"
 
   create_table "sitemap_entries", force: true do |t|
     t.text     "url"

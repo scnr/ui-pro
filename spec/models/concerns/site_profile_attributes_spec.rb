@@ -1,0 +1,225 @@
+require 'spec_helper'
+
+describe 'SiteProfileAttributes' do
+    subject { FactoryGirl.create :site_profile, site: site }
+    let(:other) { FactoryGirl.create :site_profile, site: site }
+    let(:site) { FactoryGirl.create :site }
+
+    describe :validations do
+        describe '#scope_redundant_path_patterns' do
+            it 'does not allow 0 counters' do
+                subject.scope_redundant_path_patterns = {
+                    'stuff' => 1
+                }
+
+                expect(subject.save).to be_truthy
+
+                subject.scope_redundant_path_patterns = {
+                    'stuff' => 0
+                }
+
+                expect(subject.save).to be_falsey
+                expect(subject.errors).to include :scope_redundant_path_patterns
+            end
+
+            it 'does not allow invalid patterns' do
+                subject.scope_redundant_path_patterns = {
+                    '(stuff' => 2
+                }
+
+                expect(subject.save).to be_falsey
+                expect(subject.errors).to include :scope_redundant_path_patterns
+            end
+        end
+
+        describe '#input_values' do
+            it 'does not allow empty patterns' do
+                subject.input_values = {
+                    '' => 'blah'
+                }
+
+                expect(subject.save).to be_falsey
+                expect(subject.errors).to include :input_values
+            end
+
+            it 'does not allow invalid patterns' do
+                subject.input_values = {
+                    '(stuff' => '2'
+                }
+
+                expect(subject.save).to be_falsey
+                expect(subject.errors).to include :input_values
+            end
+        end
+
+        describe '#http_cookies' do
+            it 'does not allow empty names' do
+                subject.http_cookies = {
+                    'name' => 'value'
+                }
+
+                expect(subject.save).to be_truthy
+
+                subject.http_cookies = {
+                    '' => 'test'
+                }
+
+                expect(subject.save).to be_falsey
+                expect(subject.errors).to include :http_cookies
+
+                subject.http_cookies = {
+                    ' ' => 'test'
+                }
+
+                expect(subject.save).to be_falsey
+                expect(subject.errors).to include :http_cookies
+            end
+        end
+
+        describe '#http_request_headers' do
+            it 'does not allow empty names' do
+                subject.http_request_headers = {
+                    'name' => 'value'
+                }
+
+                expect(subject.save).to be_truthy
+
+                subject.http_request_headers = {
+                    '' => 'test'
+                }
+
+                expect(subject.save).to be_falsey
+                expect(subject.errors).to include :http_request_headers
+
+                subject.http_request_headers = {
+                    ' ' => 'test'
+                }
+
+                expect(subject.save).to be_falsey
+                expect(subject.errors).to include :http_request_headers
+            end
+        end
+
+        describe '#audit_link_templates' do
+            it 'must have named captures' do
+                subject.audit_link_templates = 'vdvdv'
+
+                expect(subject.save).to be_falsey
+                expect(subject.errors).to include :audit_link_templates
+
+                subject.audit_link_templates = 'input1/(?<input1>\w+)/input2/(?<input2>\w+)'
+                expect(subject.save).to be_truthy
+            end
+
+            it 'does not allow invalid patterns' do
+                subject.audit_link_templates = '(vdvdv'
+
+                expect(subject.save).to be_falsey
+                expect(subject.errors).to include :audit_link_templates
+            end
+        end
+
+        describe '#scope_url_rewrites' do
+            it 'sets rewrite rules' do
+                subject.scope_url_rewrites = {
+                    'articles\/[\w-]+\/(\d+)' => 'articles.php?id=\1'
+                }
+                expect(subject.save).to be_truthy
+            end
+
+            it 'must not have empty pattern' do
+                subject.scope_url_rewrites = {
+                    '' => 'articles.php?id=\1'
+                }
+
+                expect(subject.save).to be_falsey
+                expect(subject.errors).to include :scope_url_rewrites
+
+                subject.scope_url_rewrites = {
+                    ' ' => 'articles.php?id=\1'
+                }
+
+                expect(subject.save).to be_falsey
+                expect(subject.errors).to include :scope_url_rewrites
+            end
+
+            it 'must not have empty substitutions' do
+                subject.scope_url_rewrites = {
+                    'articles\/[\w-]+\/(\d+)' => ''
+                }
+
+                expect(subject.save).to be_falsey
+                expect(subject.errors).to include :scope_url_rewrites
+
+                subject.scope_url_rewrites = {
+                    'articles\/[\w-]+\/(\d+)' => ' '
+                }
+
+                expect(subject.save).to be_falsey
+                expect(subject.errors).to include :scope_url_rewrites
+            end
+
+            it 'must have substitution with substitutions' do
+                subject.scope_url_rewrites = {
+                    'articles\/[\w-]+\/(\d+)' => 'stuff'
+                }
+
+                expect(subject.save).to be_falsey
+                expect(subject.errors).to include :scope_url_rewrites
+            end
+
+            it 'does not allow invalid patterns' do
+                subject.scope_url_rewrites = {
+                    '(articles\/[\w-]+\/(\d+)' => 'stuff'
+                }
+
+                expect(subject.save).to be_falsey
+                expect(subject.errors).to include :scope_url_rewrites
+            end
+        end
+
+        describe '#platforms' do
+            context 'when a platform does not exist' do
+                it 'is invalid' do
+                    subject.platforms = ['stuff']
+
+                    expect(subject.save).to be_falsey
+                    expect(subject.errors).to include :platforms
+
+                    subject.platforms = ['linux']
+                    expect(subject.save).to be_truthy
+                end
+            end
+        end
+    end
+
+    describe '#platforms' do
+        context 'when contains empty strings' do
+            it 'removes them' do
+                subject.platforms = ['', 'linux']
+
+                expect(subject.save).to be_truthy
+                expect(subject.platforms).to eq ['linux']
+            end
+        end
+    end
+
+    %w(http_cookies http_request_headers scope_redundant_path_patterns
+        scope_url_rewrites input_values).each do |attr|
+
+        describe "#{attr}" do
+            it 'is a Hash' do
+                expect(subject.send(attr)).to be_kind_of Hash
+            end
+        end
+    end
+
+    %w(audit_link_templates platforms).each do |attr|
+
+        describe "#{attr}" do
+            it 'is a Array' do
+                expect(subject.send(attr)).to be_kind_of Array
+            end
+        end
+    end
+end

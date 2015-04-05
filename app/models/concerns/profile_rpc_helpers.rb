@@ -5,10 +5,15 @@ module ProfileRpcHelpers
 
     RPC_OPTS = [
         :plugins,
+
         :checks,
+
         :platforms,
+
         :no_fingerprinting,
+
         :input_values,
+
         :audit_cookies,
         :audit_exclude_vector_patterns,
         :audit_forms,
@@ -18,8 +23,14 @@ module ProfileRpcHelpers
         :audit_xmls,
         :audit_jsons,
         :audit_parameter_values,
+
         :browser_cluster_screen_height,
         :browser_cluster_screen_width,
+        :browser_cluster_pool_size,
+        :browser_cluster_job_timeout,
+        :browser_cluster_worker_time_to_live,
+        :browser_cluster_ignore_images,
+
         :http_authentication_password,
         :http_authentication_username,
         :http_cookies,
@@ -29,8 +40,7 @@ module ProfileRpcHelpers
         :http_request_concurrency,
         :http_request_redirect_limit,
         :http_request_timeout,
-        :session_check_pattern,
-        :session_check_url,
+
         :scope_exclude_content_patterns,
         :scope_exclude_path_patterns,
         :scope_extend_paths,
@@ -45,15 +55,15 @@ module ProfileRpcHelpers
         :scope_include_subdomains,
         :scope_https_only,
         :scope_dom_depth_limit,
+
         :http_request_concurrency,
         :http_request_redirect_limit,
         :http_request_timeout,
         :http_request_queue_size,
         :http_response_max_size,
-        :browser_cluster_pool_size,
-        :browser_cluster_job_timeout,
-        :browser_cluster_worker_time_to_live,
-        :browser_cluster_ignore_images
+
+        :session_check_pattern,
+        :session_check_url
     ]
 
     module ClassMethods

@@ -35,61 +35,6 @@
     </h2>
 
     <div class="row">
-        <% if profile.scope_redundant_path_patterns.any? %>
-            <div class="col-md-6">
-                <div>
-                    <b>Redundant:</b>
-                    <table class="table table-hover">
-                        <tr>
-                            <th>Paths matching</th>
-                            <th>will be followed this amount of times</th>
-                        </tr>
-                        <% profile.scope_redundant_path_patterns.each do |pattern, counter| %>
-                            <tr>
-                                <td>
-                                    <%= pattern %>
-                                </td>
-                                <td>
-                                    <%= counter %>
-                                </td>
-                            </tr>
-                        <% end %>
-
-                    </table>
-                </div>
-                <%= messages_for :scope_redundant_path_patterns %>
-            </div>
-        <% end %>
-    </div>
-
-    <div class="row">
-        <% if profile.scope_url_rewrites.any? %>
-            <div class="col-md-6">
-                <div>
-                    <b>URL rewrite rules:</b>
-                    <table class="table table-hover">
-                        <tr>
-                            <th>Paths matching</th>
-                            <th>will be rewritten as</th>
-                        </tr>
-                        <% profile.scope_url_rewrites.each do |pattern, counter| %>
-                            <tr>
-                                <td>
-                                    <%= pattern %>
-                                </td>
-                                <td>
-                                    <%= counter %>
-                                </td>
-                            </tr>
-                        <% end %>
-
-                    </table>
-                </div>
-                <%= messages_for :scope_url_rewrites %>
-            </div>
-        <% end %>
-    </div>
-    <div class="row">
         <% if profile.scope_exclude_path_patterns.any? %>
             <div class="col-md-6">
                 <p>
@@ -209,54 +154,6 @@
             </div>
         <% end %>
     </div>
-
-    <div class="row">
-        <% if profile.audit_link_templates.any? %>
-            <div class="col-md-6">
-                <p>
-                    <b>Link templates:</b>
-                    <textarea disabled
-                              id="profile_audit_link_templates"><%= profile.audit_link_templates.join("\n") %></textarea>
-                </p>
-                <%= messages_for :audit_link_templates %>
-            </div>
-        <% end %>
-    </div>
-</section>
-
-<hr/>
-
-<section id="input">
-    <h2 id="input-h">
-        Input
-        <small>Values to use to fill in inputs</small>
-    </h2>
-
-    <div class="row">
-        <div class="col-md-6">
-            <div>
-                <b>Input values:</b>
-                <table class="table table-hover">
-                    <tr>
-                        <th>Input names matching</th>
-                        <th>will be filled-in with</th>
-                    </tr>
-                    <% profile.input_values.each do |pattern, counter| %>
-                        <tr>
-                            <td>
-                                <%= pattern %>
-                            </td>
-                            <td>
-                                <%= counter %>
-                            </td>
-                        </tr>
-                    <% end %>
-
-                </table>
-            </div>
-            <%= messages_for :input_values %>
-        </div>
-    </div>
 </section>
 
 <hr/>
@@ -295,71 +192,6 @@
             <%= messages_for :http_user_agent %>
         </div>
     </div>
-    <div class="row">
-        <% if profile.http_cookies.any? %>
-            <div class="col-md-6">
-                <p>
-                    <b>Cookies:</b>
-                    <textarea disabled id="profile_http_cookies"><%= profile.http_cookies.map { |k, v| "#{k}=#{v}" }.join("\n") %></textarea>
-                </p>
-                <%= messages_for :http_cookies %>
-            </div>
-        <% end %>
-
-        <% if profile.http_request_headers.any? %>
-            <div class="col-md-6">
-                <p>
-                    <b>Custom headers:</b>
-                    <textarea disabled id="profile_http_request_headers"><%= profile.http_request_headers.map { |k, v| "#{k}=#{v}" }.join("\n") %></textarea>
-                </p>
-                <%= messages_for :http_request_headers %>
-            </div>
-        <% end %>
-    </div>
-</section>
-
-<hr/>
-
-<section id="fingerprinting">
-    <fieldset>
-        <h2 id="fingerprinting-h">
-            Platform fingerprinting
-            <small>What platforms should the scanner anticipate</small>
-        </h2>
-
-        <div class="row">
-            <div class="col-md-12">
-                <b>Disable fingerprinting:</b>
-                <input <%= 'checked' if profile.no_fingerprinting %>
-                       disabled type="checkbox">
-
-            </div>
-        </div>
-
-        <h4>
-            Platforms
-            <small>Explicitly specify platforms to improve efficiency</small>
-        </h4>
-
-
-        <div class="row">
-            <% [:os, :db, :servers, :languages, :frameworks].each_with_index do |type, i| %>
-
-                <div class="col-md-2">
-                    <h5><%= platform_type_fullname(type) %></h5>
-
-                    <% valid_platforms(type).each do |platform| %>
-                        <p>
-                            <%= platform_fullname(platform) %>
-                            <input <%= 'checked' if profile.platforms.include?(platform) %>
-                                   disabled type="checkbox">
-                        </p>
-                    <% end %>
-                </div>
-            <% end %>
-        </div>
-
-    </fieldset>
 </section>
 
 <hr/>

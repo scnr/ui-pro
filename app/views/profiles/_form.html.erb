@@ -134,8 +134,6 @@
                                     <%= messages_for( :scope_exclude_binaries ) %>
                                 </div>
                                 <div class="col-md-6">
-                                    <%= f.input :scope_https_only,
-                                                label: 'Only follow HTTPS URLs' %>
                                 </div>
                             </div>
 
@@ -150,22 +148,6 @@
 
                             <div class="row">
                                 <div class="col-md-6">
-                                    <%= f.input :scope_url_rewrites,
-                                                label: 'URL rewrite rules',
-                                                placeholder: 'No URL rewriting',
-                                                input_html: {
-                                                        value: @profile.scope_url_rewrites.
-                                                                       map { |k, v| "#{k}:#{v}" }.join( "\n" )
-                                                } %>
-                                    <%= messages_for( :scope_url_rewrites ) %>
-                                    <p class="help-block alert alert-info">
-                                        Rules take the format of <em>pattern:substitution</em>,
-                                        input each rule in its own line.<br/>
-
-                                        For example, to convert <code>http://test.com/articles/some-stuff/23</code> to
-                                        <code>http://test.com/articles.php?id=23</code> use
-                                        <code>/articles\/[\w-]+\/(\d+)/:articles.php?id=\1</code>.
-                                    </p>
                                 </div>
                                 <div class="col-md-6">
                                     <%= f.input :scope_exclude_content_patterns,
@@ -195,30 +177,6 @@
                                                 input_html: { value: @profile.scope_extend_paths.join( "\n" ) } %>
                                     <%= messages_for( :scope_extend_paths ) %>
                                     <p class="help-block alert alert-info">Input each path in its own line.</p>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <%= f.input :scope_redundant_path_patterns,
-                                                label: 'Path redundancy patterns',
-                                                placeholder: 'Process all resources identically',
-                                                input_html: {
-                                                        value: @profile.scope_redundant_path_patterns.
-                                                                       map { |k, v| "#{k}:#{v}" }.join( "\n" )
-                                                } %>
-
-                                    <%= messages_for( :scope_redundant_path_patterns ) %>
-                                    <p class="help-block alert alert-info">
-                                        Rules take the format of <em>pattern:times</em>,
-                                        input each rule in its own line.
-                                    </p>
-                                </div>
-                                <div class="col-md-6">
-                                    <%= f.input :scope_auto_redundant_paths,
-                                                label: 'Parameter redundancy limit',
-                                                placeholder: 'Infinite' %>
-                                    <%= messages_for( :scope_auto_redundant_paths ) %>
                                 </div>
                             </div>
 
@@ -328,55 +286,11 @@
                                 </div>
                             </div>
 
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <%= f.input :audit_link_templates,
-                                                label: 'Link templates',
-                                                placeholder: 'Custom inputs not necessary',
-                                                input_html: { value: @profile.audit_link_templates.join( "\n" ) } %>
-
-                                    <%= messages_for( :audit_link_templates ) %>
-                                    <p class="help-block alert alert-info">
-                                        For example, to extract the <code>input1</code> and <code>input2</code> inputs from
-                                        <code>http://test.com/input1/value1/input2/value2</code> use
-                                        <code>/input1\/(?&lt;input1&gt;\w+)\/input2\/(?&lt;input2&gt;\w+)/</code>.
-                                    </p>
-                                </div>
-                            </div>
-
                         </div>
                     </div>
                 </div>
             </div>
 
-        </fieldset>
-    </div>
-
-    <hr/>
-
-    <div id="inputs">
-        <fieldset>
-            <h2 id="inputs-h">
-                Input values
-                <small>Are there any special values for certain inputs?</small>
-            </h2>
-
-            <div class="row">
-                <div class="col-md-12">
-                    <%= f.input :input_values,
-                                placeholder: 'No need for special values',
-                                input_html: {
-                                    value: @profile.input_values.
-                                           map { |k, v| "#{k}=#{v}" }.join( "\n" )
-                    } %>
-                    <%= messages_for( :input_values ) %>
-                    <p class="help-block alert alert-info">
-                        Rules take the format of <em>pattern=value</em>,
-                        input each rule in its own line &mdash; <kbd>pattern</kbd>
-                        will be matched against input names.
-                    </p>
-                </div>
-            </div>
         </fieldset>
     </div>
 
@@ -461,39 +375,6 @@
 
                             <div class="row">
                                 <div class="col-md-6">
-                                    <%= f.input :http_cookies,
-                                                label: 'Cookies',
-                                                placeholder: 'No need for special cookies',
-                                                input_html: {
-                                                        value: @profile.http_cookies.
-                                                                       map { |k, v| "#{k}=#{v}" }.join( "\n" )
-                                                } %>
-
-                                    <%= messages_for( :http_cookies ) %>
-                                    <p class="help-block alert alert-info">
-                                        Cookies take the format of <em>name=value</em>,
-                                        input each cookie in its own line.
-                                    </p>
-                                </div>
-                                <div class="col-md-6">
-                                    <%= f.input :http_request_headers,
-                                                label: 'Headers',
-                                                placeholder: 'No need for special headers',
-                                                input_html: {
-                                                        value: @profile.http_request_headers.
-                                                                       map { |k, v| "#{k}=#{v}" }.join( "\n" )
-                                                } %>
-
-                                    <%= messages_for( :http_request_headers ) %>
-                                    <p class="help-block alert alert-info">
-                                        Headers take the format of <em>name=value</em>,
-                                        input each header in its own line.
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
                                     <%= f.input :http_request_queue_size,
                                                 label: 'Request queue size',
                                                 placeholder: Arachni::Options.http.request_queue_size.to_s
@@ -521,11 +402,6 @@
 
                             <div class="row">
                                 <div class="col-md-6">
-                                    <%= f.input :http_request_concurrency,
-                                                label: 'Request concurrency',
-                                                placeholder: Arachni::Options.http.request_concurrency.to_s
-                                    %>
-                                    <%= messages_for( :http_request_concurrency ) %>
                                 </div>
                                 <div class="col-md-6">
                                     <%= f.input :http_response_max_size,
@@ -533,93 +409,6 @@
                                                 placeholder: 'Infinite'
                                     %>
                                     <%= messages_for( :http_response_max_size ) %>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </fieldset>
-    </div>
-
-    <hr/>
-
-    <div id="platforms">
-        <fieldset>
-            <h2 id="platforms-h">
-                Platforms
-                <small>What platforms should the scanner anticipate?</small>
-            </h2>
-
-            <div class="help-block alert alert-info">
-                Providing as much platform information as possible will result
-                in a much faster and focused scan.
-            </div>
-
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="panel panel-info">
-                        <div class="panel-heading">
-                            Popular stacks
-                        </div>
-
-                        <div class="panel-body">
-                            <div class="btn-group">
-                                <button class="btn btn-default platforms-preset">
-                                    Linux, Apache, MySQL, PHP
-                                </button>
-                                <button class="btn btn-default platforms-preset">
-                                    Linux, Nginx, Postgresql, Ruby, Rack
-                                </button>
-                                <button class="btn btn-default platforms-preset">
-                                    Linux, TomCat, Generic SQL family, JSP
-                                </button>
-                                <button class="btn btn-default platforms-preset">
-                                    MS Windows, IIS, MSSQL, ASP, ASP.NET
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="platforms-list" class="row">
-                <% [:os, :servers, :db, :languages, :frameworks].each_with_index do |type, i| %>
-                    <div class="col-md-2">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <%= platform_type_fullname( type ) %>
-                            </div>
-                            <div class="panel-body">
-                                <%= f.input :platforms, collection: valid_platforms( type ),
-                                            label:  false,
-                                            as: :check_boxes,
-                                            label_method: lambda { |p| platform_fullname( p ) }
-                                %>
-                            </div>
-                        </div>
-                    </div>
-                <% end %>
-            </div>
-
-            <div class="row">
-                <div class="col-md-12">
-                    <button class="btn btn-sm btn-primary" type="button" data-toggle="collapse"
-                            data-target="#platforms-advanced" aria-expanded="false"
-                            aria-controls="collapseExample">
-                        Advanced
-                    </button>
-                    <div class="collapse" id="platforms-advanced">
-                        <div class="well well-sm">
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <%= f.input :no_fingerprinting,
-                                                label: 'Disable fingerprinting'
-                                    %>
-                                    <%= messages_for( :no_fingerprinting ) %>
                                 </div>
                             </div>
 

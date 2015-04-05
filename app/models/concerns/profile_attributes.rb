@@ -4,44 +4,125 @@ module ProfileAttributes
     extend ActiveSupport::Concern
 
     included do
-        validate :validate_checks
-        validate :validate_platforms
-        validate :validate_plugins
-        validate :validate_plugin_options
-        validate :validate_http_cookies
-        validate :validate_http_request_headers
-        validate :validate_scope_url_rewrites
-        validate :validate_scope_redundant_path_patterns
-        validate :validate_session_check
-        validate :validate_audit_link_templates
-        validate :validate_input_values
+        [
+            :checks,
 
-        %w(scope_exclude_path_patterns scope_exclude_content_patterns
-        scope_include_path_patterns scope_restrict_paths scope_extend_paths
-        audit_exclude_vector_patterns audit_include_vector_patterns
-        audit_link_templates).each do |m|
-            validate "validate_#{m}"
+            :platforms,
+
+            :plugins,
+
+            :http_cookies,
+            :http_request_headers,
+
+            :scope_url_rewrites,
+            :scope_redundant_path_patterns,
+            :scope_exclude_path_patterns,
+            :scope_exclude_content_patterns,
+            :scope_include_path_patterns,
+            # :scope_restrict_paths,
+            # :scope_extend_paths,
+
+            :audit_exclude_vector_patterns,
+            :audit_include_vector_patterns,
+            :audit_link_templates,
+
+            :input_values
+        ].each do |attr|
+            next if !has_option?( attr )
+
+            validate "validate_#{attr}"
         end
 
-        serialize :plugins,                        Hash
-        serialize :checks,                         Array
-        serialize :platforms,                      Array
-        serialize :input_values,                   Hash
+        if has_option?( :plugins )
+            validate :validate_plugin_options
+        end
 
-        serialize :http_cookies,                   Hash
-        serialize :http_request_headers,           Hash
+        if has_option?( :session_check_url ) &&
+            has_option?( :session_check_pattern )
+            validate :validate_session_check
+        end
 
-        serialize :scope_exclude_path_patterns,    Array
-        serialize :scope_exclude_content_patterns, Array
-        serialize :scope_include_path_patterns,    Array
-        serialize :scope_extend_paths,             Array
-        serialize :scope_restrict_paths,           Array
-        serialize :scope_redundant_path_patterns,  Hash
-        serialize :scope_url_rewrites,             Hash
+        {
+            plugins:                        Hash,
+            checks:                         Array,
+            platforms:                      Array,
+            input_values:                   Hash,
 
-        serialize :audit_exclude_vector_patterns,  Array
-        serialize :audit_include_vector_patterns,  Array
-        serialize :audit_link_templates,           Array
+            http_cookies:                   Hash,
+            http_request_headers:           Hash,
+    
+            scope_exclude_path_patterns:    Array,
+            scope_exclude_content_patterns: Array,
+            scope_include_path_patterns:    Array,
+            scope_extend_paths:             Array,
+            scope_restrict_paths:           Array,
+            scope_redundant_path_patterns:  Hash,
+            scope_url_rewrites:             Hash,
+    
+            audit_exclude_vector_patterns:  Array,
+            audit_include_vector_patterns:  Array,
+            audit_link_templates:           Array
+        }.each do |attr, type|
+            next if !has_option?( attr )
+
+            serialize attr, type
+        end
+
+        %w(scope_restrict_paths scope_extend_paths).each do |m|
+            next if !has_option?( m )
+
+            define_method "#{m}=" do |string_or_array|
+                super self.class.string_list_to_array( string_or_array )
+            end
+        end
+
+        if has_option?( :audit_link_templates )
+            def audit_link_templates=( string_or_array )
+                super self.class.string_list_to_array( string_or_array )
+            end
+        end
+
+        %w(
+            scope_exclude_path_patterns
+            scope_exclude_content_patterns
+            scope_include_path_patterns
+            audit_exclude_vector_patterns
+            audit_include_vector_patterns
+        ).each do |m|
+            next if !has_option?( m )
+
+            define_method "#{m}=" do |string_or_array|
+                super self.class.string_list_to_array( string_or_array )
+            end
+
+            define_method "validate_#{m}" do
+                check_patterns send(m), m.to_sym
+            end
+        end
+
+        %w(scope_redundant_path_patterns scope_url_rewrites).each do |m|
+            next if !has_option?( m )
+
+            define_method "#{m}=" do |string_or_hash|
+                super self.class.string_list_to_hash( string_or_hash, ':' )
+            end
+        end
+
+        %w(http_cookies http_request_headers input_values).each do |m|
+            next if !has_option?( m )
+
+            define_method "#{m}=" do |string_or_hash|
+                super self.class.string_list_to_hash( string_or_hash, '=' )
+            end
+        end
+
+        %w(checks platforms).each do |m|
+            next if !has_option?( m )
+
+            define_method "#{m}=" do |list|
+                super list.reject{ |i| i.to_s.empty? }
+            end
+        end
     end
 
     module ClassMethods
@@ -63,37 +144,9 @@ module ProfileAttributes
                              map{ |rule| rule.split( hash_delimiter, 2 ) }]
             end
         end
-    end
 
-    %w(scope_exclude_path_patterns scope_exclude_content_patterns
-        scope_include_path_patterns scope_restrict_paths scope_extend_paths
-        audit_exclude_vector_patterns audit_include_vector_patterns
-        audit_link_templates).each do |m|
-
-        define_method "#{m}=" do |string_or_array|
-            super self.class.string_list_to_array( string_or_array )
-        end
-
-        define_method "validate_#{m}" do
-            check_patterns send(m), m.to_sym
-        end
-    end
-
-    %w(scope_redundant_path_patterns scope_url_rewrites).each do |m|
-        define_method "#{m}=" do |string_or_hash|
-            super self.class.string_list_to_hash( string_or_hash, ':' )
-        end
-    end
-
-    %w(http_cookies http_request_headers input_values).each do |m|
-        define_method "#{m}=" do |string_or_hash|
-            super self.class.string_list_to_hash( string_or_hash, '=' )
-        end
-    end
-
-    %w(checks platforms).each do |m|
-        define_method "#{m}=" do |list|
-            super list.reject{ |i| i.to_s.empty? }
+        def has_option?( option )
+            column_names.include? option.to_s
         end
     end
 

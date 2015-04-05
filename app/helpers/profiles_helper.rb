@@ -2,7 +2,7 @@ module ProfilesHelper
     include FrameworkHelper
 
     def messages_for( attribute )
-        render partial: 'attribute_messages', locals: { attribute: attribute }
+        render partial: 'shared/profile_attribute_messages', locals: { attribute: attribute }
     end
 
     def render_options( plugin_name, plugin_info, configuration = {}, disabled = false )

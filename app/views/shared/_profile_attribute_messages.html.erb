@@ -1,0 +1,17 @@
+<% if !(description = ProfileAttributeMessages.description_for( attribute )).to_s.empty? %>
+<p class="help-block">
+    <%= description %>
+</p>
+<% end %>
+
+<% if !(notice = ProfileAttributeMessages.notice_for( attribute )).to_s.empty? %>
+    <p class="help-block alert alert-info">
+        <%= notice %>
+    </p>
+<% end %>
+
+<% if !(warning = ProfileAttributeMessages.warning_for( attribute )).to_s.empty? %>
+    <p class="help-block alert alert-warning">
+        <%= warning %>
+    </p>
+<% end %>

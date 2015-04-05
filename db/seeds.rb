@@ -45,8 +45,7 @@ arachni_defaults.merge!(
     user:          user,
     audit_links:   true,
     audit_forms:   true,
-    audit_cookies: true,
-    input_values:  Arachni::Options.input.default_values
+    audit_cookies: true
 )
 
 # exit
@@ -71,7 +70,7 @@ puts 'XSS profile created: ' << p.name
 p = Profile.create! arachni_defaults.merge(
     name:        'SQL injection',
     description: 'Scans for SQL injection vulnerabilities.',
-    checks:      %w(sqli sqli_blind_differential sqli_blind_timing)
+    checks:      %w(sql_injection sql_injection_differential sql_injection_timing)
 )
 puts 'SQLi profile created: ' << p.name
 
@@ -136,7 +135,13 @@ revisions_per_scan = 3
     site = user.sites.create(
         protocol: parsed_url.scheme,
         host:     parsed_url.host,
-        port:     parsed_url.port || 80
+        port:     parsed_url.port || 80,
+
+        profile_attributes: {
+            http_request_concurrency: Arachni::Options.http.request_concurrency,
+            input_values:             Arachni::Options.input.default_values.
+                                        map { |k, v| "#{k.source}=#{v}" }.join( "\n" )
+        }
     )
 
     scans_size.times do |i|

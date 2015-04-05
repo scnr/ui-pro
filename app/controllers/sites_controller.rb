@@ -3,7 +3,7 @@ class SitesController < ApplicationController
 
     before_filter :authenticate_user!
 
-    before_action :set_site, only: [:show, :edit, :destroy]
+    before_action :set_site, only: [:show, :update, :destroy]
 
     # GET /sites
     # GET /sites.json
@@ -15,19 +15,7 @@ class SitesController < ApplicationController
     # GET /sites/1
     # GET /sites/1.json
     def show
-        if @site.scans.empty?
-            @scan = @site.scans.new
-            @scan.build_schedule
-        else
-            @scans = @site.scans
-            @issues_summary = issues_summary_data(
-                site:      @site,
-                sitemap:   @site.sitemap_entries,
-                scans:     @site.scans,
-                revisions: @site.revisions,
-                issues:    @site.issues
-            )
-        end
+        prepare_show_data
     end
 
     # POST /sites
@@ -44,6 +32,21 @@ class SitesController < ApplicationController
                 set_sites
 
                 format.html { render :index }
+                format.json { render json: @site.errors, status: :unprocessable_entity }
+            end
+        end
+    end
+
+    # PATCH/PUT /sites/1
+    # PATCH/PUT /sites/1.json
+    def update
+        respond_to do |format|
+            if @site.update( site_profile_params )
+                format.html { redirect_to @site, notice: 'Site was successfully updated.' }
+                format.json { render :show, status: :ok, location: @site }
+            else
+                prepare_show_data
+                format.html { render :show }
                 format.json { render json: @site.errors, status: :unprocessable_entity }
             end
         end
@@ -75,6 +78,43 @@ class SitesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def site_params
-        params.require(:site).permit( *[:protocol, :host, :port] )
+        params.require(:site).permit(*[ :protocol, :host, :port ])
     end
+
+    def site_profile_params
+        params.require(:site).permit(*[profile_attributes: [
+            { platforms: [] },
+            :no_fingerprinting,
+
+            :input_values,
+
+            :http_cookies,
+            :http_request_headers,
+            :http_request_concurrency,
+
+            :scope_redundant_path_patterns,
+            :scope_auto_redundant_paths,
+            :scope_url_rewrites,
+
+            :audit_link_templates
+        ]])
+
+    end
+
+    def prepare_show_data
+        if @site.scans.empty?
+            @scan = @site.scans.new
+            @scan.build_schedule
+        else
+            @scans = @site.scans
+            @issues_summary = issues_summary_data(
+                site:      @site,
+                sitemap:   @site.sitemap_entries,
+                scans:     @site.scans,
+                revisions: @site.revisions,
+                issues:    @site.issues
+            )
+        end
+    end
+
 end
