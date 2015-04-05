@@ -20,23 +20,19 @@
 <div id="site-tabs">
 <% if @issues_summary %>
     <ul class="nav nav-tabs">
-        <li class="active">
-            <a href="#overview" role="tab"
-               <%= 'data-toggle="tab"'.html_safe if @site.scanned? %>
-            >
+        <li class="<%= 'active' if @active_tab == 'overview' %>">
+            <a href="#overview" role="tab" data-toggle="tab">
                 Overview
             </a>
         </li>
 
-        <li class="<%= 'disabled' if !@site.scanned? %>">
-            <a href="#scans" role="tab"
-               <%= 'data-toggle="tab"'.html_safe if @site.scanned? %>
-            >
+        <li class="<%= 'active' if @active_tab == 'scans' %>">
+            <a href="#scans" role="tab" data-toggle="tab" >
                 Scans
             </a>
         </li>
 
-        <li>
+        <li class="<%= 'active' if @active_tab == 'settings' %>">
             <a href="#settings" role="tab" data-toggle="tab">
                 Settings
             </a>
@@ -44,7 +40,7 @@
     </ul>
 
     <div class="tab-content">
-        <div class="tab-pane active" id="overview">
+        <div class="tab-pane <%= 'active' if @active_tab == 'overview' %>" id="overview">
             <div class="row">
                 <div id="sidebar" class="col-md-2">
                     <%= render partial: 'sidebar' %>
@@ -56,11 +52,11 @@
             </div>
         </div>
 
-        <div class="tab-pane" id="scans">
+        <div class="tab-pane <%= 'active' if @active_tab == 'scans' %>" id="scans">
             <%= render partial: 'scans/tables' %>
         </div>
 
-        <div class="tab-pane" id="settings">
+        <div class="tab-pane <%= 'active' if @active_tab == 'settings' %>" id="settings">
             <div class="row">
                 <div class="col-md-2">
                     <%= render partial: 'sites/profile/sidebar' %>
@@ -72,40 +68,40 @@
         </div>
     </div>
 <% else %>
-        <ul class="nav nav-tabs">
-            <li class="active">
-                <a href="#scan-form" role="tab" data-toggle="tab" >
-                    New scan
-                </a>
-            </li>
+    <ul class="nav nav-tabs">
+        <li class="<%= 'active' if @active_tab == 'scan-form' %>">
+            <a href="#scan-form" role="tab" data-toggle="tab" >
+                New scan
+            </a>
+        </li>
 
-            <li>
-                <a href="#settings" role="tab" data-toggle="tab">
-                    Settings
-                </a>
-            </li>
-        </ul>
+        <li class="<%= 'active' if @active_tab == 'settings' %>">
+            <a href="#settings" role="tab" data-toggle="tab">
+                Settings
+            </a>
+        </li>
+    </ul>
 
-        <div class="tab-content">
-            <div class="tab-pane active" id="scan-form">
-                <div class="row">
-                    <div class="col-md-12">
-                        <%= render 'scans/form' %>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tab-pane" id="settings">
-                <div class="row">
-                    <div class="col-md-2">
-                        <%= render partial: 'sites/profile/sidebar' %>
-                    </div>
-                    <div class="col-md-10">
-                        <%= render partial: 'sites/profile/form' %>
-                    </div>
+    <div class="tab-content">
+        <div class="tab-pane <%= 'active' if @active_tab == 'scan-form' %>" id="scan-form">
+            <div class="row">
+                <div class="col-md-12">
+                    <%= render 'scans/form' %>
                 </div>
             </div>
         </div>
+
+        <div class="tab-pane <%= 'active' if @active_tab == 'settings' %>" id="settings">
+            <div class="row">
+                <div class="col-md-2">
+                    <%= render partial: 'sites/profile/sidebar' %>
+                </div>
+                <div class="col-md-10">
+                    <%= render partial: 'sites/profile/form' %>
+                </div>
+            </div>
+        </div>
+    </div>
 
 <% end %>
 </div>

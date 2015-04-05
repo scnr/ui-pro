@@ -29,6 +29,7 @@ class SitesController < ApplicationController
                 format.html { redirect_to site_url(@site), notice: 'Site was successfully created.' }
                 format.json { render :show, status: :created, location: @site }
             else
+                prepare_show_data
                 set_sites
 
                 format.html { render :index }
@@ -42,10 +43,16 @@ class SitesController < ApplicationController
     def update
         respond_to do |format|
             if @site.update( site_profile_params )
-                format.html { redirect_to @site, notice: 'Site was successfully updated.' }
+                session[:active_tab] = 'settings'
+
+                format.html do
+                    redirect_to @site, notice: 'Site was successfully updated.'
+                end
                 format.json { render :show, status: :ok, location: @site }
             else
                 prepare_show_data
+                @active_tab = 'settings'
+
                 format.html { render :show }
                 format.json { render json: @site.errors, status: :unprocessable_entity }
             end
@@ -95,6 +102,7 @@ class SitesController < ApplicationController
             :scope_redundant_path_patterns,
             :scope_auto_redundant_paths,
             :scope_url_rewrites,
+            :scope_https_only,
 
             :audit_link_templates
         ]])
@@ -105,6 +113,7 @@ class SitesController < ApplicationController
         if @site.scans.empty?
             @scan = @site.scans.new
             @scan.build_schedule
+            @active_tab = 'scan-form'
         else
             @scans = @site.scans
             @issues_summary = issues_summary_data(
@@ -114,6 +123,11 @@ class SitesController < ApplicationController
                 revisions: @site.revisions,
                 issues:    @site.issues
             )
+            @active_tab = 'overview'
+        end
+
+        if session[:active_tab]
+            @active_tab = session.delete(:active_tab)
         end
     end
 

@@ -27,94 +27,94 @@
     <% end %>
 
 <%= pf.simple_fields_for :profile do |f| %>
-        <div id="platforms">
-            <fieldset>
-                <h2 id="platforms-h">
-                    Software stack
-                    <small>What platforms does the application use?</small>
-                </h2>
+    <div id="platforms">
+        <fieldset>
+            <h2 id="platforms-h">
+                Software stack
+                <small>What platforms does the application use?</small>
+            </h2>
 
-                <div class="help-block alert alert-info">
-                    Providing as much platform information as possible will result
-                    in a much faster and focused scan.
+            <div class="help-block alert alert-info">
+                Providing as much platform information as possible will result
+                in a much faster and focused scan.
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            Popular configurations
+                        </div>
+
+                        <div class="panel-body">
+                            <div class="btn-group">
+                                <button class="btn btn-default platforms-preset">
+                                    Linux, Apache, MySQL, PHP
+                                </button>
+                                <button class="btn btn-default platforms-preset">
+                                    Linux, Nginx, Postgresql, Ruby, Rack
+                                </button>
+                                <button class="btn btn-default platforms-preset">
+                                    Linux, TomCat, Generic SQL family, JSP
+                                </button>
+                                <button class="btn btn-default platforms-preset">
+                                    MS Windows, IIS, MSSQL, ASP, ASP.NET
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+            </div>
 
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="panel panel-info">
+            <div id="platforms-list" class="row">
+                <% [:os, :servers, :db, :languages, :frameworks].each_with_index do |type, i| %>
+                    <div class="col-md-2">
+                        <div class="panel panel-default">
                             <div class="panel-heading">
-                                Popular configurations
+                                <%= platform_type_fullname( type ) %>
                             </div>
-
                             <div class="panel-body">
-                                <div class="btn-group">
-                                    <button class="btn btn-default platforms-preset">
-                                        Linux, Apache, MySQL, PHP
-                                    </button>
-                                    <button class="btn btn-default platforms-preset">
-                                        Linux, Nginx, Postgresql, Ruby, Rack
-                                    </button>
-                                    <button class="btn btn-default platforms-preset">
-                                        Linux, TomCat, Generic SQL family, JSP
-                                    </button>
-                                    <button class="btn btn-default platforms-preset">
-                                        MS Windows, IIS, MSSQL, ASP, ASP.NET
-                                    </button>
-                                </div>
+                                <%= f.input :platforms, collection: valid_platforms( type ),
+                                            label:  false,
+                                            as: :check_boxes,
+                                            label_method: lambda { |p| platform_fullname( p ) }
+                                %>
                             </div>
                         </div>
                     </div>
-                </div>
+                <% end %>
+            </div>
 
-                <div id="platforms-list" class="row">
-                    <% [:os, :servers, :db, :languages, :frameworks].each_with_index do |type, i| %>
-                        <div class="col-md-2">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <%= platform_type_fullname( type ) %>
-                                </div>
-                                <div class="panel-body">
-                                    <%= f.input :platforms, collection: valid_platforms( type ),
-                                                label:  false,
-                                                as: :check_boxes,
-                                                label_method: lambda { |p| platform_fullname( p ) }
+            <div class="row">
+                <div class="col-md-12">
+                    <button class="btn btn-sm btn-primary" type="button" data-toggle="collapse"
+                            data-target="#platforms-advanced" aria-expanded="false"
+                            aria-controls="collapseExample">
+                        Advanced
+                    </button>
+                    <div class="collapse" id="platforms-advanced">
+                        <div class="well well-sm">
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <%= f.input :no_fingerprinting,
+                                                label: 'Disable fingerprinting'
                                     %>
+                                    <%= messages_for( :no_fingerprinting ) %>
                                 </div>
                             </div>
-                        </div>
-                    <% end %>
-                </div>
 
-                <div class="row">
-                    <div class="col-md-12">
-                        <button class="btn btn-sm btn-primary" type="button" data-toggle="collapse"
-                                data-target="#platforms-advanced" aria-expanded="false"
-                                aria-controls="collapseExample">
-                            Advanced
-                        </button>
-                        <div class="collapse" id="platforms-advanced">
-                            <div class="well well-sm">
-
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <%= f.input :no_fingerprinting,
-                                                    label: 'Disable fingerprinting'
-                                        %>
-                                        <%= messages_for( :no_fingerprinting ) %>
-                                    </div>
-                                </div>
-
-                            </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-            </fieldset>
-        </div>
+        </fieldset>
+    </div>
 
-        <hr/>
+    <hr/>
 
-        <div id="scope">
+    <div id="scope">
         <fieldset>
             <h2 id="scope-h">
                 Scope
@@ -158,6 +158,7 @@
     </div>
 
     <hr/>
+
     <div id="inputs">
         <fieldset>
             <h2 id="inputs-h">
@@ -291,7 +292,6 @@
     </div>
 
 <% end %>
-
     <div class="form-actions">
         <%= pf.button :submit, class: 'hide' %>
     </div>
