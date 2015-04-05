@@ -131,4 +131,11 @@ feature 'Site index page' do
         expect(site.port).to eq 8080
     end
 
+    scenario 'protocol drop-down updates port', js: true do
+        expect(find('#site_port').value).to eq '80'
+
+        select 'https', from: 'site[protocol]'
+
+        expect(find('#site_port').value).to eq '443'
+    end
 end

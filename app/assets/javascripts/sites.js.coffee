@@ -43,3 +43,11 @@ window.generateIssuesChart = () ->
             bottom: 40
         color:
             pattern: [ '#1f77b4', '#ff7f0e' ]
+
+setup = () ->
+    $('#site_protocol').change ->
+        $('#site_port').val( `$('#site_protocol').val() == 'http' ? 80 : 443` )
+
+$(document).on 'page:load', setup
+jQuery setup
+
