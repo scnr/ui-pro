@@ -1,10 +1,15 @@
 feature 'Site profile form' do
     let(:user) { FactoryGirl.create :user }
     let(:other_user) { FactoryGirl.create(:user, email: 'other@example.com') }
-    let(:site) { FactoryGirl.create :site }
     let(:profile) { FactoryGirl.create :profile }
+
+    let(:site) { FactoryGirl.create :site }
     let(:scan) { FactoryGirl.create :scan, site: site, profile: FactoryGirl.create( :profile ) }
     let(:revision) { FactoryGirl.create :revision, scan: scan }
+
+    let(:https_site) { FactoryGirl.create :site, protocol: 'https' }
+    let(:https_scan) { FactoryGirl.create :scan, site: https_site, profile: FactoryGirl.create( :profile ) }
+    let(:https_revision) { FactoryGirl.create :revision, scan: https_scan }
 
     before do
         revision
@@ -38,13 +43,39 @@ feature 'Site profile form' do
         expect(profile.scope_auto_redundant_paths).to eq 10
     end
 
+    feature 'when the form is submitted' do
+        scenario 'it shows the form', js: true do
+            click_link 'Settings'
+
+            find('#sidebar button').click
+            sleep 1
+
+            expect(find('.profile-form')).to be_truthy
+        end
+    end
+
     feature 'option' do
         feature 'Scope' do
-            scenario 'can set Only follow HTTPS URLs' do
-                check 'Only follow HTTPS URLs'
-                submit
 
-                expect(profile.scope_https_only).to eq true
+            feature 'when the site uses HTTPS' do
+                before do
+                    https_revision
+                    user.sites << https_site
+                    visit site_path( https_site )
+                end
+
+                scenario 'can set Only follow HTTPS URLs' do
+                    check 'Only follow HTTPS URLs'
+                    submit
+
+                    expect(https_site.reload.profile.scope_https_only).to eq true
+                end
+            end
+
+            feature 'when the site uses HTTP' do
+                scenario 'Only follow HTTPS URLs option is not visible' do
+                    expect(page.text).to_not include 'Only follow HTTPS URLs'
+                end
             end
 
             feature 'URL rewrite rules' do
