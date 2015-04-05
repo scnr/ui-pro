@@ -193,6 +193,14 @@ describe Scan do
         it 'returns RPC options' do
             expect(normalized_rpc_options).to eq Arachni::Options.update( rpc_options ).to_rpc_data
         end
+
+        it 'merges the site profile' do
+            options = subject.profile.to_rpc_options.
+                merge( 'authorized_by' => user.email ).
+                deep_merge( site.profile.to_rpc_options )
+
+            expect(options).to eq rpc_options
+        end
     end
 
     describe '#scheduled?' do
