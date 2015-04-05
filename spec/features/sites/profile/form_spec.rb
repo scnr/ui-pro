@@ -3,7 +3,7 @@ feature 'Site profile form' do
     let(:other_user) { FactoryGirl.create(:user, email: 'other@example.com') }
     let(:profile) { FactoryGirl.create :profile }
 
-    let(:site) { FactoryGirl.create :site }
+    let(:site) { FactoryGirl.create :site, profile: nil }
     let(:scan) { FactoryGirl.create :scan, site: site, profile: FactoryGirl.create( :profile ) }
     let(:revision) { FactoryGirl.create :revision, scan: scan }
 
@@ -27,6 +27,10 @@ feature 'Site profile form' do
         find( :xpath, "//input[@type='submit']" ).click
     end
 
+    def submit_via_sidebar
+        find('#sidebar button').click
+    end
+
     let(:profile) { site.reload.profile }
 
     scenario 'sees profile form' do
@@ -37,7 +41,7 @@ feature 'Site profile form' do
         click_link 'Settings'
         fill_in 'Parameter redundancy limit', with: 10
 
-        find('#sidebar button').click
+        submit_via_sidebar
         sleep 1
 
         expect(profile.scope_auto_redundant_paths).to eq 10
@@ -47,7 +51,7 @@ feature 'Site profile form' do
         scenario 'it shows the form', js: true do
             click_link 'Settings'
 
-            find('#sidebar button').click
+            submit_via_sidebar
             sleep 1
 
             expect(find('.profile-form')).to be_truthy
@@ -294,35 +298,103 @@ feature 'Site profile form' do
         end
 
         feature 'Platforms' do
-            feature 'preset' do
+            let(:platforms) { site.reload.profile.platforms }
+
+            feature 'preset', js: true do
+                before do
+                    click_link 'Settings'
+                    click_button button
+                    submit_via_sidebar
+
+                    expect(page).to have_content 'Site was successfully updated'
+                end
+
                 feature 'Linux, Apache, MySQL, PHP' do
-                    scenario 'sets Linux'
-                    scenario 'sets Apache'
-                    scenario 'sets MySQL'
-                    scenario 'sets PHP'
+                    let(:button) { 'Linux, Apache, MySQL, PHP' }
+
+                    scenario 'sets Linux' do
+                        expect(platforms).to include 'linux'
+                    end
+
+                    scenario 'sets Apache' do
+                        expect(platforms).to include 'apache'
+                    end
+
+                    scenario 'sets MySQL' do
+                        expect(platforms).to include 'mysql'
+                    end
+
+                    scenario 'sets PHP' do
+                        expect(platforms).to include 'php'
+                    end
                 end
 
                 feature 'Linux, Nginx, Postgresql, Ruby, Rack' do
-                    scenario 'sets Linux'
-                    scenario 'sets Nginx'
-                    scenario 'sets Postgresql'
-                    scenario 'sets Ruby'
-                    scenario 'sets Rack'
+                    let(:button) { 'Linux, Nginx, Postgresql, Ruby, Rack' }
+
+                    scenario 'sets Linux' do
+                        expect(platforms).to include 'linux'
+                    end
+
+                    scenario 'sets Nginx' do
+                        expect(platforms).to include 'nginx'
+                    end
+
+                    scenario 'sets Postgresql' do
+                        expect(platforms).to include 'pgsql'
+                    end
+
+                    scenario 'sets Ruby' do
+                        expect(platforms).to include 'ruby'
+                    end
+
+                    scenario 'sets Rack' do
+                        expect(platforms).to include 'rack'
+                    end
                 end
 
                 feature 'Linux, TomCat, Generic SQL family, JSP' do
-                    scenario 'sets Linux'
-                    scenario 'sets TomCat'
-                    scenario 'sets Generic SQL family'
-                    scenario 'sets JSP'
+                    let(:button) { 'Linux, TomCat, Generic SQL family, JSP' }
+
+                    scenario 'sets Linux' do
+                        expect(platforms).to include 'linux'
+                    end
+
+                    scenario 'sets TomCat' do
+                        expect(platforms).to include 'tomcat'
+                    end
+
+                    scenario 'sets Generic SQL family' do
+                        expect(platforms).to include 'sql'
+                    end
+
+                    scenario 'sets JSP' do
+                        expect(platforms).to include 'jsp'
+                    end
                 end
 
                 feature 'MS Windows, IIS, MSSQL, ASP, ASP.NET' do
-                    scenario 'sets MS Windows'
-                    scenario 'sets IIS'
-                    scenario 'sets MSSQL'
-                    scenario 'sets ASP'
-                    scenario 'sets ASP.NET'
+                    let(:button) { 'MS Windows, IIS, MSSQL, ASP, ASP.NET' }
+
+                    scenario 'sets MS Windows' do
+                        expect(platforms).to include 'windows'
+                    end
+
+                    scenario 'sets IIS' do
+                        expect(platforms).to include 'iis'
+                    end
+
+                    scenario 'sets MSSQL' do
+                        expect(platforms).to include 'mssql'
+                    end
+
+                    scenario 'sets ASP' do
+                        expect(platforms).to include 'asp'
+                    end
+
+                    scenario 'sets ASP.NET' do
+                        expect(platforms).to include 'aspx'
+                    end
                 end
             end
 
