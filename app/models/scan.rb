@@ -37,6 +37,7 @@ class Scan < ActiveRecord::Base
     def rpc_options
         options = profile.to_rpc_options
         options.deep_merge!( site.profile.to_rpc_options )
+        options.deep_merge!( Setting.get.to_rpc_options )
         options.merge!( 'authorized_by' => site.user.email )
         options
     end

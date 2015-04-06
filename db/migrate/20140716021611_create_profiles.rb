@@ -9,8 +9,6 @@ class CreateProfiles < ActiveRecord::Migration
             t.text     "checks"
             t.text     "plugins"
 
-            t.boolean  "no_fingerprinting"
-
             t.boolean  "audit_links"
             t.boolean  "audit_forms"
             t.boolean  "audit_cookies"
@@ -35,24 +33,12 @@ class CreateProfiles < ActiveRecord::Migration
             t.integer  "scope_directory_depth_limit"
 
             t.text     "http_user_agent"
-            t.integer  "http_request_timeout"
             t.string   "http_authentication_username"
             t.string   "http_authentication_password"
-            t.integer  "http_request_queue_size"
-            t.integer  "http_request_redirect_limit"
-            t.integer  "http_response_max_size"
-            t.string   "http_proxy_host"
-            t.integer  "http_proxy_port"
-            t.string   "http_proxy_username"
-            t.string   "http_proxy_password"
 
             t.text     "session_check_url"
             t.text     "session_check_pattern"
 
-            t.integer  "browser_cluster_pool_size"
-            t.integer  "browser_cluster_job_timeout"
-            t.integer  "browser_cluster_worker_time_to_live"
-            t.boolean  "browser_cluster_ignore_images"
             t.integer  "browser_cluster_screen_width"
             t.integer  "browser_cluster_screen_height"
 

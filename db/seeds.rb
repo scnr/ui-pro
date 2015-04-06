@@ -59,6 +59,10 @@ arachni_defaults.merge!(
 # p.default!
 # puts 'Default profile created: ' << p.name
 
+Setting.create!(
+    http_request_timeout: Arachni::Options.http.request_timeout
+)
+
 p = Profile.create! arachni_defaults.merge(
     name:        'Cross-Site Scripting (XSS)',
     description: 'Scans for Cross-Site Scripting (XSS) vulnerabilities.',

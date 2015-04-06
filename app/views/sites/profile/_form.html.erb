@@ -291,7 +291,29 @@
         </fieldset>
     </div>
 
-<% end %>
+    <hr/>
+
+    <div id="browser">
+        <fieldset>
+            <h2 id="browser-h">
+                Browser
+                <small>Browser-related options.</small>
+            </h2>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <%= f.input :browser_cluster_ignore_images,
+                                label: 'Do not load images'
+                    %>
+                    <%= messages_for( :browser_cluster_ignore_images ) %>
+                </div>
+            </div>
+
+        </fieldset>
+    </div>
+
+    <% end %>
+
     <div class="form-actions">
         <%= pf.button :submit, class: 'hide' %>
     </div>

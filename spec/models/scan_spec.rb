@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe Scan do
     subject { FactoryGirl.create :scan, site: site }
+    let(:settings){ FactoryGirl.create :setting }
     let(:other_scan) { FactoryGirl.create :scan, site: site }
 
     let(:user) { FactoryGirl.create :user }
@@ -180,6 +181,7 @@ describe Scan do
 
     describe '#rpc_options' do
         before :each do
+            settings
             Arachni::Options.reset
         end
 
@@ -197,7 +199,8 @@ describe Scan do
         it 'merges the site profile' do
             options = subject.profile.to_rpc_options.
                 merge( 'authorized_by' => user.email ).
-                deep_merge( site.profile.to_rpc_options )
+                deep_merge( site.profile.to_rpc_options ).
+                deep_merge( settings.to_rpc_options  )
 
             expect(options).to eq rpc_options
         end

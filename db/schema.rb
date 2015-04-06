@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150404082757) do
+ActiveRecord::Schema.define(version: 20150405132117) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -248,7 +248,6 @@ ActiveRecord::Schema.define(version: 20150404082757) do
     t.text     "description"
     t.text     "checks"
     t.text     "plugins"
-    t.boolean  "no_fingerprinting"
     t.boolean  "audit_links"
     t.boolean  "audit_forms"
     t.boolean  "audit_cookies"
@@ -271,22 +270,10 @@ ActiveRecord::Schema.define(version: 20150404082757) do
     t.integer  "scope_dom_depth_limit"
     t.integer  "scope_directory_depth_limit"
     t.text     "http_user_agent"
-    t.integer  "http_request_timeout"
     t.string   "http_authentication_username"
     t.string   "http_authentication_password"
-    t.integer  "http_request_queue_size"
-    t.integer  "http_request_redirect_limit"
-    t.integer  "http_response_max_size"
-    t.string   "http_proxy_host"
-    t.integer  "http_proxy_port"
-    t.string   "http_proxy_username"
-    t.string   "http_proxy_password"
     t.text     "session_check_url"
     t.text     "session_check_pattern"
-    t.integer  "browser_cluster_pool_size"
-    t.integer  "browser_cluster_job_timeout"
-    t.integer  "browser_cluster_worker_time_to_live"
-    t.boolean  "browser_cluster_ignore_images"
     t.integer  "browser_cluster_screen_width"
     t.integer  "browser_cluster_screen_height"
     t.datetime "created_at"
@@ -342,6 +329,22 @@ ActiveRecord::Schema.define(version: 20150404082757) do
 
   add_index "schedules", ["scan_id"], name: "index_schedules_on_scan_id"
 
+  create_table "settings", force: true do |t|
+    t.integer  "http_request_timeout"
+    t.integer  "http_request_queue_size"
+    t.integer  "http_request_redirect_limit"
+    t.integer  "http_response_max_size"
+    t.string   "http_proxy_host"
+    t.integer  "http_proxy_port"
+    t.string   "http_proxy_username"
+    t.string   "http_proxy_password"
+    t.integer  "browser_cluster_pool_size"
+    t.integer  "browser_cluster_job_timeout"
+    t.integer  "browser_cluster_worker_time_to_live"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "site_profiles", force: true do |t|
     t.text     "platforms"
     t.boolean  "no_fingerprinting"
@@ -355,6 +358,7 @@ ActiveRecord::Schema.define(version: 20150404082757) do
     t.text     "http_cookies"
     t.text     "http_request_headers"
     t.integer  "http_request_concurrency"
+    t.boolean  "browser_cluster_ignore_images"
     t.integer  "site_id"
     t.datetime "created_at"
     t.datetime "updated_at"

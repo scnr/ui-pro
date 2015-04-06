@@ -341,64 +341,6 @@ feature 'Profile new page' do
 
                     expect(Profile.last.http_authentication_password).to eq 'Stuff here'
                 end
-
-                scenario 'can set Proxy host' do
-                    fill_in 'Proxy host', with: 'stuff.com'
-                    submit
-
-                    expect(Profile.last.http_proxy_host).to eq 'stuff.com'
-                end
-
-                scenario 'can set Proxy port' do
-                    fill_in 'Proxy port', with: '8080'
-                    submit
-
-                    expect(Profile.last.http_proxy_port).to eq 8080
-                end
-
-                scenario 'can set Proxy username' do
-                    fill_in 'Proxy username', with: 'blah'
-                    submit
-
-                    expect(Profile.last.http_proxy_username).to eq 'blah'
-                end
-
-                scenario 'can set Proxy password' do
-                    fill_in 'Proxy password', with: 'blah'
-                    submit
-
-                    expect(Profile.last.http_proxy_password).to eq 'blah'
-                end
-
-                feature 'Advanced' do
-                    scenario 'can set Request queue size' do
-                        fill_in 'Request queue size', with: 20
-                        submit
-
-                        expect(Profile.last.http_request_queue_size).to eq 20
-                    end
-
-                    scenario 'can set Request timeout' do
-                        fill_in 'Request timeout', with: 2000
-                        submit
-
-                        expect(Profile.last.http_request_timeout).to eq 2000
-                    end
-
-                    scenario 'can set Redirect limit' do
-                        fill_in 'Redirect limit', with: 10
-                        submit
-
-                        expect(Profile.last.http_request_redirect_limit).to eq 10
-                    end
-
-                    scenario 'can set Maximum response size' do
-                        fill_in 'Maximum response size', with: 1000
-                        submit
-
-                        expect(Profile.last.http_response_max_size).to eq 1000
-                    end
-                end
             end
 
             feature 'Checks' do
@@ -689,36 +631,6 @@ feature 'Profile new page' do
                     submit
 
                     expect(Profile.last.browser_cluster_screen_height).to eq 2000
-                end
-
-                feature 'Advanced' do
-                    scenario "can set Don't load images" do
-                        check "Don't load images"
-                        submit
-
-                        expect(Profile.last.browser_cluster_ignore_images).to be true
-                    end
-
-                    scenario 'can set Processes' do
-                        fill_in 'Processes', with: 10
-                        submit
-
-                        expect(Profile.last.browser_cluster_pool_size).to eq 10
-                    end
-
-                    scenario 'can set Time to live' do
-                        fill_in 'Time to live', with: 10
-                        submit
-
-                        expect(Profile.last.browser_cluster_worker_time_to_live).to eq 10
-                    end
-
-                    scenario 'can set Timeout' do
-                        fill_in 'profile_browser_cluster_job_timeout', with: 10
-                        submit
-
-                        expect(Profile.last.browser_cluster_job_timeout).to eq 10
-                    end
                 end
             end
 

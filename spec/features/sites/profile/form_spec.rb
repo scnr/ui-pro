@@ -31,6 +31,12 @@ feature 'Site profile form' do
         find('#sidebar button').click
     end
 
+    def open_settings_tab
+        within '#site-tabs' do
+            click_link 'Settings'
+        end
+    end
+
     let(:profile) { site.reload.profile }
 
     scenario 'sees profile form' do
@@ -38,7 +44,7 @@ feature 'Site profile form' do
     end
 
     scenario 'can submit form using sidebar button', js: true do
-        click_link 'Settings'
+        open_settings_tab
         fill_in 'Parameter redundancy limit', with: 10
 
         submit_via_sidebar
@@ -49,7 +55,7 @@ feature 'Site profile form' do
 
     feature 'when the form is submitted' do
         scenario 'it shows the form', js: true do
-            click_link 'Settings'
+            open_settings_tab
 
             submit_via_sidebar
             sleep 1
@@ -302,7 +308,7 @@ feature 'Site profile form' do
 
             feature 'preset', js: true do
                 before do
-                    click_link 'Settings'
+                    open_settings_tab
                     click_button button
                     submit_via_sidebar
 
@@ -590,6 +596,15 @@ feature 'Site profile form' do
 
                     expect(profile.no_fingerprinting).to eq true
                 end
+            end
+        end
+
+        feature 'Browser' do
+            scenario 'can set Do not load images' do
+                check 'Do not load images'
+                submit
+
+                expect(profile.browser_cluster_ignore_images).to be true
             end
         end
     end

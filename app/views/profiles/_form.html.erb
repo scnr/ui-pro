@@ -134,30 +134,10 @@
                                     <%= messages_for( :scope_exclude_binaries ) %>
                                 </div>
                                 <div class="col-md-6">
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
                                     <%= f.input :scope_dom_depth_limit,
                                                 label: 'DOM depth limit',
                                                 placeholder: 'Infinite' %>
                                     <%= messages_for( :scope_dom_depth_limit ) %>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                </div>
-                                <div class="col-md-6">
-                                    <%= f.input :scope_exclude_content_patterns,
-                                                label: 'Content exclusion patterns',
-                                                placeholder: 'Include all pages',
-                                                input_html: {
-                                                        value: @profile.scope_exclude_content_patterns.join( "\n" )
-                                                } %>
-                                    <%= messages_for( :scope_exclude_content_patterns ) %>
-                                    <p class="help-block alert alert-info">Input each rule in its own line.</p>
                                 </div>
                             </div>
 
@@ -177,6 +157,19 @@
                                                 input_html: { value: @profile.scope_extend_paths.join( "\n" ) } %>
                                     <%= messages_for( :scope_extend_paths ) %>
                                     <p class="help-block alert alert-info">Input each path in its own line.</p>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <%= f.input :scope_exclude_content_patterns,
+                                                label: 'Content exclusion patterns',
+                                                placeholder: 'Include all pages',
+                                                input_html: {
+                                                        value: @profile.scope_exclude_content_patterns.join( "\n" )
+                                                } %>
+                                    <%= messages_for( :scope_exclude_content_patterns ) %>
+                                    <p class="help-block alert alert-info">Input each rule in its own line.</p>
                                 </div>
                             </div>
 
@@ -327,96 +320,6 @@
                     <%= messages_for( :http_authentication_password ) %>
                 </div>
             </div>
-
-            <div class="row">
-                <div class="col-md-6">
-                    <%= f.input :http_proxy_host,
-                                label: 'Proxy host',
-                                placeholder: 'Direct connection'
-                    %>
-                    <%= messages_for( :http_proxy_host ) %>
-                </div>
-                <div class="col-md-6">
-                    <%= f.input :http_proxy_port, label: 'Proxy port' %>
-                    <%= messages_for( :http_proxy_port ) %>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6">
-                    <%= f.input :http_proxy_username,
-                                label: 'Proxy username',
-                                placeholder: 'No proxy authentication'
-                    %>
-                    <%= messages_for( :http_proxy_username ) %>
-                </div>
-                <div class="col-md-6">
-                    <%= f.input :http_proxy_password, as: :string,
-                                label: 'Proxy password',
-                                placeholder: 'No proxy authentication' %>
-                    <%= messages_for( :http_proxy_password ) %>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-12">
-                    <button class="btn btn-sm btn-primary" type="button" data-toggle="collapse"
-                            data-target="#http-advanced" aria-expanded="false"
-                            aria-controls="collapseExample">
-                        Advanced
-                    </button>
-                    <p class="help-block">
-                        In case there are special cookies, headers, performance or networking
-                        settings that need to be set.
-                    </p>
-
-                    <div class="collapse" id="http-advanced">
-                        <div class="well well-sm">
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <%= f.input :http_request_queue_size,
-                                                label: 'Request queue size',
-                                                placeholder: Arachni::Options.http.request_queue_size.to_s
-                                    %>
-                                    <%= messages_for( :http_request_queue_size ) %>
-                                </div>
-                                <div class="col-md-6">
-                                    <%= f.input :http_request_timeout,
-                                                label: 'Request timeout',
-                                                placeholder: Arachni::Options.http.request_timeout.to_s
-                                    %>
-                                    <%= messages_for( :http_request_timeout ) %>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <%= f.input :http_request_redirect_limit,
-                                                label: 'Redirect limit',
-                                                placeholder: Arachni::Options.http.request_redirect_limit.to_s
-                                    %>
-                                    <%= messages_for( :http_request_redirect_limit ) %>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                </div>
-                                <div class="col-md-6">
-                                    <%= f.input :http_response_max_size,
-                                                label: 'Maximum response size',
-                                                placeholder: 'Infinite'
-                                    %>
-                                    <%= messages_for( :http_response_max_size ) %>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
         </fieldset>
     </div>
 
@@ -540,55 +443,6 @@
                     <%= messages_for( :browser_cluster_screen_height ) %>
                 </div>
             </div>
-
-            <div class="row">
-                <div class="col-md-12">
-                    <button class="btn btn-sm btn-primary" type="button" data-toggle="collapse"
-                            data-target="#browser_cluster-advanced" aria-expanded="false"
-                            aria-controls="collapseExample">
-                        Advanced
-                    </button>
-                    <p class="help-block">
-                        In case there are special performance settings that need to be set.
-                    </p>
-
-                    <div class="collapse" id="browser_cluster-advanced">
-                        <div class="well well-sm">
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <%= f.input :browser_cluster_ignore_images, label: "Don't load images" %>
-                                    <%= messages_for( :browser_cluster_ignore_images ) %>
-                                </div>
-                                <div class="col-md-6">
-                                    <%= f.input :browser_cluster_pool_size,
-                                                label: 'Processes',
-                                                placeholder: Arachni::Options.browser_cluster.pool_size.to_s
-                                    %>
-                                    <%= messages_for( :browser_cluster_pool_size ) %>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <%= f.input :browser_cluster_worker_time_to_live,
-                                                label: 'Time to live',
-                                                placeholder: Arachni::Options.browser_cluster.worker_time_to_live.to_s
-                                    %>
-                                    <%= messages_for( :browser_cluster_worker_time_to_live ) %>
-                                </div>
-                                <div class="col-md-6">
-                                    <%= f.input :browser_cluster_job_timeout,
-                                                label: 'Timeout',
-                                                placeholder: Arachni::Options.browser_cluster.job_timeout.to_s
-                                    %>
-                                    <%= messages_for( :browser_cluster_job_timeout ) %>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
         </fieldset>
     </div>
 

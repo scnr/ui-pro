@@ -27,7 +27,7 @@ class ProfilesController < ApplicationController
         end
 
         respond_to do |format|
-            format.html # show.html.erb
+            format.html # edit.html.erb
             format.js { render @profile }
             format.json do
                 set_download_header.call 'json'
@@ -186,16 +186,8 @@ class ProfilesController < ApplicationController
             :audit_include_vector_patterns,
 
             :http_user_agent,
-            :http_request_timeout,
             :http_authentication_username,
             :http_authentication_password,
-            :http_request_queue_size,
-            :http_request_redirect_limit,
-            :http_response_max_size,
-            :http_proxy_host,
-            :http_proxy_port,
-            :http_proxy_username,
-            :http_proxy_password,
 
             :scope_page_limit,
             :scope_extend_paths,
@@ -205,18 +197,13 @@ class ProfilesController < ApplicationController
             :scope_exclude_content_patterns,
             :scope_directory_depth_limit,
             :scope_dom_depth_limit,
-            :scope_https_only,
             :scope_exclude_binaries,
 
             :session_check_pattern,
             :session_check_url,
 
             :browser_cluster_screen_width,
-            :browser_cluster_screen_height,
-            :browser_cluster_pool_size,
-            :browser_cluster_job_timeout,
-            :browser_cluster_worker_time_to_live,
-            :browser_cluster_ignore_images
+            :browser_cluster_screen_height
         ]
     end
 

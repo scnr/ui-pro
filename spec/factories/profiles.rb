@@ -40,8 +40,6 @@ FactoryGirl.define do
         browser_cluster_screen_width 1000
         browser_cluster_screen_height 1000
         scope_directory_depth_limit 10
-        http_request_redirect_limit 5
-        http_response_max_size 200_000
         plugins(
             'uncommon_headers' => nil,
             'headers_collector'  => {
@@ -49,12 +47,6 @@ FactoryGirl.define do
             }
         )
         scope_exclude_binaries true
-        http_request_timeout 10_000
-        http_request_queue_size 50
         scope_dom_depth_limit 10
-        browser_cluster_pool_size 6
-        browser_cluster_job_timeout 10
-        browser_cluster_worker_time_to_live 100
-        browser_cluster_ignore_images true
     end
 end

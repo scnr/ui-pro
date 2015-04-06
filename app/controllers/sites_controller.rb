@@ -104,7 +104,9 @@ class SitesController < ApplicationController
             :scope_url_rewrites,
             :scope_https_only,
 
-            :audit_link_templates
+            :audit_link_templates,
+
+            :browser_cluster_ignore_images
         ]])
 
     end

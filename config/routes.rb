@@ -21,4 +21,6 @@ Rails.application.routes.draw do
     end
 
     resources :schedules, only: [:index]
+
+    resources :settings
 end

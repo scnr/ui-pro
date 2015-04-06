@@ -18,6 +18,8 @@ class SiteProfiles < ActiveRecord::Migration
             t.text     :http_request_headers
             t.integer  :http_request_concurrency
 
+            t.boolean  :browser_cluster_ignore_images
+
             t.belongs_to :site, index: true
 
             t.timestamps

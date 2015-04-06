@@ -1,0 +1,159 @@
+<%= simple_form_for @settings, html: { class: 'profile-form' } do |f| %>
+    <%= f.error_notification %>
+
+    <% if f.error_notification %>
+        <div>
+            <ul>
+                <% @settings.errors.messages.each do |attribute, messages| %>
+                    <li>
+                        <%= link_to attribute.to_s.humanize, "#profile_#{attribute}", class: 'scroll' %>
+                        <% if attribute != :plugins %>
+                            <% if messages.size == 1 %>
+                                <%= messages.first %>
+                            <% else %>
+                                <ul class="list-unstyled">
+                                    <% messages.each do |message| %>
+                                        <li>
+                                            <span class="help-block">
+                                                <%= message %>
+                                            </span>
+                                        </li>
+                                    <% end %>
+                                </ul>
+                            <% end %>
+                        <% else %>
+                            <% if messages.size == 1 %>
+                                <pre class="alert alert-danger"><%= messages.first %></pre>
+                            <% else %>
+                                <ul class="list-unstyled">
+                                    <% messages.each do |message| %>
+                                        <li>
+                                            <pre><%= message %></pre>
+                                        </li>
+                                    <% end %>
+                                </ul>
+                            <% end %>
+                        <% end %>
+                    </li>
+                <% end %>
+            </ul>
+        </div>
+    <% end %>
+
+    <div id="http">
+        <fieldset>
+            <h2 id="http-h">
+                HTTP
+                <small>How shall the scanner communicate with the remote server?</small>
+            </h2>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <%= f.input :http_proxy_host,
+                                label: 'Proxy host',
+                                placeholder: 'Direct connection'
+                    %>
+                    <%= messages_for( :http_proxy_host ) %>
+                </div>
+                <div class="col-md-6">
+                    <%= f.input :http_proxy_port, label: 'Proxy port' %>
+                    <%= messages_for( :http_proxy_port ) %>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <%= f.input :http_proxy_username,
+                                label: 'Proxy username',
+                                placeholder: 'No proxy authentication'
+                    %>
+                    <%= messages_for( :http_proxy_username ) %>
+                </div>
+                <div class="col-md-6">
+                    <%= f.input :http_proxy_password, as: :string,
+                                label: 'Proxy password',
+                                placeholder: 'No proxy authentication' %>
+                    <%= messages_for( :http_proxy_password ) %>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <%= f.input :http_request_queue_size,
+                                label: 'Request queue size',
+                                placeholder: Arachni::Options.http.request_queue_size.to_s
+                    %>
+                    <%= messages_for( :http_request_queue_size ) %>
+                </div>
+                <div class="col-md-6">
+                    <%= f.input :http_request_timeout,
+                                label: 'Request timeout',
+                                placeholder: Arachni::Options.http.request_timeout.to_s
+                    %>
+                    <%= messages_for( :http_request_timeout ) %>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <%= f.input :http_request_redirect_limit,
+                                label: 'Redirect limit',
+                                placeholder: Arachni::Options.http.request_redirect_limit.to_s
+                    %>
+                    <%= messages_for( :http_request_redirect_limit ) %>
+                </div>
+                <div class="col-md-6">
+                    <%= f.input :http_response_max_size,
+                                label: 'Maximum response size',
+                                placeholder: 'Infinite'
+                    %>
+                    <%= messages_for( :http_response_max_size ) %>
+                </div>
+            </div>
+
+        </fieldset>
+    </div>
+
+    <hr/>
+
+    <div id="browser">
+        <fieldset>
+            <h2 id="browser-h">
+                Browser
+                <small>Browser-related options.</small>
+            </h2>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <%= f.input :browser_cluster_pool_size,
+                                label: 'Processes',
+                                placeholder: Arachni::Options.browser_cluster.pool_size.to_s
+                    %>
+                    <%= messages_for( :browser_cluster_pool_size ) %>
+                </div>
+                <div class="col-md-6">
+                    <%= f.input :browser_cluster_worker_time_to_live,
+                                label: 'Time to live',
+                                placeholder: Arachni::Options.browser_cluster.worker_time_to_live.to_s
+                    %>
+                    <%= messages_for( :browser_cluster_worker_time_to_live ) %>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <%= f.input :browser_cluster_job_timeout,
+                                label: 'Timeout',
+                                placeholder: Arachni::Options.browser_cluster.job_timeout.to_s
+                    %>
+                    <%= messages_for( :browser_cluster_job_timeout ) %>
+                </div>
+            </div>
+
+        </fieldset>
+    </div>
+
+    <div class="form-actions">
+        <%= f.button :submit, class: 'hide',
+                     value: (@settings.id ? 'Update' : 'Create') %>
+    </div>
+<% end %>
