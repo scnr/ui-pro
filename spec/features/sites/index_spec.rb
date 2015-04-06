@@ -116,6 +116,17 @@ feature 'Site index page' do
         end
     end
 
+    feature 'without scans' do
+        before do
+            visit sites_path
+        end
+
+        scenario 'user does not see the table' do
+            expect(page).to_not have_content('#sites')
+        end
+    end
+
+
     scenario 'user can add new site' do
         select 'http', from: 'site[protocol]'
         fill_in 'site[host]', with: 'example.com'

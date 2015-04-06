@@ -1,9 +1,14 @@
-<h1>
-    Sites
-</h1>
+<div class="page-header">
+    <h1>Sites</h1>
+
+    <div class="lead">
+        Add and manage the sites you wish to scan.
+    </div>
+</div>
 
 <%= render 'form' %>
 
+<% if @sites.any? %>
 <div id="sites">
     <div class="row">
         <div class="col-md-12">
@@ -11,3 +16,4 @@
         </div>
     </div>
 </div>
+<% end %>
