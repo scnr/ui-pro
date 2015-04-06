@@ -85,9 +85,7 @@ class ProfilesController < ApplicationController
         @profile = Profile.import( params[:profile][:file] )
 
         if !@profile
-            redirect_to profiles_url,
-                        alert: 'Could not understand the Profile format, please' <<
-                                   ' ensure that you are using a v0.5 profile.'
+            redirect_to profiles_url, alert: 'Could not understand the Profile format.'
             return
         end
 
@@ -185,7 +183,6 @@ class ProfilesController < ApplicationController
             :audit_exclude_vector_patterns,
             :audit_include_vector_patterns,
 
-            :http_user_agent,
             :http_authentication_username,
             :http_authentication_password,
 
@@ -200,10 +197,7 @@ class ProfilesController < ApplicationController
             :scope_exclude_binaries,
 
             :session_check_pattern,
-            :session_check_url,
-
-            :browser_cluster_screen_width,
-            :browser_cluster_screen_height
+            :session_check_url
         ]
     end
 

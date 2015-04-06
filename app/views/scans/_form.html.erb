@@ -14,6 +14,15 @@
                               first time the scan runs.' if @scan.revisions.empty?)
             %>
 
+            <%= f.association :user_agent,
+                              label: false,
+                              disabled: @scan.revisions.any?,
+                              collection: UserAgent.all,
+                              selected: UserAgent.default,
+                              hint: ('The user-agent will remain editable until the
+                              first time the scan runs.' if @scan.revisions.empty?)
+            %>
+
             <%= f.input :description, placeholder: 'Description', label: false %>
         </div>
 

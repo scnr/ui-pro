@@ -2,6 +2,7 @@ class CreateProfiles < ActiveRecord::Migration
     def change
         create_table :profiles do |t|
             t.belongs_to :user
+
             t.boolean  "default"
             t.string   "name"
             t.text     "description"
@@ -32,15 +33,11 @@ class CreateProfiles < ActiveRecord::Migration
             t.integer  "scope_dom_depth_limit"
             t.integer  "scope_directory_depth_limit"
 
-            t.text     "http_user_agent"
             t.string   "http_authentication_username"
             t.string   "http_authentication_password"
 
             t.text     "session_check_url"
             t.text     "session_check_pattern"
-
-            t.integer  "browser_cluster_screen_width"
-            t.integer  "browser_cluster_screen_height"
 
             t.timestamps
         end

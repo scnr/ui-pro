@@ -19,17 +19,16 @@
 
     <p class="alert alert-info">
         Once a profile has been used for a scan it will no longer be editable,
-        this allows for recurring delta-scans that allow you to observe the
+        this allows for recurring delta-scans that enable you to observe the
         security state of a website over time.
-        <br/>
-        If you want to perform recurring scans for authenticated sites please
-        prefer one of the login plugins, rather than setting session cookies.
     </p>
 </div>
 
-<%= render partial: 'import' %>
+<%= render partial: '/shared/profile_import', locals: {
+        type: 'profile',
+        import_url: import_profiles_url
+} %>
 
 <div id="profiles-table">
     <%= render partial: 'table' %>
 </div>
-

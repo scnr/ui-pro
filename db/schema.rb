@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150405132117) do
+ActiveRecord::Schema.define(version: 20150406105049) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -269,13 +269,10 @@ ActiveRecord::Schema.define(version: 20150405132117) do
     t.text     "scope_extend_paths"
     t.integer  "scope_dom_depth_limit"
     t.integer  "scope_directory_depth_limit"
-    t.text     "http_user_agent"
     t.string   "http_authentication_username"
     t.string   "http_authentication_password"
     t.text     "session_check_url"
     t.text     "session_check_pattern"
-    t.integer  "browser_cluster_screen_width"
-    t.integer  "browser_cluster_screen_height"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -308,6 +305,7 @@ ActiveRecord::Schema.define(version: 20150405132117) do
     t.integer  "revisions_count", default: 0
     t.integer  "integer",         default: 0
     t.integer  "site_id"
+    t.integer  "user_agent_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "profile_id"
@@ -400,6 +398,16 @@ ActiveRecord::Schema.define(version: 20150405132117) do
 
   add_index "sites_users", ["site_id", "user_id"], name: "index_sites_users_on_site_id_and_user_id"
   add_index "sites_users", ["user_id"], name: "index_sites_users_on_user_id"
+
+  create_table "user_agents", force: true do |t|
+    t.boolean  "default"
+    t.string   "name"
+    t.text     "http_user_agent"
+    t.integer  "browser_cluster_screen_width"
+    t.integer  "browser_cluster_screen_height"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "users", force: true do |t|
     t.string   "email",                             default: "", null: false

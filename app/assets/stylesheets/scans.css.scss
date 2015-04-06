@@ -10,7 +10,9 @@
     border-left: 1px solid #eeeeee;
 }
 
-.scan_name, #scan_name, .scan_profile, #scan_profile_id,
+.scan_name, #scan_name,
+.scan_profile, #scan_profile_id,
+.scan_user_agent, #scan_user_agent_id,
 .scan_description, #scan_description {
     width: 100%;
 }

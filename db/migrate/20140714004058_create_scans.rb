@@ -6,6 +6,7 @@ class CreateScans < ActiveRecord::Migration
       t.integer :revisions_count, :integer, default: 0
 
       t.belongs_to :site, index: true
+      t.belongs_to :user_agent
 
       t.timestamps
     end

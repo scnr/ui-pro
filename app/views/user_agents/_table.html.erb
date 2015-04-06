@@ -3,54 +3,64 @@
     <tr>
         <th>Default</th>
         <th>Name</th>
+        <th>Identification</th>
+        <th>Resolution</th>
         <th>Scans</th>
         <th></th>
     </tr>
     </thead>
 
     <tbody>
-    <% @profiles.each do |profile| %>
+    <% @user_agents.each do |user_agent| %>
         <tr>
             <td>
-                <%= simple_form_for profile,
-                                    url: default_profile_path( profile ),
+                <%= simple_form_for user_agent,
+                                    url: default_user_agent_path( user_agent ),
                                     method: :patch, remote: true,
                                     html: { onsubmit: 'loading();' } do %>
                     <input type="radio"
                            class="make-default"
                            onclick="$(this).submit()"
-                           name="id_<%= profile.id %>"
-                           id="id_<%= profile.id %>"
+                           name="id_<%= user_agent.id %>"
+                           id="id_<%= user_agent.id %>"
                            autocomplete="off"
-                           <%= 'checked="checked"'.html_safe if profile.default? %>
-                           <%= 'disabled' if profile.default? %>
+                           <%= 'checked="checked"'.html_safe if user_agent.default? %>
+                           <%= 'disabled' if user_agent.default? %>
                     >
                 <% end %>
             </td>
 
             <td>
-                <%= link_to profile.name, profile %>
+                <%= link_to user_agent.name, user_agent %>
             </td>
 
             <td>
-                <%= profile.scans.size %>
+                <%= user_agent.http_user_agent %>
             </td>
 
             <td>
-                <%= link_to copy_profile_path( profile ),
+                <%= user_agent.browser_cluster_screen_width %>x<%= user_agent.browser_cluster_screen_height %>
+            </td>
+
+            <td>
+                <%= user_agent.scans.size %>
+            </td>
+
+            <td>
+                <%= link_to copy_user_agent_path( user_agent ),
                             class: 'btn btn-sm btn-primary' do %>
                     <i class="fa fa-copy"></i>
                 <% end %>
 
-                <% if profile.revisions.empty? %>
-                    <%= link_to edit_profile_path( profile ),
+                <% if user_agent.revisions.empty? %>
+                    <%= link_to edit_user_agent_path( user_agent ),
                                 class: 'btn btn-sm btn-warning' do %>
                         <i class="fa fa-pencil"></i>
                     <% end %>
                 <% end %>
 
-                <% if profile.scans.empty? && !profile.default? %>
-                    <%= link_to profile, method: :delete,
+                <% if user_agent.scans.empty? && !user_agent.default? %>
+                    <%= link_to user_agent, method: :delete,
                                 class: 'btn btn-sm btn-danger',
                                 data: { confirm: 'Are you sure?' } do %>
                         <i class="fa fa-trash"></i>
@@ -58,7 +68,7 @@
                 <% end %>
 
                 <div class="btn-group" role="group">
-                    <button id="profile-export-button" type="button"
+                    <button id="user_agent-export-button" type="button"
                             class="btn btn-sm btn-inverse dropdown-toggle"
                             data-toggle="dropdown">
 
@@ -67,17 +77,17 @@
                     </button>
                     <ul class="dropdown-menu" role="menu">
                         <li>
-                            <%= link_to profile_path( profile, format: :yaml ) do %>
+                            <%= link_to user_agent_path( user_agent, format: :yaml ) do %>
                                 YAML
                             <% end %>
                         </li>
                         <li>
-                            <%= link_to profile_path( profile, format: :json ) do %>
+                            <%= link_to user_agent_path( user_agent, format: :json ) do %>
                                 JSON
                             <% end %>
                         </li>
                         <li>
-                            <%= link_to profile_path( profile, format: :afp ) do %>
+                            <%= link_to user_agent_path( user_agent, format: :afp ) do %>
                                 AFP (Suitable for the CLI interface.)
                             <% end %>
                         </li>

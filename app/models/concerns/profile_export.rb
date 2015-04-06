@@ -5,8 +5,14 @@ module ProfileExport
 
     def export( serializer = YAML )
         profile_hash = to_rpc_options
-        profile_hash[:name] = name
-        profile_hash[:description] = description
+
+        if has_option? :name
+            profile_hash[:name] = name
+        end
+
+        if has_option? :description
+            profile_hash[:description] = description
+        end
 
         profile_hash = profile_hash.stringify_keys
         if serializer == JSON

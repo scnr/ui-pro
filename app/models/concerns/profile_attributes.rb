@@ -150,6 +150,10 @@ module ProfileAttributes
         end
     end
 
+    def has_option?( *args )
+        self.class.has_option?( *args )
+    end
+
     def checks_with_info
         checks.inject({}) { |h, n| h[n] = ::FrameworkHelper.checks[n]; h }
     end

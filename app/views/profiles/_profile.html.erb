@@ -8,16 +8,16 @@
     </div>
 </div>
 
-<% if @profile.scans.any? %>
+<% if profile.scans.any? %>
     <div class="row">
         <div class="col-md-12">
             <h2>
-                <%= @profile.scans.size %> associated
-                <%= 'scan'.pluralize @profile.scans.size %>
+                <%= profile.scans.size %> associated
+                <%= 'scan'.pluralize profile.scans.size %>
             </h2>
 
             <ol>
-                <% @profile.scans.each do |scan| %>
+                <% profile.scans.each do |scan| %>
                     <li>
                         <%= link_to scan.name, [scan.site, scan] %> of
                         <%= link_to scan.site, scan.site %>
@@ -182,16 +182,6 @@
             </div>
         </div>
     <% end %>
-
-    <div class="row">
-        <div class="col-md-6">
-            <p>
-                <b>User agent:</b>
-                <%= profile.http_user_agent %>
-            </p>
-            <%= messages_for :http_user_agent %>
-        </div>
-    </div>
 </section>
 
 <hr/>
@@ -207,33 +197,6 @@
     <% else %>
         <p class="alert alert-info">No checks have been selected.</p>
     <% end %>
-
-</section>
-
-<hr/>
-
-<section id="browser_cluster">
-    <h2 id="browser_cluster-h">
-        Browser cluster
-        <small>Browser-related options</small>
-    </h2>
-
-    <div class="row">
-        <div class="col-md-6">
-            <p>
-                <b>Screen width:</b>
-                <%= profile.browser_cluster_screen_width %>
-            </p>
-            <%= messages_for :browser_cluster_screen_width %>
-        </div>
-        <div class="col-md-6">
-            <p>
-                <b>Screen height:</b>
-                <%= profile.browser_cluster_screen_height %>
-            </p>
-            <%= messages_for :browser_cluster_screen_height %>
-        </div>
-    </div>
 
 </section>
 

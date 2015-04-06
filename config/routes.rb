@@ -23,4 +23,10 @@ Rails.application.routes.draw do
     resources :schedules, only: [:index]
 
     resources :settings
+
+    resources :user_agents do
+        post  :import,  on: :collection
+        patch :default, on: :member
+        get   :copy,    on: :member
+    end
 end

@@ -298,16 +298,6 @@
 
             <div class="row">
                 <div class="col-md-6">
-                    <%= f.input :http_user_agent, as: :string,
-                                label: 'User-agent',
-                                placeholder: Arachni::Options.http.user_agent
-                    %>
-                    <%= messages_for( :http_user_agent ) %>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6">
                     <%= f.input :http_authentication_username,
                                 placeholder: 'No authentication',
                                 label: 'Username' %>
@@ -415,34 +405,6 @@
                                    class_name: 'col-md-6'
                            } %>
             <% end %>
-        </fieldset>
-    </div>
-
-    <hr/>
-
-    <div id="browser_cluster">
-        <fieldset>
-            <h2 id="browser_cluster-h">
-                Browser
-                <small>Browser-related options.</small>
-            </h2>
-
-            <div class="row">
-                <div class="col-md-6">
-                    <%= f.input :browser_cluster_screen_width,
-                                label: 'Screen width',
-                                placeholder: Arachni::Options.browser_cluster.screen_width.to_s
-                    %>
-                    <%= messages_for( :browser_cluster_screen_width ) %>
-                </div>
-                <div class="col-md-6">
-                    <%= f.input :browser_cluster_screen_height,
-                                label: 'Screen height',
-                                placeholder: Arachni::Options.browser_cluster.screen_height.to_s
-                    %>
-                    <%= messages_for( :browser_cluster_screen_height ) %>
-                </div>
-            </div>
         </fieldset>
     </div>
 

@@ -10,7 +10,6 @@ FactoryGirl.define do
         audit_cookies true
         audit_headers false
         checks ['xss', 'xss_tag']
-        http_user_agent "Arachni/v0.0"
         scope_exclude_path_patterns [
             'exclude-this', 'eclude-this-too'
         ]
@@ -37,8 +36,6 @@ FactoryGirl.define do
         audit_exclude_vector_patterns [
             'token', 'csrf'
         ]
-        browser_cluster_screen_width 1000
-        browser_cluster_screen_height 1000
         scope_directory_depth_limit 10
         plugins(
             'uncommon_headers' => nil,

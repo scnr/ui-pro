@@ -15,8 +15,13 @@ module ProfileImport
 
             return if !data.is_a?( Hash )
 
-            data['name']        ||= file.original_filename
-            data['description'] ||= "Imported from '#{file.original_filename}'."
+            if has_option? :name
+                data['name'] ||= file.original_filename
+            end
+
+            if has_option? :description
+                data['description'] ||= "Imported from '#{file.original_filename}'."
+            end
 
             import_from_data( data )
         end

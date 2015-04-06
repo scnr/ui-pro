@@ -64,7 +64,7 @@ http_request_redirect_limit: 'Limits the amount of total redirects to be followe
 http_response_max_size:
     description: 'Maximum size of acceptable remote resources (in bytes).'
     notice: 'Large responses (in the MB range) can greatly increase memory consumption, you can use this option as a safeguard.'
-http_user_agent: 'User-agent string to be used for HTTP requests.'
+http_user_agent: 'User-agent string to be used for browser identification.'
 http_request_timeout: 'HTTP request timeout (in milliseconds).'
 
 session_check_pattern: 'Matches the given pattern against the body of the session-check

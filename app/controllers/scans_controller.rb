@@ -106,7 +106,7 @@ class ScansController < ApplicationController
     end
 
     def permitted_attributes
-        [:name, :description, :profile_id,
+        [:name, :description, :profile_id, :user_agent_id,
          { schedule_attributes: [:month_frequency, :day_frequency, :start_at, :stop_after_hours, :stop_suspend] }]
     end
 

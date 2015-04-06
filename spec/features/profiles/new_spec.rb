@@ -321,13 +321,6 @@ feature 'Profile new page' do
             end
 
             feature 'HTTP' do
-                scenario 'can set User-agent' do
-                    fill_in 'User-agent', with: 'Stuff here'
-                    submit
-
-                    expect(Profile.last.http_user_agent).to eq 'Stuff here'
-                end
-
                 scenario 'can set Username' do
                     fill_in 'Username', with: 'Stuff here'
                     submit
@@ -615,22 +608,6 @@ feature 'Profile new page' do
                     scenario 'is not listed' do
                         expect(page).to_not have_selector( '#profile_plugins_waf_detector' )
                     end
-                end
-            end
-
-            feature 'Browser' do
-                scenario 'can set Screen width' do
-                    fill_in 'Screen width', with: 1000
-                    submit
-
-                    expect(Profile.last.browser_cluster_screen_width).to eq 1000
-                end
-
-                scenario 'can set Screen height' do
-                    fill_in 'Screen height', with: 2000
-                    submit
-
-                    expect(Profile.last.browser_cluster_screen_height).to eq 2000
                 end
             end
 

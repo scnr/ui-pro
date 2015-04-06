@@ -1,0 +1,33 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="page-header">
+            <h1><%= @user_agent.name %></h1>
+
+            <div class="lead">
+                <%= @user_agent.http_user_agent %>
+                &mdash;
+                <%= @user_agent.browser_cluster_screen_width %>x<%= @user_agent.browser_cluster_screen_height %>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% if @user_agent.scans.any? %>
+    <div class="row">
+        <div class="col-md-12">
+            <h2>
+                <%= @user_agent.scans.size %> associated
+                <%= 'scan'.pluralize @user_agent.scans.size %>
+            </h2>
+
+            <ol>
+                <% @user_agent.scans.each do |scan| %>
+                    <li>
+                        <%= link_to scan.name, [scan.site, scan] %> of
+                        <%= link_to scan.site, scan.site %>
+                    </li>
+                <% end %>
+            </ol>
+        </div>
+    </div>
+<% end %>

@@ -11,6 +11,8 @@ feature 'New scan page' do
     let(:site) { FactoryGirl.create :site }
     let(:profile) { FactoryGirl.create :profile, name: 'Stuff' }
     let(:other_profile) { FactoryGirl.create :profile, name: 'Other stuff' }
+    let(:user_agent) { FactoryGirl.create :user_agent }
+    let(:other_user_agent) { FactoryGirl.create :user_agent }
 
     let(:name) { 'name blahblah' }
     let(:description) { 'description blahblah' }
@@ -20,6 +22,9 @@ feature 'New scan page' do
     end
 
     before do
+        user_agent
+        other_user_agent
+
         login_as user, scope: :user
         visit new_site_scan_path( site )
     end
@@ -32,6 +37,7 @@ feature 'New scan page' do
         fill_in 'scan_name', with: name
         fill_in 'scan_description', with: description
         select profile.name, from: 'scan_profile_id'
+        select user_agent.name, from: 'scan_user_agent_id'
 
         select '2016', from: 'scan_schedule_attributes_start_at_1i'
         select 'November', from: 'scan_schedule_attributes_start_at_2i'
@@ -65,7 +71,13 @@ feature 'New scan page' do
 
     scenario 'user sees own profiles in select box' do
         FactoryGirl.create :profile, name: 'Other user profile'
+        visit new_site_scan_path( site )
+
         expect(page).to have_select 'scan_profile_id', [profile.name, other_profile.name]
+    end
+
+    scenario 'user sees user-agents in select box' do
+        expect(page).to have_select 'scan_user_agent_id', [user_agent.name, other_user_agent.name]
     end
 
     feature 'when the name is missing' do
