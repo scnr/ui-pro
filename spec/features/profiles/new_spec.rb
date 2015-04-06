@@ -320,22 +320,6 @@ feature 'Profile new page' do
                 end
             end
 
-            feature 'HTTP' do
-                scenario 'can set Username' do
-                    fill_in 'Username', with: 'Stuff here'
-                    submit
-
-                    expect(Profile.last.http_authentication_username).to eq 'Stuff here'
-                end
-
-                scenario 'can set Password' do
-                    fill_in 'Password', with: 'Stuff here'
-                    submit
-
-                    expect(Profile.last.http_authentication_password).to eq 'Stuff here'
-                end
-            end
-
             feature 'Checks' do
                 feature 'can be searched' do
                     scenario 'by name'

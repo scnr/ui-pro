@@ -33,9 +33,6 @@ class CreateProfiles < ActiveRecord::Migration
             t.integer  "scope_dom_depth_limit"
             t.integer  "scope_directory_depth_limit"
 
-            t.string   "http_authentication_username"
-            t.string   "http_authentication_password"
-
             t.text     "session_check_url"
             t.text     "session_check_pattern"
 

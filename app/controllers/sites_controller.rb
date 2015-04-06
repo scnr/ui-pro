@@ -98,6 +98,8 @@ class SitesController < ApplicationController
             :http_cookies,
             :http_request_headers,
             :http_request_concurrency,
+            :http_authentication_username,
+            :http_authentication_password,
 
             :scope_redundant_path_patterns,
             :scope_auto_redundant_paths,

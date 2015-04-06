@@ -289,32 +289,6 @@
 
     <hr/>
 
-    <div id="http">
-        <fieldset>
-            <h2 id="http-h">
-                HTTP
-                <small>How shall the scanner communicate with the remote server?</small>
-            </h2>
-
-            <div class="row">
-                <div class="col-md-6">
-                    <%= f.input :http_authentication_username,
-                                placeholder: 'No authentication',
-                                label: 'Username' %>
-                    <%= messages_for( :http_authentication_username ) %>
-                </div>
-                <div class="col-md-6">
-                    <%= f.input :http_authentication_password, as: :string,
-                                placeholder: 'No authentication',
-                                label: 'Password' %>
-                    <%= messages_for( :http_authentication_password ) %>
-                </div>
-            </div>
-        </fieldset>
-    </div>
-
-    <hr/>
-
     <div id="checks">
         <fieldset>
             <h2 id="checks-h">

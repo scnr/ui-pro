@@ -123,6 +123,13 @@ FrameworkHelper.framework do |f|
     end
 end
 
+user_agent = UserAgent.create(
+    name: 'Arachni',
+    http_user_agent: Arachni::Options.http.user_agent,
+    browser_cluster_screen_width:  1200,
+    browser_cluster_screen_height: 1600
+)
+
 scans_size         = 2
 revisions_per_scan = 3
 
@@ -154,6 +161,7 @@ revisions_per_scan = 3
         puts "[#{i}] Creating scan"
         scan = site.scans.create(
             profile:     p,
+            user_agent:  user_agent,
             name:        "my scan #{i}",
             description: 'my description'
         )

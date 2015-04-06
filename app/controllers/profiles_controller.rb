@@ -183,9 +183,6 @@ class ProfilesController < ApplicationController
             :audit_exclude_vector_patterns,
             :audit_include_vector_patterns,
 
-            :http_authentication_username,
-            :http_authentication_password,
-
             :scope_page_limit,
             :scope_extend_paths,
             :scope_restrict_paths,

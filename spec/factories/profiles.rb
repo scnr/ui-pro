@@ -28,8 +28,6 @@ FactoryGirl.define do
         ]
         session_check_url 'http://stuff/'
         session_check_pattern 'logout.php'
-        http_authentication_username "johny"
-        http_authentication_password "secret"
         audit_include_vector_patterns [
             'search', 'username'
         ]

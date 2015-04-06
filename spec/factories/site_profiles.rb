@@ -31,7 +31,8 @@ FactoryGirl.define do
         scope_include_subdomains false
         scope_auto_redundant_paths 100
         scope_https_only false
-
+        http_authentication_username "johny"
+        http_authentication_password "secret"
         browser_cluster_ignore_images true
     end
 end

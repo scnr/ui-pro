@@ -273,33 +273,45 @@ feature 'Site profile form' do
         end
 
         feature 'HTTP' do
-            feature 'Advanced' do
-                scenario 'can set Cookies' do
-                    fill_in 'Cookies', with: "cookie1=blah1\ncookie2=blah2"
-                    submit
+            scenario 'can set Username' do
+                fill_in 'Username', with: 'Stuff here'
+                submit
 
-                    expect(profile.http_cookies).to eq ({
-                        'cookie1' => 'blah1',
-                        'cookie2' => 'blah2'
-                    })
-                end
+                expect(profile.http_authentication_username).to eq 'Stuff here'
+            end
 
-                scenario 'can set Headers' do
-                    fill_in 'Headers', with: "header1=blah1\nheader2=blah2"
-                    submit
+            scenario 'can set Password' do
+                fill_in 'Password', with: 'Stuff here'
+                submit
 
-                    expect(profile.http_request_headers).to eq ({
-                        'header1' => 'blah1',
-                        'header2' => 'blah2'
-                    })
-                end
+                expect(profile.http_authentication_password).to eq 'Stuff here'
+            end
 
-                scenario 'can set Request concurrency' do
-                    fill_in 'Request concurrency', with: 100
-                    submit
+            scenario 'can set Cookies' do
+                fill_in 'Cookies', with: "cookie1=blah1\ncookie2=blah2"
+                submit
 
-                    expect(profile.http_request_concurrency).to eq 100
-                end
+                expect(profile.http_cookies).to eq ({
+                    'cookie1' => 'blah1',
+                    'cookie2' => 'blah2'
+                })
+            end
+
+            scenario 'can set Headers' do
+                fill_in 'Headers', with: "header1=blah1\nheader2=blah2"
+                submit
+
+                expect(profile.http_request_headers).to eq ({
+                    'header1' => 'blah1',
+                    'header2' => 'blah2'
+                })
+            end
+
+            scenario 'can set Request concurrency' do
+                fill_in 'Request concurrency', with: 100
+                submit
+
+                expect(profile.http_request_concurrency).to eq 100
             end
         end
 

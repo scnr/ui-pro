@@ -1,11 +1,7 @@
-<div class="row">
-    <div class="col-md-12">
-        <div class="page-header">
-            <h1><%= profile.name %></h1>
+<div class="page-header">
+    <h1><%= profile.name %></h1>
 
-            <div class="lead"><%= profile.description %></div>
-        </div>
-    </div>
+    <div class="lead"><%= profile.description %></div>
 </div>
 
 <% if profile.scans.any? %>
@@ -154,34 +150,6 @@
             </div>
         <% end %>
     </div>
-</section>
-
-<hr/>
-
-<section id="http">
-    <h2 id="http-h">
-        HTTP
-        <small>How the scanner will communicate with the web application</small>
-    </h2>
-
-    <% if !profile.http_authentication_username.to_s.empty? && !profile.http_authentication_password.to_s.empty? %>
-        <div class="row">
-            <div class="col-md-6">
-                <p>
-                    <b>HTTP username:</b>
-                    <%= profile.http_authentication_username %>
-                </p>
-                <%= messages_for :http_authentication_username %>
-            </div>
-            <div class="col-md-6">
-                <p>
-                    <b>HTTP password:</b>
-                    <%= profile.http_authentication_password %>
-                </p>
-                <%= messages_for :http_authentication_password %>
-            </div>
-        </div>
-    <% end %>
 </section>
 
 <hr/>
