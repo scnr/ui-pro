@@ -155,12 +155,17 @@ revisions_per_scan = 3
         }
     )
 
+    role = site.roles.create(
+        name: 'Guest'
+    )
+
     scans_size.times do |i|
         break if issues.empty?
 
         puts "[#{i}] Creating scan"
         scan = site.scans.create(
             profile:     p,
+            site_role:   role,
             user_agent:  user_agent,
             name:        "my scan #{i}",
             description: 'my description'

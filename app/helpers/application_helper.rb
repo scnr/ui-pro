@@ -87,5 +87,73 @@ module ApplicationHelper
         Loofah.fragment( html ).scrub!(:prune).to_s.html_safe
     end
 
+    def code_highlight( *args, &block )
+        if block_given?
+            code  = capture( &block )
+        else
+            code = args.shift
+        end
+
+        language, options = *args
+        language ||= :html
+        options  ||= {}
+
+        return if !code
+
+        code = code.strip
+
+        lines = CodeRay.scan( code.recode, language ).
+            html( css: :style ).lines.to_a
+
+        if options[:from]
+            from = [0, options[:from]].max
+        else
+            from = 0
+        end
+
+        if options[:to]
+            to = [lines.size, options[:to]].min
+        else
+            to = lines.size - 1
+        end
+
+        code = '<div class="code-container"><table class="CodeRay"><tbody><tr>'
+
+        if options[:line_numbers]
+            code << '<td class="line-numbers"><pre>'
+            from.upto(to) do |i|
+                if options[:anchor_id]
+                    line = "<a href='#{id_to_location "#{options[:anchor_id]}-#{i}"}'>#{i}</a>"
+                else
+                    line = "#{i}"
+                end
+
+                if options[:breakpoint] && options[:breakpoint] == i
+                    code << "<span class='breakpoint'>#{line}</span>"
+                else
+                    code << line
+                end
+
+                code << "\n"
+            end
+
+            code << '</pre></td>'
+        end
+
+        code << '<td class="code"><pre>'
+
+        from.upto(to) do |i|
+            line = "<span id='#{options[:anchor_id]}-#{i}'>#{lines[i]}</span>"
+
+            if options[:breakpoint] && options[:breakpoint] == i
+                code << "<span class='breakpoint'>#{line}</span>"
+            else
+                code << line.to_s
+            end
+        end
+
+        (code + '</pre></td></tr></tbody></table></div>').html_safe
+    end
+
     extend self
 end

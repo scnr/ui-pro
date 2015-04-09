@@ -1,0 +1,7 @@
+browser.goto '<%= @site.url %>/login'
+
+form = browser.form( id: 'login-form' )
+form.text_field( name: 'user' ).set 'admin'
+form.text_field( name: 'passwd' ).set 'secret'
+
+form.submit

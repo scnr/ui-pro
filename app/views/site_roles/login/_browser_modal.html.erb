@@ -1,0 +1,19 @@
+<%=
+    render( layout: 'site_roles/login/script_modal',
+           locals: {
+                   title:  'Login via the browser driver',
+                   script: 'browser'
+           }) do
+%>
+    <p>
+        A browser driver allows you to programmatically control a real browser and
+        use it to interact with the web application via its user interface.
+    </p>
+
+    <p>
+        Arachni provides you with a prepared instance of
+        <a target="_blank" href="http://watirwebdriver.com/web-elements/">Watir WebDriver</a>,
+        exposed via the <code>browser</code> variable.
+    </p>
+
+<% end %>

@@ -40,19 +40,6 @@
         </div>
     <% end %>
 
-    <div class="row">
-        <div class="col-md-12">
-            <%= f.input :name, label: false, placeholder: '(Required) Name' %>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <%= f.input :description, label: false, placeholder: '(Required) Description',
-                        hint: 'You can use Markdown for text formatting.',
-                        input_html: { rows: 5, cols: 100 } %>
-        </div>
-    </div>
-
     <% if @profile.scans.any? %>
         <div class="row">
             <div class="col-md-12">
@@ -72,6 +59,19 @@
             </div>
         </div>
     <% end %>
+
+    <div class="row">
+        <div class="col-md-12">
+            <%= f.input :name, label: false, placeholder: '(Required) Name' %>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <%= f.input :description, label: false, placeholder: '(Required) Description',
+                        hint: 'You can use Markdown for text formatting.',
+                        input_html: { rows: 5, cols: 100 } %>
+        </div>
+    </div>
 
     <div id="scope">
         <fieldset>
@@ -379,30 +379,6 @@
                                    class_name: 'col-md-6'
                            } %>
             <% end %>
-        </fieldset>
-    </div>
-
-    <hr/>
-
-    <div id="session">
-        <fieldset>
-            <h2 id="session-h">
-                Session check
-                <small>How will scanner determine its session's validity?</small>
-            </h2>
-
-            <div class="row">
-                <div class="col-md-6">
-                    <%= f.input :session_check_url, as: :string, label: false,
-                                placeholder: 'Session check URL' %>
-                    <%= messages_for( :session_check_url ) %>
-                </div>
-                <div class="col-md-6">
-                    <%= f.input :session_check_pattern, as: :string, label: false,
-                                placeholder: 'Session check pattern' %>
-                    <%= messages_for( :session_check_pattern ) %>
-                </div>
-            </div>
         </fieldset>
     </div>
 

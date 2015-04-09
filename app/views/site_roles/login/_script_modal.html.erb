@@ -1,0 +1,40 @@
+<% code = render( partial: "site_roles/login/scripts/#{script}", formats: :rb ) %>
+
+<div class="modal fade" id="login-script-<%= script %>" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <%= title %>
+                </h4>
+            </div>
+            <div class="modal-body">
+                <%= code_highlight( code, :ruby ) %>
+                <hr/>
+                <%= yield %>
+            </div>
+            <textarea class="hide" id="login-script-<%= script %>-code"><%= code.html_safe %></textarea>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button onclick="insert_<%= script %>_code_into_editor()"
+                        data-dismiss="modal"
+                        type="button" class="btn btn-primary">
+                    Use example
+                </button>
+            </div>
+
+            <script>
+                function insert_<%= script %>_code_into_editor() {
+                    var editor = ace_editor( 'site_role_login_script_code_editor' );
+
+                    editor.setValue( $('#login-script-<%= script %>-code').val() );
+                    editor.gotoLine( editor.session.getLength() );
+
+                    $('#login-script-<%= script %>').on( 'hidden.bs.modal', function (e) {
+                        editor.focus();
+                    })
+                }
+            </script>
+        </div>
+    </div>
+</div>

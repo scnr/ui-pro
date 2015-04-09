@@ -27,11 +27,11 @@
                         <hr/>
 
                         <div class="plugin-options">
-                            <%= render partial: 'plugin_options',
+                            <%= render partial: '/shared/plugin_options',
                                        locals: {
                                            plugin_info:   info,
                                            plugin_name:   shortname,
-                                           configuration: @profile.plugins[shortname] || {},
+                                           configuration: selected[shortname] || {},
                                        } %>
                         </div>
 

@@ -1,0 +1,41 @@
+<p>
+    <strong>Name:</strong>
+    <%= @site_role.name %>
+</p>
+
+<p>
+    <strong>Description:</strong>
+    <%= @site_role.description %>
+</p>
+
+<p>
+    <strong>Session check url:</strong>
+    <%= @site_role.session_check_url %>
+</p>
+
+<p>
+    <strong>Session check pattern:</strong>
+    <%= @site_role.session_check_pattern %>
+</p>
+
+<p>
+    <strong>Login type:</strong>
+    <%= @site_role.login_type %>
+</p>
+
+<% if @site_role.login_type == 'form' %>
+    <p>
+        <strong>Form URL:</strong>
+        <%= @site_role.login_form_url %>
+    </p>
+
+    <p>
+        <strong>Form parameters:</strong>
+        <%= @site_role.login_form_parameters %>
+    </p>
+<% else %>
+    <p>
+        <strong>Script:</strong>
+        <%= code_highlight @site_role.login_script_code, :ruby %>
+    </p>
+<% end %>

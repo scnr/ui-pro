@@ -32,6 +32,16 @@
             </a>
         </li>
 
+        <li class="<%= 'active' if @active_tab == 'roles' %>">
+            <%= link_to site_roles_path( @site ), remote: true,
+                        data: {
+                                toggle: 'tab',
+                                target: '#roles'
+                        } do %>
+                Roles
+            <% end %>
+        </li>
+
         <li class="<%= 'active' if @active_tab == 'settings' %>">
             <a href="#settings" role="tab" data-toggle="tab">
                 Settings
@@ -56,6 +66,10 @@
             <%= render partial: 'scans/tables' %>
         </div>
 
+        <div class="tab-pane <%= 'active' if @active_tab == 'roles' %>" id="roles">
+            Roles.
+        </div>
+
         <div class="tab-pane <%= 'active' if @active_tab == 'settings' %>" id="settings">
             <div class="row">
                 <div class="col-md-2">
@@ -75,6 +89,12 @@
             </a>
         </li>
 
+        <li class="<%= 'active' if @active_tab == 'roles' %>">
+            <a href="#roles" role="tab" data-toggle="tab">
+                Roles
+            </a>
+        </li>
+
         <li class="<%= 'active' if @active_tab == 'settings' %>">
             <a href="#settings" role="tab" data-toggle="tab">
                 Settings
@@ -87,6 +107,14 @@
             <div class="row">
                 <div class="col-md-12">
                     <%= render 'scans/form' %>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane <%= 'active' if @active_tab == 'roles' %>" id="roles">
+            <div class="row">
+                <div class="col-md-12">
+                    Roles.
                 </div>
             </div>
         </div>

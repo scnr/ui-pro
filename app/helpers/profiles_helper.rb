@@ -6,7 +6,7 @@ module ProfilesHelper
     end
 
     def render_options( plugin_name, plugin_info, configuration = {}, disabled = false )
-        tpl = "#{Rails.root}/app/views/profiles/plugin_options/#{plugin_name}/#{params[:action]}.html.erb"
+        tpl = "#{Rails.root}/app/views/shared/plugin_options/#{plugin_name}/#{params[:action]}.html.erb"
         opts = {
             plugin_name:   plugin_name,
             info:          plugin_info,
@@ -17,7 +17,7 @@ module ProfilesHelper
         if File.exist? tpl
             render file: tpl, locals: opts
         else
-            render partial: 'profiles/plugin_options/generic', locals: opts
+            render partial: 'shared/plugin_options/generic', locals: opts
         end
     end
 

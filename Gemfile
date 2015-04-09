@@ -23,6 +23,10 @@ gem 'loofah'
 gem 'd3-rails'
 gem 'c3-rails'
 
+gem 'ace-rails-ap'
+
+gem 'coderay'
+
 group :doc do
     gem 'sdoc', '~> 0.4.0'
 end

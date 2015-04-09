@@ -1,0 +1,19 @@
+<%=
+    render( layout: 'site_roles/login/script_modal',
+            locals: {
+                    title:  'Login via the HTTP client',
+                    script: 'http'
+            }) do
+%>
+    <p>
+        An HTTP client allows you to interact with the web application's HTTP
+        interface via HTTP requests.
+    </p>
+
+    <p>
+        Arachni provides you with a prepared
+        <a target="_blank" href="http://www.rubydoc.info/github/Arachni/arachni/Arachni/HTTP/Client">HTTP client</a>,
+        exposed via the <code>http</code> variable.
+    </p>
+
+<% end %>

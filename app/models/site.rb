@@ -14,6 +14,9 @@ class Site < ActiveRecord::Base
     has_many :revisions, through: :scans
     has_many :issues, through: :scans
 
+    has_many :roles, dependent: :destroy, foreign_key: 'site_id',
+             class: SiteRole
+
     has_many :sitemap_entries, dependent: :destroy
 
     validates_presence_of :protocol

@@ -24,6 +24,7 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
+    ace-rails-ap (3.0.2)
     actionmailer (4.1.4)
       actionpack (= 4.1.4)
       actionview (= 4.1.4)
@@ -566,6 +567,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  ace-rails-ap
   arachni!
   awesome_print
   better_errors
@@ -574,6 +576,7 @@ DEPENDENCIES
   bullet
   c3-rails
   capybara
+  coderay
   coffee-rails (~> 4.0.0)
   d3-rails
   database_cleaner

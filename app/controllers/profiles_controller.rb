@@ -191,10 +191,7 @@ class ProfilesController < ApplicationController
             :scope_exclude_content_patterns,
             :scope_directory_depth_limit,
             :scope_dom_depth_limit,
-            :scope_exclude_binaries,
-
-            :session_check_pattern,
-            :session_check_url
+            :scope_exclude_binaries
         ]
     end
 

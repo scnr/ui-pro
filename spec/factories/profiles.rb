@@ -11,7 +11,7 @@ FactoryGirl.define do
         audit_headers false
         checks ['xss', 'xss_tag']
         scope_exclude_path_patterns [
-            'exclude-this', 'eclude-this-too'
+            'exclude-this', 'exclude-this-too'
         ]
         scope_exclude_content_patterns [
             'Not found', 'Not found either'
@@ -26,8 +26,6 @@ FactoryGirl.define do
         scope_extend_paths [
             'include-me', 'include-me-too'
         ]
-        session_check_url 'http://stuff/'
-        session_check_pattern 'logout.php'
         audit_include_vector_patterns [
             'search', 'username'
         ]

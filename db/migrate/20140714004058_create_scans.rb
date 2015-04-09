@@ -7,6 +7,7 @@ class CreateScans < ActiveRecord::Migration
 
       t.belongs_to :site, index: true
       t.belongs_to :user_agent
+      t.belongs_to :site_role
 
       t.timestamps
     end

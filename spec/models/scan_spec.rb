@@ -205,6 +205,14 @@ describe Scan do
                 deep_merge( subject.user_agent.to_rpc_options ).
                 deep_merge( settings.to_rpc_options  )
 
+            options['scope'].delete( 'exclude_path_patterns' )
+
+            options['session'] = subject.site_role.to_rpc_options['session']
+
+            expect(rpc_options['scope'].delete( 'exclude_path_patterns' )).to eq(
+                [ 'exclude-this', 'exclude-this-too', 'exclude-that', 'exclude-that-too']
+            )
+
             expect(options).to eq rpc_options
         end
     end

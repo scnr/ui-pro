@@ -1,0 +1,8 @@
+http.post( '<%= @site.url %>/do_login',
+    parameters:     {
+          'user'   => 'admin',
+          'passwd' => 'secret'
+    },
+    mode:           :sync,
+    update_cookies: true
+)

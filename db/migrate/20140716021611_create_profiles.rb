@@ -33,9 +33,6 @@ class CreateProfiles < ActiveRecord::Migration
             t.integer  "scope_dom_depth_limit"
             t.integer  "scope_directory_depth_limit"
 
-            t.text     "session_check_url"
-            t.text     "session_check_pattern"
-
             t.timestamps
         end
     end

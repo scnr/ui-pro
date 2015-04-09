@@ -1,5 +1,6 @@
 class Scan < ActiveRecord::Base
     belongs_to :site
+    belongs_to :site_role
     belongs_to :profile
     belongs_to :user_agent
 
@@ -16,6 +17,7 @@ class Scan < ActiveRecord::Base
     validates_uniqueness_of :name, scope: :site
 
     validates_presence_of   :site
+    validates_presence_of   :site_role
     validates_presence_of   :profile
     validates_presence_of   :user_agent
 
@@ -41,6 +43,18 @@ class Scan < ActiveRecord::Base
         options.deep_merge!( site.profile.to_rpc_options )
         options.deep_merge!( user_agent.to_rpc_options )
         options.deep_merge!( Setting.get.to_rpc_options )
+
+        site_role_rpc_options = site_role.to_rpc_options
+
+        options['scope']                          ||= {}
+        options['scope']['exclude_path_patterns'] ||= []
+        site_role_rpc_options['scope']            ||= {}
+
+        options['scope']['exclude_path_patterns'] |=
+            site_role_rpc_options['scope'].delete( 'exclude_path_patterns' ) || []
+
+        options.deep_merge!( site_role_rpc_options )
+
         options.merge!( 'authorized_by' => site.user.email )
         options
     end

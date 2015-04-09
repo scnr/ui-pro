@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150406105049) do
+ActiveRecord::Schema.define(version: 20150406191208) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -269,8 +269,6 @@ ActiveRecord::Schema.define(version: 20150406105049) do
     t.text     "scope_extend_paths"
     t.integer  "scope_dom_depth_limit"
     t.integer  "scope_directory_depth_limit"
-    t.text     "session_check_url"
-    t.text     "session_check_pattern"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -304,6 +302,7 @@ ActiveRecord::Schema.define(version: 20150406105049) do
     t.integer  "integer",         default: 0
     t.integer  "site_id"
     t.integer  "user_agent_id"
+    t.integer  "site_role_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "profile_id"
@@ -363,6 +362,21 @@ ActiveRecord::Schema.define(version: 20150406105049) do
   end
 
   add_index "site_profiles", ["site_id"], name: "index_site_profiles_on_site_id"
+
+  create_table "site_roles", force: true do |t|
+    t.integer  "site_id"
+    t.string   "name"
+    t.text     "description"
+    t.text     "session_check_url"
+    t.text     "session_check_pattern"
+    t.text     "scope_exclude_path_patterns"
+    t.string   "login_type"
+    t.text     "login_form_url"
+    t.text     "login_form_parameters"
+    t.text     "login_script_code"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "sitemap_entries", force: true do |t|
     t.text     "url"

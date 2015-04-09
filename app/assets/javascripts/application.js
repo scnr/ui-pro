@@ -17,6 +17,10 @@
 //= require d3
 //= require c3
 //= require websocket_rails/main
+//= require ace/ace
+//= require ace/worker-html
+//= require ace/theme-monokai
+//= require ace/mode-ruby
 //= require_tree .
 
 $.expr[':'].icontains = function(obj, index, meta, stack){
@@ -27,6 +31,16 @@ $.expr[':'].icontains = function(obj, index, meta, stack){
 String.prototype.endsWith = function(suffix) {
     return this.indexOf(suffix, this.length - suffix.length) !== -1;
 };
+
+function ace_editor( id ) {
+    var editor = ace.edit( id );
+    editor.setTheme( 'ace/theme/monokai' );
+    editor.getSession().setMode( 'ace/mode/ruby' );
+    editor.setShowPrintMargin(false);
+    editor.getSession().setUseSoftTabs( true );
+    editor.getSession().setUseWrapMode( true );
+    return editor;
+}
 
 function loading(){
     $('#loading').show();
@@ -53,6 +67,7 @@ function setupScroll(){
 
 function setup() {
     $('a[data-toggle="tab"]').on('shown.bs.tab', setupScroll);
+
     setupScroll();
 }
 

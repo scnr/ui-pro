@@ -1,0 +1,287 @@
+<%= simple_form_for( @site_role,
+                    url:      @site_role.id ?
+                                  site_role_path(@site, @site_role) :
+                                  site_roles_path(@site),
+                    remote:   true,
+                    html: {
+                        onsubmit: 'on_submit()'
+                    }
+    ) do |f| %>
+    <%= f.error_notification %>
+
+    <% if f.error_notification %>
+        <div>
+            <ul>
+                <% @site_role.errors.messages.each do |attribute, messages| %>
+                    <li>
+                        <%= link_to attribute.to_s.humanize, "#site_role_#{attribute}", class: 'scroll' %>
+                        <% if messages.size == 1 %>
+                            <%= messages.first %>
+                        <% else %>
+                            <ul class="list-unstyled">
+                                <% messages.each do |message| %>
+                                    <li>
+                                        <span class="help-block">
+                                            <%= message %>
+                                        </span>
+                                    </li>
+                                <% end %>
+                            </ul>
+                        <% end %>
+                    </li>
+                <% end %>
+            </ul>
+        </div>
+    <% end %>
+
+    <div class="row">
+        <div class="col-md-12">
+            <%= f.input :name, label: false, placeholder: 'Name' %>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <%= f.input :description, label: false, placeholder: 'Description',
+                        hint: 'You can use Markdown for text formatting.',
+                        input_html: { rows: 5, cols: 100 } %>
+        </div>
+    </div>
+
+    <%= f.input :login_type, label: false, wrapper_html: { class: 'hide' } %>
+
+    <div id="session">
+        <fieldset>
+            <h2 id="session-h">
+                Session
+                <small>How will scanner determine its session's validity?</small>
+            </h2>
+
+            <div class="row">
+                <div class="col-md-7">
+                    <%= f.input :session_check_url, as: :string, label: false,
+                                placeholder: "Check URL (Example: #{@site.url})" %>
+                    <%= messages_for( :session_check_url ) %>
+
+                    <%= f.input :session_check_pattern, as: :string, label: false,
+                                placeholder: 'Check pattern (Example: profile/admin)' %>
+                    <%= messages_for( :session_check_pattern ) %>
+
+                    <%= f.input :scope_exclude_path_patterns, label: false,
+                                placeholder: 'Log-out exclusion patterns (Example: logout)',
+                                input_html: { value: @site_role.scope_exclude_path_patterns.join( "\n" ) }%>
+                    <%= messages_for( :scope_exclude_path_patterns ) %>
+                    <p class="help-block alert alert-info">Input each rule in its own line.</p>
+                </div>
+
+                <div class="col-md-5">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Let's say there's a page at <code><%= @site.url %></code>:
+                        </div>
+                        <div class="panel-body">
+                            <%= code_highlight do %>
+<!-- [...] -->
+
+<div class="menu">
+    Hello <a href="/profile/admin">Admin</a>! | <a href="/logout">Log out</a>
+</div>
+
+<!-- [...] -->
+                            <% end %>
+
+                            <em>
+                                Assuming this content only appears when the
+                                <kbd>admin</kbd> user is logged in.
+                            </em>
+                            <hr/>
+
+                            <p class="alert alert-info">
+                                The options on the left are filled in with example
+                                values for this case.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
+    <hr/>
+
+    <div id="login">
+        <fieldset>
+            <h2 id="login-h">
+                Log-in procedure
+                <small>How will the scanner log-in?</small>
+            </h2>
+
+            <div class="row">
+                <div class="col-md-7">
+                    <div role="tabpanel" class="type-tabs">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation"
+                                class="<%= 'active' if !@site_role.login_type || @site_role.login_type == 'form' %>">
+                                <a href="#form" role="tab" data-toggle="tab">Form</a>
+                            </li>
+
+                            <li role="presentation" class="<%= 'active' if @site_role.login_type == 'script' %>">
+                                <a href="#script" role="tab" data-toggle="tab">Script</a>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <div class="tab-pane <%= 'active' if !@site_role.login_type || @site_role.login_type == 'form' %>"
+                                 role="tabpanel"
+                                 id="form">
+                                <div class="alert">
+                                    <p>
+                                        When using form-based authentication the system
+                                        will look for a form that matches the given parameters
+                                        at the specified URL.
+                                        <br/>
+                                        It will then fill-in the form with the
+                                        parameter values and submit it via a browser.
+                                    </p>
+                                    <p>
+                                        <strong>
+                                            This approach should be preferred whenever
+                                            possible as it is the most reliable and
+                                            easiest to configure.
+                                        </strong>
+                                    </p>
+                                </div>
+
+                                <%= f.input :login_form_url, as: :string, label: false,
+                                            placeholder: "URL (Example: #{@site.url}/login)" %>
+
+                                <%= f.input :login_form_parameters, label: false,
+                                            placeholder: 'Parameters (Example: user=admin and passwd=secret)',
+                                            input_html: {
+                                                    value: @site_role.login_form_parameters.
+                                                                   map { |k, v| "#{k}=#{v}" }.join( "\n" )
+                                            }
+                                %>
+                                <p class="help-block alert alert-info">
+                                    Parameters take the format of <em>name=value</em>,
+                                    input each pair in its own line.
+                                </p>
+                            </div>
+
+                            <div class="tab-pane <%= 'active' if @site_role.login_type == 'script' %>"
+                                 role="tabpanel"
+                                 id="script">
+                                <p class="alert">
+                                    Script-based logins allow you to run arbitrary
+                                    <a target="_blank" href="https://www.ruby-lang.org/">Ruby</a>
+                                    code in order to perform the log-in operation.
+                                </p>
+
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <ul class="nav nav-stacked nav-horizontal">
+                                            <li>
+                                                <a href="#" data-toggle="modal"
+                                                   data-target="#login-script-browser">
+                                                    Browser driver
+                                                </a>
+                                                <p class="text-muted">
+                                                    When interaction with the user interface or
+                                                    execution of Javascript is required.
+                                                </p>
+                                            </li>
+                                            <li>
+                                                <a href="#" data-toggle="modal"
+                                                   data-target="#login-script-http">
+                                                    HTTP client
+                                                </a>
+                                                <p class="text-muted">
+                                                    When the operation can be performed with
+                                                    HTTP requests alone.
+                                                </p>
+                                            </li>
+                                        </ul>
+
+                                        <%= render partial: 'site_roles/login/browser_modal' %>
+                                        <%= render partial: 'site_roles/login/http_modal' %>
+                                    </div>
+
+                                    <div class="col-md-9">
+                                        <div id="site_role_login_script_code_editor"><%= @site_role.login_script_code %></div>
+                                        <%= f.input :login_script_code,
+                                                    wrapper_html: {
+                                                            style: 'position: absolute; left: -99999em'
+                                                    } %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Let's say there's a form at <code><%= @site.url %>/login</code>:
+                        </div>
+                        <div class="panel-body">
+                            <%= code_highlight do %>
+<!-- [...] -->
+
+<form id="login-form" method="post" action="/do_login">
+    <label for="user">Username</label>
+    <input name="user" id="user" type="text"/>
+
+    <label for="passwd">Password</label>
+    <input name="passwd" id="passwd" type="password"/>
+
+    <input type="submit" value="Login"/>
+</form>
+
+<!-- [...] -->
+                            <% end %>
+
+                            <hr/>
+
+                            <table class="table table-condensed table-borderless">
+                                <tr>
+                                    <th>Username</th>
+                                    <td><kbd>admin</kbd></td>
+                                </tr>
+
+                                <tr>
+                                    <th>Password</th>
+                                    <td><kbd>secret</kbd></td>
+                                </tr>
+                            </table>
+
+                            <hr/>
+
+                            <p class="alert alert-info">
+                                The procedure options on the left are filled in
+                                with example values for this form.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
+    <div class="form-actions">
+        <%= f.button :submit %>
+    </div>
+<% end %>
+
+<script>
+    ace_editor( 'site_role_login_script_code_editor' );
+
+    function on_submit() {
+        $('#site_role_login_type').val( $('div.type-tabs div.tab-pane.active').attr('id') );
+
+        var editor_value =
+                ace_editor('site_role_login_script_code_editor').
+                        getSession().
+                        getValue();
+
+        $('#site_role_login_script_code').val( editor_value );
+    }
+</script>
