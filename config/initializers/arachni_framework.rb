@@ -5,7 +5,8 @@ EXCLUDE_PLUGINS = [
     :script,
     :vector_feed,
     :vector_collector,
-    :waf_detector
+    :waf_detector,
+    :autologin
 ]
 
 EXCLUDE_REPORTERS = [

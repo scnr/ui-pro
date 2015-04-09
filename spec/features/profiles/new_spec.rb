@@ -458,6 +458,12 @@ feature 'Profile new page' do
                     end
                 end
 
+                feature 'Autologin' do
+                    scenario 'is not listed' do
+                        expect(page).to_not have_selector( '#profile_plugins_autologin' )
+                    end
+                end
+
                 feature 'Headers collector' do
                     before do
                         check 'profile_plugins_headers_collector'
