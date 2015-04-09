@@ -361,62 +361,6 @@ feature 'Profile new page' do
             end
 
             feature 'Plugins' do
-                feature 'AutoLogin' do
-                    before do
-                        check 'profile_plugins_autologin'
-                    end
-
-                    scenario 'can be set' do
-                        fill_in 'profile_plugins_autologin_url', with: 'http://test.com'
-                        fill_in 'profile_plugins_autologin_parameters', with: 'username=user&password=pass'
-                        fill_in 'profile_plugins_autologin_check', with: 'logout'
-
-                        submit
-
-                        expect(Profile.last.plugins['autologin']).to eq ({
-                            'url'        => 'http://test.com',
-                            'parameters' => 'username=user&password=pass',
-                            'check'      => 'logout'
-                        })
-                    end
-
-                    feature 'when missing url' do
-                        scenario 'it shows error' do
-                            fill_in 'profile_plugins_autologin_parameters', with: 'username=user&password=pass'
-                            fill_in 'profile_plugins_autologin_check', with: 'logout'
-
-                            submit
-
-                            expect(find("#plugins .alert-danger").text).to include 'Invalid options for component: autologin'
-                            expect(find("#plugins .alert-danger").text).to include 'Missing value: url'
-                        end
-                    end
-
-                    feature 'when missing parameters' do
-                        scenario 'it shows error' do
-                            fill_in 'profile_plugins_autologin_url', with: 'http://test.com'
-                            fill_in 'profile_plugins_autologin_check', with: 'logout'
-
-                            submit
-
-                            expect(find("#plugins .alert-danger").text).to include 'Invalid options for component: autologin'
-                            expect(find("#plugins .alert-danger").text).to include 'Missing value: parameters'
-                        end
-                    end
-
-                    feature 'when missing check' do
-                        scenario 'it shows error' do
-                            fill_in 'profile_plugins_autologin_url', with: 'http://test.com'
-                            fill_in 'profile_plugins_autologin_parameters', with: 'username=user&password=pass'
-
-                            submit
-
-                            expect(find("#plugins .alert-danger").text).to include 'Invalid options for component: autologin'
-                            expect(find("#plugins .alert-danger").text).to include 'Missing value: check'
-                        end
-                    end
-                end
-
                 feature 'Beep notify' do
                     scenario 'is not listed' do
                         expect(page).to_not have_selector( '#profile_plugins_beep_notify' )
@@ -464,6 +408,12 @@ feature 'Profile new page' do
                     end
                 end
 
+                feature 'Login script' do
+                    scenario 'is not listed' do
+                        expect(page).to_not have_selector( '#profile_plugins_login_script' )
+                    end
+                end
+
                 feature 'Headers collector' do
                     before do
                         check 'profile_plugins_headers_collector'
@@ -488,46 +438,6 @@ feature 'Profile new page' do
                             'exclude' => 'exclude_stuff'
                         })
                     end
-                end
-
-                feature 'Login script' do
-                    before do
-                        check 'profile_plugins_login_script'
-                    end
-
-                    scenario 'can be set' do
-                        pending
-
-                        find('#profile_plugins_login_script_script').set 'path'
-                        submit
-
-                        expect(Profile.last.plugins['profile_plugins_login_script']).to eq ({
-                            'script' => 'path'
-                        })
-                    end
-
-                    feature 'when missing the script' do
-                        scenario 'it shows error' do
-                            pending
-                            submit
-
-                            expect(find("#plugins .alert-danger").text).to include 'Invalid options for component: login_script'
-                            expect(find("#plugins .alert-danger").text).to include 'Missing value: script'
-                        end
-                    end
-
-                    feature 'when the script script location is invalid' do
-                        scenario 'it shows error' do
-                            pending
-
-                            find('#profile_plugins_login_script_script').set 'path'
-                            submit
-
-                            expect(find("#plugins .alert-danger").text).to include 'Invalid options for component: login_script'
-                            expect(find("#plugins .alert-danger").text).to include 'Missing value: script'
-                        end
-                    end
-
                 end
 
                 feature 'Proxy' do
