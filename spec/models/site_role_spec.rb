@@ -1,5 +1,226 @@
 require 'rails_helper'
 
-RSpec.describe SiteRole, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+describe SiteRole, type: :model do
+    subject { FactoryGirl.create :site_role }
+    let(:site){ FactoryGirl.create :site }
+    let(:other_site){ FactoryGirl.create :site }
+
+    expect_it { to belong_to :site }
+    expect_it { to have_many :scans }
+    expect_it { to have_many :revisions }
+    expect_it { to validate_presence_of :site }
+    expect_it { to validate_presence_of :name }
+    expect_it { to validate_presence_of :session_check_url }
+    expect_it { to validate_presence_of :session_check_pattern }
+    expect_it { to validate_presence_of :scope_exclude_path_patterns }
+    expect_it { to validate_presence_of :login_type }
+
+    describe '#name' do
+        it 'is unique for each site' do
+            data = subject.attributes.merge( name: 'stuff' )
+            data.delete 'id'
+
+            expect(site.roles.create( data )).to be_valid
+
+            role = site.roles.create( data )
+            expect(role.errors.messages).to include :name
+        end
+    end
+
+    describe '#login_type' do
+        it 'can be form' do
+            subject.login_type = 'form'
+            expect(subject).to be_valid
+        end
+
+        it 'can be script' do
+            subject.login_type = 'script'
+            expect(subject).to be_valid
+        end
+
+        it 'cannot be other' do
+            subject.login_type = 'stuff'
+            expect(subject).to_not be_valid
+        end
+    end
+
+    describe '#login_form_url' do
+        context 'when #login_type is' do
+            describe 'form' do
+                before do
+                    subject.login_type = 'form'
+                end
+
+                it 'is required' do
+                    subject.login_form_url = nil
+                    subject.save
+                    expect(subject.errors.messages).to include :login_form_url
+
+                    subject.login_form_url = subject.site.url
+                    expect(subject).to be_valid
+                end
+            end
+
+            describe 'script' do
+                before do
+                    subject.login_type = 'script'
+                end
+
+                it 'is not required' do
+                    subject.login_form_url = nil
+                    expect(subject).to be_valid
+                end
+            end
+        end
+    end
+
+    describe '#login_form_parameters' do
+        context 'when #login_type is' do
+            describe 'form' do
+                before do
+                    subject.login_type = 'form'
+                end
+
+                it 'is required' do
+                    subject.login_form_parameters = {}
+                    subject.save
+                    expect(subject.errors.messages).to include :login_form_parameters
+
+                    subject.login_form_parameters = { '1' => '2' }
+                    expect(subject).to be_valid
+                end
+            end
+
+            describe 'script' do
+                before do
+                    subject.login_type = 'script'
+                end
+
+                it 'is not required' do
+                    subject.login_form_parameters = nil
+                    expect(subject).to be_valid
+                end
+            end
+        end
+    end
+
+    describe '#login_script_code' do
+        context 'when #login_type is' do
+            describe 'script' do
+                before do
+                    subject.login_type = 'script'
+                end
+
+                it 'is required' do
+                    subject.login_script_code = nil
+                    subject.save
+                    expect(subject.errors.messages).to include :login_script_code
+
+                    subject.login_script_code = 'stuff'
+                    expect(subject).to be_valid
+                end
+
+                it 'has to be syntactically valid' do
+                    subject.login_script_code = 'puts "'
+                    subject.save
+                    expect(subject.errors.messages).to include :login_script_code
+
+                    subject.login_script_code = 'puts "stuff"'
+                    expect(subject).to be_valid
+                end
+            end
+
+            describe 'form' do
+                before do
+                    subject.login_type = 'form'
+                end
+
+                it 'is not required' do
+                    subject.login_script_code = nil
+                    expect(subject).to be_valid
+                end
+
+                it 'does not have to be syntactically valid' do
+                    subject.login_script_code = 'puts "'
+                    expect(subject).to be_valid
+                end
+            end
+        end
+    end
+
+    context 'when #session_check_pattern is invalid' do
+        it 'is invalid' do
+            subject.session_check_url     = 'http://test.com'
+            subject.session_check_pattern = '(stuff'
+
+            expect(subject.save).to be_falsey
+            expect(subject.errors).to include :session_check_pattern
+        end
+    end
+
+    describe '#login_script_code_tempfile' do
+        it 'returns the location of a file containing #login_script_code' do
+            expect(IO.read(subject.login_script_code_tempfile)).to eq subject.login_script_code
+        end
+    end
+
+    describe '#to_rpc_options' do
+        let(:rpc_options) do
+            options = subject.to_rpc_options
+            options.delete 'plugins'
+            options
+        end
+
+        it 'includes Arachni options' do
+            expect(rpc_options).to eq({
+                'session' => {
+                    'check_url'     => 'http://stuff/',
+                    'check_pattern' => 'logout.php'
+                },
+                'scope' => {
+                    'exclude_path_patterns' => [
+                        'exclude-that',
+                        'exclude-that-too'
+                    ]
+                }
+            })
+        end
+
+        context 'when #login_type is' do
+            let(:rpc_options) do
+                subject.to_rpc_options['plugins']
+            end
+
+            describe 'script' do
+                before do
+                    subject.login_type = 'script'
+                end
+
+                it 'configures the login_script plugin' do
+                    expect(rpc_options).to eq ({
+                        'login_script' => {
+                            'script' => subject.login_script_code_tempfile
+                        }
+                    })
+                end
+            end
+
+            describe 'form' do
+                before do
+                    subject.login_type = 'form'
+                end
+
+                it 'configures the autologin plugin' do
+                    expect(rpc_options).to eq ({
+                        'autologin' => {
+                            'url'        => subject.site.url,
+                            'parameters' => 'username=joe&password=secret',
+                            'check'      => 'logout.php'
+                        }
+                    })
+                end
+            end
+        end
+
+    end
 end

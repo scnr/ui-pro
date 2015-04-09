@@ -203,7 +203,7 @@ describe Scan do
                 merge( 'authorized_by' => user.email ).
                 deep_merge( site.profile.to_rpc_options ).
                 deep_merge( subject.user_agent.to_rpc_options ).
-                deep_merge( settings.to_rpc_options  )
+                deep_merge( settings.to_rpc_options )
 
             options['scope'].delete( 'exclude_path_patterns' )
 
@@ -212,6 +212,12 @@ describe Scan do
             expect(rpc_options['scope'].delete( 'exclude_path_patterns' )).to eq(
                 [ 'exclude-this', 'exclude-this-too', 'exclude-that', 'exclude-that-too']
             )
+
+            options['plugins']['autologin'] = {
+                'url'        => subject.site_role.site.url,
+                'parameters' => 'username=joe&password=secret',
+                'check'      => 'logout.php'
+            }
 
             expect(options).to eq rpc_options
         end

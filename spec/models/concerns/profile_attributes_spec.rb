@@ -91,75 +91,12 @@ describe ProfileAttributes do
 
             context 'when given missing options' do
                 it 'is invalid' do
-                    subject.plugins = { 'autologin' => {
-                        'url' => ''
-                    }}
+                    subject.plugins = { 'form_dicattack' => {} }
 
                     expect(subject.save).to be_falsey
                     expect(subject.errors).to include :plugins
 
-                    expect(subject.errors.messages[:plugins].first).to include 'Missing value: url'
-                end
-            end
-        end
-
-        describe 'session check' do
-            before do
-                subject.session_check_url     = nil
-                subject.session_check_pattern = nil
-            end
-
-
-            context 'when it has a #session_check_url' do
-                context 'but not a #session_check_pattern' do
-                    it 'is invalid' do
-                        subject.session_check_url = 'http://test.com'
-
-                        expect(subject.save).to be_falsey
-                        expect(subject.errors).to include :session_check_pattern
-                    end
-                end
-            end
-
-            context 'when #session_check_pattern is invalid' do
-                it 'is invalid' do
-                    subject.session_check_url = 'http://test.com'
-                    subject.session_check_pattern = '(stuff'
-
-                    expect(subject.save).to be_falsey
-                    expect(subject.errors).to include :session_check_pattern
-                end
-            end
-
-            context 'when it has a #session_check_pattern' do
-                context 'but not a #session_check_url' do
-                    it 'is invalid' do
-                        subject.session_check_pattern = 'stuff'
-
-                        expect(subject.save).to be_falsey
-                        expect(subject.errors).to include :session_check_url
-                    end
-                end
-            end
-
-            context 'when #session_check_url is not a valid absolute URL' do
-                it 'should be invalid' do
-                    subject.session_check_url     = 'stuff-url'
-                    subject.session_check_pattern = 'stuff'
-
-                    expect(subject.save).to be_falsey
-                    expect(subject.errors).to include :session_check_url
-                end
-            end
-
-            context 'when it has a valid #session_check_url' do
-                context 'and a #session_check_pattern' do
-                    it 'is valid' do
-                        subject.session_check_url     = 'http://test.com/stuff/'
-                        subject.session_check_pattern = 'stuff'
-
-                        expect(subject.save).to be_truthy
-                    end
+                    expect(subject.errors.messages[:plugins].first).to include 'Missing value: username_list'
                 end
             end
         end
