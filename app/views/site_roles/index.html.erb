@@ -1,12 +1,12 @@
 <h2>
     User roles
 
-    <%= link_to new_site_role_path(@site),
-                remote: true,
-                title: 'New scan',
-                class: 'btn btn-xs btn-primary' do %>
+    <a href="#!/roles/new"
+       title="New scan"
+       class="btn btn-xs btn-primary"
+       data-js="<%= new_site_role_path(@site) %>">
         <i class="fa fa-plus"></i>
-    <% end %>
+    </a>
 </h2>
 
 <div class="lead">

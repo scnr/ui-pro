@@ -21,29 +21,25 @@
 <% if @issues_summary %>
     <ul class="nav nav-tabs">
         <li class="<%= 'active' if @active_tab == 'overview' %>">
-            <a href="#overview" role="tab" data-toggle="tab">
+            <a href="#!/overview">
                 Overview
             </a>
         </li>
 
         <li class="<%= 'active' if @active_tab == 'scans' %>">
-            <a href="#scans" role="tab" data-toggle="tab" >
+            <a href="#!/scans">
                 Scans
             </a>
         </li>
 
         <li class="<%= 'active' if @active_tab == 'roles' %>">
-            <%= link_to site_roles_path( @site ), remote: true,
-                        data: {
-                                toggle: 'tab',
-                                target: '#roles'
-                        } do %>
+            <a href="#!/roles">
                 Roles
-            <% end %>
+            </a>
         </li>
 
         <li class="<%= 'active' if @active_tab == 'settings' %>">
-            <a href="#settings" role="tab" data-toggle="tab">
+            <a href="#!/settings">
                 Settings
             </a>
         </li>
@@ -66,7 +62,9 @@
             <%= render partial: 'scans/tables' %>
         </div>
 
-        <div class="tab-pane <%= 'active' if @active_tab == 'roles' %>" id="roles">
+        <div data-js="<%= site_roles_path( @site ) %>"
+            class="tab-pane <%= 'active' if @active_tab == 'roles' %>"
+            id="roles">
             Roles.
         </div>
 

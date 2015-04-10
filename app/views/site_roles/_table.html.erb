@@ -12,7 +12,10 @@
     <% @site_roles.each do |site_role| %>
         <tr>
             <td>
-                <%= link_to site_role.name, site_role_path( site_role.site, site_role ), remote: true %>
+                <a href="#!/roles/<%= site_role.id %>"
+                   data-js="<%= site_role_path( site_role.site, site_role ) %>">
+                    <%= site_role.name %>
+                </a>
             </td>
 
             <td>
@@ -24,11 +27,11 @@
             </td>
 
             <td>
-                <%= link_to edit_site_role_path( site_role.site, site_role ),
-                            remote: true,
-                            class: 'btn btn-sm btn-warning' do %>
+                <a href="#!/roles/<%= site_role.id %>/edit"
+                   class="btn btn-sm btn-warning"
+                   data-js="<%= edit_site_role_path( site_role.site, site_role ) %>">
                     <i class="fa fa-pencil"></i>
-                <% end %>
+                </a>
 
                 <% if site_role.scans.empty? %>
                     <%= link_to site_role_path( site_role.site, site_role ),
