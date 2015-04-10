@@ -71,6 +71,13 @@ class SiteRole < ActiveRecord::Base
         path
     end
 
+    def login_script_code_error_line
+        return if !errors.messages[:login_script_code] ||
+            errors.messages[:login_script_code].empty?
+
+        errors.messages[:login_script_code].first.match( /Line (\d+)/ )[1].to_i
+    end
+
     private
 
     def validate_login_script_code_syntax
@@ -87,7 +94,7 @@ class SiteRole < ActiveRecord::Base
 
         return if status.exitstatus == 0
 
-        errors.add :login_script_code, stderr
+        errors.add :login_script_code, stderr.gsub( "#{login_script_code_tempfile}:", 'Line ' )
     ensure
         file.close if file
     end

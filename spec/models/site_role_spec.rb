@@ -164,6 +164,40 @@ describe SiteRole, type: :model do
         end
     end
 
+    describe '#login_script_code_error_line' do
+        before do
+            subject.login_type = 'script'
+        end
+
+        context 'when there is a syntax error' do
+            it 'returns the number of the line' do
+                subject.login_script_code =<<EORUBY
+                puts 1
+                e = 1)
+
+                def foo
+                end
+EORUBY
+                subject.save
+                expect(subject.login_script_code_error_line).to eq 2
+            end
+        end
+
+        context 'when there is no syntax error' do
+            it 'returns nil' do
+                subject.login_script_code =<<EORUBY
+                puts 1
+                e = 1+2
+
+                def foo
+                end
+EORUBY
+                subject.save
+                expect(subject.login_script_code_error_line).to be_nil
+            end
+        end
+    end
+
     describe '#to_rpc_options' do
         let(:rpc_options) do
             options = subject.to_rpc_options

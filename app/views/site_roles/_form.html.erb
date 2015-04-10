@@ -207,10 +207,7 @@
 
                                     <div class="col-md-9">
                                         <div id="site_role_login_script_code_editor"><%= @site_role.login_script_code %></div>
-                                        <%= f.input :login_script_code,
-                                                    wrapper_html: {
-                                                            style: 'position: absolute; left: -99999em'
-                                                    } %>
+                                        <samp><%= f.input :login_script_code %></samp>
                                     </div>
                                 </div>
                             </div>
@@ -269,6 +266,15 @@
     <div class="form-actions">
         <%= f.button :submit %>
     </div>
+<% end %>
+
+<% if @site_role.login_script_code_error_line %>
+<style>
+    div.ace_gutter-cell:nth-of-type(<%= @site_role.login_script_code_error_line %>),
+    div.ace_line_group:nth-of-type(<%= @site_role.login_script_code_error_line %>) {
+        background-color: rgba( 255, 0, 0, 0.3 );
+    }
+</style>
 <% end %>
 
 <script>

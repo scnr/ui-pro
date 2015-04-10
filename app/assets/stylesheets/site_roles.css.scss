@@ -7,3 +7,12 @@
     width:     100%;
     height:    500px;
 }
+
+#site_role_login_script_code {
+    position: absolute;
+    left:     -99999em
+}
+
+label[for="site_role_login_script_code"] {
+    display: none
+}
