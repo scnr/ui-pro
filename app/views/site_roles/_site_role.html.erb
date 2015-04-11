@@ -37,7 +37,8 @@
 
         <p>
             <strong>URL:</strong>
-            <%= link_to @site_role.session_check_url, @site_role.session_check_url %>
+            <%= link_to @site_role.session_check_url, @site_role.session_check_url,
+                        target: '_blank' %>
         </p>
 
         <p>
@@ -55,7 +56,8 @@
 
     <% if @site_role.login_type == 'form' %>
         <p>
-            <%= link_to @site_role.login_form_url, @site_role.login_form_url %>
+            <%= link_to @site_role.login_form_url, @site_role.login_form_url,
+                        target: '_blank' %>
         </p>
 
         <p>
