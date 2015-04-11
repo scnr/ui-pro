@@ -9,6 +9,8 @@ feature 'New scan page' do
     let(:user) { FactoryGirl.create :user, sites: [site], profiles: [other_profile, profile] }
     let(:other_user) { FactoryGirl.create :user, email: 'dd@ss.cc', shared_sites: [site] }
     let(:site) { FactoryGirl.create :site }
+    let(:site_role) { FactoryGirl.create :site_role, name: 'Stuff', site: site }
+    let(:other_site_role) { FactoryGirl.create :site_role, name: 'Other stuff', site: site }
     let(:profile) { FactoryGirl.create :profile, name: 'Stuff' }
     let(:other_profile) { FactoryGirl.create :profile, name: 'Other stuff' }
     let(:user_agent) { FactoryGirl.create :user_agent }
@@ -22,6 +24,7 @@ feature 'New scan page' do
     end
 
     before do
+        site_role
         user_agent
         other_user_agent
 
@@ -36,6 +39,7 @@ feature 'New scan page' do
     scenario 'user can set the schedule' do
         fill_in 'scan_name', with: name
         fill_in 'scan_description', with: description
+        select site_role.name, from: 'scan_site_role_id'
         select profile.name, from: 'scan_profile_id'
         select user_agent.name, from: 'scan_user_agent_id'
 
@@ -57,6 +61,8 @@ feature 'New scan page' do
 
         expect(scan.name).to eq name
         expect(scan.description).to eq description
+        expect(scan.user_agent).to eq user_agent
+        expect(scan.site_role).to eq site_role
         expect(scan.profile).to eq profile
 
         schedule = scan.schedule
@@ -102,7 +108,9 @@ feature 'New scan page' do
     feature 'when start_at is missing' do
         scenario 'the scan is not scheduled' do
             fill_in 'scan_name', with: name
+            select site_role.name, from: 'scan_site_role_id'
             select profile.name, from: 'scan_profile_id'
+            select user_agent.name, from: 'scan_user_agent_id'
 
             click_button 'Create'
 

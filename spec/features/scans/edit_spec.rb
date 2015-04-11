@@ -10,10 +10,15 @@ feature 'Edit scan page' do
     let(:user) { FactoryGirl.create :user, sites: [site], profiles: [other_profile, profile] }
     let(:site) { FactoryGirl.create :site }
     let(:scan) do
-        FactoryGirl.create :scan, profile: profile, site: site, schedule: FactoryGirl.create(:schedule)
+        FactoryGirl.create :scan, profile: profile, site: site,
+                           schedule: FactoryGirl.create(:schedule), site_role: site_role
     end
+    let(:site_role) { FactoryGirl.create :site_role, name: 'Stuff', site: site }
+    let(:other_site_role) { FactoryGirl.create :site_role, name: 'Other stuff', site: site }
     let(:profile) { FactoryGirl.create :profile, name: 'Stuff' }
     let(:other_profile) { FactoryGirl.create :profile, name: 'Other stuff' }
+    let(:user_agent) { FactoryGirl.create :user_agent }
+    let(:other_user_agent) { FactoryGirl.create :user_agent }
 
     let(:name) { 'name blahblah' }
     let(:description) { 'description blahblah' }
@@ -23,6 +28,8 @@ feature 'Edit scan page' do
     end
 
     before do
+        site_role
+        user_agent
         login_as user, scope: :user
         visit edit_site_scan_path( site, scan )
     end
@@ -38,7 +45,9 @@ feature 'Edit scan page' do
     scenario 'user can change the schedule' do
         fill_in 'scan_name', with: name
         fill_in 'scan_description', with: description
+        select site_role.name, from: 'scan_site_role_id'
         select profile.name, from: 'scan_profile_id'
+        select user_agent.name, from: 'scan_user_agent_id'
 
         select '2016', from: 'scan_schedule_attributes_start_at_1i'
         select 'November', from: 'scan_schedule_attributes_start_at_2i'
@@ -58,6 +67,8 @@ feature 'Edit scan page' do
 
         expect(scan.name).to eq name
         expect(scan.description).to eq description
+        expect(scan.user_agent).to eq user_agent
+        expect(scan.site_role).to eq site_role
         expect(scan.profile).to eq profile
 
         schedule = scan.schedule

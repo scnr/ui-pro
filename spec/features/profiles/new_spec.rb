@@ -510,59 +510,6 @@ feature 'Profile new page' do
                     end
                 end
             end
-
-            feature 'Session check' do
-                scenario 'can set options' do
-                    fill_in 'profile_session_check_url', with: 'http://test.com'
-                    fill_in 'profile_session_check_pattern', with: 'test'
-                    submit
-
-                    expect(Profile.last.session_check_url).to eq 'http://test.com'
-                    expect(Profile.last.session_check_pattern).to eq 'test'
-                end
-
-                feature 'when the profile_session_check_pattern' do
-                    feature 'is missing' do
-                        scenario 'it shows error' do
-                            fill_in 'profile_session_check_url', with: 'http://test.com'
-                            submit
-
-                            expect(find('.profile_session_check_pattern.has-error').text).to include 'cannot be blank'
-                        end
-                    end
-
-                    feature 'is invalid' do
-                        scenario 'it shows error' do
-                            fill_in 'profile_session_check_url', with: 'http://test.com'
-                            fill_in 'profile_session_check_pattern', with: '(test'
-                            submit
-
-                            expect(find('.profile_session_check_pattern.has-error').text).to include 'invalid pattern'
-                        end
-                    end
-                end
-
-                feature 'profile_session_check_url' do
-                    feature 'is missing' do
-                        scenario 'can set options' do
-                            fill_in 'profile_session_check_pattern', with: 'test'
-                            submit
-
-                            expect(find('.profile_session_check_url.has-error').text).to include 'not a valid absolute URL'
-                        end
-                    end
-
-                    feature 'is invalid' do
-                        scenario 'can set options' do
-                            fill_in 'profile_session_check_url', with: 'test'
-                            fill_in 'profile_session_check_pattern', with: 'test'
-                            submit
-
-                            expect(find('.profile_session_check_url.has-error').text).to include 'not a valid absolute URL'
-                        end
-                    end
-                end
-            end
         end
     end
 

@@ -5,6 +5,12 @@
         <div class="form-inputs col-md-3">
             <%= f.input :name, placeholder: '(Required) Name', label: false %>
 
+            <%= f.association :site_role,
+                              label: false,
+                              disabled: @scan.revisions.any?,
+                              collection: @site.roles.all
+            %>
+
             <%= f.association :profile,
                               label: false,
                               disabled: @scan.revisions.any?,

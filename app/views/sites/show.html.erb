@@ -82,19 +82,19 @@
 <% else %>
     <ul class="nav nav-tabs">
         <li class="<%= 'active' if @active_tab == 'scan-form' %>">
-            <a href="#scan-form" role="tab" data-toggle="tab" >
+            <a href="#!/scan-form">
                 New scan
             </a>
         </li>
 
         <li class="<%= 'active' if @active_tab == 'roles' %>">
-            <a href="#roles" role="tab" data-toggle="tab">
+            <a href="#!/roles">
                 Roles
             </a>
         </li>
 
         <li class="<%= 'active' if @active_tab == 'settings' %>">
-            <a href="#settings" role="tab" data-toggle="tab">
+            <a href="#!/settings">
                 Settings
             </a>
         </li>
@@ -109,12 +109,10 @@
             </div>
         </div>
 
-        <div class="tab-pane <%= 'active' if @active_tab == 'roles' %>" id="roles">
-            <div class="row">
-                <div class="col-md-12">
-                    Roles.
-                </div>
-            </div>
+        <div data-js="<%= site_roles_path( @site ) %>"
+             class="tab-pane <%= 'active' if @active_tab == 'roles' %>"
+             id="roles">
+            Roles.
         </div>
 
         <div class="tab-pane <%= 'active' if @active_tab == 'settings' %>" id="settings">

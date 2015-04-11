@@ -1,41 +1,81 @@
-<p>
-    <strong>Name:</strong>
-    <%= @site_role.name %>
-</p>
+<div class="row">
+    <div class="col-md-12">
+        <div class="page-header">
+            <h2><%= @site_role.name %></h2>
 
-<p>
-    <strong>Description:</strong>
-    <%= @site_role.description %>
-</p>
+            <div class="lead">
+                <%= @site_role.description %>
+            </div>
+        </div>
+    </div>
+</div>
 
-<p>
-    <strong>Session check url:</strong>
-    <%= @site_role.session_check_url %>
-</p>
+<div class="row">
 
-<p>
-    <strong>Session check pattern:</strong>
-    <%= @site_role.session_check_pattern %>
-</p>
+    <% if @site_role.scans.any? %>
+    <div class="col-md-4">
+        <h3>
+            <%= @site_role.scans.size %> associated
+            <%= 'scan'.pluralize @site_role.scans.size %>
+        </h3>
 
-<p>
-    <strong>Login type:</strong>
-    <%= @site_role.login_type %>
-</p>
+        <ol>
+            <% @site_role.scans.each do |scan| %>
+                <li>
+                    <%= link_to scan.name, [scan.site, scan] %> of
+                    <%= link_to scan.site, scan.site %>
+                </li>
+            <% end %>
+        </ol>
+    </div>
+    <% end %>
 
-<% if @site_role.login_type == 'form' %>
-    <p>
-        <strong>Form URL:</strong>
-        <%= @site_role.login_form_url %>
-    </p>
+    <div class="col-md-4">
+        <h3>
+            Session check
+        </h3>
 
-    <p>
-        <strong>Form parameters:</strong>
-        <%= @site_role.login_form_parameters %>
-    </p>
-<% else %>
-    <p>
-        <strong>Script:</strong>
-        <%= code_highlight @site_role.login_script_code, :ruby %>
-    </p>
-<% end %>
+        <p>
+            <strong>URL:</strong>
+            <%= link_to @site_role.session_check_url, @site_role.session_check_url %>
+        </p>
+
+        <p>
+            <strong>Pattern:</strong>
+            <code>
+                <%= @site_role.session_check_pattern %>
+            </code>
+        </p>
+    </div>
+
+    <div class="col-md-4">
+        <h3>
+            Login
+        </h3>
+
+    <% if @site_role.login_type == 'form' %>
+        <p>
+            <%= link_to @site_role.login_form_url, @site_role.login_form_url %>
+        </p>
+
+        <p>
+            <table class="table-stripped table-hover table-condensed">
+            <% @site_role.login_form_parameters.each do |name, value| %>
+                <tr>
+                    <th>
+                        <%= name %>
+                    </th>
+                    <td>
+                        <%= value %>
+                    </td>
+                </tr>
+            <% end %>
+            </table>
+        </p>
+    <% else %>
+        <p>
+            <%= code_highlight @site_role.login_script_code, :ruby %>
+        </p>
+    <% end %>
+    </div>
+</div>

@@ -75,7 +75,10 @@ class SiteRole < ActiveRecord::Base
         return if !errors.messages[:login_script_code] ||
             errors.messages[:login_script_code].empty?
 
-        errors.messages[:login_script_code].first.match( /Line (\d+)/ )[1].to_i
+        line = errors.messages[:login_script_code].first.match( /Line (\d+)/ )
+        return if !line || !line[1]
+
+        line[1].to_i
     end
 
     private
