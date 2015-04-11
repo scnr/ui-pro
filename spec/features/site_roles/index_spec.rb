@@ -3,9 +3,10 @@ Warden.test_mode!
 
 feature 'Site roles index page', js: true do
 
+    subject { FactoryGirl.create :site_role, name: 'Stuff', site: site }
     let(:user) { FactoryGirl.create :user }
     let(:site) { FactoryGirl.create :site }
-    subject { FactoryGirl.create :site_role, name: 'Stuff', site: site }
+    let(:scan) { FactoryGirl.create :scan, site: site }
 
     after(:each) do
         Warden.test_reset!
@@ -61,11 +62,21 @@ feature 'Site roles index page', js: true do
         end
 
         feature 'when there are no associated scans' do
-            scenario 'has delete button'
+            scenario 'has delete button' do
+                find(:xpath, "//a[@href='#{site_role_path( site, subject )}' and @data-method='delete']" ).click
+                expect(table).to_not have_content subject.name
+            end
         end
 
         feature 'when there are associated scans' do
-            scenario 'does not have delete button'
+            scenario 'does not have delete button' do
+                subject.scans << scan
+                subject.scans << FactoryGirl.create( :scan, name: 'Fff', site: site )
+
+                visit "#{site_path( site )}#!/roles"
+
+                expect(page).to_not have_xpath "//a[@href='#{site_role_path( site, subject )}' and @data-method='delete']"
+            end
         end
     end
 end
