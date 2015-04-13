@@ -12,24 +12,6 @@
 
 <div class="row">
 
-    <% if @site_role.scans.any? %>
-    <div class="col-md-4">
-        <h3>
-            <%= @site_role.scans.size %> associated
-            <%= 'scan'.pluralize @site_role.scans.size %>
-        </h3>
-
-        <ol>
-            <% @site_role.scans.each do |scan| %>
-                <li>
-                    <%= link_to scan.name, [scan.site, scan] %> of
-                    <%= link_to scan.site, scan.site %>
-                </li>
-            <% end %>
-        </ol>
-    </div>
-    <% end %>
-
     <div class="col-md-4">
         <h3>
             Session check
@@ -46,6 +28,18 @@
             <code>
                 <%= @site_role.session_check_pattern %>
             </code>
+        </p>
+
+        <p>
+            <strong>Logout exclusion patterns:</strong>
+
+            <ul>
+            <% @site_role.scope_exclude_path_patterns.each do |pattern| %>
+                <li>
+                    <code><%= pattern %></code>
+                </li>
+            <% end %>
+            </ul>
         </p>
     </div>
 
@@ -80,4 +74,22 @@
         </p>
     <% end %>
     </div>
+
+    <% if @site_role.scans.any? %>
+        <div class="col-md-4">
+            <h3>
+                <%= @site_role.scans.size %> associated
+                <%= 'scan'.pluralize @site_role.scans.size %>
+            </h3>
+
+            <ol>
+                <% @site_role.scans.each do |scan| %>
+                    <li>
+                        <%= link_to scan.name, [scan.site, scan] %> of
+                        <%= link_to scan.site, scan.site %>
+                    </li>
+                <% end %>
+            </ol>
+        </div>
+    <% end %>
 </div>

@@ -48,6 +48,12 @@ feature 'Show site role page', js: true do
         end
     end
 
+    scenario 'sees logout exclusion patterns' do
+        subject.scope_exclude_path_patterns.each do |pattern|
+            expect(page).to have_content pattern
+        end
+    end
+
     scenario 'sees session check URL' do
         expect(page).to have_content subject.session_check_url
     end
