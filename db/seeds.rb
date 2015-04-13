@@ -156,7 +156,17 @@ revisions_per_scan = 3
     )
 
     role = site.roles.create(
-        name: 'Guest'
+        name:                        'Administrator',
+        description:                 'Administrator account',
+        session_check_url:           site.url,
+        session_check_pattern:       'logout',
+        scope_exclude_path_patterns: ['logout'],
+        login_type:                  'form',
+        login_form_url:              "#{site.url}/login",
+        login_form_parameters:       {
+            'user'     => 'admin',
+            'password' => 'secret'
+        }
     )
 
     scans_size.times do |i|
