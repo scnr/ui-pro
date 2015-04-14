@@ -26,15 +26,67 @@ feature 'Profile page', :devise do
                 visit profile_path( subject )
             end
 
-            scenario 'sees associated scans' do
-                subject.scans << scan
-                subject.scans << FactoryGirl.create( :scan, name: 'Fff', site: site )
+            feature 'and the profile has scans' do
+                before do
+                    subject.scans << scan
+                    subject.scans << FactoryGirl.create( :scan, name: 'Fff', site: site )
+                    subject.save
 
-                visit profile_path( subject )
+                    visit profile_path( subject )
+                end
 
-                subject.scans.each do |scan|
-                    expect(page).to have_content scan.name
-                    expect(page).to have_content scan.site.to_s
+                scenario 'sees them' do
+                    subject.scans.each do |scan|
+                        expect(page).to have_content scan.name
+                        expect(page).to have_content scan.site.to_s
+                    end
+                end
+
+                scenario 'can edit' do
+                    expect(page).to have_xpath "//a[@href='#{edit_profile_path( subject )}']"
+                end
+
+                scenario 'can copy' do
+                    expect(page).to have_xpath "//a[@href='#{copy_profile_path( subject )}']"
+                end
+
+                scenario 'cannot delete' do
+                    expect(page).to_not have_xpath "//a[@href='#{profile_path( subject )}' and @data-method='delete']"
+                end
+            end
+
+            feature 'and the profile has no scans' do
+                before do
+                    subject.scans = []
+                    subject.save
+
+                    visit profile_path( subject )
+                end
+
+                scenario 'can edit' do
+                    expect(page).to have_xpath "//a[@href='#{edit_profile_path( subject )}']"
+                end
+
+                scenario 'can copy' do
+                    expect(page).to have_xpath "//a[@href='#{copy_profile_path( subject )}']"
+                end
+
+                scenario 'can delete' do
+                    expect(page).to have_xpath "//a[@href='#{profile_path( subject )}' and @data-method='delete']"
+                end
+            end
+
+            feature 'and the profile is default' do
+                before do
+                    subject.scans   = []
+                    subject.default = true
+                    subject.save
+
+                    visit profile_path( subject )
+                end
+
+                scenario 'cannot delete' do
+                    expect(page).to_not have_xpath "//a[@href='#{profile_path( subject )}' and @data-method='delete']"
                 end
             end
 
