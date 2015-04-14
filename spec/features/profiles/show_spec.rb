@@ -26,6 +26,19 @@ feature 'Profile page', :devise do
                 visit profile_path( subject )
             end
 
+            scenario 'sees name in heading' do
+                expect(find('h1')).to have_content subject.name
+            end
+
+            scenario 'sees rendered Markdown description' do
+                subject.description = '**Stuff**'
+                subject.save
+
+                visit profile_path( subject )
+
+                expect(find('.lead.description strong')).to have_content 'Stuff'
+            end
+
             feature 'can export profile as' do
                 scenario 'JSON' do
                     find_button('profile-export-button').click

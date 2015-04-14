@@ -33,4 +33,13 @@ feature 'Revision page' do
         expect(find('h1').text).to match site.url
     end
 
+    scenario 'sees rendered Markdown scan description' do
+        scan.description = '**Stuff**'
+        scan.save
+
+        visit site_scan_revision_path( site, scan, revision )
+
+        expect(find('.description strong')).to have_content 'Stuff'
+    end
+
 end

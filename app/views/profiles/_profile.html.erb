@@ -1,7 +1,9 @@
 <div class="page-header">
     <h1><%= profile.name %></h1>
 
-    <div class="lead"><%= md profile.description %></div>
+    <div class="lead description">
+        <%= md profile.description %>
+    </div>
 </div>
 
 <% if profile.scans.any? %>

@@ -36,6 +36,15 @@ feature 'Show site role page', js: true do
         expect(page).to have_content subject.description
     end
 
+    scenario 'sees rendered Markdown description' do
+        subject.description = '**Stuff**'
+        subject.save
+
+        visit "#{site_path( site )}#!/roles/1"
+
+        expect(find('.description strong')).to have_content 'Stuff'
+    end
+
     scenario 'sees associated scans' do
         subject.scans << scan
         subject.scans << FactoryGirl.create( :scan, name: 'Fff', site: site )

@@ -29,8 +29,13 @@ feature 'Scan page' do
         expect(find('h1').text).to match site.url
     end
 
-    scenario 'user sees scan description' do
-        expect(page).to have_content scan.description
+    scenario 'sees rendered Markdown description' do
+        scan.description = '**Stuff**'
+        scan.save
+
+        visit site_scan_path( site, scan )
+
+        expect(find('.description strong')).to have_content 'Stuff'
     end
 
     scenario 'user sees a link to the profile' do

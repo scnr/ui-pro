@@ -18,9 +18,9 @@
             <% end %>
         </h1>
 
-        <p class="text-muted">
-            <%= @scan.description %>
-        </p>
+        <div class="description">
+            <%= md @scan.description %>
+        </div>
 
         <p class="text-muted">
             <% if @scan.schedule.recurring? %>
