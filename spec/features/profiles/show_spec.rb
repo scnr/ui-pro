@@ -26,6 +26,29 @@ feature 'Profile page', :devise do
                 visit profile_path( subject )
             end
 
+            feature 'can export profile as' do
+                scenario 'JSON' do
+                    find_button('profile-export-button').click
+                    click_link 'JSON'
+
+                    expect(page.body).to eq subject.export( JSON )
+                end
+
+                scenario 'YAML' do
+                    find_button('profile-export-button').click
+                    click_link 'YAML'
+
+                    expect(page.body).to eq subject.export( YAML )
+                end
+
+                scenario 'AFR' do
+                    find_button('profile-export-button').click
+                    click_link 'AFP (Suitable for the CLI interface.)'
+
+                    expect(page.body).to eq subject.to_rpc_options.to_yaml
+                end
+            end
+
             feature 'and the profile has scans' do
                 before do
                     subject.scans << scan
