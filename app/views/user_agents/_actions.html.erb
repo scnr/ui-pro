@@ -1,0 +1,50 @@
+<%
+   button_size = local_assigns[:button_size] || 'sm'
+%>
+
+<%= link_to copy_user_agent_path( user_agent ),
+            class: "btn btn-#{button_size} btn-primary" do %>
+    <i class="fa fa-copy"></i>
+<% end %>
+
+<% if user_agent.revisions.empty? %>
+    <%= link_to edit_user_agent_path( user_agent ),
+                class: "btn btn-#{button_size} btn-warning" do %>
+        <i class="fa fa-pencil"></i>
+    <% end %>
+<% end %>
+
+<% if user_agent.scans.empty? && !user_agent.default? %>
+    <%= link_to user_agent, method: :delete,
+                class: "btn btn-#{button_size} btn-danger",
+                data: { confirm: 'Are you sure?' } do %>
+        <i class="fa fa-trash"></i>
+    <% end %>
+<% end %>
+
+<div class="btn-group" role="group">
+    <button id="user_agent-export-button" type="button"
+            class="btn btn-<%= button_size %> btn-inverse dropdown-toggle"
+            data-toggle="dropdown">
+
+        <i class="fa fa-download"></i>
+        <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+        <li>
+            <%= link_to user_agent_path( user_agent, format: :yaml ) do %>
+                YAML
+            <% end %>
+        </li>
+        <li>
+            <%= link_to user_agent_path( user_agent, format: :json ) do %>
+                JSON
+            <% end %>
+        </li>
+        <li>
+            <%= link_to user_agent_path( user_agent, format: :afp ) do %>
+                AFP (Suitable for the CLI interface.)
+            <% end %>
+        </li>
+    </ul>
+</div>
