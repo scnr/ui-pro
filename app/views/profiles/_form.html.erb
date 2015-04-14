@@ -113,70 +113,54 @@
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-md-12">
-                    <button class="btn btn-sm btn-primary" type="button" data-toggle="collapse"
-                            data-target="#scope-advanced" aria-expanded="false"
-                            aria-controls="collapseExample">
-                        Advanced
-                    </button>
-                    <p class="help-block">
-                        In case there are redundant/infinite pages, rewrite rules or you want to provide
-                        your own sitemap.
-                    </p>
-
-                    <div class="collapse" id="scope-advanced">
-                        <div class="well well-sm">
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <%= f.input :scope_exclude_binaries, label: 'Ignore binary content' %>
-                                    <%= messages_for( :scope_exclude_binaries ) %>
-                                </div>
-                                <div class="col-md-6">
-                                    <%= f.input :scope_dom_depth_limit,
-                                                label: 'DOM depth limit',
-                                                placeholder: 'Infinite' %>
-                                    <%= messages_for( :scope_dom_depth_limit ) %>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <%= f.input :scope_restrict_paths,
-                                                label: 'Restrict paths',
-                                                placeholder: 'Use paths discovered by the crawl',
-                                                input_html: { value: @profile.scope_restrict_paths.join( "\n" ) } %>
-                                    <%= messages_for( :scope_restrict_paths ) %>
-                                    <p class="help-block alert alert-info">Input each path in its own line.</p>
-                                </div>
-                                <div class="col-md-6">
-                                    <%= f.input :scope_extend_paths,
-                                                label: 'Extend paths',
-                                                placeholder: 'Only use paths discovered by the crawl',
-                                                input_html: { value: @profile.scope_extend_paths.join( "\n" ) } %>
-                                    <%= messages_for( :scope_extend_paths ) %>
-                                    <p class="help-block alert alert-info">Input each path in its own line.</p>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <%= f.input :scope_exclude_content_patterns,
-                                                label: 'Content exclusion patterns',
-                                                placeholder: 'Include all pages',
-                                                input_html: {
-                                                        value: @profile.scope_exclude_content_patterns.join( "\n" )
-                                                } %>
-                                    <%= messages_for( :scope_exclude_content_patterns ) %>
-                                    <p class="help-block alert alert-info">Input each rule in its own line.</p>
-                                </div>
-                            </div>
-
-                        </div>
+            <%= advanced id: 'scope',
+                         message: 'In case there are redundant/infinite pages,' <<
+                            ' rewrite rules or you want to provide your own sitemap.' do %>
+                <div class="row">
+                    <div class="col-md-6">
+                        <%= f.input :scope_exclude_binaries, label: 'Ignore binary content' %>
+                        <%= messages_for( :scope_exclude_binaries ) %>
+                    </div>
+                    <div class="col-md-6">
+                        <%= f.input :scope_dom_depth_limit,
+                                    label: 'DOM depth limit',
+                                    placeholder: 'Infinite' %>
+                        <%= messages_for( :scope_dom_depth_limit ) %>
                     </div>
                 </div>
-            </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <%= f.input :scope_restrict_paths,
+                                    label: 'Restrict paths',
+                                    placeholder: 'Use paths discovered by the crawl',
+                                    input_html: { value: @profile.scope_restrict_paths.join( "\n" ) } %>
+                        <%= messages_for( :scope_restrict_paths ) %>
+                        <p class="help-block alert alert-info">Input each path in its own line.</p>
+                    </div>
+                    <div class="col-md-6">
+                        <%= f.input :scope_extend_paths,
+                                    label: 'Extend paths',
+                                    placeholder: 'Only use paths discovered by the crawl',
+                                    input_html: { value: @profile.scope_extend_paths.join( "\n" ) } %>
+                        <%= messages_for( :scope_extend_paths ) %>
+                        <p class="help-block alert alert-info">Input each path in its own line.</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <%= f.input :scope_exclude_content_patterns,
+                                    label: 'Content exclusion patterns',
+                                    placeholder: 'Include all pages',
+                                    input_html: {
+                                            value: @profile.scope_exclude_content_patterns.join( "\n" )
+                                    } %>
+                        <%= messages_for( :scope_exclude_content_patterns ) %>
+                        <p class="help-block alert alert-info">Input each rule in its own line.</p>
+                    </div>
+                </div>
+                <% end %>
         </fieldset>
     </div>
 
@@ -221,69 +205,52 @@
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-md-12">
-                    <button class="btn btn-sm btn-primary" type="button" data-toggle="collapse"
-                            data-target="#audit-advanced" aria-expanded="false"
-                            aria-controls="collapseExample">
-                        Advanced
-                    </button>
-                    <p class="help-block">
-                        In case there are inputs that need to be included/excluded or more extensively
-                        audited.
-                    </p>
-
-                    <div class="collapse" id="audit-advanced">
-                        <div class="well well-sm">
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <%= f.input :audit_with_both_http_methods %>
-                                    <%= messages_for( :audit_with_both_http_methods ) %>
-                                </div>
-                                <div class="col-md-6">
-                                    <%= f.input :audit_cookies_extensively %>
-                                    <%= messages_for( :audit_cookies_extensively ) %>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <%= f.input :audit_with_extra_parameter %>
-                                    <%= messages_for( :audit_with_extra_parameter ) %>
-                                </div>
-                                <div class="col-md-6">
-                                    <%= f.input :audit_parameter_names %>
-                                    <%= messages_for( :audit_parameter_names ) %>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <%= f.input :audit_include_vector_patterns,
-                                                label: 'Parameter inclusion patterns',
-                                                placeholder: 'Include all parameters',
-                                                input_html: { value: @profile.audit_include_vector_patterns.join( "\n" ) } %>
-
-                                    <%= messages_for( :audit_include_vector_patterns ) %>
-                                    <p class="help-block alert alert-info">Input one pattern per line.</p>
-                                </div>
-                                <div class="col-md-6">
-                                    <%= f.input :audit_exclude_vector_patterns,
-                                                label: 'Parameter exclusion patterns',
-                                                placeholder: 'Do not exclude any parameters',
-                                                input_html: { value: @profile.audit_exclude_vector_patterns.join( "\n" ) } %>
-
-                                    <%= messages_for( :audit_exclude_vector_patterns ) %>
-                                    <p class="help-block alert alert-info">Input one pattern per line.</p>
-                                </div>
-                            </div>
-
-                        </div>
+            <%= advanced id: 'audit',
+                         message: 'In case there are inputs that need to be' <<
+                            ' included/excluded or more extensively audited.' do %>
+                <div class="row">
+                    <div class="col-md-6">
+                        <%= f.input :audit_with_both_http_methods %>
+                        <%= messages_for( :audit_with_both_http_methods ) %>
+                    </div>
+                    <div class="col-md-6">
+                        <%= f.input :audit_cookies_extensively %>
+                        <%= messages_for( :audit_cookies_extensively ) %>
                     </div>
                 </div>
-            </div>
 
+                <div class="row">
+                    <div class="col-md-6">
+                        <%= f.input :audit_with_extra_parameter %>
+                        <%= messages_for( :audit_with_extra_parameter ) %>
+                    </div>
+                    <div class="col-md-6">
+                        <%= f.input :audit_parameter_names %>
+                        <%= messages_for( :audit_parameter_names ) %>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <%= f.input :audit_include_vector_patterns,
+                                    label: 'Parameter inclusion patterns',
+                                    placeholder: 'Include all parameters',
+                                    input_html: { value: @profile.audit_include_vector_patterns.join( "\n" ) } %>
+
+                        <%= messages_for( :audit_include_vector_patterns ) %>
+                        <p class="help-block alert alert-info">Input one pattern per line.</p>
+                    </div>
+                    <div class="col-md-6">
+                        <%= f.input :audit_exclude_vector_patterns,
+                                    label: 'Parameter exclusion patterns',
+                                    placeholder: 'Do not exclude any parameters',
+                                    input_html: { value: @profile.audit_exclude_vector_patterns.join( "\n" ) } %>
+
+                        <%= messages_for( :audit_exclude_vector_patterns ) %>
+                        <p class="help-block alert alert-info">Input one pattern per line.</p>
+                    </div>
+                </div>
+            <% end %>
         </fieldset>
     </div>
 

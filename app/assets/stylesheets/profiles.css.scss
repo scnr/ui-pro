@@ -2,6 +2,23 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+#checks, #plugins {
+    .panel-heading:nth-child(even) {
+        background-color: #E9E9E9;
+    }
+    .panel-heading {
+        border: 0px;
+    }
+
+    input[type="checkbox"] {
+        top: -20px;
+    }
+
+    .panel-title {
+        cursor: pointer;
+    }
+}
+
 .profile-form {
 
     .form-control {
@@ -96,25 +113,8 @@
         float: left;
     }
 
-    #checks, #plugins {
-        .panel-heading:nth-child(even) {
-            background-color: #E9E9E9;
-        }
-        .panel-heading {
-            border: 0px;
-        }
-
-        input[type="checkbox"] {
-            top: -20px;
-        }
-
-        .panel-title {
-            cursor: pointer;
-        }
-    }
-
     .numeric {
-        width: 100px;
+        width: 120px;
         margin-top: 5px;
     }
 

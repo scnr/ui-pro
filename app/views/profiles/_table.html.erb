@@ -37,52 +37,7 @@
             </td>
 
             <td>
-                <%= link_to copy_profile_path( profile ),
-                            class: 'btn btn-sm btn-primary' do %>
-                    <i class="fa fa-copy"></i>
-                <% end %>
-
-                <% if profile.revisions.empty? %>
-                    <%= link_to edit_profile_path( profile ),
-                                class: 'btn btn-sm btn-warning' do %>
-                        <i class="fa fa-pencil"></i>
-                    <% end %>
-                <% end %>
-
-                <% if profile.scans.empty? && !profile.default? %>
-                    <%= link_to profile, method: :delete,
-                                class: 'btn btn-sm btn-danger',
-                                data: { confirm: 'Are you sure?' } do %>
-                        <i class="fa fa-trash"></i>
-                    <% end %>
-                <% end %>
-
-                <div class="btn-group" role="group">
-                    <button id="profile-export-button" type="button"
-                            class="btn btn-sm btn-inverse dropdown-toggle"
-                            data-toggle="dropdown">
-
-                        <i class="fa fa-download"></i>
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" role="menu">
-                        <li>
-                            <%= link_to profile_path( profile, format: :yaml ) do %>
-                                YAML
-                            <% end %>
-                        </li>
-                        <li>
-                            <%= link_to profile_path( profile, format: :json ) do %>
-                                JSON
-                            <% end %>
-                        </li>
-                        <li>
-                            <%= link_to profile_path( profile, format: :afp ) do %>
-                                AFP (Suitable for the CLI interface.)
-                            <% end %>
-                        </li>
-                    </ul>
-                </div>
+                <%= render 'actions', profile: profile %>
             </td>
         </tr>
     <% end %>

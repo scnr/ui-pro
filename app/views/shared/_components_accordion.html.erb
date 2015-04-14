@@ -1,11 +1,9 @@
 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
     <% components.each do |shortname, info| %>
         <div class="panel-heading" role="tab">
-            <h4 class="panel-title">
-                <a class="accordion-toggle" data-toggle="collapse"
-                   data-parent="#component-accordion" href="#<%= shortname %>">
-                    <%= info[:name] %> (<%= shortname %>)
-                </a>
+            <h4 class="panel-title" data-toggle="collapse"
+                role="tab" data-target="#<%= shortname %>">
+                <%= info[:name] %> (<code><%= shortname %></code>)
             </h4>
             <div style="height: 0px;" id="<%= shortname %>" class="panel-collapse collapse">
                 <div class="panel-body">
@@ -13,47 +11,53 @@
                         <%= md info[:description] %>
                     </div>
 
-                    <hr/>
-
-                    <p>
-                        <strong>Version:</strong> <%= info[:version] %><br/>
-                    </p>
-
-                    <div>
-                        <strong>Authors:</strong>
-
-                        <ul>
-                            <% info[:authors].each do |author| %>
-                                <li><%= author %></li>
-                            <% end %>
-                        </ul>
-                    </div>
-
-                    <% if info[:platforms].is_a? Array %>
-                        <div>
-                            <strong>Supported platforms:</strong>
-                            <ul>
-                            <% info[:targets].each do |platform| %>
-                                <li><%= platform %></li>
-                            <% end %>
-                            </ul>
-                        </div>
-                    <% end %>
-
                     <% if info[:options] %>
-                        <div>
-                            <strong>Options</strong>
-                            <div class="plugin-options">
-                                <%= render partial: 'plugin_options',
-                                           locals: {
-                                                   plugin_info:   info,
-                                                   plugin_name:   shortname,
-                                                   configuration: @profile.plugins[shortname] || {},
-                                                   disabled:      true
-                                           } %>
-                            </div>
+                        <hr/>
+
+                        <div class="plugin-options">
+                            <%= render partial: '/shared/plugin_options',
+                                       locals: {
+                                               plugin_info:   info,
+                                               plugin_name:   shortname,
+                                               configuration: @profile.plugins[shortname] || {},
+                                               disabled:      true
+                                       } %>
                         </div>
+
+                        <hr/>
                     <%end%>
+
+                    <table class="table table-borderless table-condensed">
+                        <tr>
+                            <th>Version:</th>
+                            <td><%= info[:version] %></td>
+                        </tr>
+
+                        <tr>
+                            <th>Authors:</th>
+                            <td>
+                                <ul class="list-unstyled">
+                                    <% info[:authors].each do |author| %>
+                                        <li><%= author %></li>
+                                    <% end %>
+                                </ul>
+                            </td>
+                        </tr>
+
+                        <% if info[:platforms].is_a? Array %>
+                            <tr>
+                                <th>Supported platforms:</th>
+                                <td>
+                                    <ul class="list-unstyled">
+                                        <% info[:platforms].each do |platform| %>
+                                            <li><%= platform_fullname platform %></li>
+                                        <% end %>
+                                    </ul>
+                                </td>
+                            </tr>
+                        <% end %>
+                    </table>
+
                 </div>
             </div>
         </div>

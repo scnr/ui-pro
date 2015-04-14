@@ -1,7 +1,7 @@
 <div class="page-header">
     <h1><%= profile.name %></h1>
 
-    <div class="lead"><%= profile.description %></div>
+    <div class="lead"><%= md profile.description %></div>
 </div>
 
 <% if profile.scans.any? %>
@@ -24,146 +24,365 @@
     </div>
 <% end %>
 
-<section id="scope">
+<div id="scope">
     <h2 id="scope-h">
         Scope
-        <small>Rules about which resources to include</small>
+        <small>Rules governing scan coverage</small>
     </h2>
 
     <div class="row">
-        <% if profile.scope_exclude_path_patterns.any? %>
-            <div class="col-md-6">
-                <p>
-                    <b>Exclude:</b>
-                    <textarea disabled
-                              id="profile_scope_exclude_path_patterns"><%= profile.scope_exclude_path_patterns.join("\n") %></textarea>
-                </p>
-                <%= messages_for :scope_exclude_path_patterns %>
-            </div>
-        <% end %>
+        <div id="scope_page_limit" class="col-md-6">
+            <strong>Page limit:</strong>
+            <%= profile.scope_page_limit || 'Infinite' %>
 
-        <% if profile.scope_include_path_patterns.any? %>
-            <div class="col-md-6">
-                <p>
-                    <b>Include:</b>
-                    <textarea disabled
-                              id="profile_scope_include_path_patterns"><%= profile.scope_include_path_patterns.join("\n") %></textarea>
-                </p>
-                <%= messages_for :scope_include_path_patterns %>
-            </div>
-        <% end %>
-    </div>
-    <div class="row">
-        <% if profile.scope_restrict_paths.any? %>
-            <div class="col-md-6">
-                <p>
-                    <b>Restrict paths:</b> <br/>
-                    <textarea disabled
-                              id="profile_scope_restrict_paths"><%= profile.scope_restrict_paths.join("\n") %></textarea>
-                </p>
-                <%= messages_for :scope_restrict_paths %>
-            </div>
-        <% end %>
+            <%= messages_for :scope_page_limit %>
+        </div>
+        <div id="scope_directory_depth_limit" class="col-md-6">
+            <strong>Directory depth limit:</strong>
+            <%= profile.scope_directory_depth_limit || 'Infinite' %>
 
-        <% if profile.scope_extend_paths.any? %>
-            <div class="col-md-6">
-                <p>
-                    <b>Extend paths:</b>
-                    <textarea disabled
-                              id="profile_scope_extend_paths"><%= profile.scope_extend_paths.join("\n") %></textarea>
-                </p>
-                <%= messages_for :scope_extend_paths %>
-            </div>
-        <% end %>
+            <%= messages_for :scope_directory_depth_limit %>
+        </div>
     </div>
+
     <div class="row">
-        <% if profile.scope_exclude_content_patterns.any? %>
-            <div class="col-md-6">
-                <p>
-                    <b>Exclude pages:</b> <br/>
-                    <textarea disabled
-                              id="profile_scope_exclude_content_patterns"><%= profile.scope_exclude_content_patterns.join("\n") %></textarea>
-                </p>
-                <%= messages_for :scope_exclude_content_patterns %>
-            </div>
-        <% end %>
+        <div id="scope_include_path_patterns" class="col-md-6">
+            <strong>Path inclusion patterns:</strong>
+
+            <% if profile.scope_include_path_patterns.empty? %>
+                Include all resources.
+            <% else %>
+                <ol>
+                <% profile.scope_include_path_patterns.each do |pattern| %>
+                    <li>
+                        <%= pattern %>
+                    </li>
+                <% end %>
+                </ol>
+            <% end %>
+
+            <%= messages_for :scope_include_path_patterns %>
+        </div>
+        <div id="scope_exclude_path_patterns" class="col-md-6">
+            <strong>Path exclude patterns:</strong>
+
+            <% if profile.scope_exclude_path_patterns.empty? %>
+                Do not exclude any resources.
+            <% else %>
+                <ol>
+                    <% profile.scope_exclude_path_patterns.each do |pattern| %>
+                        <li>
+                            <%= pattern %>
+                        </li>
+                    <% end %>
+                </ol>
+            <% end %>
+
+            <%= messages_for :scope_exclude_path_patterns %>
+        </div>
     </div>
-</section>
+
+    <%= advanced id: 'scope' do %>
+        <div class="row">
+            <div id="scope_exclude_binaries" class="col-md-6">
+                <strong>Ignore binary content:</strong>
+                <input <%= 'checked' if profile.scope_exclude_binaries? %>
+                       disabled type="checkbox">
+
+                <%= messages_for( :scope_exclude_binaries ) %>
+            </div>
+            <div id="scope_dom_depth_limit" class="col-md-6">
+                <strong>DOM depth limit:</strong>
+                <%= profile.scope_dom_depth_limit || 'Infinite' %>
+
+                <%= messages_for( :scope_dom_depth_limit ) %>
+            </div>
+        </div>
+
+        <div class="row">
+            <div id="scope_restrict_paths" class="col-md-6">
+                <strong>Restrict paths:</strong>
+
+                <% if profile.scope_restrict_paths.empty? %>
+                    Use paths discovered by the crawl.
+                <% else %>
+                    <ol>
+                        <% profile.scope_restrict_paths.each do |path| %>
+                            <li>
+                                <%= path %>
+                            </li>
+                        <% end %>
+                    </ol>
+                <% end %>
+
+                <%= messages_for( :scope_restrict_paths ) %>
+            </div>
+            <div id="scope_extend_paths" class="col-md-6">
+                <strong>Extend paths:</strong>
+
+                <% if profile.scope_extend_paths.empty? %>
+                    Only use paths discovered by the crawl.
+                <% else %>
+                    <ol>
+                        <% profile.scope_extend_paths.each do |path| %>
+                            <li>
+                                <%= path %>
+                            </li>
+                        <% end %>
+                    </ol>
+                <% end %>
+
+                <%= messages_for( :scope_extend_paths ) %>
+            </div>
+        </div>
+
+        <div class="row">
+            <div id="scope_exclude_content_patterns" class="col-md-6">
+                <strong>Content exclusion patterns:</strong>
+
+                <% if profile.scope_exclude_content_patterns.empty? %>
+                    Include all pages.
+                <% else %>
+                    <ol>
+                        <% profile.scope_exclude_content_patterns.each do |pattern| %>
+                            <li>
+                                <%= pattern %>
+                            </li>
+                        <% end %>
+                    </ol>
+                <% end %>
+
+                <%= messages_for( :scope_exclude_content_patterns ) %>
+            </div>
+        </div>
+    <% end %>
+</div>
 
 <hr/>
 
-<section id="audit">
+<div id="audit">
     <h2 id="audit-h">
         Audit
         <small>How the scanner will audit web application inputs</small>
     </h2>
 
     <div class="row">
-        <div class="col-md-6">
+        <div id="audit_forms" class="col-md-6">
             <p>
-                <b>Forms:</b>
-                <input <%= 'checked' if profile.audit_forms %>
+                <strong>Forms:</strong>
+                <input <%= 'checked' if profile.audit_forms? %>
                        disabled type="checkbox">
             </p>
             <%= messages_for :audit_forms %>
         </div>
-        <div class="col-md-6">
+        <div id="audit_links" class="col-md-6">
             <p>
-                <b>Links:</b>
-                <input <%= 'checked' if profile.audit_links %>
+                <strong>Links:</strong>
+                <input <%= 'checked' if profile.audit_links? %>
                        disabled type="checkbox">
             </p>
             <%= messages_for :audit_links %>
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6">
+        <div id="audit_cookies" class="col-md-6">
             <p>
-                <b>Cookies:</b>
-                <input <%= 'checked' if profile.audit_cookies %>
+                <strong>Cookies:</strong>
+                <input <%= 'checked' if profile.audit_cookies? %>
                        disabled type="checkbox">
             </p>
             <%= messages_for :audit_cookies %>
         </div>
+
+        <div id="audit_headers" class="col-md-6">
+            <p>
+                <strong>Headers:</strong>
+                <input <%= 'checked' if profile.audit_headers? %>
+                       disabled type="checkbox">
+            </p>
+            <%= messages_for :audit_headers %>
+        </div>
     </div>
 
     <div class="row">
-        <% if profile.audit_exclude_vector_patterns.any? %>
-            <div class="col-md-6">
-                <p>
-                    <b>Exclude input vectors:</b>
-                    <textarea disabled
-                              id="profile_audit_exclude_vector_patterns"><%= profile.audit_exclude_vector_patterns.join("\n") %></textarea>
-                </p>
-                <%= messages_for :audit_exclude_vector_patterns %>
-            </div>
-        <% end %>
+        <div id="audit_xmls" class="col-md-6">
+            <p>
+                <strong>XML inputs:</strong>
+                <input <%= 'checked' if profile.audit_xmls? %>
+                       disabled type="checkbox">
+            </p>
+            <%= messages_for :audit_xmls %>
+        </div>
 
-        <% if profile.audit_include_vector_patterns.any? %>
-            <div class="col-md-6">
+        <div id="audit_jsons" class="col-md-6">
+            <p>
+                <strong>JSON inputs:</strong>
+                <input <%= 'checked' if profile.audit_jsons? %>
+                       disabled type="checkbox">
+            </p>
+            <%= messages_for :audit_jsons %>
+        </div>
+    </div>
+
+    <%= advanced id: 'audit' do %>
+        <div class="row">
+            <div id="audit_with_both_http_methods" class="col-md-6">
                 <p>
-                    <b>Include input vectors:</b>
-                    <textarea disabled
-                              id="profile_audit_audit_include_vector_patterns"><%= profile.audit_include_vector_patterns.join("\n") %></textarea>
+                    <strong>Audit with both http methods:</strong>
+                    <input <%= 'checked' if profile.audit_with_both_http_methods? %>
+                           disabled type="checkbox">
                 </p>
+                <%= messages_for :audit_with_both_http_methods %>
+            </div>
+            <div id="audit_cookies_extensively" class="col-md-6">
+                <p>
+                    <strong>Audit cookies extensively:</strong>
+                    <input <%= 'checked' if profile.audit_cookies_extensively? %>
+                           disabled type="checkbox">
+                </p>
+                <%= messages_for :audit_cookies_extensively %>
+            </div>
+        </div>
+
+        <div class="row">
+            <div id="audit_with_extra_parameter" class="col-md-6">
+                <p>
+                    <strong>Audit with extra parameter:</strong>
+                    <input <%= 'checked' if profile.audit_with_extra_parameter? %>
+                           disabled type="checkbox">
+                </p>
+                <%= messages_for :audit_with_extra_parameter %>
+            </div>
+            <div id="audit_parameter_names" class="col-md-6">
+                <p>
+                    <strong>Audit parameter names:</strong>
+                    <input <%= 'checked' if profile.audit_parameter_names? %>
+                           disabled type="checkbox">
+                </p>
+                <%= messages_for :audit_parameter_names %>
+            </div>
+        </div>
+
+        <div class="row">
+            <div id="audit_include_vector_patterns" class="col-md-6">
+                <p>
+                    <strong>Parameter inclusion patterns:</strong>
+
+                    <% if profile.audit_include_vector_patterns.empty? %>
+                        Include all parameters.
+                    <% else %>
+                    <ol>
+                        <% profile.audit_include_vector_patterns.each do |pattern| %>
+                            <li>
+                                <%= pattern %>
+                            </li>
+                        <% end %>
+                    </ol>
+                    <% end %>
+                </p>
+
                 <%= messages_for :audit_include_vector_patterns %>
             </div>
-        <% end %>
-    </div>
-</section>
+            <div id="audit_exclude_vector_patterns" class="col-md-6">
+                <p>
+                    <strong>Parameter exclusion patterns:</strong>
+
+                    <% if profile.audit_exclude_vector_patterns.empty? %>
+                        Do not exclude any parameters.
+                    <% else %>
+                    <ol>
+                        <% profile.audit_exclude_vector_patterns.each do |pattern| %>
+                            <li>
+                                <%= pattern %>
+                            </li>
+                        <% end %>
+                    </ol>
+                <% end %>
+                </p>
+
+                <%= messages_for :audit_exclude_vector_patterns %>
+            </div>
+        </div>
+    <% end %>
+</div>
 
 <hr/>
 
-<section id="checks">
+<div id="checks">
     <h2 id="checks-h">
         Checks
         <small>The security checks to be run again the web application</small>
     </h2>
 
     <% if profile.checks.any? %>
-        <%= profile.checks %>
+        <div class="row">
+            <div id="checks-active" class="col-md-12">
+                <h3>
+                    Active
+                    <small>These checks will actively engage the web application via its inputs (links, forms, etc.).</small>
+                </h3>
+
+                <% active = profile.checks_with_info.select { |n, i| i[:path].include?( '/checks/active' ) } %>
+                <% if active.any? %>
+                    <%= render partial: '/shared/components_twin_accordion',
+                               locals: {
+                                       components: active,
+                                       selected:   profile.checks,
+                                       input:      :checks,
+                                       class_name: 'col-md-6'
+                               } %>
+                <% else %>
+                    <p class="help-block alert alert-info">
+                        No active checks have been selected.
+                    </p>
+                <% end %>
+            </div>
+        </div>
+        <div class="row">
+            <div id="checks-passive" class="col-md-12">
+                <h3>
+                    Passive
+                    <small>These checks will passively collect data.</small>
+                </h3>
+
+                <% passive = profile.checks_with_info.select { |n, i| i[:path].include?( '/checks/passive' ) } %>
+                <% if passive.any? %>
+                    <%= render partial: '/shared/components_twin_accordion',
+                               locals: {
+                                       components: passive,
+                                       selected:   profile.checks,
+                                       input:      :checks,
+                                       class_name: 'col-md-6'
+                               } %>
+                <% else %>
+                    <p class="help-block alert alert-info">
+                        No passive checks have been selected.
+                    </p>
+                <% end %>
+            </div>
+        </div>
     <% else %>
         <p class="alert alert-info">No checks have been selected.</p>
     <% end %>
+</div>
 
-</section>
+<hr/>
+
+<div id="plugins">
+    <h2 id="plugins-h">
+        Plugins
+        <small>Assisting components to be enabled during the process.</small>
+    </h2>
+
+    <% if @profile.plugins.any? %>
+        <%= render partial: '/shared/components_twin_accordion',
+                   locals: {
+                           components: profile.plugins_with_info,
+                           selected:   @profile.plugins,
+                           input:      :plugins,
+                           class_name: 'col-md-6'
+                   } %>
+    <% else %>
+        <p class="alert alert-info">No plugins have been selected.</p>
+    <% end %>
+</div>

@@ -111,7 +111,10 @@ function openFromWindowLocation(){
 }
 
 function idFromWindowLocation() {
-    return window.location.hash.split('#!/')[1].replace( /\//g, '-' )
+    var loc = window.location.hash.split( '#!/' )[1];
+    if( !loc ) return;
+
+    return loc.replace( /\//g, '-' )
 }
 
 function scrollToActiveElementFromWindowLocation() {

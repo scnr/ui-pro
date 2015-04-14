@@ -158,6 +158,10 @@ module ProfileAttributes
         checks.inject({}) { |h, n| h[n] = ::FrameworkHelper.checks[n]; h }
     end
 
+    def plugins_with_info
+        plugins.keys.inject({}) { |h, n| h[n] = ::FrameworkHelper.plugins[n]; h }
+    end
+
     def validate_input_values
         input_values.each do |pattern, _|
             if pattern.empty?

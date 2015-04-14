@@ -87,6 +87,10 @@ module ApplicationHelper
         Loofah.fragment( html ).scrub!(:prune).to_s.html_safe
     end
 
+    def advanced( options = {}, &block )
+        render layout: 'shared/advanced', locals: options, &block
+    end
+
     def code_highlight( *args, &block )
         if block_given?
             code  = capture( &block )

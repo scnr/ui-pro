@@ -1,0 +1,29 @@
+<%
+   button_text = local_assigns[:button_text] || 'Advanced'
+   message     = local_assigns[:message]
+   id          = local_assigns[:id]
+%>
+
+<div class="row">
+    <div class="col-md-12">
+        <button class="btn btn-sm btn-primary" type="button" data-toggle="collapse"
+                data-target="#<%= id %>-advanced" aria-expanded="false"
+                aria-controls="collapseExample">
+            <%= button_text %>
+        </button>
+
+        <% if message %>
+            <p class="help-block">
+                <%= message %>
+            </p>
+        <% end %>
+
+        <div class="collapse" id="<%= id %>-advanced">
+            <div class="well well-sm">
+
+                <%= yield %>
+
+            </div>
+        </div>
+    </div>
+</div>
