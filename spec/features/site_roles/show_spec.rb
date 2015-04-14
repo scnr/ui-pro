@@ -32,10 +32,6 @@ feature 'Show site role page', js: true do
         expect(find('h2')).to have_content subject.name
     end
 
-    scenario 'sees description' do
-        expect(page).to have_content subject.description
-    end
-
     scenario 'sees rendered Markdown description' do
         subject.description = '**Stuff**'
         subject.save
@@ -43,6 +39,38 @@ feature 'Show site role page', js: true do
         visit "#{site_path( site )}#!/roles/1"
 
         expect(find('.description strong')).to have_content 'Stuff'
+    end
+
+    scenario 'has edit link' do
+        find( :xpath, "//a[@href='#!/roles/#{subject.id}/edit']" ).click
+        expect(page).to have_css "form#edit_site_role_#{subject.id}"
+    end
+
+    feature 'when there are no associated scans' do
+        before do
+            subject.scans = []
+            subject.save
+
+            visit "#{site_path( site )}#!/roles/1"
+        end
+
+        scenario 'has delete button' do
+            find(:xpath, "//a[@href='#{site_role_path( site, subject )}' and @data-method='delete']" ).click
+            expect(find('#roles table')).to_not have_content subject.name
+        end
+    end
+
+    feature 'when there are associated scans' do
+        before do
+            subject.scans << scan
+            subject.scans << FactoryGirl.create( :scan, name: 'Fff', site: site )
+
+            visit "#{site_path( site )}#!/roles/1"
+        end
+
+        scenario 'does not have delete button' do
+            expect(page).to_not have_xpath "//a[@href='#{site_role_path( site, subject )}' and @data-method='delete']"
+        end
     end
 
     scenario 'sees associated scans' do

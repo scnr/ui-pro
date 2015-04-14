@@ -1,7 +1,11 @@
 <div class="row">
     <div class="col-md-12">
         <div class="page-header">
-            <h2><%= @site_role.name %></h2>
+            <h2>
+                <%= @site_role.name %>
+
+                <%= render 'actions', site_role: @site_role, button_size: 'xs' %>
+            </h2>
 
             <div class="lead description">
                 <%= md @site_role.description %>

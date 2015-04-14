@@ -27,21 +27,7 @@
             </td>
 
             <td>
-                <a href="#!/roles/<%= site_role.id %>/edit"
-                   class="btn btn-sm btn-warning"
-                   data-js="<%= edit_site_role_path( site_role.site, site_role ) %>">
-                    <i class="fa fa-pencil"></i>
-                </a>
-
-                <% if site_role.scans.empty? %>
-                    <%= link_to site_role_path( site_role.site, site_role ),
-                                method: :delete,
-                                remote: true,
-                                class: 'btn btn-sm btn-danger',
-                                data: { confirm: 'Are you sure?' } do %>
-                        <i class="fa fa-trash"></i>
-                    <% end %>
-                <% end %>
+                <%= render 'actions', site_role: site_role %>
             </td>
         </tr>
     <% end %>
