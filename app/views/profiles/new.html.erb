@@ -1,3 +1,8 @@
+<%
+    title params[:action] == 'copy' ? "Copying #{@profile.name}" : 'New'
+    breadcrumb_add 'Profiles', profiles_path
+%>
+
 <h1>New profile</h1>
 
 <div class="row">

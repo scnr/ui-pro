@@ -2,7 +2,11 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= content_for?(:title) ? yield(:title) : 'Arachni Pro' %></title>
+    <title>
+        <%= "#{yield( :title )} - " if content_for?( :title ) %>
+        <%= "#{title_breadcrumbs} - " if !title_breadcrumbs.empty? %>
+        Arachni Pro
+    </title>
     <meta name="description" content="<%= content_for?(:description) ? yield(:description) : 'Arachni Pro' %>">
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>

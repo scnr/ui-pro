@@ -23,6 +23,23 @@ feature 'User-agent copy page', :devise do
                 visit copy_user_agent_path( subject )
             end
 
+            scenario 'has title' do
+                expect(page).to have_title "Copying #{subject.name}"
+                expect(page).to have_title 'User-agents'
+            end
+
+            scenario 'has breadcrumbs' do
+                breadcrumbs = find('ul.bread')
+
+                expect(breadcrumbs.find('li:nth-of-type(1) a').native['href']).to eq root_path
+
+                expect(breadcrumbs.find('li:nth-of-type(2)')).to have_content 'User-agents'
+                expect(breadcrumbs.find('li:nth-of-type(2) a').native['href']).to eq user_agents_path
+
+                expect(breadcrumbs.find('li:nth-of-type(3)')).to have_content "Copying #{subject.name}"
+                expect(breadcrumbs.find('li:nth-of-type(3) a').native['href']).to eq copy_user_agent_path( subject )
+            end
+
             scenario 'sees the user-agent form pre-filled' do
                 expect(find(:input, '#user_agent_name').value).to eq subject.name
             end

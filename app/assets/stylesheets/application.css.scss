@@ -59,3 +59,53 @@ ul.list-info li:before {
     width:  100%;
     height: 100%
 }
+
+.breadcrumbs {
+    background: none repeat scroll 0 0 #252525;
+    border-color: -moz-use-text-color #252525 #252525;
+    border-right: 1px solid #252525;
+    border-style: none solid solid;
+    border-width: 0 1px 1px;
+    margin-left: -1px;
+    margin-bottom: -1px;
+}
+.breadcrumbs .bread {
+    height: 27px;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.breadcrumbs .bread li {
+    float: left;
+    position: relative;
+}
+.breadcrumbs .bread li a {
+    color: #888888;
+    display: block;
+    padding: 5px 10px;
+
+    max-width: 400px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.breadcrumbs .bread li a i {
+    opacity: 0.3;
+}
+.breadcrumbs .bread li a:hover {
+    color: #FFFFFF;
+    text-decoration: none;
+}
+.breadcrumbs .bread li a:hover i {
+    opacity: 1;
+}
+.breadcrumbs .bread li a:after {
+    content: "/";
+    margin-left: 15px;
+}
+.breadcrumbs .bread li:last-child a:after {
+    content: "";
+}
+.breadcrumbs .bread li.active a {
+    color: #FFFFFF;
+}

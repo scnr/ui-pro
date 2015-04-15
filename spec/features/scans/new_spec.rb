@@ -32,6 +32,27 @@ feature 'New scan page' do
         visit new_site_scan_path( site )
     end
 
+    scenario 'has title' do
+        expect(page).to have_title 'New scan'
+        expect(page).to have_title site.url
+        expect(page).to have_title 'Sites'
+    end
+
+    scenario 'has breadcrumbs' do
+        breadcrumbs = find('ul.bread')
+
+        expect(breadcrumbs.find('li:nth-of-type(1) a').native['href']).to eq root_path
+
+        expect(breadcrumbs.find('li:nth-of-type(2)')).to have_content 'Sites'
+        expect(breadcrumbs.find('li:nth-of-type(2) a').native['href']).to eq sites_path
+
+        expect(breadcrumbs.find('li:nth-of-type(3)')).to have_content site.url
+        expect(breadcrumbs.find('li:nth-of-type(3) a').native['href']).to eq site_path( site )
+
+        expect(breadcrumbs.find('li:nth-of-type(4)')).to have_content 'New scan'
+        expect(breadcrumbs.find('li:nth-of-type(4) a').native['href']).to eq new_site_scan_path( site )
+    end
+
     scenario 'user sees site url in heading' do
         expect(find('h1').text).to match site.url
     end

@@ -3,7 +3,7 @@ Warden.test_mode!
 
 feature 'User-agent new page' do
 
-    subject { FactoryGirl.create :user_agent, scans: [scan] }
+    subject { FactoryGirl.create :user_agent }
     let(:user) { FactoryGirl.create :user }
 
     after(:each) do
@@ -18,6 +18,23 @@ feature 'User-agent new page' do
         before do
             login_as( user, scope: :user )
             visit new_user_agent_path
+        end
+
+        scenario 'has title' do
+            expect(page).to have_title 'New'
+            expect(page).to have_title 'User-agents'
+        end
+
+        scenario 'has breadcrumbs' do
+            breadcrumbs = find('ul.bread')
+
+            expect(breadcrumbs.find('li:nth-of-type(1) a').native['href']).to eq root_path
+
+            expect(breadcrumbs.find('li:nth-of-type(2)')).to have_content 'User-agents'
+            expect(breadcrumbs.find('li:nth-of-type(2) a').native['href']).to eq user_agents_path
+
+            expect(breadcrumbs.find('li:nth-of-type(3)')).to have_content 'New'
+            expect(breadcrumbs.find('li:nth-of-type(3) a').native['href']).to eq new_user_agent_path
         end
 
         scenario 'sees user_agent form' do

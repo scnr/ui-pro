@@ -25,6 +25,23 @@ feature 'Profile new page' do
             visit new_profile_path
         end
 
+        scenario 'has title' do
+            expect(page).to have_title 'New'
+            expect(page).to have_title 'Profiles'
+        end
+
+        scenario 'has breadcrumbs' do
+            breadcrumbs = find('ul.bread')
+
+            expect(breadcrumbs.find('li:nth-of-type(1) a').native['href']).to eq root_path
+
+            expect(breadcrumbs.find('li:nth-of-type(2)')).to have_content 'Profiles'
+            expect(breadcrumbs.find('li:nth-of-type(2) a').native['href']).to eq profiles_path
+
+            expect(breadcrumbs.find('li:nth-of-type(3)')).to have_content 'New'
+            expect(breadcrumbs.find('li:nth-of-type(3) a').native['href']).to eq new_profile_path
+        end
+
         scenario 'sees profile form' do
             expect(find('.profile-form')).to be_truthy
         end

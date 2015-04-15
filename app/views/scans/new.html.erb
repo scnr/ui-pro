@@ -1,3 +1,9 @@
+<%
+   title 'New scan'
+   breadcrumb_add 'Sites', sites_path
+   breadcrumb_add @site.url, site_path( @site )
+%>
+
 <h1>
     New scan for <%= link_to @scan.site, @scan.site %>
 </h1>

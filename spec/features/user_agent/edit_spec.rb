@@ -20,6 +20,23 @@ feature 'User-agent edit page', :devise do
                 visit edit_user_agent_path( subject )
             end
 
+            scenario 'has title' do
+                expect(page).to have_title "Editing #{subject.name}"
+                expect(page).to have_title 'User-agents'
+            end
+
+            scenario 'has breadcrumbs' do
+                breadcrumbs = find('ul.bread')
+
+                expect(breadcrumbs.find('li:nth-of-type(1) a').native['href']).to eq root_path
+
+                expect(breadcrumbs.find('li:nth-of-type(2)')).to have_content 'User-agents'
+                expect(breadcrumbs.find('li:nth-of-type(2) a').native['href']).to eq user_agents_path
+
+                expect(breadcrumbs.find('li:nth-of-type(3)')).to have_content "Editing #{subject.name}"
+                expect(breadcrumbs.find('li:nth-of-type(3) a').native['href']).to eq edit_user_agent_path( subject )
+            end
+
             scenario 'sees user-agent form' do
                 expect(find('form')).to be_truthy
             end

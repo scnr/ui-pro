@@ -137,7 +137,7 @@ function getRemote( element ) {
 
 function setupScroll(){
     if( $('#sidebar-container').is(':visible' ) ) {
-        $('body').scrollspy({ target: '#sidebar-container', offset: 50 });
+        $('body').scrollspy({ target: '#sidebar-container', offset: 77 });
         $('body').scrollspy('refresh');
     } else {
         $('body').removeData( 'bs.scrollspy' );
@@ -146,7 +146,7 @@ function setupScroll(){
     $( '.scroll' ).click( function( event ) {
         event.preventDefault();
         $( 'html,body' ).animate( { scrollTop: $( this.hash ).offset().top -
-            $( 'header' ).height() - 45 }, 500 );
+            $( 'header' ).height() - 70 }, 500 );
     });
 }
 

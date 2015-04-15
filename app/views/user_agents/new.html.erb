@@ -1,3 +1,8 @@
+<%
+   title params[:action] == 'copy' ? "Copying #{@user_agent.name}" : 'New'
+   breadcrumb_add 'User-agents', user_agents_path
+%>
+
 <h1>New user agent</h1>
 
 <%= render 'form' %>

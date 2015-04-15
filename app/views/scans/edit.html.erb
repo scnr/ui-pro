@@ -1,3 +1,9 @@
+<%
+   title "Editing #{@scan.name}"
+   breadcrumb_add 'Sites', sites_path
+   breadcrumb_add @site.url, site_path( @site )
+%>
+
 <h1>
     Editing <%=  link_to @scan.name, [@scan.site, @scan] %> scan
     for <%= link_to @scan.site, @scan.site %>
