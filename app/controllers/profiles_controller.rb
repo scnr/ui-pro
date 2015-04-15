@@ -1,47 +1,18 @@
 class ProfilesController < ApplicationController
+    include ProfilesControllerExportable
+    include ProfilesControllerImportable
+
     before_filter :authenticate_user!
     before_filter :prepare_plugin_params
 
     before_action :set_profiles,      only: [:index, :default]
-    before_action :set_profile,       only: [:show, :copy, :edit, :update,
-                                             :default, :destroy]
+    before_action :set_profile,       only: [:show, :copy, :edit, :update, :default, :destroy]
     before_action :authorize_edit,    only: [:edit, :update]
     before_action :authorize_destroy, only: [:destroy]
-
-    PROFILE_EXPORT_PREFIX = 'Arachni Pro Profile'
 
     # GET /profiles
     # GET /profiles.json
     def index
-    end
-
-    # GET /profiles/1
-    # GET /profiles/1.json
-    def show
-        set_download_header = proc do |extension|
-            name = @profile.name
-            [ "\n", "\r", '"' ].each { |k| name.gsub!( k, '' ) }
-
-            headers['Content-Disposition'] =
-                "attachment; filename=\"#{PROFILE_EXPORT_PREFIX} - #{name}.#{extension}\""
-        end
-
-        respond_to do |format|
-            format.html # edit.html.erb
-            format.js { render @profile }
-            format.json do
-                set_download_header.call 'json'
-                render text: @profile.export( JSON )
-            end
-            format.yaml do
-                set_download_header.call 'yaml'
-                render text: @profile.export( YAML )
-            end
-            format.afp do
-                set_download_header.call 'afp'
-                render text: @profile.to_rpc_options.to_yaml
-            end
-        end
     end
 
     # GET /profiles/new
@@ -72,25 +43,6 @@ class ProfilesController < ApplicationController
                 format.html { render :new }
                 format.json { render json: @profile.errors, status: :unprocessable_entity }
             end
-        end
-    end
-
-    # POST /profiles/import
-    def import
-        if !params[:profile] || !params[:profile][:file].is_a?( ActionDispatch::Http::UploadedFile )
-            redirect_to profiles_url, alert: 'No file selected for import.'
-            return
-        end
-
-        @profile = Profile.import( params[:profile][:file] )
-
-        if !@profile
-            redirect_to profiles_url, alert: 'Could not understand the Profile format.'
-            return
-        end
-
-        respond_to do |format|
-            format.html { render 'edit' }
         end
     end
 

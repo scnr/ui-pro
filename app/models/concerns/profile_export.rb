@@ -1,6 +1,7 @@
 require 'active_support/concern'
 
 module ProfileExport
+    extend ActiveModel::Naming
     extend ActiveSupport::Concern
 
     def export( serializer = YAML )
