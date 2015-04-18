@@ -134,8 +134,9 @@ scans_size         = 2
 revisions_per_scan = 3
 
 [
-    # '/home/zapotek/workspace/arachni/spec/support/fixtures/report.afr',
-    '/home/zapotek/Downloads/report.afr'
+    '/home/zapotek/workspace/arachni/spec/support/fixtures/report.afr',
+    '/home/zapotek/Downloads/testhtml5.vulnweb.com.afr',
+    '/home/zapotek/Downloads/testfire.net.afr'
 ].each do |afr|
     sitemap    = nil
     report     = Arachni::Report.load( afr )
@@ -216,9 +217,12 @@ revisions_per_scan = 3
                     ap issue.variations.first.page.dom.url
 
                     solo = variation.to_solo( issue )
+
                     next if !solo.check
 
                     revision.issues.create_from_arachni( solo, sitemap_entry: sitemap_entry )
+
+                    break
                 end
 
                 # ap sitemap_entry.reload.issues.size

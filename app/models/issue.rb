@@ -1,11 +1,13 @@
 class Issue < ActiveRecord::Base
     belongs_to :revision
+    has_one :scan, through: :revision
+    has_one :site, through: :scan
 
     belongs_to :page, class_name: 'IssuePage', foreign_key: 'issue_page_id',
                dependent: :destroy
 
     belongs_to :referring_page, class_name: 'IssuePage',
-               foreign_key: 'issue_page_id', dependent: :destroy
+               foreign_key: 'referring_issue_page_id', dependent: :destroy
 
     belongs_to :type, class_name: 'IssueType', foreign_key: 'issue_type_id'
     has_one :severity, through: :type

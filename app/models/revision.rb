@@ -7,6 +7,10 @@ class Revision < ActiveRecord::Base
 
     before_save :set_index
 
+    def to_s
+        "Revision ##{index}"
+    end
+
     def set_index
         self.index ||= scan.revisions.count + 1
     end

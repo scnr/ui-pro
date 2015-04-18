@@ -56,8 +56,12 @@ ul.list-info li:before {
 }
 
 .CodeRay {
-    width:  100%;
-    height: 100%
+    height: 100%;
+    width: 100%;
+}
+
+td.line-numbers {
+    width: 0;
 }
 
 .breadcrumbs {
@@ -108,4 +112,28 @@ ul.list-info li:before {
 }
 .breadcrumbs .bread li.active a {
     color: #FFFFFF;
+}
+
+.anchor {
+    position: absolute;
+    left: -0.5em;
+    opacity: 0;
+
+    -moz-user-select: none;
+    display: inline-block;
+    font-size: 16px;
+    text-decoration: none;
+    text-rendering: auto;
+
+    -webkit-transition: opacity 0.2s ease-in-out 0.1s;
+    -moz-transition: opacity 0.2s ease-in-out 0.1s;
+    -ms-transition: opacity 0.2s ease-in-out 0.1s;
+}
+
+h2:hover .anchor,
+h3:hover .anchor,
+h4:hover .anchor,
+h5:hover .anchor,
+h6:hover .anchor {
+    opacity: 1;
 }

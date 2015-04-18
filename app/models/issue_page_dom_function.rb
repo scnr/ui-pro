@@ -3,6 +3,16 @@ class IssuePageDomFunction < ActiveRecord::Base
 
     serialize :arguments, Array
 
+    def signature_arguments
+        return [] if !signature
+        signature.match( /\((.*)\)/ )[1].split( ',' ).map(&:strip)
+    end
+
+    def signature
+        return if !@source
+        source.match( /function\s*(.*?)\s*\{/m )[1]
+    end
+
     def self.create_from_arachni( function )
         create(
             name:      function.name,

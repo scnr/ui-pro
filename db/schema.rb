@@ -77,6 +77,7 @@ ActiveRecord::Schema.define(version: 20150406191208) do
   add_index "issue_page_dom_data_flow_sinks", ["object"], name: "index_issue_page_dom_data_flow_sinks_on_object"
 
   create_table "issue_page_dom_execution_flow_sinks", force: true do |t|
+    t.text     "data"
     t.integer  "issue_page_dom_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -111,6 +112,7 @@ ActiveRecord::Schema.define(version: 20150406191208) do
   create_table "issue_page_dom_transitions", force: true do |t|
     t.text     "element"
     t.text     "event"
+    t.text     "options"
     t.float    "time"
     t.integer  "issue_page_dom_id"
     t.datetime "created_at"

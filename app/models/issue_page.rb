@@ -8,7 +8,7 @@ class IssuePage < ActiveRecord::Base
     has_one :dom,      class_name: 'IssuePageDom',
             dependent: :destroy
 
-    has_one :issue
+    belongs_to :issue
 
     def self.create_from_arachni( page )
         create(

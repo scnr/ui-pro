@@ -57,11 +57,11 @@ class SiteRolesController < ApplicationController
     end
 
     def set_site_role
-        @site_role = SiteRole.find(params[:id])
+        @site_role = @site.roles.find(params[:id])
     end
 
     def set_site_roles
-        @site_roles = SiteRole.all
+        @site_roles = @site.roles
     end
 
     def site_role_params

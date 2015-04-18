@@ -3,6 +3,10 @@ class HttpResponse < ActiveRecord::Base
 
     serialize :headers, Hash
 
+    def to_s
+        "#{raw_headers}#{body}".recode
+    end
+
     def self.create_from_arachni( response )
         create(
             url:            response.url,

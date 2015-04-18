@@ -1,0 +1,108 @@
+<div class="page-header">
+    <h1>
+        <%= @issue.type.name %>
+        <small>
+            <% if @issue.active? %>
+                in <%= @issue.vector.kind %> input
+                <code><%= @issue.vector.affected_input_name %></code>
+            <% end %>
+
+            at
+            <%= link_to_url_with_external external: @issue.page.dom.url,
+                                          internal: '#',
+                                          display_path_only: true %>.
+        </small>
+    </h1>
+
+    <p class="pull-left label label-severity-<%= @issue.severity.to_s.downcase %>">
+        <%= @issue.severity.to_s.capitalize %> severity
+    </p>
+</div>
+
+<div class="description">
+    <%= md @issue.type.description %>
+</div>
+
+<hr/>
+
+<% if @issue.type.remedy_guidance %>
+<div>
+    <h2>
+        <a id="remedy_guidance" class="anchor" href="#!/remedy_guidance">
+            <span class="fa fa-link"></span>
+        </a>
+
+        Remediation guidance
+    </h2>
+
+    <div class="description">
+        <%= md @issue.type.remedy_guidance %>
+    </div>
+</div>
+
+<hr/>
+<% end %>
+
+<div>
+    <h2>
+        <a id="identification" class="anchor" href="#!/identification">
+            <span class="fa fa-link"></span>
+        </a>
+
+        Identification
+    </h2>
+    <%= render 'issues/identification', issue: issue %>
+</div>
+
+<hr/>
+
+<div id="input_vector">
+    <h2>
+        <a id="input_vector" class="anchor" href="#!/input_vector">
+            <span class="fa fa-link"></span>
+        </a>
+
+        Input vector
+    </h2>
+    <%= render 'issues/input_vector', issue: issue %>
+</div>
+
+<hr/>
+
+<div id="affected_page">
+    <h2>
+        <a id="affected_page" class="anchor" href="#!/affected_page">
+            <span class="fa fa-link"></span>
+        </a>
+
+        Affected page:
+
+        <small>
+            <%= link_to_url_with_external external: @issue.page.dom.url,
+                                          internal: '#',
+                                          display_path_only: true %>
+        </small>
+    </h2>
+
+    <%= render 'page', issue: @issue, page: @issue.page, id: 'affected_page' %>
+</div>
+
+<hr/>
+
+<div id="referring_page">
+    <h2>
+        <a id="referring_page" class="anchor" href="#!/referring_page">
+            <span class="fa fa-link"></span>
+        </a>
+
+        Referring page:
+
+        <small>
+            <%= link_to_url_with_external external: @issue.referring_page.dom.url,
+                                          internal: '#',
+                                          display_path_only: true %>
+        </small>
+    </h2>
+
+    <%= render 'page', issue: @issue, page: @issue.referring_page, id: 'referring_page' %>
+</div>

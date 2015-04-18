@@ -8,6 +8,10 @@ class HttpRequest < ActiveRecord::Base
         super m.to_s.upcase
     end
 
+    def to_s
+        raw
+    end
+
     def self.create_from_arachni( request )
         create(
             url:         request.url,

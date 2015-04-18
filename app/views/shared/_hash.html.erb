@@ -1,0 +1,35 @@
+<%
+   highlight_key ||= nil
+   fixed         ||= false
+%>
+
+<table class="table table-condensed table-borderless <%= 'table-fixed' if fixed %>">
+    <% object.each do |k, v| %>
+        <% cell = (highlight_key == k ? 'th' : 'td') %>
+
+        <tr>
+            <<%= cell %>>
+                <% if code %>
+                    <code><%= k %> </code>
+                <% else %>
+                    <%= k %>
+                <% end %>
+            </<%= cell %>>
+            <<%= cell %>>
+                <% if v.is_a? Hash %>
+                    <% if v.empty? %>
+                        <code><%= v %></code>
+                    <% else %>
+                        <%= render '/shared/hash', code: code, object: v %>
+                    <% end %>
+                <% else %>
+                    <% if code %>
+                        <code><%= v %> </code>
+                    <% else %>
+                        <%= v %>
+                    <% end %>
+                <% end %>
+            </<%= cell %>>
+        </tr>
+    <% end %>
+</table>

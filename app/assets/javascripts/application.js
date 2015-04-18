@@ -23,6 +23,8 @@
 //= require ace/mode-ruby
 //= require_tree .
 
+jQuery.fn.exists = function(){ return this.length > 0; };
+
 $.expr[':'].icontains = function(obj, index, meta, stack){
     return (obj.textContent || obj.innerText || jQuery(obj).text() || '').
         toLowerCase().indexOf(meta[3].toLowerCase()) >= 0;
@@ -31,6 +33,8 @@ $.expr[':'].icontains = function(obj, index, meta, stack){
 String.prototype.endsWith = function(suffix) {
     return this.indexOf(suffix, this.length - suffix.length) !== -1;
 };
+
+window.topOffset = undefined;
 
 function ace_editor( id ) {
     var editor = ace.edit( id );
@@ -98,7 +102,7 @@ function goTo( location ){
     var target = $('#' + id_breadcrumb);
     if( !target.length ) return;
     if( !target.hasClass('tab-pane') ) {
-        $('html,body').scrollTop( target.offset().top );
+        $('html,body').scrollTop( target.offset().top - window.topOffset );
     }
 }
 
@@ -121,7 +125,20 @@ function scrollToActiveElementFromWindowLocation() {
     var element = $('#' + idFromWindowLocation());
     if( !element.length ) return;
 
-    $('html,body').scrollTop( element.offset().top );
+    $('html,body').scrollTop( element.offset().top - window.topOffset );
+}
+
+// Parent must have 'position: relative;'
+function scrollToChild( parent, child ){
+    parent = $(parent);
+    child  = $(child);
+
+    if( !child.exists() ) return;
+
+    parent.scrollTop(
+        parent.scrollTop() + child.position().top - (parent.height() / 2) + (child.height())
+    );
+
 }
 
 function getRemote( element ) {
@@ -137,7 +154,7 @@ function getRemote( element ) {
 
 function setupScroll(){
     if( $('#sidebar-container').is(':visible' ) ) {
-        $('body').scrollspy({ target: '#sidebar-container', offset: 77 });
+        $('body').scrollspy({ target: '#sidebar-container', offset: window.topOffset + 10 });
         $('body').scrollspy('refresh');
     } else {
         $('body').removeData( 'bs.scrollspy' );
@@ -146,17 +163,22 @@ function setupScroll(){
     $( '.scroll' ).click( function( event ) {
         event.preventDefault();
         $( 'html,body' ).animate( { scrollTop: $( this.hash ).offset().top -
-            $( 'header' ).height() - 70 }, 500 );
+            window.topOffset }, 500 );
     });
 }
 
 function setup() {
+    // Init all tooltips.
+    $("[rel=tooltip]").tooltip();
+
     $('a[data-toggle="tab"]').on('shown.bs.tab', setupScroll);
 
     setupScroll();
 }
 
 jQuery(function ($) {
+    window.topOffset = $('#top-nav').height();
+
     // Restore the last open tab from the URL fragment.
     openFromWindowLocation();
     scrollToActiveElementFromWindowLocation();

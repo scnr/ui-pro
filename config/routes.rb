@@ -10,7 +10,9 @@ Rails.application.routes.draw do
         end
 
         resources :scans do
-            resources :revisions, only: [:show, :destroy]
+            resources :revisions, only: [:show, :destroy] do
+                resources :issues, only: [:show, :edit, :update]
+            end
         end
     end
 

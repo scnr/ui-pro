@@ -3,6 +3,7 @@ class CreateIssuePageDomTransitions < ActiveRecord::Migration
         create_table :issue_page_dom_transitions do |t|
             t.text :element
             t.text :event
+            t.text :options
             t.float :time
             t.belongs_to :issue_page_dom, index: true
 

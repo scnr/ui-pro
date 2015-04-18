@@ -4,6 +4,10 @@ class Vector < ActiveRecord::Base
     serialize :inputs,         Hash
     serialize :default_inputs, Hash
 
+    def kind
+        super.to_sym
+    end
+
     def http_method=( m )
         super m.to_s.upcase
     end

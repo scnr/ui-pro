@@ -7,6 +7,20 @@ class IssuePageDomDataFlowSink < ActiveRecord::Base
     has_many :stackframes, as: :with_dom_stack_frame,
              class_name: 'IssuePageDomStackFrame', dependent: :destroy
 
+    # @return   [String, nil]
+    #   Value of the tainted argument.
+    def tainted_argument_value
+        return if !function.arguments
+        function.arguments[tainted_argument_index]
+    end
+
+    # @return   [String, nil]
+    #   Name of the tainted argument.
+    def tainted_argument_name
+        return if !function.signature_arguments
+        function.signature_arguments[tainted_argument_index]
+    end
+
     def self.create_from_arachni( sink )
         create(
             object:                 sink.object,

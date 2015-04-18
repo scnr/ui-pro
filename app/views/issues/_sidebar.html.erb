@@ -1,0 +1,71 @@
+<%
+   sections = {
+       remedy_guidance: 'Remediation guidance',
+       identification:  'Identification',
+       input_vector:    'Input vector',
+       affected_page:   'Affected page'
+   }
+
+   if @issue.page.dom.transitions.any?
+       sections.merge!(
+           affected_page_transitions: '&mdash; Transitions',
+       )
+   end
+
+   if @issue.page.dom.data_flow_sinks.any?
+       sections.merge!(
+           affected_page_data_flow: '&mdash; Data-flow',
+       )
+   end
+
+   if @issue.page.dom.execution_flow_sinks.any?
+       sections.merge!(
+           affected_page_execution_flow: '&mdash; Execution-flow',
+       )
+   end
+
+   sections.merge!(
+       affected_page_http: '&mdash; HTTP data',
+       referring_page:     'Referring page',
+   )
+
+   if @issue.referring_page.dom.transitions.any?
+       sections.merge!(
+           referring_page_transitions: '&mdash; Transitions',
+       )
+   end
+
+   if @issue.referring_page.dom.data_flow_sinks.any?
+       sections.merge!(
+           referring_page_data_flow: '&mdash; Data-flow',
+       )
+   end
+
+   if @issue.referring_page.dom.execution_flow_sinks.any?
+       sections.merge!(
+           referring_page_execution_flow: '&mdash; Execution-flow',
+       )
+   end
+
+   sections.merge!(
+       referring_page_http: '&mdash; HTTP data',
+   )
+%>
+
+<div id="sidebar-container" class="affix">
+    <ul id="sidebar" class="nav nav-pills nav-stacked sidenav">
+        <li>
+            <a href="#top" class="scroll">
+                <i class="fa fa-chevron-up"></i>
+                Top
+            </a>
+        </li>
+        <% sections.each do |id, title| %>
+            <li>
+                <a href="#<%= id.to_s %>" class="scroll">
+                    <%= title.to_s.html_safe %>
+                </a>
+            </li>
+        <% end %>
+    </ul>
+</div>
