@@ -9,6 +9,13 @@ module IssuesHelper
         "#!/#{id.gsub( '-', '/' )}"
     end
 
+    def highlight_seed( issue )
+        code_highlight(
+            escape_control_characters( issue.vector.seed ),
+            issue.platform ? issue.platform.shortname : nil
+        ).html_safe
+    end
+
     def highlight_vector_source( vector )
         code_highlight(
             vector_source_prettify( vector ),
@@ -45,15 +52,19 @@ module IssuesHelper
         proof  = proof.to_s.recode
 
         return h( string ) if proof.to_s.empty?
-        return h( string ) if !string.include?( proof )
+        return h( string ) if !string.downcase.include?( proof.downcase )
 
         escaped_proof         = h( proof )
         escaped_response_body = h( string )
 
         escaped_response_body.gsub(
-            escaped_proof,
-            "<span class=\"issue-proof-highlight\">#{escaped_proof}</span>"
+            Regexp.new( escaped_proof, Regexp::IGNORECASE ),
+            "<span class=\"issue-proof-highlight\">\\0</span>"
         )
+    end
+
+    def escape_control_characters( string )
+        string.gsub( "\x00", '\\\0' )
     end
 
 end

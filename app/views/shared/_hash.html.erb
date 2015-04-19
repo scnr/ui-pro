@@ -1,11 +1,13 @@
 <%
-   highlight_key ||= nil
-   fixed         ||= false
+   highlight ||= nil
+   fixed     ||= false
 %>
 
-<table class="table table-condensed table-borderless <%= 'table-fixed' if fixed %>">
+<table class="table table-hash table-condensed table-borderless <%= 'table-fixed' if fixed %>">
     <% object.each do |k, v| %>
-        <% cell = (highlight_key == k ? 'th' : 'td') %>
+        <%
+           cell = [k,v].include?( highlight ) ? 'th' : 'td'
+        %>
 
         <tr>
             <<%= cell %>>
@@ -15,18 +17,19 @@
                     <%= k %>
                 <% end %>
             </<%= cell %>>
+
             <<%= cell %>>
                 <% if v.is_a? Hash %>
                     <% if v.empty? %>
-                        <code><%= v %></code>
+                        <code><%= escape_control_characters v %></code>
                     <% else %>
                         <%= render '/shared/hash', code: code, object: v %>
                     <% end %>
                 <% else %>
                     <% if code %>
-                        <code><%= v %> </code>
+                        <code><%= escape_control_characters v %></code>
                     <% else %>
-                        <%= v %>
+                        <%= escape_control_characters v %>
                     <% end %>
                 <% end %>
             </<%= cell %>>

@@ -71,51 +71,58 @@
     </div>
 <% end %>
 
-<h3>
-    <a id="<%= id %>_http" class="anchor"
-       href="<%= id_to_location "#{id}_http" %>">
-        <span class="fa fa-link"></span>
-    </a>
+<% if !page.request.to_s.empty? || !page.response.to_s.empty? %>
 
-    HTTP
-</h3>
+    <h3>
+        <a id="<%= id %>_http" class="anchor"
+           href="<%= id_to_location "#{id}_http" %>">
+            <span class="fa fa-link"></span>
+        </a>
 
-<div class="row">
-    <div class="col-md-6">
-        <h4>
-            <a id="<%= id %>_http_request" class="anchor"
-               href="<%= id_to_location "#{id}_http_request" %>">
-                <span class="fa fa-link"></span>
-            </a>
+        HTTP
+    </h3>
 
-            Request
-        </h4>
+    <div class="row">
+        <% if !page.request.to_s.empty? %>
+        <div class="col-md-6">
+            <h4>
+                <a id="<%= id %>_http_request" class="anchor"
+                   href="<%= id_to_location "#{id}_http_request" %>">
+                    <span class="fa fa-link"></span>
+                </a>
 
-        <p class="text-muted">
-            Raw HTTP request used to retrieve the page.
-        </p>
+                Request
+            </h4>
 
-        <pre class="code-container"><%= page.request %></pre>
+            <p class="text-muted">
+                Raw HTTP request used to retrieve the page.
+            </p>
+
+            <pre class="code-container"><%= page.request %></pre>
+        </div>
+        <% end %>
+
+        <% if !page.response.to_s.empty? %>
+        <div class="col-md-6">
+            <h4>
+                <a id="<%= id %>_http_response" class="anchor"
+                   href="<%= id_to_location "#{id}_http_response" %>">
+                    <span class="fa fa-link"></span>
+                </a>
+
+                Response
+            </h4>
+
+            <p class="text-muted">
+                Raw HTTP response used as the page basis.
+
+                (Binary bodies will not be displayed.)
+            </p>
+
+            <pre id="proof-container" class="code-container"><%= highlight_proof( page.response.to_s, issue.proof ).html_safe %></pre>
+        </div>
+        <% end %>
     </div>
-
-    <div class="col-md-6">
-        <h4>
-            <a id="<%= id %>_http_response" class="anchor"
-               href="<%= id_to_location "#{id}_http_response" %>">
-                <span class="fa fa-link"></span>
-            </a>
-
-            Response
-        </h4>
-
-        <p class="text-muted">
-            Raw HTTP response used as the page basis.
-
-            (Binary bodies will not be displayed.)
-        </p>
-
-        <pre id="proof-container" class="code-container"><%= highlight_proof( page.response.to_s, issue.proof ).html_safe %></pre>
-    </div>
-</div>
+<% end %>
 
 <%= render 'issues/page/body', page: page, id: id %>

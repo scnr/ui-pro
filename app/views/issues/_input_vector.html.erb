@@ -14,7 +14,9 @@
             <th>Type</th>
 
             <% if @issue.active? %>
-                <th>Name</th>
+                <th>
+                    <%= [:xml, :json].include?( @issue.vector.kind ) ? 'Location' : 'Name' %>
+                </th>
             <% end %>
 
             <th>At</th>
@@ -41,7 +43,7 @@
     </tr>
 </table>
 
-<% if @issue.active? %>
+<% if @issue.vector.default_inputs.any? && @issue.vector.inputs.any? %>
     <table class="table table-condensed table-fixed vector-inputs">
         <thead>
             <tr>
@@ -54,7 +56,7 @@
                 <td>
                     <%= render '/shared/hash',
                                object: @issue.vector.default_inputs,
-                               highlight_key: @issue.vector.affected_input_name,
+                               highlight: @issue.vector.affected_input_name,
                                fixed: true,
                                code: true
                     %>
@@ -62,7 +64,7 @@
                 <td>
                     <%= render '/shared/hash',
                                object: @issue.vector.inputs,
-                               highlight_key: @issue.vector.affected_input_name,
+                               highlight: @issue.vector.affected_input_name,
                                fixed: true,
                                code: true
                     %>

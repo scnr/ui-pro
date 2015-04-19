@@ -1,4 +1,4 @@
-<table class="table table-condensed table-hover table-fixed">
+<table class="table table-condensed table-fixed">
     <col width="1%" />
     <col width="74%" />
     <col width="5%" />
@@ -22,7 +22,11 @@
             <th></th>
         </tr>
     </thead>
-    <% trace.each.with_index do |frame, i| %>
+    <% trace.each.with_index do |frame, i|
+
+           inspectable = (frame.line.to_i > 0 && frame.url == page.dom.url) ||
+                   !frame.function.source.to_s.empty? || frame.function.arguments.any?
+        %>
         <tr id="<%= id %>-<%= i %>">
             <th>
                 <strong>
@@ -31,64 +35,62 @@
                     </a>
                 </strong>
             </th>
-            <td>
-                <a href="<%= frame.url %>">
-                    <%= frame.url %>
-                </a>
-            </td>
-            <td>
-                <% if frame.line.to_i > 0 && frame.url == page.dom.url %>
-                    <a href="<%= id_to_location parent_id %>/browser_evaluated_body/<%= frame.line %>">
-                        <%= frame.line %>
+            <% if inspectable %>
+                <td>
+                    <a href="<%= frame.url %>">
+                        <%= frame.url %>
                     </a>
-                <% else %>
-                    <%= frame.line %>
-                <% end %>
-            </td>
-            <td>
-                <% if frame.function.signature %>
-                    <code><%= frame.function.signature %></code>
-                <% else %>
-                    <p class="alert alert-info">No function signature available.</p>
-                <% end %>
-            </td>
+                </td>
+                <td>
+                    <% if frame.line.to_i > 0 && frame.url == page.dom.url %>
+                        <a href="<%= id_to_location parent_id %>/browser_body/<%= frame.line %>">
+                            <%= frame.line %>
+                        </a>
+                    <% else %>
+                        <%= frame.line %>
+                    <% end %>
+                </td>
+                <td>
+                    <% if frame.function.signature %>
+                        <code><%= frame.function.signature %></code>
+                    <% else %>
+                        <p class="alert alert-info">No function signature available.</p>
+                    <% end %>
+                </td>
 
-            <td>
-                <% if (frame.line.to_i > 0 && frame.url == page.dom.url) ||
-                        !frame.function.source.to_s.empty? || frame.function.arguments %>
+                <td>
                     <a href="javascript:void(0);"
                        onclick="$('#<%= id %>-<%= i %>-inspect').toggle()"
                        class="btn btn-info btn-xs">
                         Inspect
                     </a>
-                <% else %>
-                    <span rel="tooltip" title="This call lacks context.
-                        It was probably eval()'ed or performed under a strict-mode JS context.">
-
-                        <a href="javascript:void(0);"
-                           class="btn btn-info btn-xs disabled">
-                            Inspect
-                        </a>
-                    </span>
-                <% end %>
-            </td>
+                </td>
+            <% else %>
+                <td colspan="4">
+                    <p class="alert alert-info">
+                        This call lacks context.
+                        It was probably executed via
+                        <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval">eval()</a>
+                        or performed under <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode">JavaScript strict-mode</a>.
+                    </p>
+                </td>
+            <% end %>
         </tr>
 
-        <% if (frame.line.to_i > 0 && frame.url == page.dom.url) ||
-                !frame.function.source.to_s.empty? || frame.function.arguments %>
+        <% if inspectable %>
         <tr id="<%= id %>-<%= i %>-inspect" style="display: none">
             <td colspan="5" class="borderless">
                 <ul class="nav nav-tabs">
 
                     <% has_active = false %>
                     <% if frame.function.arguments %>
-                    <% has_active = true %>
+                        <% has_active = true %>
 
-                    <li class="active">
-                        <a href="<%= id_to_location id %>/<%= i %>/inspect/arguments">
-                            Arguments
-                        </a>
-                    </li>
+                        <li class="active">
+                            <a href="<%= id_to_location id %>/<%= i %>/inspect/arguments">
+                                Arguments
+                            </a>
+                        </li>
                     <% end %>
 
                     <% if (frame.line.to_i > 0 && frame.url == page.dom.url) || !frame.function.source.to_s.empty? %>

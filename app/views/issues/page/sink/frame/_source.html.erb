@@ -9,7 +9,7 @@
 
     <%=
         code_highlight(
-                page.body, :html,
+                page.dom.body, :html,
                 from:         frame.line - 5,
                 to:           frame.line + 5,
                 anchor_id:    "#{id}-source-page",

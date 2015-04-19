@@ -1,10 +1,20 @@
 <%
    sections = {
-       remedy_guidance: 'Remediation guidance',
-       identification:  'Identification',
+       remedy_guidance: 'Remediation guidance'
+   }
+
+   if @issue.vector.seed || @issue.signature || @issue.proof ||
+        @issue.remarks.any? || @issue.platform
+
+       sections.merge!(
+           identification:  'Identification'
+       )
+   end
+
+   sections.merge!(
        input_vector:    'Input vector',
        affected_page:   'Affected page'
-   }
+   )
 
    if @issue.page.dom.transitions.any?
        sections.merge!(
@@ -24,9 +34,14 @@
        )
    end
 
+   if !@issue.page.request.to_s.empty? || !@issue.page.response.to_s.empty?
+       sections.merge!(
+           affected_page_http: '&mdash; HTTP data',
+       )
+   end
+
    sections.merge!(
-       affected_page_http: '&mdash; HTTP data',
-       referring_page:     'Referring page',
+       referring_page: 'Referring page',
    )
 
    if @issue.referring_page.dom.transitions.any?
@@ -47,9 +62,13 @@
        )
    end
 
-   sections.merge!(
-       referring_page_http: '&mdash; HTTP data',
-   )
+   if !@issue.referring_page.request.to_s.empty? ||
+           !@issue.referring_page.response.to_s.empty?
+
+       sections.merge!(
+               referring_page_http: '&mdash; HTTP data',
+       )
+   end
 %>
 
 <div id="sidebar-container" class="affix">

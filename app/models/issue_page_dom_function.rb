@@ -9,7 +9,7 @@ class IssuePageDomFunction < ActiveRecord::Base
     end
 
     def signature
-        return if !@source
+        return if !source
         source.match( /function\s*(.*?)\s*\{/m )[1]
     end
 

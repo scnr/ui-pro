@@ -45,28 +45,21 @@
         </tr>
     </thead>
     <tr>
-
         <% if issue.vector.seed %>
             <td>
-                <%= issue.vector.seed ?
-                            "<pre>#{h(issue.vector.seed)}</pre>".html_safe :
-                            not_available %>
+                <%= highlight_seed( issue ) %>
             </td>
         <% end %>
 
         <% if issue.signature %>
             <td>
-                <%= issue.signature ?
-                            "<pre>#{h(issue.signature)}</pre>".html_safe :
-                            not_available %>
+                <%= code_highlight issue.signature, :ruby %>
             </td>
         <% end %>
 
         <% if issue.proof %>
             <td>
-                <%= issue.proof ?
-                            "<pre class='code-container'>#{h(issue.proof)}</pre>".html_safe :
-                            not_available %>
+                <%= code_highlight( issue.proof ) %>
             </td>
         <% end %>
     </tr>

@@ -43,6 +43,8 @@
 <hr/>
 <% end %>
 
+<% if @issue.vector.seed || @issue.signature || @issue.proof ||
+        @issue.remarks.any? || @issue.platform %>
 <div>
     <h2>
         <a id="identification" class="anchor" href="#!/identification">
@@ -53,8 +55,8 @@
     </h2>
     <%= render 'issues/identification', issue: issue %>
 </div>
-
 <hr/>
+<% end %>
 
 <div id="input_vector">
     <h2>
