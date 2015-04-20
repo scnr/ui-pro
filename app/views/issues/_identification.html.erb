@@ -5,21 +5,10 @@
 <%= render 'issues/remarks',  issue: issue %>
 <%= render 'issues/platform', issue: issue %>
 
-<% if issue.vector.seed || issue.signature || issue.proof %>
+<% if !issue.signature.to_s.empty? || !issue.proof.to_s.empty? %>
 <table class="table table-condensed table-fixed">
     <thead>
         <tr>
-            <% if issue.vector.seed %>
-                <th>
-                    Injected seed
-
-                    <a href="#" rel="tooltip"
-                       title="This seed uncovered the vulnerable vector during the audit.">
-                        <i class="fa fa-info"></i>
-                    </a>
-                </th>
-            <% end %>
-
             <% if issue.signature %>
                 <th>
                     Signature
@@ -45,12 +34,6 @@
         </tr>
     </thead>
     <tr>
-        <% if issue.vector.seed %>
-            <td>
-                <%= highlight_seed( issue ) %>
-            </td>
-        <% end %>
-
         <% if issue.signature %>
             <td>
                 <%= code_highlight issue.signature, :ruby %>
@@ -64,4 +47,65 @@
         <% end %>
     </tr>
 </table>
+<% end %>
+
+<% if !@issue.proof.to_s.empty? && !@issue.page.response.to_s.empty? %>
+
+    <% if @issue.page.dom.transitions.any? %>
+        <pre class="highlight-container code-container"><%= highlight_proof( @issue.page.dom.body.to_s, @issue.proof ).html_safe %></pre>
+
+        <p class="text-muted">
+            Evaluated browser DOM.
+        <p>
+    <% else %>
+        <pre class="highlight-container code-container"><%= highlight_proof( @issue.page.response.to_s, @issue.proof ).html_safe %></pre>
+
+        <p class="text-muted">
+            Raw HTTP response - binary bodies will not be displayed.
+        </p>
+    <% end %>
+
+<% end %>
+
+<% if @issue.page.dom.execution_flow_sinks.any? %>
+    <h4>
+        <a id="identification_execution_flow_sinks" class="anchor"
+           href="<%= id_to_location 'identification_execution_flow_sinks' %>">
+            <span class="fa fa-link"></span>
+        </a>
+
+        This issue is accompanied by successful execution of a JavaScript payload:
+    </h4>
+
+    <%= render 'issues/page/sink/execution_flow',
+               page: @issue.page,
+               id:   'identification' %>
+<% end %>
+
+<% if @issue.page.dom.execution_flow_sinks.any? &&
+        @issue.page.dom.data_flow_sinks.any? %>
+    <hr/>
+<% end %>
+
+<% if @issue.page.dom.data_flow_sinks.any? %>
+    <div class="panel panel-info">
+        <div class="panel panel-heading">
+            <a id="identification_data_flow_sinks" class="anchor"
+               href="<%= id_to_location 'identification_data_flow_sinks' %>">
+                <span class="fa fa-link"></span>
+            </a>
+
+            <i class="fa fa-info-circle"></i>
+
+            You can gain more insights into the issue by inspecting the flow of the
+            injected payload:
+        </div>
+
+        <div class="panel">
+            <%= render 'issues/page/sink/data_flow',
+                       page: @issue.page,
+                       id:   'identification'
+            %>
+        </div>
+    </div>
 <% end %>

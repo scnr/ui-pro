@@ -1,90 +1,105 @@
 <%
    sections = {
-       remedy_guidance: 'Remediation guidance'
+    input_vector: 'Input vector'
    }
 
-   if @issue.vector.seed || @issue.signature || @issue.proof ||
-        @issue.remarks.any? || @issue.platform
-
-       sections.merge!(
-           identification:  'Identification'
-       )
-   end
-
    sections.merge!(
-       input_vector:    'Input vector',
-       affected_page:   'Affected page'
+       identification: 'Identification',
+       reproduction:   'Reproduction'
    )
 
-   if @issue.page.dom.transitions.any?
+   sections.merge!(
+       remediation: 'Remediation'
+   )
+
+   sections.merge!(
+       _:                       nil,
+       advanced:               'Advanced info',
+       advanced_affected_page: '&ndash; Affected page'
+   )
+
+   if !@issue.page.request.to_s.empty? || !@issue.page.response.to_s.empty?
        sections.merge!(
-           affected_page_transitions: '&mdash; Transitions',
+           advanced_affected_page_http: '&mdash; HTTP traffic',
        )
    end
 
-   if @issue.page.dom.data_flow_sinks.any?
+   if (!@issue.page.dom.body.empty? || !@issue.page.response.body.empty?) &&
+        (@issue.page.dom.body != @issue.page.response.body) &&
+           @issue.page.dom.transitions.any?
+
        sections.merge!(
-           affected_page_data_flow: '&mdash; Data-flow',
+           advanced_affected_page_dom_processing: '&mdash; DOM processing',
        )
    end
 
    if @issue.page.dom.execution_flow_sinks.any?
        sections.merge!(
-           affected_page_execution_flow: '&mdash; Execution-flow',
+               advanced_affected_page_execution_flow: '&mdash; Execution-flow',
        )
    end
 
-   if !@issue.page.request.to_s.empty? || !@issue.page.response.to_s.empty?
+   if @issue.page.dom.data_flow_sinks.any?
        sections.merge!(
-           affected_page_http: '&mdash; HTTP data',
+               advanced_affected_page_data_flow: '&mdash; Data-flow',
        )
    end
 
    sections.merge!(
-       referring_page: 'Referring page',
+       advanced_referring_page: '&ndash; Referring page',
    )
-
-   if @issue.referring_page.dom.transitions.any?
-       sections.merge!(
-           referring_page_transitions: '&mdash; Transitions',
-       )
-   end
-
-   if @issue.referring_page.dom.data_flow_sinks.any?
-       sections.merge!(
-           referring_page_data_flow: '&mdash; Data-flow',
-       )
-   end
-
-   if @issue.referring_page.dom.execution_flow_sinks.any?
-       sections.merge!(
-           referring_page_execution_flow: '&mdash; Execution-flow',
-       )
-   end
 
    if !@issue.referring_page.request.to_s.empty? ||
            !@issue.referring_page.response.to_s.empty?
 
        sections.merge!(
-               referring_page_http: '&mdash; HTTP data',
+               advanced_referring_page_http: '&mdash; HTTP traffic',
        )
    end
+
+   if (!@issue.referring_page.dom.body.empty? || !@issue.referring_page.response.body.empty?) &&
+           (@issue.referring_page.dom.body != @issue.referring_page.response.body) &&
+           @issue.referring_page.dom.transitions.any?
+
+       sections.merge!(
+           advanced_affected_page_dom_processing: '&mdash; DOM processing',
+       )
+   end
+
+   if @issue.referring_page.dom.execution_flow_sinks.any?
+       sections.merge!(
+               advanced_referring_page_execution_flow: '&mdash; Execution-flow',
+       )
+   end
+
+   if @issue.referring_page.dom.data_flow_sinks.any?
+       sections.merge!(
+               advanced_referring_page_data_flow: '&mdash; Data-flow',
+       )
+   end
+
 %>
 
 <div id="sidebar-container" class="affix">
-    <ul id="sidebar" class="nav nav-pills nav-stacked sidenav">
-        <li>
-            <a href="#top" class="scroll">
-                <i class="fa fa-chevron-up"></i>
-                Top
-            </a>
-        </li>
-        <% sections.each do |id, title| %>
+    <div id="sidebar">
+        <ul class="nav nav-pills nav-stacked sidenav">
             <li>
-                <a href="#<%= id.to_s %>" class="scroll">
-                    <%= title.to_s.html_safe %>
+                <a href="#top" class="scroll">
+                    <i class="fa fa-chevron-up"></i>
+                    Top
                 </a>
             </li>
-        <% end %>
-    </ul>
+            <% sections.each do |id, title| %>
+                <li>
+                <% if id == :_ %>
+                    <hr/>
+                <% else %>
+                    <a href="#<%= id.to_s %>" class="scroll">
+                        <%= title.to_s.html_safe %>
+                    </a>
+                <% end %>
+                </li>
+            <% end %>
+        </ul>
+    </div>
 </div>

@@ -17,12 +17,14 @@ module IssuesHelper
     end
 
     def highlight_vector_source( vector )
-        code_highlight(
+        s = code_highlight(
             vector_source_prettify( vector ),
             vector_type_to_source_type( @issue.vector.kind ),
             line_numbers: true,
             anchor_id:    'input_vector-source'
-        ).html_safe
+        )
+
+        highlight_proof( s, vector.default_inputs[vector.affected_input_name] ).html_safe
     end
 
     def vector_source_prettify( vector )
@@ -47,19 +49,26 @@ module IssuesHelper
         end
     end
 
+    def highlight_http_request( issue )
+        highlight_proof(
+            issue.page.request.to_s,
+            issue.vector.arachni_class.encode( issue.vector.seed )
+        ).html_safe
+    end
+
     def highlight_proof( string, proof )
         string = string.to_s.recode
         proof  = proof.to_s.recode
 
         return h( string ) if proof.to_s.empty?
-        return h( string ) if !string.downcase.include?( proof.downcase )
+        # return h( string ) if !string.downcase.include?( proof.downcase )
 
         escaped_proof         = h( proof )
         escaped_response_body = h( string )
 
         escaped_response_body.gsub(
-            Regexp.new( escaped_proof, Regexp::IGNORECASE ),
-            "<span class=\"issue-proof-highlight\">\\0</span>"
+            Regexp.new( Regexp.escape( escaped_proof ), Regexp::IGNORECASE | Regexp::MULTILINE | Regexp::EXTENDED ),
+            "<span class=\"highlight\">\\0</span>"
         )
     end
 

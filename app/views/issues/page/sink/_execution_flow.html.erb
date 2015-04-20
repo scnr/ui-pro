@@ -1,6 +1,6 @@
 <table class="table table-condensed table-fixed">
     <colgroup>
-        <col width="2%"/>
+        <col width="4%"/>
         <col width="92%"/>
         <col width="6%"/>
     </colgroup>
@@ -9,12 +9,7 @@
         <tr>
             <th>#</th>
             <th>
-                Data
-
-                <a href="#" rel="tooltip"
-                   title="Helper data logged by the payload.">
-                    <i class="fa fa-info"></i>
-                </a>
+                Helper information
             </th>
             <th></th>
         </tr>
@@ -32,7 +27,9 @@
                 <% if sink.data.any? %>
                     <%= data_dump sink.data %>
                 <% else %>
-                    <p class="alert alert-info">No helper data logged.</p>
+                    <p class="alert alert-info">
+                        The JavaScript payload did not log any helper data.
+                    </p>
                 <% end %>
             </td>
             <td>
@@ -44,8 +41,8 @@
             </td>
         </tr>
 
-        <tr id="<%= id %>-execution_flow_sinks-<%= i %>-inspect" style="display: none">
-            <td colspan="3" class="borderless">
+        <tr id="<%= id %>-execution_flow_sinks-<%= i %>-inspect" class="inspection">
+            <td colspan="3">
                 <ul class="nav nav-tabs">
 
                     <li class="active">

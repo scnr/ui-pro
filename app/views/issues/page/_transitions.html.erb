@@ -1,27 +1,41 @@
+<%
+    debug   ||= false
+    counter   = 0
+%>
+
 <table class="table table-hover table-condensed">
     <thead>
         <tr>
             <th>#</th>
-            <th>Time</th>
+
+            <% if debug %>
+                <th>Time</th>
+            <% end %>
+
             <th>Event</th>
             <th>Element</th>
             <th>Options</th>
         </tr>
     </thead>
 
-    <% page.dom.transitions.each.with_index do |transition, i|
+    <% page.dom.transitions.each do |transition|
            request = (transition.event == :request)
+            next if request && !debug
     %>
         <tr
-            id="<%= id %>-transitions-<%= i %>"
+            id="<%= id %>-transitions-<%= counter %>"
             <%= 'class="text-muted request-transition"'.html_safe if request %>
         >
             <th>
-                <a href="<%= id_to_location id %>/transitions/<%= i %>">
-                    <%= i %>
+                <a href="<%= id_to_location id %>/transitions/<%= counter %>">
+                    <%= counter %>
                 </a>
             </th>
-            <td><%= transition.time %></td>
+
+            <% if debug %>
+                <td><%= transition.time %></td>
+            <% end %>
+
             <td><code><%= transition.event %></code></td>
             <td>
                 <% if request %>
@@ -82,5 +96,7 @@
                 </table>
             </td>
         </tr>
-    <% end %>
+    <%
+       counter += 1
+       end %>
 </table>

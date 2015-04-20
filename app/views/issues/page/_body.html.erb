@@ -1,45 +1,42 @@
-<% if page.dom.transitions.any? && (!page.dom.body.empty? || !page.response.body.empty?) &&
-        (page.dom.body != page.response.body) %>
-    <div class="row">
-        <div class="col-md-6">
-            <h4>
-                <a id="<%= id %>_http_browser_body" class="anchor"
-                   href="<%= id_to_location "#{id}_http_browser_body" %>">
-                    <span class="fa fa-link"></span>
-                </a>
+<div class="row">
+    <div class="col-md-6">
+        <h5>
+            <a id="<%= id %>_initial" class="anchor"
+               href="<%= id_to_location "#{id}_initial" %>">
+                <span class="fa fa-link"></span>
+            </a>
 
-                Browser-evaluated body
-            </h4>
+            Initial state
+        </h5>
 
-            <p class="text-muted">
-                This is the browser-evaluated body, as a result of the listed
-                transitions.
-            </p>
+        <p class="text-muted">
+            This is the original HTTP response body.
+        </p>
 
-            <%= code_highlight page.dom.body, :html,
-                               line_numbers: true,
-                               anchor_id:    "#{id}-browser_body"
-            %>
-        </div>
-
-        <div class="col-md-6">
-            <h4>
-                <a id="<%= id %>_http_response_body" class="anchor"
-                   href="<%= id_to_location "#{id}_http_response_body" %>">
-                    <span class="fa fa-link"></span>
-                </a>
-
-                Response body
-            </h4>
-
-            <p class="text-muted">
-                This is the original HTTP response body.
-            </p>
-
-            <%= code_highlight page.response.body, :html,
-                               line_numbers: true,
-                               anchor_id:    "#{id}-response_body"
-            %>
-        </div>
+        <%= code_highlight page.response.body, :html,
+                           line_numbers: true,
+                           anchor_id:    "#{id}-initial"
+        %>
     </div>
-<% end %>
+
+    <div class="col-md-6">
+        <h5>
+            <a id="<%= id %>_final" class="anchor"
+               href="<%= id_to_location "#{id}_final" %>">
+                <span class="fa fa-link"></span>
+            </a>
+
+            Final state
+        </h5>
+
+        <p class="text-muted">
+            This is the browser-evaluated body, as a result of the listed
+            transitions.
+        </p>
+
+        <%= code_highlight page.dom.body, :html,
+                           line_numbers: true,
+                           anchor_id:    "#{id}-final"
+        %>
+    </div>
+</div>

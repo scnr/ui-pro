@@ -20,7 +20,7 @@
             <% end %>
 
             <th>At</th>
-            <th>Action</th>
+            <th>Pointing to</th>
         </tr>
     </thead>
     <tr>
@@ -44,11 +44,10 @@
 </table>
 
 <% if @issue.vector.default_inputs.any? && @issue.vector.inputs.any? %>
-    <table class="table table-condensed table-fixed vector-inputs">
+    <table class="table table-condensed">
         <thead>
             <tr>
-                <th>Original inputs</th>
-                <th>Submitted inputs</th>
+                <th>Inputs</th>
             </tr>
         </thead>
         <tbody>
@@ -57,15 +56,6 @@
                     <%= render '/shared/hash',
                                object: @issue.vector.default_inputs,
                                highlight: @issue.vector.affected_input_name,
-                               fixed: true,
-                               code: true
-                    %>
-                </td>
-                <td>
-                    <%= render '/shared/hash',
-                               object: @issue.vector.inputs,
-                               highlight: @issue.vector.affected_input_name,
-                               fixed: true,
                                code: true
                     %>
                 </td>

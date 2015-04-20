@@ -8,7 +8,11 @@
             <% end %>
 
             at
-            <%= link_to_url_with_external external: @issue.page.dom.url,
+            <%= link_to_url_with_external external: @issue.referring_page.dom.url,
+                                          internal: '#',
+                                          display_path_only: true %>
+            pointing to
+            <%= link_to_url_with_external external: @issue.vector.action,
                                           internal: '#',
                                           display_path_only: true %>.
         </small>
@@ -19,44 +23,36 @@
     </p>
 </div>
 
-<div class="description">
-    <%= md @issue.type.description %>
-</div>
+<% has_references = @issue.type.references.any? || @issue.type.cwe %>
 
-<hr/>
-
-<% if @issue.type.remedy_guidance %>
-<div>
-    <h2>
-        <a id="remedy_guidance" class="anchor" href="#!/remedy_guidance">
-            <span class="fa fa-link"></span>
-        </a>
-
-        Remediation guidance
-    </h2>
-
-    <div class="description">
-        <%= md @issue.type.remedy_guidance %>
+<div class="row">
+    <div class="col-md-<%= has_references ? '10' : '12' %>">
+        <div class="description">
+            <%= md @issue.type.description %>
+        </div>
     </div>
+
+    <% if has_references %>
+    <div class="col-md-2">
+        <h3>References</h3>
+        <ul class="list-unstyled">
+            <% if @issue.type.cwe_url %>
+            <li>
+                <%= link_to 'CWE', @issue.type.cwe_url, target: '_blank' %>
+            </li>
+            <% end %>
+
+            <% @issue.type.references.each do |reference| %>
+                <li>
+                    <%= link_to reference.title, reference.url, target: '_blank' %>
+                </li>
+            <% end %>
+        </ul>
+    </div>
+    <% end %>
 </div>
 
 <hr/>
-<% end %>
-
-<% if @issue.vector.seed || @issue.signature || @issue.proof ||
-        @issue.remarks.any? || @issue.platform %>
-<div>
-    <h2>
-        <a id="identification" class="anchor" href="#!/identification">
-            <span class="fa fa-link"></span>
-        </a>
-
-        Identification
-    </h2>
-    <%= render 'issues/identification', issue: issue %>
-</div>
-<hr/>
-<% end %>
 
 <div id="input_vector">
     <h2>
@@ -69,42 +65,118 @@
     <%= render 'issues/input_vector', issue: issue %>
 </div>
 
-<hr/>
-
-<div id="affected_page">
+<div>
     <h2>
-        <a id="affected_page" class="anchor" href="#!/affected_page">
+        <a id="identification" class="anchor" href="#!/identification">
             <span class="fa fa-link"></span>
         </a>
 
-        Affected page:
-
-        <small>
-            <%= link_to_url_with_external external: @issue.page.dom.url,
-                                          internal: '#',
-                                          display_path_only: true %>
-        </small>
+        Identification
     </h2>
 
-    <%= render 'page', issue: @issue, page: @issue.page, id: 'affected_page' %>
+    <%= render 'issues/identification', issue: issue %>
 </div>
 
 <hr/>
 
-<div id="referring_page">
+<div>
     <h2>
-        <a id="referring_page" class="anchor" href="#!/referring_page">
+        <a id="reproduction" class="anchor" href="#!/reproduction">
             <span class="fa fa-link"></span>
         </a>
 
-        Referring page:
-
-        <small>
-            <%= link_to_url_with_external external: @issue.referring_page.dom.url,
-                                          internal: '#',
-                                          display_path_only: true %>
-        </small>
+        Reproduction
     </h2>
 
-    <%= render 'page', issue: @issue, page: @issue.referring_page, id: 'referring_page' %>
+    <p class="text-muted">
+    </p>
+
+    <%= render 'issues/reproduction', issue: issue %>
+</div>
+
+<hr/>
+
+<% if @issue.type.remedy_guidance %>
+    <div>
+        <h2>
+            <a id="remediation" class="anchor" href="#!/remediation">
+                <span class="fa fa-link"></span>
+            </a>
+
+            Remediation
+        </h2>
+
+        <div class="description">
+            <%= md @issue.type.remedy_guidance %>
+        </div>
+    </div>
+
+    <hr/>
+<% end %>
+
+<div>
+    <h2>
+        <a id="advanced" class="anchor" href="#!/advanced">
+            <span class="fa fa-link"></span>
+        </a>
+
+        Advanced information
+    </h2>
+
+    <p class="text-muted">
+        The following sections provide all available data regarding the
+        state of the web application and associated traffic.
+    </p>
+
+    <div>
+        <h3>
+            <a id="advanced_affected_page" class="anchor" href="#!/advanced_affected_page">
+                <span class="fa fa-link"></span>
+            </a>
+
+            Affected page:
+
+            <small>
+                <%= link_to_url_with_external external: @issue.page.dom.url,
+                                              internal: '#',
+                                              display_path_only: true %>
+            </small>
+        </h3>
+
+        <p class="text-muted">
+            Information about the page at its vulnerable state.
+        </p>
+
+        <%= render 'page',
+                   issue: @issue,
+                   page: @issue.page,
+                   id: 'advanced_affected_page' %>
+    </div>
+
+    <hr/>
+
+    <div>
+        <h3>
+            <a id="advanced_referring_page" class="anchor" href="#!/advanced_referring_page">
+                <span class="fa fa-link"></span>
+            </a>
+
+            Referring page:
+
+            <small>
+                <%= link_to_url_with_external external: @issue.referring_page.dom.url,
+                                              internal: '#',
+                                              display_path_only: true %>
+            </small>
+        </h3>
+
+        <p class="text-muted">
+            Information about the page that included the logged input vector.
+        </p>
+
+        <%= render 'page',
+                   issue: @issue,
+                   page: @issue.referring_page,
+                   id: 'advanced_referring_page' %>
+    </div>
 </div>

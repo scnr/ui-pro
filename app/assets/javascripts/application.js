@@ -129,15 +129,23 @@ function scrollToActiveElementFromWindowLocation() {
 }
 
 // Parent must have 'position: relative;'
-function scrollToChild( parent, child ){
-    parent = $(parent);
-    child  = $(child);
+function scrollToChild( parent_selector, child_selector ){
+    var parent = $(parent_selector);
 
-    if( !child.exists() ) return;
+    if( !parent.exists() ) return;
 
-    parent.scrollTop(
-        parent.scrollTop() + child.position().top - (parent.height() / 2) + (child.height())
-    );
+    parent.each( function(){
+        var current_parent = $(this);
+
+        var child = current_parent.children( child_selector );
+
+        if( !child.exists() ) return;
+
+        current_parent.scrollTop(
+            current_parent.scrollTop() + child.position().top -
+            (current_parent.height() / 2) + (child.height())
+        );
+    });
 
 }
 

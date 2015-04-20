@@ -7,29 +7,37 @@
     <% object.each do |k, v| %>
         <%
            cell = [k,v].include?( highlight ) ? 'th' : 'td'
+           k    = escape_control_characters( k.to_s )
+           v    = escape_control_characters( v.to_s )
         %>
 
         <tr>
             <<%= cell %>>
                 <% if code %>
-                    <code><%= k %> </code>
+                    <code><%= k %></code>
                 <% else %>
                     <%= k %>
                 <% end %>
             </<%= cell %>>
 
+            <% if !fixed %>
+                <th>
+                    =
+                </th>
+            <% end %>
+
             <<%= cell %>>
                 <% if v.is_a? Hash %>
                     <% if v.empty? %>
-                        <code><%= escape_control_characters v %></code>
+                        <code><%= v %></code>
                     <% else %>
                         <%= render '/shared/hash', code: code, object: v %>
                     <% end %>
                 <% else %>
                     <% if code %>
-                        <code><%= escape_control_characters v %></code>
+                        <code><%= v %></code>
                     <% else %>
-                        <%= escape_control_characters v %>
+                        <%= v %>
                     <% end %>
                 <% end %>
             </<%= cell %>>

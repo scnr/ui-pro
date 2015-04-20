@@ -1,5 +1,5 @@
 <%
-   title @issue.type.name
+   title @issue.to_s.html_safe
    breadcrumb_add 'Sites', sites_path
    breadcrumb_add @issue.site.url, site_path( @issue.site )
    breadcrumb_add @issue.scan.name, site_scan_path( @issue.site, @issue.scan )

@@ -1,20 +1,18 @@
-<strong>
-    <a
-    id="<%= id %>-arguments-all"
-    href="<%= id_to_location id %>/arguments/all">
+<h5>
+    <a id="<%= id %>-arguments-all" href="<%= id_to_location id %>/arguments/all">
         All
     </a>
-</strong>
+</h5>
 
 <%= highlight_proof( data_dump( sink.function.arguments ), sink.taint_value ).html_safe %>
 
-<strong>
-    <a
-    id="<%= id %>-arguments-tainted"
-    href="<%= id_to_location id %>/arguments/tainted">
+<hr/>
+
+<h5>
+    <a id="<%= id %>-arguments-tainted" href="<%= id_to_location id %>/arguments/tainted">
         Tainted
     </a>
-</strong>
+</h5>
 
 <table class="table table-condensed table-fixed">
     <% if sink.tainted_argument_value != sink.tainted_value %>

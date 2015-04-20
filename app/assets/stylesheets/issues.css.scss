@@ -86,7 +86,11 @@
         background-color: #F2DEDE;
     }
 
-    .issue-proof-highlight {
+    .highlight-container {
+        max-height: 150px;
+    }
+
+    .highlight {
         background-color: yellow;
         font-weight: bold;
     }
@@ -97,6 +101,18 @@
 
     table.vector-inputs > tbody > tr > td {
         border-right: 1px solid #E5E5E5;
+    }
+
+    .inspection {
+        display: none;
+
+        td {
+            border: 0px;
+        }
+    }
+
+    .inspection.active td {
+        background-color: inherit;
     }
 
 }

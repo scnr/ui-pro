@@ -1,12 +1,18 @@
+<%
+   include_taint ||= false
+%>
+
+<% if include_taint %>
 <p class="alert alert-info">
     Taint is:
     <code><%= page.dom.data_flow_sinks.first.taint_value %></code>
 </p>
+<% end %>
 
 <table class="table table-condensed table-fixed">
     <colgroup>
-        <col width="2%"/>
-        <col width="47%"/>
+        <col width="4%"/>
+        <col width="45%"/>
         <col width="47%"/>
         <col width="6%"/>
     </colgroup>
@@ -40,7 +46,7 @@
                 </a>
             </td>
         </tr>
-        <tr id="<%= id %>-data_flow_sinks-<%= i %>-inspect" class="well" style="display: none">
+        <tr id="<%= id %>-data_flow_sinks-<%= i %>-inspect" class="inspection">
             <td colspan="4">
                 <ul class="nav nav-tabs">
                     <li class="active">

@@ -17,4 +17,9 @@ class IssueType < ActiveRecord::Base
     end
     default_scope { by_severity }
 
+    def cwe_url
+        return if !cwe
+        "http://cwe.mitre.org/data/definitions/#{cwe}.html"
+    end
+
 end

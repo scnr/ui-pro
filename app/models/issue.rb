@@ -32,6 +32,10 @@ class Issue < ActiveRecord::Base
         includes(:type).includes(:vector).by_severity.order('issue_types.name asc')
     end
 
+    def to_s
+        "#{type.name} in #{vector.kind} input '#{vector.affected_input_name}'"
+    end
+
     def self.max_severity
         issue = by_severity.first
         return if !issue

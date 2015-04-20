@@ -1,8 +1,8 @@
 <table class="table table-condensed table-fixed">
-    <col width="1%" />
+    <col width="4%" />
     <col width="74%" />
     <col width="5%" />
-    <col width="15%" />
+    <col width="12%" />
     <col width="6%" />
 
     <thead>
@@ -24,9 +24,11 @@
     </thead>
     <% trace.each.with_index do |frame, i|
 
-           inspectable = (frame.line.to_i > 0 && frame.url == page.dom.url) ||
-                   !frame.function.source.to_s.empty? || frame.function.arguments.any?
-        %>
+           with_source = (frame.line.to_i > 0 && frame.url == page.dom.url) ||
+                   !frame.function.source.to_s.empty?
+
+           inspectable = with_source || frame.function.arguments.any?
+    %>
         <tr id="<%= id %>-<%= i %>">
             <th>
                 <strong>
@@ -37,13 +39,11 @@
             </th>
             <% if inspectable %>
                 <td>
-                    <a href="<%= frame.url %>">
-                        <%= frame.url %>
-                    </a>
+                    <%= link_to frame.url, frame.url, target: '_blank' %>
                 </td>
                 <td>
                     <% if frame.line.to_i > 0 && frame.url == page.dom.url %>
-                        <a href="<%= id_to_location parent_id %>/browser_body/<%= frame.line %>">
+                        <a href="<%= id_to_location "advanced_affected_page_dom_processing-final-#{frame.line}" %>">
                             <%= frame.line %>
                         </a>
                     <% else %>
@@ -54,7 +54,7 @@
                     <% if frame.function.signature %>
                         <code><%= frame.function.signature %></code>
                     <% else %>
-                        <p class="alert alert-info">No function signature available.</p>
+                        Not available.
                     <% end %>
                 </td>
 
@@ -68,8 +68,7 @@
             <% else %>
                 <td colspan="4">
                     <p class="alert alert-info">
-                        This call lacks context.
-                        It was probably executed via
+                        This call lacks context, it was probably executed via
                         <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval">eval()</a>
                         or performed under <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode">JavaScript strict-mode</a>.
                     </p>
@@ -78,8 +77,8 @@
         </tr>
 
         <% if inspectable %>
-        <tr id="<%= id %>-<%= i %>-inspect" style="display: none">
-            <td colspan="5" class="borderless">
+        <tr id="<%= id %>-<%= i %>-inspect" class="inspection">
+            <td colspan="5">
                 <ul class="nav nav-tabs">
 
                     <% has_active = false %>
@@ -93,7 +92,7 @@
                         </li>
                     <% end %>
 
-                    <% if (frame.line.to_i > 0 && frame.url == page.dom.url) || !frame.function.source.to_s.empty? %>
+                    <% if with_source %>
                         <li <%= 'class="active"' if !has_active %>>
                             <a href="<%= id_to_location id %>/<%= i %>/inspect/source">
                                 Source
@@ -112,8 +111,10 @@
                     </div>
                     <% end %>
 
-                    <% if (frame.line.to_i > 0 && frame.url == page.dom.url) || !frame.function.source.to_s.empty? %>
-                        <div class="tab-pane <%= 'active' if !has_active %>" id="<%= id %>-<%= i %>-inspect-source">
+                    <% if with_source %>
+                        <div class="tab-pane <%= 'active' if !has_active %>"
+                             id="<%= id %>-<%= i %>-inspect-source">
+
                             <%= render 'issues/page/sink/frame/source',
                                     id:    "#{id}-#{i}-inspect",
                                     frame: frame,
