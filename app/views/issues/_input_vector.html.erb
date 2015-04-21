@@ -14,6 +14,12 @@
             <th>Type</th>
 
             <% if @issue.active? %>
+                <% if !@issue.vector.http_method.to_s.empty? %>
+                <th>
+                    HTTP method
+                </th>
+                <% end %>
+
                 <th>
                     <%= [:xml, :json].include?( @issue.vector.kind ) ? 'Location' : 'Name' %>
                 </th>
@@ -27,6 +33,10 @@
         <td><code><%= @issue.vector.kind %></code></td>
 
         <% if @issue.active? %>
+            <% if !@issue.vector.http_method.to_s.empty? %>
+            <td><%= @issue.vector.http_method %></td>
+            <% end %>
+
             <td><code><%= @issue.vector.affected_input_name %></code></td>
         <% end %>
 

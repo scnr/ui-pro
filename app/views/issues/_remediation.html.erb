@@ -1,0 +1,26 @@
+<div class="description">
+    <%= md issue.type.remedy_guidance %>
+</div>
+
+<% if issue.page.dom.data_flow_sinks.any? %>
+    <div class="panel panel-info">
+        <div class="panel panel-heading">
+            <a id="remediation_data_flow_sinks" class="anchor"
+               href="<%= id_to_location 'remediation_data_flow_sinks' %>">
+                <span class="fa fa-link"></span>
+            </a>
+
+            <i class="fa fa-info-circle"></i>
+
+            You can gain more insights into the issue by inspecting the flow of the
+            injected payload:
+        </div>
+
+        <div class="panel">
+            <%= render 'issues/advanced//page/sink/data_flow',
+                       page: issue.page,
+                       id:   'remediation'
+            %>
+        </div>
+    </div>
+<% end %>

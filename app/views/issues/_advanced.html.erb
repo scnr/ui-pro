@@ -1,0 +1,51 @@
+<div>
+    <h3>
+        <a id="advanced_affected_page" class="anchor" href="#!/advanced_affected_page">
+            <span class="fa fa-link"></span>
+        </a>
+
+        Affected page:
+
+        <small>
+            <%= link_to_url_with_external external: issue.page.dom.url,
+                                          internal: '#',
+                                          display_path_only: true %>
+        </small>
+    </h3>
+
+    <p class="text-muted">
+        Information about the page at its vulnerable state.
+    </p>
+
+    <%= render 'issues/advanced/page',
+               issue: issue,
+               page: issue.page,
+               id: 'advanced_affected_page' %>
+</div>
+
+<hr/>
+
+<div>
+    <h3>
+        <a id="advanced_referring_page" class="anchor" href="#!/advanced_referring_page">
+            <span class="fa fa-link"></span>
+        </a>
+
+        Referring page:
+
+        <small>
+            <%= link_to_url_with_external external: issue.referring_page.dom.url,
+                                          internal: '#',
+                                          display_path_only: true %>
+        </small>
+    </h3>
+
+    <p class="text-muted">
+        Information about the page that included the logged input vector.
+    </p>
+
+    <%= render 'issues/advanced/page',
+               issue: issue,
+               page: issue.referring_page,
+               id: 'advanced_referring_page' %>
+</div>

@@ -61,7 +61,7 @@
 
     .code-container {
         overflow-x: auto;
-        max-height: 400px;
+        max-height: 300px;
         position:   relative;
     }
 
@@ -87,7 +87,6 @@
     }
 
     .highlight-container {
-        max-height: 150px;
     }
 
     .highlight {
@@ -103,16 +102,18 @@
         border-right: 1px solid #E5E5E5;
     }
 
-    .inspection {
+    tr.inspection {
         display: none;
-
-        td {
-            border: 0px;
-        }
     }
 
-    .inspection.active td {
-        background-color: inherit;
+    tr.inspection > th, tr.inspection > td {
+        border: 0px;
+    }
+
+    tr.inspection th,
+    tr.inspection td,
+    ul.nav-tabs li.active a {
+        background-color: #f5f5f5
     }
 
 }

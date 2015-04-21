@@ -13,13 +13,9 @@ class Vector < ActiveRecord::Base
     end
 
     def arachni_class
-        namespace = Arachni::Element
-
-        super.gsub( 'Arachni::Element::', '' ).split( '::' ).each do |klass|
-            namespace = namespace.const_get( klass.to_sym )
-        end
-
-        namespace
+        Arachni::Element.const_get(
+            super.gsub( 'Arachni::Element::', '' ).split( '::' ).first.to_sym
+        )
     end
 
     def self.create_from_arachni( vector )

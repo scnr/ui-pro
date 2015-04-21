@@ -21,7 +21,7 @@
                     Request
                 </h5>
 
-                <pre class="code-container"><%= page.request %></pre>
+                <pre class="highlight-container code-container"><%= highlight_http_request( page.request.to_s, issue, issue.vector.seed ) %></pre>
             </div>
         <% end %>
 
@@ -73,12 +73,17 @@
                 the interface of the web application.
             </p>
 
-            <%= render 'issues/page/transitions', page: page, id: "#{id}_dom_processing", debug: true %>
+            <%= render 'issues/advanced/page/transitions',
+                       page: page,
+                       id: "#{id}_dom_processing",
+                       debug: true %>
 
             <% if (!page.dom.body.empty? || !page.response.body.empty?) &&
                 (page.dom.body != page.response.body) %>
 
-                <%= render 'issues/page/body', page: page, id: "#{id}_dom_processing" %>
+                <%= render 'issues/advanced/page/body',
+                           page: page,
+                           id: "#{id}_dom_processing" %>
             </div>
         </div>
     <% end %>
@@ -103,7 +108,9 @@
                 Each sink is a point of payload execution.
             </p>
 
-            <%= render 'issues/page/sink/execution_flow', page: page, id: id %>
+            <%= render 'issues/advanced/page/sink/execution_flow',
+                       page: page,
+                       id: id %>
         </div>
     </div>
 <% end %>
@@ -127,7 +134,9 @@
                 Each sink is a function which was passed tainted arguments.
             </p>
 
-            <%= render 'issues/page/sink/data_flow', page: page, id: id %>
+            <%= render 'issues/advanced/page/sink/data_flow',
+                       page: page,
+                       id: id %>
         </div>
     </div>
 <% end %>

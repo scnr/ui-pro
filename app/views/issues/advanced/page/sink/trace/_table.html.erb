@@ -54,7 +54,7 @@
                     <% if frame.function.signature %>
                         <code><%= frame.function.signature %></code>
                     <% else %>
-                        Not available.
+                        N/A
                     <% end %>
                 </td>
 
@@ -115,7 +115,7 @@
                         <div class="tab-pane <%= 'active' if !has_active %>"
                              id="<%= id %>-<%= i %>-inspect-source">
 
-                            <%= render 'issues/page/sink/frame/source',
+                            <%= render 'issues/advanced/page/sink/frame/source',
                                     id:    "#{id}-#{i}-inspect",
                                     frame: frame,
                                     page:  page

@@ -1,11 +1,9 @@
 <% if frame.line.to_i > 0 && frame.url == page.dom.url %>
-    <strong>
-        <a
-        id="<%= id %>-source-page"
-        href="<%= id_to_location id %>/source/page">
+    <h5>
+        <a id="<%= id %>-source-page" href="<%= id_to_location id %>/source/page">
             Page
         </a>
-    </strong>
+    </h5>
 
     <%=
         code_highlight(
@@ -20,13 +18,11 @@
 <% end %>
 
 <% if !frame.function.source.to_s.empty? %>
-    <strong>
-        <a
-        id="<%= id %>-source-function"
-        href="<%= id_to_location id %>/source/function">
+    <h5>
+        <a id="<%= id %>-source-function" href="<%= id_to_location id %>/source/function">
             Function
         </a>
-    </strong>
+    </h5>
 
     <%= code_highlight( frame.function.source, :javascript,
                         line_numbers: true,

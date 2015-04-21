@@ -49,11 +49,12 @@ module IssuesHelper
         end
     end
 
-    def highlight_http_request( issue )
-        highlight_proof(
-            issue.page.request.to_s,
-            issue.vector.arachni_class.encode( issue.vector.seed )
-        ).html_safe
+    def highlight_http_request( request, issue, highlight )
+        encoded = issue.vector.arachni_class.respond_to?( :encode ) ?
+            issue.vector.arachni_class.encode( highlight ) :
+            highlight
+
+        highlight_proof( request.to_s, encoded ).html_safe
     end
 
     def highlight_proof( string, proof )
@@ -73,7 +74,13 @@ module IssuesHelper
     end
 
     def escape_control_characters( string )
-        string.gsub( "\x00", '\\\0' )
+        string = string.dup
+        {
+            "\n"   => '\\\n',
+            "\r"   => '\\\r',
+            "\x00" => '\\\0'
+        }.each { |pair| string.gsub!( *pair ) }
+        string
     end
 
 end

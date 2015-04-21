@@ -45,16 +45,9 @@
             <% if sink.tainted_argument_name %>
                 <code><%= sink.tainted_argument_name %></code>
             <% else %>
-                <% if sink.function.signature_arguments.empty? %>
-                    <p class="alert alert-info">
-                        The function signature does not declare any arguments.
-                    </p>
-                <% else %>
-                    <p class="alert alert-info">
-                        The tainted argument was provided in addition to the
-                        ones declared in the function signature.
-                    </p>
-                <% end %>
+                <p class="alert alert-info">
+                    Undeclared
+                </p>
             <% end %>
         </td>
         <td>

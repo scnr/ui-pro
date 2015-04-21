@@ -48,6 +48,7 @@
         </tr>
         <tr id="<%= id %>-data_flow_sinks-<%= i %>-inspect" class="inspection">
             <td colspan="4">
+
                 <ul class="nav nav-tabs">
                     <li class="active">
                         <a href="<%= id_to_location id %>/data_flow_sinks/<%= i %>/inspect/arguments">
@@ -75,7 +76,7 @@
 
                 <div class="tab-content">
                     <div class="tab-pane active" id="<%= id %>-data_flow_sinks-<%= i %>-inspect-arguments">
-                        <%= render 'issues/page/sink/data_flow/arguments',
+                        <%= render 'issues/advanced/page/sink/data_flow/arguments',
                                 id:   "#{id}-data_flow_sinks-#{i}-inspect",
                                 sink: sink
                         %>
@@ -83,7 +84,7 @@
 
                     <% if !sink.function.source.to_s.empty? %>
                         <div class="tab-pane" id="<%= id %>-data_flow_sinks-<%= i %>-inspect-source">
-                            <%= render 'issues/page/sink/data_flow/source',
+                            <%= render 'issues/advanced/page/sink/data_flow/source',
                                     id:     "#{id}-data_flow_sinks-#{i}-inspect",
                                     source: sink.function.source
                             %>
@@ -92,7 +93,7 @@
 
                     <% if sink.stackframes.any? %>
                         <div class="tab-pane" id="<%= id %>-data_flow_sinks-<%= i %>-inspect-stacktrace">
-                            <%= render 'issues/page/sink/trace/table',
+                            <%= render 'issues/advanced/page/sink/trace/table',
                                     id:    "#{id}-data_flow_sinks-#{i}-inspect-stacktrace",
                                     parent_id: id,
                                     trace: sink.stackframes,

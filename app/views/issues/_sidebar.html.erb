@@ -1,11 +1,11 @@
 <%
    sections = {
-    input_vector: 'Input vector'
+        input_vector: 'Input vector'
    }
 
    sections.merge!(
-       identification: 'Identification',
-       reproduction:   'Reproduction'
+       reproduction:   'Reproduction',
+       identification: 'Identification'
    )
 
    sections.merge!(
@@ -35,13 +35,13 @@
 
    if @issue.page.dom.execution_flow_sinks.any?
        sections.merge!(
-               advanced_affected_page_execution_flow: '&mdash; Execution-flow',
+           advanced_affected_page_execution_flow: '&mdash; Execution-flow',
        )
    end
 
    if @issue.page.dom.data_flow_sinks.any?
        sections.merge!(
-               advanced_affected_page_data_flow: '&mdash; Data-flow',
+           advanced_affected_page_data_flow: '&mdash; Data-flow',
        )
    end
 
@@ -53,7 +53,7 @@
            !@issue.referring_page.response.to_s.empty?
 
        sections.merge!(
-               advanced_referring_page_http: '&mdash; HTTP traffic',
+           advanced_referring_page_http: '&mdash; HTTP traffic',
        )
    end
 
@@ -62,19 +62,19 @@
            @issue.referring_page.dom.transitions.any?
 
        sections.merge!(
-           advanced_affected_page_dom_processing: '&mdash; DOM processing',
+           advanced_referring_page_dom_processing: '&mdash; DOM processing',
        )
    end
 
    if @issue.referring_page.dom.execution_flow_sinks.any?
        sections.merge!(
-               advanced_referring_page_execution_flow: '&mdash; Execution-flow',
+           advanced_referring_page_execution_flow: '&mdash; Execution-flow',
        )
    end
 
    if @issue.referring_page.dom.data_flow_sinks.any?
        sections.merge!(
-               advanced_referring_page_data_flow: '&mdash; Data-flow',
+           advanced_referring_page_data_flow: '&mdash; Data-flow',
        )
    end
 

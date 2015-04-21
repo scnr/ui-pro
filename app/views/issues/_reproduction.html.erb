@@ -1,23 +1,25 @@
 <% if issue.active? && issue.vector.inputs.any? %>
-<h4>
-    <a id="reproduction-inputs" class="anchor"
-       href="<%= id_to_location 'reproduction-inputs' %>">
-        <span class="fa fa-link"></span>
-    </a>
+    <h4>
+        <a id="reproduction-inputs" class="anchor"
+           href="<%= id_to_location 'reproduction-inputs' %>">
+            <span class="fa fa-link"></span>
+        </a>
 
-    In order to reproduce the issue please submit the
-    <a href="#!/input_vector">input vector</a> with the following values:
-</h4>
+        In order to reproduce the issue please submit the
+        <a href="#!/input_vector">input vector</a> with the following values:
+    </h4>
 
-<%= render '/shared/hash',
-           object: issue.vector.inputs,
-           highlight: issue.vector.affected_input_name,
-           code: true
-%>
+    <%= render '/shared/hash',
+               object: issue.vector.inputs,
+               highlight: issue.vector.affected_input_name,
+               code: true
+    %>
+
+<hr/>
 <% end %>
 
 <% if issue.page.dom.transitions.any? %>
-    <h5>
+    <h4>
         <a id="reproduction-transitions" class="anchor"
            href="<%= id_to_location 'reproduction-transitions' %>">
             <span class="fa fa-link"></span>
@@ -25,23 +27,23 @@
 
         This issue requires a series of browser-based interface interactions
         in order to bring the page to a vulnerable state:
-    </h5>
+    </h4>
 
-    <%= render 'issues/page/transitions',
+    <%= render 'issues/advanced/page/transitions',
                page: issue.page,
                id:   'reproduction' %>
 <% end %>
 
 <% if issue.page.dom.execution_flow_sinks.empty? && issue.active? &&
         !issue.vector.kind.to_s.end_with?( 'dom' ) && issue.vector.inputs.any? %>
-    <h5>
+    <h4>
         <a id="reproduction-http_request" class="anchor"
            href="<%= id_to_location 'reproduction-http_request' %>">
             <span class="fa fa-link"></span>
         </a>
 
         HTTP request:
-    </h5>
+    </h4>
 
-    <pre class="code-container"><%= highlight_http_request issue %></pre>
+    <pre class="highlight-container code-container"><%= highlight_http_request( issue.page.request.to_s, issue, issue.vector.seed ) %></pre>
 <% end %>
