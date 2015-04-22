@@ -145,7 +145,7 @@ module ApplicationHelper
             code << '</pre></td>'
         end
 
-        code << '<td class="code"><pre>'
+        code << "<td class=\"code #{options[:line_numbers] ? 'with' : 'without' }-line-numbers\"><pre>"
 
         from.upto(to) do |i|
             line = "<span id='#{options[:anchor_id]}-#{i}'>#{lines[i]}</span>"

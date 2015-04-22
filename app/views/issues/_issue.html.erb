@@ -34,7 +34,8 @@
 
     <% if has_references %>
     <div class="col-md-2">
-        <h3>References</h3>
+        <h4>References</h4>
+
         <ul class="list-unstyled">
             <% if @issue.type.cwe_url %>
             <li>
@@ -75,9 +76,6 @@
 
         Reproduction
     </h2>
-
-    <p class="text-muted">
-    </p>
 
     <%= render 'issues/reproduction', issue: issue %>
 </div>

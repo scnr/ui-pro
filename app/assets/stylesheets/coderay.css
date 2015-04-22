@@ -38,7 +38,7 @@ table.CodeRay td.code {
     border-left: 0px;
 }
 
-table.CodeRay td.code pre {
+table.CodeRay td.code.with-line-numbers pre {
     border-left: 0px;
     border-top-left-radius: 0px;
     border-bottom-left-radius: 0px;

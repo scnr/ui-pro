@@ -64,14 +64,9 @@
 <% end %>
 
 <% if @issue.page.dom.execution_flow_sinks.any? %>
-    <h4>
-        <a id="identification_execution_flow_sinks" class="anchor"
-           href="<%= id_to_location 'identification_execution_flow_sinks' %>">
-            <span class="fa fa-link"></span>
-        </a>
-
+    <p>
         This issue is accompanied by successful execution of a JavaScript payload:
-    </h4>
+    </p>
 
     <%= render 'issues/advanced/page/sink/execution_flow',
                page: @issue.page,

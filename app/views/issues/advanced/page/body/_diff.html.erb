@@ -13,7 +13,7 @@
                 "<a href=\"#{id_to_location id}/diff/#{i}\">#{i}</a>"
                 end.join("\n").html_safe %></pre>
         </td>
-        <td class="code">
+        <td class="code with-line-numbers">
 <pre><%=
     diff.map.with_index do |line, i|
         c = if line.start_with?( '+' )

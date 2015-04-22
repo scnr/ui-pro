@@ -43,6 +43,20 @@
 
 <div class="row">
     <div class="col-md-12">
+        <h5>
+            <a id="<%= id %>_diff" class="anchor"
+               href="<%= id_to_location "#{id}_diff" %>">
+                <span class="fa fa-link"></span>
+            </a>
+
+            State differences
+        </h5>
+
+        <p class="text-muted">
+            Differences between the <span class="text-danger">initial</span>
+            and <span class="text-success">final</span> states.
+        </p>
+
         <%= render 'issues/advanced/page/body/diff',
                    page: page,
                    id:  id %>
