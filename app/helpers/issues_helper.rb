@@ -73,6 +73,10 @@ module IssuesHelper
         )
     end
 
+    def html_diff( string1, string2 )
+        Diffy::Diff.new( string1, string2 )
+    end
+
     def escape_control_characters( string )
         string = string.dup
         {

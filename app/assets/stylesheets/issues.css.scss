@@ -76,16 +76,6 @@
         position:   relative;
     }
 
-    .CodeRay .active {
-        font-weight: bold;
-        background-color: #BCE8F1;
-    }
-
-    .CodeRay .breakpoint {
-        font-weight: bold;
-        background-color: #F2DEDE;
-    }
-
     .highlight-container {
     }
 
@@ -116,4 +106,22 @@
         background-color: #f5f5f5
     }
 
+    .diff-container {
+        max-height: 500px;
+    }
+
+    .diff {
+        min-width: 100%;
+    }
+
+    .diff.diff-addition {
+        background-color: #eaffea;
+    }
+
+    .diff.diff-deletion {
+        background-color: #ffecec;
+    }
+
+    .diff.diff-unchanged {
+    }
 }

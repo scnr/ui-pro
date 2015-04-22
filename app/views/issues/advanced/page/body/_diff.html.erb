@@ -1,0 +1,35 @@
+<%
+   diff = html_diff(
+           CodeRay.scan( page.response.body, :html ).html.lines.to_a.join,
+           CodeRay.scan( "#{page.dom.body}\n", :html ).html.lines.to_a.join
+   ).to_a
+%>
+<div class="code-container diff-container">
+<table class="CodeRay">
+    <tbody>
+    <tr>
+        <td class="line-numbers">
+            <pre><%= diff.map.with_index do |_, i|
+                "<a href=\"#{id_to_location id}/diff/#{i}\">#{i}</a>"
+                end.join("\n").html_safe %></pre>
+        </td>
+        <td class="code">
+<pre><%=
+    diff.map.with_index do |line, i|
+        c = if line.start_with?( '+' )
+                line.sub!( '+', '' )
+                'addition'
+            elsif line.start_with?( '-' )
+                line.sub!( '-', '' )
+                'deletion'
+            else
+                'unchanged'
+            end
+
+    "<div id=\"#{id}-diff-#{i}\" class=\"diff diff-#{c}\">#{line}</div>"
+end.join.recode.html_safe %></pre>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</div>

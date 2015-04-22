@@ -26,6 +26,7 @@ gem 'c3-rails'
 gem 'ace-rails-ap'
 
 gem 'coderay'
+gem 'diffy'
 
 group :doc do
     gem 'sdoc', '~> 0.4.0'

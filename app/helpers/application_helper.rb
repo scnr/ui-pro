@@ -108,8 +108,7 @@ module ApplicationHelper
 
         code = code.strip
 
-        lines = CodeRay.scan( code.recode, language ).
-            html( css: :style ).lines.to_a
+        lines = CodeRay.scan( code.recode, language ).html.lines.to_a
 
         if options[:from]
             from = [0, options[:from]].max
