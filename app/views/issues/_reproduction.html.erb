@@ -23,8 +23,12 @@
                id:   'reproduction' %>
 <% end %>
 
-<% if issue.page.dom.execution_flow_sinks.empty? && issue.active? &&
+<% if issue.active? %>
+    <% if issue.page.dom.execution_flow_sinks.empty? && issue.active? &&
         !issue.vector.kind.to_s.end_with?( 'dom' ) && issue.vector.inputs.any? %>
 
-    <pre class="highlight-container code-container"><%= highlight_http_request( issue.page.request.to_s, issue, issue.vector.seed ) %></pre>
+        <pre class="highlight-container code-container"><%= highlight_http_request( issue.page.request.to_s, issue, issue.vector.seed ) || issue.page.request %></pre>
+    <% end %>
+<% elsif issue.page.dom.transitions.empty? %>
+    <pre class="highlight-container code-container"><%= highlight_http_request( issue.page.request.to_s, issue, '' ) || issue.page.request%></pre>
 <% end %>

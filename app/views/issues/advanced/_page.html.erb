@@ -21,7 +21,7 @@
                     Request
                 </h5>
 
-                <pre class="highlight-container code-container"><%= highlight_http_request( page.request.to_s, issue, issue.vector.seed ) %></pre>
+                <pre class="highlight-container code-container"><%= highlight_http_request( page.request.to_s, issue, issue.vector.seed ) || page.request %></pre>
             </div>
         <% end %>
 
@@ -36,7 +36,7 @@
                     Response <small>&mdash; Binary bodies will not be displayed.</small>
                 </h5>
 
-                <pre class="highlight-container code-container"><%= highlight_proof( page.response.to_s, issue.proof ).html_safe %></pre>
+                <pre class="highlight-container code-container"><%= highlight_proof( page.response.to_s, issue.proof ) || page.response %></pre>
             </div>
         <% end %>
     </div>

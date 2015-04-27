@@ -1,6 +1,6 @@
 <%=
     if !@issue.vector.source.to_s.empty?
-        highlight_vector_source( @issue.vector )
+        code_highlight( @issue.vector.source )
     end
 %>
 
