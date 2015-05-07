@@ -13,7 +13,7 @@ describe IssuePageDomTransition do
             expect(transition).to be_valid
 
             expect(transition.element).to eq arachni_transition.element.to_s
-            expect(transition.event).to eq arachni_transition.event.to_s
+            expect(transition.event).to eq arachni_transition.event
             expect(transition.time).to eq arachni_transition.time
         end
     end

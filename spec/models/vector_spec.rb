@@ -42,8 +42,8 @@ describe Vector do
                 expect(vector.default_inputs).to eq arachni_vector.default_inputs
                 expect(vector.source).to eq arachni_vector.source
                 expect(vector.http_method).to eq arachni_vector.http_method.to_s.upcase
-                expect(vector.arachni_class).to eq arachni_vector.class.to_s
-                expect(vector.kind).to eq arachni_vector.class.type.to_s
+                expect(vector.arachni_class).to eq arachni_vector.class
+                expect(vector.kind).to eq arachni_vector.class.type
             end
         end
 
@@ -60,8 +60,8 @@ describe Vector do
                 expect(vector.inputs).to eq arachni_vector.inputs
                 expect(vector.default_inputs).to eq arachni_vector.default_inputs
                 expect(vector.http_method).to eq arachni_vector.http_method.to_s.upcase
-                expect(vector.arachni_class).to eq arachni_vector.class.to_s
-                expect(vector.kind).to eq arachni_vector.class.type.to_s
+                expect(vector.arachni_class).to eq arachni_vector.class
+                expect(vector.kind).to eq arachni_vector.class.type
             end
         end
 
@@ -72,8 +72,8 @@ describe Vector do
 
             expect(vector.action).to eq arachni_vector.action
             expect(vector.affected_input_name).to eq arachni_vector.affected_input_name
-            expect(vector.arachni_class).to eq arachni_vector.class.to_s
-            expect(vector.kind).to eq arachni_vector.class.type.to_s
+            expect(vector.arachni_class).to eq arachni_vector.class
+            expect(vector.kind).to eq arachni_vector.class.type
         end
 
         [Arachni::Element::Body, Arachni::Element::Server, Arachni::Element::Path].each do |klass|
@@ -83,8 +83,8 @@ describe Vector do
                 expect(vector).to be_valid
 
                 expect(vector.action).to eq arachni_vector.action
-                expect(vector.arachni_class).to eq arachni_vector.class.to_s
-                expect(vector.kind).to eq arachni_vector.class.type.to_s
+                expect(vector.arachni_class).to eq arachni_vector.class
+                expect(vector.kind).to eq arachni_vector.class.type
             end
         end
     end
