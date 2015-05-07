@@ -3,7 +3,7 @@
    breadcrumb_add 'Sites', sites_path
    breadcrumb_add @issue.site.url, site_path( @issue.site )
    breadcrumb_add @issue.scan.name, site_scan_path( @issue.site, @issue.scan )
-   breadcrumb_add @issue.revision, site_scan_path( @issue.site, @issue.scan )
+   breadcrumb_add @issue.revision, site_scan_revision_path( @issue.site, @issue.scan, @issue.revision )
 %>
 
 <div id="issues">

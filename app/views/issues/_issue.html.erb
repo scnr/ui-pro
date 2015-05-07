@@ -25,7 +25,7 @@
 
 <% has_references = @issue.type.references.any? || @issue.type.cwe %>
 
-<div class="row">
+<div class="row" id="info">
     <div class="col-md-<%= has_references ? '10' : '12' %>">
         <div class="description">
             <%= md @issue.type.description %>
@@ -33,7 +33,7 @@
     </div>
 
     <% if has_references %>
-    <div class="col-md-2">
+    <div class="col-md-2 references">
         <strong>References</strong>
 
         <ul class="list-unstyled">
@@ -57,7 +57,7 @@
 
 <div id="input_vector">
     <h2>
-        <a id="input_vector" class="anchor" href="#!/input_vector">
+        <a class="anchor" href="#!/input_vector">
             <span class="fa fa-link"></span>
         </a>
 
@@ -68,9 +68,9 @@
 
 <hr/>
 
-<div>
+<div id="reproduction">
     <h2>
-        <a id="reproduction" class="anchor" href="#!/reproduction">
+        <a class="anchor" href="#!/reproduction">
             <span class="fa fa-link"></span>
         </a>
 
@@ -82,9 +82,9 @@
 
 <hr/>
 
-<div>
+<div id="identification">
     <h2>
-        <a id="identification" class="anchor" href="#!/identification">
+        <a class="anchor" href="#!/identification">
             <span class="fa fa-link"></span>
         </a>
 
@@ -97,9 +97,9 @@
 <hr/>
 
 <% if @issue.type.remedy_guidance %>
-    <div>
+    <div id="remediation">
         <h2>
-            <a id="remediation" class="anchor" href="#!/remediation">
+            <a class="anchor" href="#!/remediation">
                 <span class="fa fa-link"></span>
             </a>
 
@@ -112,9 +112,9 @@
     <hr/>
 <% end %>
 
-<div>
+<div id="advanced">
     <h2>
-        <a id="advanced" class="anchor" href="#!/advanced">
+        <a class="anchor" href="#!/advanced">
             <span class="fa fa-link"></span>
         </a>
 

@@ -50,6 +50,8 @@ module IssuesHelper
     end
 
     def highlight_http_request( request, issue, highlight )
+        return if !highlight
+
         case issue.vector.arachni_class.to_s
 
             when 'Arachni::Element::LinkTemplate'

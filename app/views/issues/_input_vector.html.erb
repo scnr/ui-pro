@@ -1,75 +1,79 @@
-<%=
-    if !@issue.vector.source.to_s.empty?
-        code_highlight( @issue.vector.source )
-    end
-%>
+<% if !@issue.vector.source.to_s.empty? %>
+    <div class="source">
+        <%= code_highlight( @issue.vector.source ) %>
+    </div>
+<% end %>
 
-<table class="table table-condensed table-fixed">
-    <colgroup>
-        <col width="10%"/>
-    </colgroup>
+<div class="input_vector-info">
+    <table class="table table-condensed table-fixed">
+        <colgroup>
+            <col width="10%"/>
+        </colgroup>
 
-    <thead>
+        <thead>
+            <tr>
+                <th>Type</th>
+
+                <% if @issue.active? %>
+                    <% if !@issue.vector.http_method.to_s.empty? %>
+                    <th>
+                        HTTP method
+                    </th>
+                    <% end %>
+
+                    <th>
+                        <%= [:xml, :json].include?( @issue.vector.kind ) ? 'Location' : 'Name' %>
+                    </th>
+                <% end %>
+
+                <th>At</th>
+                <th>Pointing to</th>
+            </tr>
+        </thead>
         <tr>
-            <th>Type</th>
+            <td><code><%= @issue.vector.kind %></code></td>
 
             <% if @issue.active? %>
                 <% if !@issue.vector.http_method.to_s.empty? %>
-                <th>
-                    HTTP method
-                </th>
+                <td><%= @issue.vector.http_method %></td>
                 <% end %>
 
-                <th>
-                    <%= [:xml, :json].include?( @issue.vector.kind ) ? 'Location' : 'Name' %>
-                </th>
+                <td><code><%= @issue.vector.affected_input_name %></code></td>
             <% end %>
 
-            <th>At</th>
-            <th>Pointing to</th>
+            <td>
+                <%= link_to_url_with_external external: @issue.referring_page.dom.url,
+                                              internal: '#',
+                                              display_path_only: true %>
+            </td>
+            <td>
+                <%= link_to_url_with_external external: @issue.vector.action,
+                                              internal: '#',
+                                              display_path_only: true %>
+            </td>
         </tr>
-    </thead>
-    <tr>
-        <td><code><%= @issue.vector.kind %></code></td>
-
-        <% if @issue.active? %>
-            <% if !@issue.vector.http_method.to_s.empty? %>
-            <td><%= @issue.vector.http_method %></td>
-            <% end %>
-
-            <td><code><%= @issue.vector.affected_input_name %></code></td>
-        <% end %>
-
-        <td>
-            <%= link_to_url_with_external external: @issue.referring_page.dom.url,
-                                          internal: '#',
-                                          display_path_only: true %>
-        </td>
-        <td>
-            <%= link_to_url_with_external external: @issue.vector.action,
-                                          internal: '#',
-                                          display_path_only: true %>
-        </td>
-    </tr>
-</table>
+    </table>
+</div>
 
 <% if @issue.vector.default_inputs.any? && @issue.vector.inputs.any? %>
-    <table class="table table-condensed">
-        <thead>
-            <tr>
-                <th>Values</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>
-                    <%= render '/shared/hash',
-                               object: @issue.vector.default_inputs,
-                               highlight: @issue.vector.affected_input_name,
-                               code: true
-                    %>
-                </td>
-            </tr>
-        <tbody>
-    </table>
+    <div class="input_vector-values">
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <th>Values</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <%= render '/shared/hash',
+                                   object: @issue.vector.default_inputs,
+                                   highlight: @issue.vector.affected_input_name,
+                                   code: true
+                        %>
+                    </td>
+                </tr>
+            <tbody>
+        </table>
+    </div>
 <% end %>
