@@ -75,15 +75,18 @@ module IssuesHelper
         s.html_safe
     end
 
-    def highlight_proof( string, proof )
-        string = string.to_s.recode
-        proof  = proof.to_s.recode
-
+    def string_has_proof?( string, proof )
         return if proof.to_s.empty?
-        return if !string.downcase.include?( proof.downcase )
+        return false if !string.to_s.recode.downcase.include?( proof.recode.downcase )
 
-        escaped_proof         = h( proof )
-        escaped_response_body = h( string )
+        true
+    end
+
+    def highlight_proof( string, proof )
+        return if !string_has_proof?( string, proof )
+
+        escaped_proof         = h( proof.to_s.recode )
+        escaped_response_body = h( string.to_s.recode )
 
         escaped_response_body.gsub(
             Regexp.new(

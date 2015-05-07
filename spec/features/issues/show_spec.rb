@@ -5,9 +5,14 @@ feature 'Issue page' do
 
     let(:user) { FactoryGirl.create :user, sites: [site] }
     let(:issue) do
-        Issue.create_from_arachni( Factory[:issue],
-                                   revision: revision,
-                                   type: FactoryGirl.create(:issue_type)
+        Issue.create_from_arachni(
+            Factory[:issue],
+            revision: revision,
+            type: FactoryGirl.create(:issue_type),
+            platform: FactoryGirl.create(
+                :issue_platform,
+                type: FactoryGirl.create( :issue_platform_type )
+            )
         )
     end
     let(:revision) { FactoryGirl.create :revision, scan: scan }
@@ -15,13 +20,17 @@ feature 'Issue page' do
     let(:site) { FactoryGirl.create :site }
     let(:vector) { issue.vector }
 
+    def refresh
+        visit site_scan_revision_issue_path( site, scan, revision, issue )
+    end
+    
     after(:each) do
         Warden.test_reset!
     end
 
     before do
         login_as user, scope: :user
-        visit site_scan_revision_issue_path( site, scan, revision, issue )
+        refresh
     end
 
     scenario 'has title' do
@@ -94,7 +103,7 @@ feature 'Issue page' do
             issue.type.description = '**Stuff**'
             issue.type.save
 
-            visit site_scan_revision_issue_path( site, scan, revision, issue )
+            refresh
 
             expect(info.find('.description strong')).to have_content 'Stuff'
         end
@@ -105,7 +114,7 @@ feature 'Issue page' do
                 issue.type.references = []
                 issue.type.save
 
-                visit site_scan_revision_issue_path( site, scan, revision, issue )
+                refresh
 
                 references = info.find('.references')
 
@@ -133,7 +142,7 @@ feature 'Issue page' do
                 issue.type.references = []
                 issue.type.save
 
-                visit site_scan_revision_issue_path( site, scan, revision, issue )
+                refresh
 
                 expect(info).to_not have_css '.references'
             end
@@ -148,7 +157,7 @@ feature 'Issue page' do
                 vector.source = nil
                 vector.save
 
-                visit site_scan_revision_issue_path( site, scan, revision, issue )
+                refresh
             end
 
             scenario 'it does not show it' do
@@ -163,7 +172,7 @@ feature 'Issue page' do
                 vector.source = '<form></form>'
                 vector.save
 
-                visit site_scan_revision_issue_path( site, scan, revision, issue )
+                refresh
             end
 
             scenario 'it highlights it' do
@@ -184,7 +193,7 @@ feature 'Issue page' do
                     issue.active = true
                     issue.save
 
-                    visit site_scan_revision_issue_path( site, scan, revision, issue )
+                    refresh
                 end
 
                 scenario 'has HTTP method' do
@@ -197,7 +206,7 @@ feature 'Issue page' do
                     issue.active = false
                     issue.save
 
-                    visit site_scan_revision_issue_path( site, scan, revision, issue )
+                    refresh
                 end
 
                 scenario 'has HTTP method' do
@@ -222,7 +231,7 @@ feature 'Issue page' do
                 }
                 vector.save
 
-                visit site_scan_revision_issue_path( site, scan, revision, issue )
+                refresh
             end
 
             let(:values) { input_vector.find '.input_vector-values .table-hash' }
@@ -239,7 +248,7 @@ feature 'Issue page' do
                     vector.affected_input_name = 'myname'
                     vector.save
 
-                    visit site_scan_revision_issue_path( site, scan, revision, issue )
+                    refresh
                 end
 
                 scenario 'it highlights the input' do
@@ -259,7 +268,7 @@ feature 'Issue page' do
                 vector.default_inputs = {}
                 vector.save
 
-                visit site_scan_revision_issue_path( site, scan, revision, issue )
+                refresh
             end
 
             scenario 'it does not show values' do
@@ -285,7 +294,7 @@ feature 'Issue page' do
                     }
                     vector.save
 
-                    visit site_scan_revision_issue_path( site, scan, revision, issue )
+                    refresh
                 end
 
                 let(:values){ reproduction.find( '#reproduction-inputs .table-hash' ) }
@@ -302,7 +311,7 @@ feature 'Issue page' do
                         vector.affected_input_name = 'myname'
                         vector.save
 
-                        visit site_scan_revision_issue_path( site, scan, revision, issue )
+                        refresh
                     end
 
                     scenario 'it highlights the input' do
@@ -322,7 +331,7 @@ feature 'Issue page' do
                     vector.inputs = {}
                     vector.save
 
-                    visit site_scan_revision_issue_path( site, scan, revision, issue )
+                    refresh
                 end
 
                 scenario 'it shows no inputs' do
@@ -336,7 +345,7 @@ feature 'Issue page' do
                 issue.active = false
                 issue.save
 
-                visit site_scan_revision_issue_path( site, scan, revision, issue )
+                refresh
             end
 
             scenario 'it shows no inputs' do
@@ -436,7 +445,7 @@ feature 'Issue page' do
                 issue.vector.seed = nil
                 issue.vector.save
 
-                visit site_scan_revision_issue_path( site, scan, revision, issue )
+                refresh
             end
 
             let(:request) { reproduction.find '#reproduction-request' }
@@ -454,11 +463,255 @@ feature 'Issue page' do
                     issue.vector.seed = 'goes'
                     issue.vector.save
 
-                    visit site_scan_revision_issue_path( site, scan, revision, issue )
+                    refresh
                 end
 
                 scenario 'it highlights it' do
                     expect(request.find('.highlight')).to have_content issue.vector.seed
+                end
+            end
+        end
+    end
+
+    feature 'identification' do
+        let(:identification) { find '#identification' }
+
+        feature 'when the issue has platforms' do
+            let(:platform) { identification.find '#identification-platform' }
+
+            scenario 'it shows platform info' do
+                expect(platform).to have_content issue.platform.name
+                expect(platform).to have_content issue.platform.type.name
+            end
+        end
+
+        feature 'when the issue has no platforms' do
+            before do
+                issue.platform = nil
+                issue.save
+
+                refresh
+            end
+
+            scenario 'it does not show platform info' do
+                expect(identification).to_not have_css '#identification-platform'
+            end
+        end
+
+        feature 'when the issue has remarks' do
+            before do
+                issue.remarks = []
+                issue.remarks.create author: 'the_dude', text: 'stuff'
+                issue.remarks.create author: 'the_dude', text: 'stuff 2'
+                issue.remarks.create author: 'the_other_dude', text: 'stuff'
+                issue.remarks.create author: 'the_other_dude', text: 'stuf2'
+                issue.save
+
+                refresh
+            end
+
+            let(:remarks) { identification.find '#identification-remarks' }
+
+            scenario 'it shows them in groups' do
+                dude = remarks.find('ul.list-unstyled > li:nth-of-type(1)')
+                expect(dude.find('strong')).to have_content 'The dude'
+
+                dude_texts = dude.find( 'ul' )
+                expect(dude_texts.find( 'li:nth-of-type(1)' )).to have_content issue.remarks[0].text
+                expect(dude_texts.find( 'li:nth-of-type(2)' )).to have_content issue.remarks[1].text
+
+                other_dude = remarks.find('ul.list-unstyled > li:nth-of-type(2)')
+                expect(other_dude.find('strong')).to have_content 'The other dude'
+
+                other_dude_texts = other_dude.find( 'ul' )
+                expect(other_dude_texts.find( 'li:nth-of-type(1)' )).to have_content issue.remarks[2].text
+                expect(other_dude_texts.find( 'li:nth-of-type(2)' )).to have_content issue.remarks[3].text
+            end
+        end
+
+        feature 'when the issue has no remarks' do
+            before do
+                issue.remarks = []
+                issue.save
+
+                refresh
+            end
+
+            scenario 'it does not show remarks' do
+                expect(identification).to_not have_css '#identification-remarks'
+            end
+        end
+
+        feature 'when the issue has a proof and a response' do
+            let(:proof) { identification.find '#identification-proof.issue-proof' }
+
+            before do
+                issue.proof = 'this is the proof'
+                issue.save
+
+                issue.page.response.body = "This is the response and #{issue.proof}."
+                issue.page.response.save
+
+                issue.page.dom.body = "This is the DOM body and #{issue.proof}."
+                issue.page.dom.save
+
+                refresh
+            end
+
+            feature 'and transitions' do
+                before do
+                    expect(issue.page.dom.transitions).to be_any
+                end
+
+                feature 'and the page DOM body includes the proof' do
+                    scenario 'highlights the proof in the body' do
+                        expect(proof.find('.highlight-container')).to have_content issue.page.dom.body
+                        expect(proof.find('.highlight-container .highlight')).to have_content issue.proof
+                    end
+                end
+
+                feature 'and the page DOM body does not include the proof' do
+                    before do
+                        issue.proof = 'response and this is the proof'
+                        issue.save
+
+                        refresh
+                    end
+
+                    feature 'and the response includes the proof' do
+                        scenario 'highlights the proof in the response' do
+                            expect(proof.find('.highlight-container')).to have_content issue.page.response.to_s
+                            expect(proof.find('.highlight-container .highlight')).to have_content issue.proof
+                        end
+                    end
+
+                    feature 'and the response does not include the proof' do
+                        before do
+                            issue.proof = '<weird>stuff</weird>'
+                            issue.save
+
+                            refresh
+                        end
+
+                        scenario 'displays proof as highlighted code' do
+                            expect(proof.find('.CodeRay')).to have_content issue.proof
+                        end
+                    end
+                end
+            end
+
+            feature 'and no transitions' do
+                before do
+                    issue.page.dom.transitions = []
+                    issue.page.dom.save
+                    refresh
+                end
+
+                feature 'and the response includes the proof' do
+                    scenario 'highlights the proof in the response' do
+                        expect(proof.find('.highlight-container')).to have_content issue.page.response.to_s
+                        expect(proof.find('.highlight-container .highlight')).to have_content issue.proof
+                    end
+                end
+
+                feature 'and the response does not include the proof' do
+                    before do
+                        issue.proof = '<weird>stuff</weird>'
+                        issue.save
+
+                        refresh
+                    end
+
+                    scenario 'displays proof as highlighted code' do
+                        expect(proof.find('.CodeRay')).to have_content issue.proof
+                    end
+                end
+            end
+        end
+
+        feature 'when the issue has no proof' do
+            before do
+                issue.proof = nil
+                issue.save
+
+                refresh
+            end
+
+            scenario 'it does not show issue proof' do
+                expect(identification).to_not have_css '#identification-proof.issue-proof'
+            end
+        end
+
+        feature 'when the issue has no response' do
+            before do
+                issue.page.response.raw_headers = nil
+                issue.page.response.body        = nil
+                issue.page.response.save
+
+                refresh
+            end
+
+            scenario 'it does not show issue proof' do
+                expect(identification).to_not have_css '#identification-proof.issue-proof'
+            end
+        end
+
+        feature 'when the issue has JS execution flow sinks' do
+            let(:sinks) { identification.find '#identification-execution-flow-sinks' }
+
+            scenario 'it includes JS execution flow sinks' do
+                expect(sinks).to have_css 'table.table-execution-flow-sinks'
+            end
+        end
+
+        feature 'when the issue has no JS execution flow sinks' do
+            before do
+                issue.page.dom.execution_flow_sinks = []
+                issue.page.dom.save
+
+                refresh
+            end
+
+            scenario 'it does not show them' do
+                expect(identification).to_not have_css '#identification-execution-flow-sinks'
+            end
+        end
+
+        feature 'when the issue has no associated proof of any kind' do
+            before do
+                issue.proof = nil
+                issue.save
+
+                issue.page.dom.execution_flow_sinks = []
+                issue.page.dom.save
+
+                issue.page.response.body = 'This is the response body.'
+                issue.page.response.save
+
+                issue.page.dom.body = 'This is the DOM body.'
+                issue.page.dom.save
+
+                refresh
+            end
+
+            let(:proof) { identification.find '#identification-proof.body-proof .CodeRay' }
+
+            feature 'and has DOM transitions' do
+                scenario 'it shows code highlighted DOM body' do
+                    expect(proof).to have_content issue.page.dom.body
+                end
+            end
+
+            feature 'and has no transitions' do
+                before do
+                    issue.page.dom.transitions = []
+                    issue.page.dom.save
+
+                    refresh
+                end
+
+                scenario 'it shows code highlighted DOM body' do
+                    expect(proof).to have_content issue.page.response.to_s
                 end
             end
         end

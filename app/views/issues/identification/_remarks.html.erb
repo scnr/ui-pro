@@ -1,5 +1,4 @@
 <% if issue.remarks.any? %>
-
     <%
        remarks = {}
        issue.remarks.each do |remark|
@@ -7,31 +6,33 @@
        end
     %>
 
-    <div class="panel panel-info">
-        <div class="panel-heading">
-            <i class="fa fa-info-circle"></i>
+    <div id="identification-remarks">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <i class="fa fa-info-circle"></i>
 
-            System components have attached some insights to this issue.
-        </div>
+                System components have attached some insights to this issue.
+            </div>
 
-        <div class="panel-body">
-            <ul class="list-unstyled">
-                <% remarks.each do |commenter, texts| %>
-                    <li>
-                        <strong>
-                            <%= commenter.to_s.humanize %>
-                        </strong>
+            <div class="panel-body">
+                <ul class="list-unstyled">
+                    <% remarks.each do |commenter, texts| %>
+                        <li>
+                            <strong>
+                                <%= commenter.to_s.humanize %>
+                            </strong>
 
-                        <ul>
-                            <% texts.each do |text| %>
-                                <li>
-                                    <%= text %>
-                                </li>
-                            <% end %>
-                        </ul>
-                    </li>
-                <% end %>
-            </ul>
+                            <ul>
+                                <% texts.each do |text| %>
+                                    <li>
+                                        <%= text %>
+                                    </li>
+                                <% end %>
+                            </ul>
+                        </li>
+                    <% end %>
+                </ul>
+            </div>
         </div>
     </div>
 <% end %>
