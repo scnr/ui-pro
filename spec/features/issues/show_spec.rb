@@ -717,4 +717,63 @@ feature 'Issue page' do
         end
     end
 
+    feature 'remediation' do
+        let(:remediation) { find '#remediation' }
+
+        scenario 'shows rendered Markdown description' do
+            issue.type.remedy_guidance = '**Stuff**'
+            issue.type.save
+
+            refresh
+
+            expect(remediation.find('.description strong')).to have_content 'Stuff'
+        end
+
+        feature 'when there are references' do
+            scenario 'shows them' do
+                references = remediation.find('.references')
+
+                expect(issue.type.references.size).to be >= 1
+
+                issue.type.references.each do |reference|
+                    expect(references).to have_xpath "//a[@href='#{reference.url}']"
+                    expect(references).to have_content reference.title
+                end
+            end
+        end
+
+        feature 'when there are no references' do
+            scenario 'shows nothing' do
+                issue.type.cwe = nil
+                issue.type.references = []
+                issue.type.save
+
+                refresh
+
+                expect(remediation).to_not have_css '.references'
+            end
+        end
+
+        feature 'when the issue has JS data flow sinks' do
+            let(:sinks) { remediation.find '#remediation-data-flow-sinks' }
+
+            scenario 'it includes JS data flow sinks' do
+                expect(sinks).to have_css 'table.table-data-flow-sinks'
+            end
+        end
+
+        feature 'when the issue has no JS data flow sinks' do
+            before do
+                issue.page.dom.data_flow_sinks = []
+                issue.page.dom.save
+
+                refresh
+            end
+
+            scenario 'it does not show them' do
+                expect(remediation).to_not have_css '#remediation-data-flow-sinks'
+            end
+        end
+    end
+
 end
