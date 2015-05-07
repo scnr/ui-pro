@@ -13,6 +13,7 @@ feature 'Issue page' do
     let(:revision) { FactoryGirl.create :revision, scan: scan }
     let(:scan) { FactoryGirl.create :scan, site: site, profile: FactoryGirl.create(:profile) }
     let(:site) { FactoryGirl.create :site }
+    let(:vector) { issue.vector }
 
     after(:each) do
         Warden.test_reset!
@@ -140,7 +141,6 @@ feature 'Issue page' do
     end
 
     feature 'input vector' do
-        let(:vector) { issue.vector }
         let(:input_vector) { find '#input_vector' }
 
         feature 'when the input vector has no source' do
@@ -264,6 +264,202 @@ feature 'Issue page' do
 
             scenario 'it does not show values' do
                 expect(input_vector).to_not have_css '.input_vector-values'
+            end
+        end
+    end
+
+    feature 'reproduction' do
+        let(:reproduction) { find '#reproduction' }
+
+        feature 'when the issue is active' do
+            before do
+                issue.active = true
+                issue.save
+            end
+
+            feature 'and has inputs' do
+                before do
+                    vector.inputs = {
+                        'myname'  => 'my value',
+                        'myname1' => 'my value2'
+                    }
+                    vector.save
+
+                    visit site_scan_revision_issue_path( site, scan, revision, issue )
+                end
+
+                let(:values){ reproduction.find( '#reproduction-inputs .table-hash' ) }
+
+                scenario 'it shows values' do
+                    vector.inputs.each do |k, v|
+                        expect(values).to have_content k
+                        expect(values).to have_content v
+                    end
+                end
+
+                feature 'when the issue has an affected input name' do
+                    before do
+                        vector.affected_input_name = 'myname'
+                        vector.save
+
+                        visit site_scan_revision_issue_path( site, scan, revision, issue )
+                    end
+
+                    scenario 'it highlights the input' do
+                        row = values.find('tr:nth-of-type(1)')
+
+                        expect(row.find('th:nth-of-type(1)')).to have_content 'myname'
+                        expect(row.find('th:nth-of-type(2)')).to have_content '='
+                        expect(row.find('th:nth-of-type(3)')).to have_content 'my value'
+
+                        expect(values.find('tr:nth-of-type(2)')).to_not have_xpath 'th'
+                    end
+                end
+            end
+
+            feature 'and has no inputs' do
+                before do
+                    vector.inputs = {}
+                    vector.save
+
+                    visit site_scan_revision_issue_path( site, scan, revision, issue )
+                end
+
+                scenario 'it shows no inputs' do
+                    expect(reproduction).to_not have_css '#reproduction-inputs'
+                end
+            end
+        end
+
+        feature 'when the issue is not active' do
+            before do
+                issue.active = false
+                issue.save
+
+                visit site_scan_revision_issue_path( site, scan, revision, issue )
+            end
+
+            scenario 'it shows no inputs' do
+                expect(reproduction).to_not have_css '#reproduction-inputs'
+            end
+        end
+
+        feature 'when the issue has transitions' do
+            let(:dom_transitions) { issue.page.dom.transitions }
+            let(:transitions) { find '#reproduction-transitions' }
+
+            scenario 'it lists them' do
+                expect(dom_transitions.size).to be >= 1
+
+                cnt = 1
+                dom_transitions.each.with_index do |t, i|
+                    next if t.event == :request
+
+                    row = transitions.find( ".table-transitions > tbody > tr:nth-of-type(#{cnt})" )
+
+                    expect(row).to have_content t.event
+                    expect(row).to have_content t.element
+                    expect(row).to_not have_content t.time
+
+                    cnt += 1
+                end
+            end
+
+            scenario 'it ignores request ones' do
+                expect(dom_transitions.find { |t| t.event == :request }).to be_truthy
+                expect(transitions).to_not have_content 'request'
+            end
+
+            feature 'when a transition has option' do
+                scenario ':url' do
+                    transition = dom_transitions[0]
+                    row        = transitions.find( '.table-transitions > tbody > tr:nth-of-type(1)' )
+                    options    = row.find( 'table.table-transition-options > tr:nth-of-type(1)' )
+
+                    expect(options.find('th')).to have_content 'URL'
+                    expect(options.find('td')).to have_content transition.options[:url]
+                end
+
+                scenario ':cookies' do
+                    transition = dom_transitions[0]
+                    row        = transitions.find( '.table-transitions > tbody > tr:nth-of-type(1)' )
+                    options    = row.find( 'table.table-transition-options' )
+
+                    expect(options.find('tr:nth-of-type(2) th')).to have_content 'Cookies'
+
+                    cookies_table = options.find('tr:nth-of-type(3) td table')
+
+                    transition.options[:cookies].each do |k, v|
+                        expect(cookies_table).to have_content k
+                        expect(cookies_table).to have_content v
+                    end
+                end
+
+                scenario ':input' do
+                    transition = dom_transitions[2]
+                    row        = transitions.find( '.table-transitions > tbody > tr:nth-of-type(2)' )
+                    options    = row.find( 'table.table-transition-options > tr:nth-of-type(1)' )
+
+                    expect(options.find('th')).to have_content 'Value'
+                    expect(options.find('td')).to have_content transition.options[:value]
+                end
+
+                scenario ':inputs' do
+                    transition = dom_transitions[3]
+                    row        = transitions.find( '.table-transitions > tbody > tr:nth-of-type(3)' )
+                    options    = row.find( 'table.table-transition-options' )
+
+                    expect(options.find('tr:nth-of-type(1) th')).to have_content 'Inputs'
+
+                    inputs_table = options.find('tr:nth-of-type(2) td table')
+
+                    transition.options[:inputs].each do |k, v|
+                        expect(inputs_table).to have_content k
+                        expect(inputs_table).to have_content v
+                    end
+                end
+            end
+
+            scenario 'it does not show HTTP request' do
+                expect(reproduction).to_not have_css '#reproduction-request'
+            end
+        end
+
+        feature 'when the issue has no transition' do
+            before do
+                issue.page.dom.transitions = []
+                issue.page.dom.save
+
+                issue.page.request.raw = 'stuff goes here'
+                issue.page.request.save
+
+                issue.vector.seed = nil
+                issue.vector.save
+
+                visit site_scan_revision_issue_path( site, scan, revision, issue )
+            end
+
+            let(:request) { reproduction.find '#reproduction-request' }
+
+            scenario 'it does not show transitions' do
+                expect(reproduction).to_not have_css '#reproduction-transitions'
+            end
+
+            scenario 'it shows HTTP request' do
+                expect(request).to have_content issue.page.request.to_s
+            end
+
+            feature 'when the request includes the seed' do
+                before do
+                    issue.vector.seed = 'goes'
+                    issue.vector.save
+
+                    visit site_scan_revision_issue_path( site, scan, revision, issue )
+                end
+
+                scenario 'it highlights it' do
+                    expect(request.find('.highlight')).to have_content issue.vector.seed
+                end
             end
         end
     end
