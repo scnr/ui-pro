@@ -133,22 +133,28 @@
                             <div class="tab-pane <%= 'active' if !@site_role.login_type || @site_role.login_type == 'form' %>"
                                  role="tabpanel"
                                  id="form">
+
                                 <div class="alert">
-                                    <p>
-                                        When using form-based authentication the system
-                                        will look for a form that matches the given parameters
-                                        at the specified URL.
-                                        <br/>
-                                        It will then fill-in the form with the
-                                        parameter values and submit it via a browser.
-                                    </p>
-                                    <p>
-                                        <strong>
-                                            This approach should be preferred whenever
-                                            possible as it is the most reliable and
-                                            easiest to configure.
-                                        </strong>
-                                    </p>
+                                    When using form-based authentication the system
+                                    will look for a form that matches the given parameters
+                                    at the specified URL.
+                                    <br/>
+                                    It will then fill-in the form with the
+                                    parameter values and submit it via a browser.
+                                </div>
+
+                                <div class="alert alert-warning">
+                                    This method operates a browser just like a
+                                    regular user would and is thus limited to the
+                                    same extent.
+                                    <br/>
+                                    For example, if the login form is by default
+                                    hidden and requires a sequence of UI interactions
+                                    in order to become visible, it will not be possible
+                                    to submit it.
+                                    <br/>
+                                    In cases where a sequence of events needs to
+                                    be triggered, the script method should be preferred instead.
                                 </div>
 
                                 <%= f.input :login_form_url, as: :string, label: false,
