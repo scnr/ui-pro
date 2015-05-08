@@ -111,4 +111,6 @@ module IssuesHelper
         string
     end
 
+    extend self
+
 end

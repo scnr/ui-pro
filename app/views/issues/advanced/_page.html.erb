@@ -1,50 +1,50 @@
 <% if !page.request.to_s.empty? || !page.response.to_s.empty? %>
+    <div id="<%= id %>-http-traffic">
+        <h4>
+            <a id="<%= id %>_http" class="anchor"
+               href="<%= id_to_location "#{id}_http" %>">
+                <span class="fa fa-link"></span>
+            </a>
 
-    <h4>
-        <a id="<%= id %>_http" class="anchor"
-           href="<%= id_to_location "#{id}_http" %>">
-            <span class="fa fa-link"></span>
-        </a>
+            HTTP traffic
+        </h4>
 
-        HTTP traffic
-    </h4>
+        <div class="row">
+            <% if !page.request.to_s.empty? %>
+                <div class="col-md-6" id="<%= id %>-http-traffic-request">
+                    <h5>
+                        <a id="<%= id %>_http_request" class="anchor"
+                           href="<%= id_to_location "#{id}_http_request" %>">
+                            <span class="fa fa-link"></span>
+                        </a>
 
-    <div class="row">
-        <% if !page.request.to_s.empty? %>
-            <div class="col-md-6">
-                <h5>
-                    <a id="<%= id %>_http_request" class="anchor"
-                       href="<%= id_to_location "#{id}_http_request" %>">
-                        <span class="fa fa-link"></span>
-                    </a>
+                        Request
+                    </h5>
 
-                    Request
-                </h5>
+                    <pre class="highlight-container code-container"><%= highlight_http_request( page.request.to_s, issue, issue.vector.seed ) || page.request %></pre>
+                </div>
+            <% end %>
 
-                <pre class="highlight-container code-container"><%= highlight_http_request( page.request.to_s, issue, issue.vector.seed ) || page.request %></pre>
-            </div>
-        <% end %>
+            <% if !page.response.to_s.empty? %>
+                <div class="col-md-6" id="<%= id %>-http-traffic-response">
+                    <h5>
+                        <a id="<%= id %>_http_response" class="anchor"
+                           href="<%= id_to_location "#{id}_http_response" %>">
+                            <span class="fa fa-link"></span>
+                        </a>
 
-        <% if !page.response.to_s.empty? %>
-            <div class="col-md-6">
-                <h5>
-                    <a id="<%= id %>_http_response" class="anchor"
-                       href="<%= id_to_location "#{id}_http_response" %>">
-                        <span class="fa fa-link"></span>
-                    </a>
+                        Response <small>&mdash; Binary bodies will not be displayed.</small>
+                    </h5>
 
-                    Response <small>&mdash; Binary bodies will not be displayed.</small>
-                </h5>
-
-                <pre class="highlight-container code-container"><%= highlight_proof( page.response.to_s, issue.proof ) || page.response %></pre>
-            </div>
-        <% end %>
+                    <pre class="highlight-container code-container"><%= highlight_proof( page.response.to_s, issue.proof ) || page.response %></pre>
+                </div>
+            <% end %>
+        </div>
     </div>
 <% end %>
 
 <% if page.dom.transitions.any? %>
-
-    <div class="row">
+    <div class="row" id="<%= id %>-dom">
         <div class="col-md-12">
             <h4>
                 <a id="<%= id %>_dom_processing" class="anchor"
@@ -81,19 +81,21 @@
             <% if (!page.dom.body.empty? || !page.response.body.empty?) &&
                 (page.dom.body != page.response.body) %>
 
-                <%= render 'issues/advanced/page/body',
-                           page: page,
-                           id: "#{id}_dom_processing" %>
-            </div>
+                <div id="<%= id %>-dom-states">
+                    <%= render 'issues/advanced/page/states',
+                               page: page,
+                               id: "#{id}_dom_processing" %>
+                </div>
+            <% end %>
         </div>
-    <% end %>
+    </div>
 <% end %>
 
 <% if page.dom.execution_flow_sinks.any? %>
-    <div class="row">
+    <div class="row" id="<%= id %>_execution_flow" >
         <div class="col-md-12">
             <h4>
-                <a id="<%= id %>_execution_flow" class="anchor"
+                <a class="anchor"
                    href="<%= id_to_location "#{id}_execution_flow" %>">
                     <span class="fa fa-link"></span>
                 </a>
@@ -116,10 +118,10 @@
 <% end %>
 
 <% if page.dom.data_flow_sinks.any? %>
-    <div class="row">
+    <div class="row" id="<%= id %>_data_flow" >
         <div class="col-md-12">
             <h4>
-                <a id="<%= id %>_data_flow" class="anchor"
+                <a class="anchor"
                    href="<%= id_to_location "#{id}_data_flow" %>">
                     <span class="fa fa-link"></span>
                 </a>

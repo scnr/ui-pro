@@ -1,7 +1,7 @@
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-6" id="<%= id %>_initial">
         <h5>
-            <a id="<%= id %>_initial" class="anchor"
+            <a class="anchor"
                href="<%= id_to_location "#{id}_initial" %>">
                 <span class="fa fa-link"></span>
             </a>
@@ -19,9 +19,9 @@
         %>
     </div>
 
-    <div class="col-md-6">
+    <div class="col-md-6" id="<%= id %>_final" >
         <h5>
-            <a id="<%= id %>_final" class="anchor"
+            <a class="anchor"
                href="<%= id_to_location "#{id}_final" %>">
                 <span class="fa fa-link"></span>
             </a>
@@ -42,9 +42,9 @@
 </div>
 
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-12" id="<%= id %>_diff">
         <h5>
-            <a id="<%= id %>_diff" class="anchor"
+            <a class="anchor"
                href="<%= id_to_location "#{id}_diff" %>">
                 <span class="fa fa-link"></span>
             </a>
@@ -57,7 +57,7 @@
             and <span class="text-success">final</span> states.
         </p>
 
-        <%= render 'issues/advanced/page/body/diff',
+        <%= render 'issues/advanced/page/states/diff',
                    page: page,
                    id:  id %>
     </div>

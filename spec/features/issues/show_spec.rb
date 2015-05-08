@@ -776,4 +776,231 @@ feature 'Issue page' do
         end
     end
 
+    feature 'advanced' do
+        let(:advanced) { find '#advanced' }
+
+        feature 'affected page' do
+            let(:affected_page) { advanced.find '#advanced_affected_page' }
+
+            feature 'when it has HTTP traffic' do
+                before do
+                    issue.page.request.raw = 'GET /stuff HTTP/1.1'
+                    issue.page.request.save
+
+                    issue.page.response.body = '<stuff></stuff>'
+                    issue.page.response.save
+
+                    refresh
+                end
+
+                let(:http_traffic) { affected_page.find '#advanced_affected_page-http-traffic' }
+
+                feature 'request' do
+                    let(:request) { http_traffic.find '#advanced_affected_page-http-traffic-request' }
+
+                    scenario 'shows traffic' do
+                        expect(request).to have_content issue.page.request.to_s
+                    end
+
+                    feature 'when it includes the vector seed' do
+                        before do
+                            issue.vector.seed = 'stuff'
+                            issue.vector.save
+
+                            refresh
+                        end
+
+                        scenario 'it highlights it' do
+                            expect(request.find('.highlight')).to have_content issue.vector.seed
+                        end
+                    end
+                end
+
+                feature 'response' do
+                    let(:response) { http_traffic.find '#advanced_affected_page-http-traffic-response' }
+
+                    scenario 'shows traffic' do
+                        expect(response).to have_content issue.page.response.to_s
+                    end
+
+                    feature 'when it includes the issue proof' do
+                        before do
+                            issue.proof = '<stuff>'
+                            issue.save
+
+                            refresh
+                        end
+
+                        scenario 'it highlights it' do
+                            expect(response.find('.highlight')).to have_content issue.proof
+                        end
+                    end
+                end
+            end
+
+            feature 'when there is no HTTP traffic' do
+                before do
+                    issue.page.request.raw = ''
+                    issue.page.request.save
+
+                    issue.page.response.body = ''
+                    issue.page.response.save
+
+                    refresh
+                end
+
+                scenario 'it does not show HTTP traffic' do
+                    expect(affected_page).to_not have_css '#advanced_affected_page-http-traffic'
+                end
+            end
+
+            feature 'DOM processing' do
+                let(:dom_data) { affected_page.find '#advanced_affected_page-dom' }
+
+                feature 'when it has transitions' do
+                    scenario 'it lists them' do
+                        expect(dom_data).to have_css 'table.table-transitions'
+                    end
+
+                    feature 'when it has a DOM body' do
+                        before do
+                            issue.page.dom.body = <<EOHTML
+<html>
+    <title>My title!</title>
+    <body>
+        <div>
+            My stuff!
+        </div>
+    </body>
+</html>
+EOHTML
+                            issue.page.dom.save
+                        end
+
+                        let(:states) { affected_page.find '#advanced_affected_page-dom-states' }
+
+                        feature 'different from the response body' do
+                            before do
+                                issue.page.response.body = <<EOHTML
+<html>
+    <title>My other title!</title>
+    <body>
+        <div>
+            My other stuff!
+        </div>
+    </body>
+</html>
+EOHTML
+                                issue.page.response.save
+
+                                refresh
+                            end
+
+                            let(:initial) { states.find('#advanced_affected_page_dom_processing_initial') }
+                            let(:final) { states.find('#advanced_affected_page_dom_processing_final') }
+                            let(:diff) do
+                                states.find('#advanced_affected_page_dom_processing_diff .code').native.to_s + "\n"
+                            end
+
+                            scenario 'it displays the response body' do
+                                expect(initial).to have_content issue.page.response.body
+                            end
+
+                            scenario 'it displays the page DOM body' do
+                                expect(final).to have_content issue.page.dom.body
+                            end
+
+                            scenario 'it displays a diff' do
+                                expect(diff).to eq <<EOHTML
+<td class="code with-line-numbers">
+<pre><div id="advanced_affected_page_dom_processing-diff-0" class="diff diff-unchanged"> <span class="tag">&lt;html&gt;</span>
+</div><div id="advanced_affected_page_dom_processing-diff-1" class="diff diff-deletion">    <span class="tag">&lt;title&gt;</span>My other title!<span class="tag">&lt;/title&gt;</span>
+</div><div id="advanced_affected_page_dom_processing-diff-2" class="diff diff-addition">    <span class="tag">&lt;title&gt;</span>My title!<span class="tag">&lt;/title&gt;</span>
+</div><div id="advanced_affected_page_dom_processing-diff-3" class="diff diff-unchanged">     <span class="tag">&lt;body&gt;</span>
+</div><div id="advanced_affected_page_dom_processing-diff-4" class="diff diff-unchanged">         <span class="tag">&lt;div&gt;</span>
+</div><div id="advanced_affected_page_dom_processing-diff-5" class="diff diff-deletion">            My other stuff!
+</div><div id="advanced_affected_page_dom_processing-diff-6" class="diff diff-addition">            My stuff!
+</div><div id="advanced_affected_page_dom_processing-diff-7" class="diff diff-unchanged">         <span class="tag">&lt;/div&gt;</span>
+</div><div id="advanced_affected_page_dom_processing-diff-8" class="diff diff-unchanged">     <span class="tag">&lt;/body&gt;</span>
+</div><div id="advanced_affected_page_dom_processing-diff-9" class="diff diff-unchanged"> <span class="tag">&lt;/html&gt;</span>
+</div><div id="advanced_affected_page_dom_processing-diff-10" class="diff diff-addition">
+</div></pre>
+        </td>
+EOHTML
+                            end
+                        end
+
+                        feature 'identical to the response body' do
+                            before do
+                                issue.page.response.body = issue.page.dom.body
+                                issue.page.response.save
+
+                                refresh
+                            end
+
+                            scenario 'does not show DOM states' do
+                                expect(affected_page).to_not have_css '#advanced_affected_page-dom-states'
+                            end
+                        end
+                    end
+                end
+
+                feature 'when it has no transitions' do
+                    before do
+                        issue.page.dom.transitions = []
+                        issue.page.dom.save
+
+                        refresh
+                    end
+
+                    scenario 'it does not show DOM data' do
+                        expect(affected_page).to_not have_css '#advanced_affected_page-dom'
+                    end
+                end
+            end
+
+            feature 'execution flow sinks' do
+                feature 'when there are any' do
+                    scenario 'it lists them' do
+                        expect(affected_page).to have_css 'table.table-execution-flow-sinks'
+                    end
+                end
+
+                feature 'when there are none' do
+                    before do
+                        issue.page.dom.execution_flow_sinks = []
+                        issue.page.dom.save
+
+                        refresh
+                    end
+
+                    scenario 'is does not list them' do
+                        expect(affected_page).to_not have_css 'table.table-execution-flow-sinks'
+                    end
+                end
+            end
+
+            feature 'data flow sinks' do
+                feature 'when there are any' do
+                    scenario 'it lists them' do
+                        expect(affected_page).to have_css 'table.table-data-flow-sinks'
+                    end
+                end
+
+                feature 'when there are none' do
+                    before do
+                        issue.page.dom.data_flow_sinks = []
+                        issue.page.dom.save
+
+                        refresh
+                    end
+
+                    scenario 'is does not list them' do
+                        expect(affected_page).to_not have_css 'table.table-data-flow-sinks'
+                    end
+                end
+            end
+        end
+    end
+
 end
