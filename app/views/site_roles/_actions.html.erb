@@ -2,6 +2,8 @@
    button_size = local_assigns[:button_size] || 'sm'
 %>
 
+<% return if site_role.guest? %>
+
 <a href="#!/roles/<%= site_role.id %>/edit"
    class="btn btn-<%= button_size %> btn-warning"
    data-js="<%= edit_site_role_path( site_role.site, site_role ) %>">

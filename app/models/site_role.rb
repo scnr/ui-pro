@@ -8,16 +8,19 @@ class SiteRole < ActiveRecord::Base
     has_many   :scans
     has_many   :revisions, through: :scans
 
-    validates :login_type, presence: true, inclusion: { in: %w(form script) }
+    validates :login_type, presence: true, inclusion: { in: %w(none form script) }
 
     validates_presence_of   :site
     validates_presence_of   :name
     validates_uniqueness_of :name, scope: :site
 
-    validates_presence_of   :session_check_url
-    validates_presence_of   :session_check_pattern
+    validates_presence_of   :session_check_url,
+                            if: lambda { !guest? }
+    validates_presence_of   :session_check_pattern,
+                            if: lambda { !guest? }
 
-    validates_presence_of   :scope_exclude_path_patterns
+    validates_presence_of   :scope_exclude_path_patterns,
+                            if: lambda { !guest? }
 
     validates_presence_of   :login_form_url,
                                 if: lambda { login_type == 'form' }
@@ -37,6 +40,8 @@ class SiteRole < ActiveRecord::Base
     end
 
     def to_rpc_options
+        return {} if login_type == 'none'
+
         rpc_options = super
 
         if login_type == 'form'
@@ -79,6 +84,10 @@ class SiteRole < ActiveRecord::Base
         return if !line || !line[1]
 
         line[1].to_i
+    end
+
+    def guest?
+        login_type == 'none'
     end
 
     private

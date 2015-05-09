@@ -20,6 +20,7 @@ class SiteRolesController < ApplicationController
     end
 
     def edit
+        fail 'Cannot edit Guest role.' if @site_role.guest?
     end
 
     def create
@@ -35,6 +36,8 @@ class SiteRolesController < ApplicationController
     end
 
     def update
+        fail 'Cannot update Guest role.' if @site_role.guest?
+
         if @site_role.update(site_role_params)
             flash[:notice] = 'SiteRole was successfully updated.'
             render :show
@@ -44,6 +47,9 @@ class SiteRolesController < ApplicationController
     end
 
     def destroy
+        fail 'Cannot delete Guest role.'      if @site_role.guest?
+        fail 'Cannot delete role with scans.' if @site_role.scans.any?
+
         @site_role.destroy
         render :index
     end

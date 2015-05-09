@@ -28,7 +28,8 @@ class Site < ActiveRecord::Base
     validates_presence_of     :port
     validates_numericality_of :port
 
-    before_save :ensure_profile
+    after_create :create_guest_role
+    before_save  :ensure_profile
 
     def url
         u = "#{protocol}://#{host}"
@@ -58,5 +59,12 @@ class Site < ActiveRecord::Base
 
     def ensure_profile
         self.profile ||= build_profile
+    end
+
+    def create_guest_role
+        self.roles.create(
+            name:       'Guest',
+            login_type: 'none'
+        )
     end
 end

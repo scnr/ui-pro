@@ -71,6 +71,17 @@ describe SiteRole, type: :model do
                     expect(subject).to be_valid
                 end
             end
+
+            describe 'none' do
+                before do
+                    subject.login_type = 'none'
+                end
+
+                it 'is not required' do
+                    subject.login_form_url = nil
+                    expect(subject).to be_valid
+                end
+            end
         end
     end
 
@@ -94,6 +105,17 @@ describe SiteRole, type: :model do
             describe 'script' do
                 before do
                     subject.login_type = 'script'
+                end
+
+                it 'is not required' do
+                    subject.login_form_parameters = nil
+                    expect(subject).to be_valid
+                end
+            end
+
+            describe 'none' do
+                before do
+                    subject.login_type = 'none'
                 end
 
                 it 'is not required' do
@@ -145,16 +167,72 @@ describe SiteRole, type: :model do
                     expect(subject).to be_valid
                 end
             end
+
+            describe 'none' do
+                before do
+                    subject.login_type = 'none'
+                end
+
+                it 'is not required' do
+                    subject.login_script_code = nil
+                    expect(subject).to be_valid
+                end
+
+                it 'does not have to be syntactically valid' do
+                    subject.login_script_code = 'puts "'
+                    expect(subject).to be_valid
+                end
+            end
         end
     end
 
-    context 'when #session_check_pattern is invalid' do
-        it 'is invalid' do
-            subject.session_check_url     = 'http://test.com'
-            subject.session_check_pattern = '(stuff'
+    context '#session_check_url' do
+        context 'when invalid' do
+            it 'is invalid' do
+                subject.session_check_url     = ''
+                subject.session_check_pattern = 'stuff'
 
-            expect(subject.save).to be_falsey
-            expect(subject.errors).to include :session_check_pattern
+                expect(subject.save).to be_falsey
+                expect(subject.errors).to include :session_check_url
+            end
+        end
+
+        context 'when #login_type is' do
+            describe 'none' do
+                before do
+                    subject.login_type = 'none'
+                end
+
+                it 'is not required' do
+                    subject.session_check_url = nil
+                    expect(subject.reload).to be_valid
+                end
+            end
+        end
+    end
+
+    context '#session_check_pattern' do
+        context 'when invalid' do
+            it 'is invalid' do
+                subject.session_check_url     = 'http://test.com'
+                subject.session_check_pattern = '(stuff'
+
+                expect(subject.save).to be_falsey
+                expect(subject.errors).to include :session_check_pattern
+            end
+        end
+
+        context 'when #login_type is' do
+            describe 'none' do
+                before do
+                    subject.login_type = 'none'
+                end
+
+                it 'is not required' do
+                    subject.session_check_pattern = nil
+                    expect(subject.reload).to be_valid
+                end
+            end
         end
     end
 

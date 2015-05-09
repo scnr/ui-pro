@@ -12,6 +12,18 @@ describe Site, type: :model do
     expect_it { to have_many :issues }
     expect_it { to have_many(:sitemap_entries).dependent(:destroy) }
 
+    it 'has a Guest role' do
+        roles = described_class.create(
+            protocol: 'http',
+            host:     "test#{rand(99999)}.com",
+            port:     1,
+            profile:  FactoryGirl.create( :site_profile )
+        ).roles
+
+        expect(roles.size).to eq 1
+        expect(roles.first).to be_guest
+    end
+
     describe :validations do
         describe '#protocol' do
             context :http do

@@ -15,72 +15,73 @@
 </div>
 
 <div class="row">
+    <% if !@site_role.guest? %>
+        <div class="col-md-4" id="site-role-session">
+            <h3>
+                Session check
+            </h3>
 
-    <div class="col-md-4">
-        <h3>
-            Session check
-        </h3>
+            <p>
+                <strong>URL:</strong>
+                <%= link_to @site_role.session_check_url, @site_role.session_check_url,
+                            target: '_blank' %>
+            </p>
 
-        <p>
-            <strong>URL:</strong>
-            <%= link_to @site_role.session_check_url, @site_role.session_check_url,
-                        target: '_blank' %>
-        </p>
+            <p>
+                <strong>Pattern:</strong>
+                <code>
+                    <%= @site_role.session_check_pattern %>
+                </code>
+            </p>
 
-        <p>
-            <strong>Pattern:</strong>
-            <code>
-                <%= @site_role.session_check_pattern %>
-            </code>
-        </p>
+            <p>
+                <strong>Logout exclusion patterns:</strong>
 
-        <p>
-            <strong>Logout exclusion patterns:</strong>
+                <ul>
+                <% @site_role.scope_exclude_path_patterns.each do |pattern| %>
+                    <li>
+                        <code><%= pattern %></code>
+                    </li>
+                <% end %>
+                </ul>
+            </p>
+        </div>
 
-            <ul>
-            <% @site_role.scope_exclude_path_patterns.each do |pattern| %>
-                <li>
-                    <code><%= pattern %></code>
-                </li>
-            <% end %>
-            </ul>
-        </p>
-    </div>
+        <div class="col-md-4" id="site-role-login">
+            <h3>
+                Login
+            </h3>
 
-    <div class="col-md-4">
-        <h3>
-            Login
-        </h3>
+        <% if @site_role.login_type == 'form' %>
+            <p>
+                <%= link_to @site_role.login_form_url, @site_role.login_form_url,
+                            target: '_blank' %>
+            </p>
 
-    <% if @site_role.login_type == 'form' %>
-        <p>
-            <%= link_to @site_role.login_form_url, @site_role.login_form_url,
-                        target: '_blank' %>
-        </p>
-
-        <p>
-            <table class="table-stripped table-hover table-condensed">
-            <% @site_role.login_form_parameters.each do |name, value| %>
-                <tr>
-                    <th>
-                        <%= name %>
-                    </th>
-                    <td>
-                        <%= value %>
-                    </td>
-                </tr>
-            <% end %>
-            </table>
-        </p>
-    <% else %>
-        <p>
-            <%= code_highlight @site_role.login_script_code, :ruby %>
-        </p>
+            <p>
+                <table class="table-stripped table-hover table-condensed">
+                <% @site_role.login_form_parameters.each do |name, value| %>
+                    <tr>
+                        <th>
+                            <%= name %>
+                        </th>
+                        <td>
+                            <%= value %>
+                        </td>
+                    </tr>
+                <% end %>
+                </table>
+            </p>
+        <% else %>
+            <p>
+                <%= code_highlight @site_role.login_script_code, :ruby %>
+            </p>
+        <% end %>
+        </div>
     <% end %>
-    </div>
 
     <% if @site_role.scans.any? %>
-        <div class="col-md-4">
+        <div class="col-md-4" id="site-role-scans">
             <h3>
                 <%= @site_role.scans.size %> associated
                 <%= 'scan'.pluralize @site_role.scans.size %>

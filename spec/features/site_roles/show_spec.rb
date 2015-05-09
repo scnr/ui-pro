@@ -21,11 +21,15 @@ feature 'Show site role page', js: true do
         visit site_path( site )
 
         click_link 'Roles'
-        find( :xpath, "//a[@href='#!/roles/1']" ).click
+        find( :xpath, "//a[@href='#!/roles/#{subject.id}']" ).click
+    end
+
+    def refresh
+        visit "#{site_path( site )}#!/roles/#{subject.id}"
     end
 
     scenario 'can be visited by URL fragment' do
-        visit "#{site_path( site )}#!/roles/1"
+        visit "#{site_path( site )}#!/roles/#{subject.id}"
     end
 
     scenario 'sees name in heading' do
@@ -36,14 +40,122 @@ feature 'Show site role page', js: true do
         subject.description = '**Stuff**'
         subject.save
 
-        visit "#{site_path( site )}#!/roles/1"
+        visit "#{site_path( site )}#!/roles/#{subject.id}"
 
         expect(find('.description strong')).to have_content 'Stuff'
     end
 
-    scenario 'has edit link' do
-        find( :xpath, "//a[@href='#!/roles/#{subject.id}/edit']" ).click
-        expect(page).to have_css "form#edit_site_role_#{subject.id}"
+    feature 'when role is Guest' do
+        before do
+            subject.scans = []
+            subject.login_type = 'none'
+            subject.save
+
+            refresh
+        end
+
+        scenario 'does not have edit link' do
+            expect(page).to_not have_xpath "//a[@href='#!/roles/#{subject.id}/edit']"
+        end
+
+        scenario 'does not have delete link' do
+            expect(page).to_not have_xpath "//a[@href='#{site_role_path( site, subject )}' and @data-method='delete']"
+        end
+    end
+
+    feature 'when role is not Guest' do
+        scenario 'has edit link' do
+            find( :xpath, "//a[@href='#!/roles/#{subject.id}/edit']" ).click
+            expect(page).to have_css "form#edit_site_role_#{subject.id}"
+        end
+
+        feature 'when there are no associated scans' do
+            before do
+                subject.scans = []
+                subject.save
+
+                visit "#{site_path( site )}#!/roles/#{subject.id}"
+            end
+
+            scenario 'has delete button' do
+                find(:xpath, "//a[@href='#{site_role_path( site, subject )}' and @data-method='delete']" ).click
+                expect(find('#roles table')).to_not have_content subject.name
+            end
+
+            scenario 'does not list associated scans' do
+                expect(page).to_not have_css '#site-role-scans'
+            end
+        end
+
+        feature 'when there are associated scans' do
+            before do
+                subject.scans << scan
+                subject.scans << FactoryGirl.create( :scan, name: 'Fff', site: site )
+
+                visit "#{site_path( site )}#!/roles/#{subject.id}"
+            end
+
+            scenario 'does not have delete button' do
+                expect(page).to_not have_xpath "//a[@href='#{site_role_path( site, subject )}' and @data-method='delete']"
+            end
+        end
+
+        feature 'session' do
+            let(:session) { find '#site-role-session' }
+
+            scenario 'sees logout exclusion patterns' do
+                subject.scope_exclude_path_patterns.each do |pattern|
+                    expect(session).to have_content pattern
+                end
+            end
+
+            scenario 'sees check URL' do
+                expect(session).to have_content subject.session_check_url
+            end
+
+            scenario 'sees check pattern' do
+                expect(session).to have_content subject.session_check_pattern
+            end
+        end
+
+        feature 'login' do
+            let(:login) { find '#site-role-login' }
+
+            feature 'when type is' do
+                feature 'form' do
+                    let(:parameters) { login.find('table') }
+
+                    before do
+                        subject.login_type = 'form'
+                        subject.save
+                        visit "#{site_path( site )}#!/roles/#{subject.id}"
+                    end
+
+                    scenario 'sees form URL' do
+                        expect(login).to have_content subject.login_form_url
+                    end
+
+                    scenario 'sees form parameters' do
+                        subject.login_form_parameters.each do |name, value|
+                            expect(parameters).to have_content name
+                            expect(parameters).to have_content value
+                        end
+                    end
+                end
+
+                feature 'script' do
+                    before do
+                        subject.login_type = 'script'
+                        subject.save
+                        visit "#{site_path( site )}#!/roles/#{subject.id}"
+                    end
+
+                    scenario 'sees script code' do
+                        expect(login).to have_css 'table.CodeRay'
+                    end
+                end
+            end
+        end
     end
 
     feature 'when there are no associated scans' do
@@ -51,12 +163,11 @@ feature 'Show site role page', js: true do
             subject.scans = []
             subject.save
 
-            visit "#{site_path( site )}#!/roles/1"
+            visit "#{site_path( site )}#!/roles/#{subject.id}"
         end
 
-        scenario 'has delete button' do
-            find(:xpath, "//a[@href='#{site_role_path( site, subject )}' and @data-method='delete']" ).click
-            expect(find('#roles table')).to_not have_content subject.name
+        scenario 'does not list associated scans' do
+            expect(page).to_not have_css '#site-role-scans'
         end
     end
 
@@ -65,72 +176,17 @@ feature 'Show site role page', js: true do
             subject.scans << scan
             subject.scans << FactoryGirl.create( :scan, name: 'Fff', site: site )
 
-            visit "#{site_path( site )}#!/roles/1"
+            visit "#{site_path( site )}#!/roles/#{subject.id}"
         end
 
-        scenario 'does not have delete button' do
-            expect(page).to_not have_xpath "//a[@href='#{site_role_path( site, subject )}' and @data-method='delete']"
-        end
-    end
+        let(:scans) { find( '#site-role-scans' ) }
 
-    scenario 'sees associated scans' do
-        subject.scans << scan
-        subject.scans << FactoryGirl.create( :scan, name: 'Fff', site: site )
-
-        visit "#{site_path( site )}#!/roles/1"
-
-        subject.scans.each do |scan|
-            expect(page).to have_content scan.name
-            expect(page).to have_content scan.site.to_s
-        end
-    end
-
-    scenario 'sees logout exclusion patterns' do
-        subject.scope_exclude_path_patterns.each do |pattern|
-            expect(page).to have_content pattern
-        end
-    end
-
-    scenario 'sees session check URL' do
-        expect(page).to have_content subject.session_check_url
-    end
-
-    scenario 'sees session check pattern' do
-        expect(page).to have_content subject.session_check_pattern
-    end
-
-    feature 'when login type is' do
-        feature 'form' do
-            before do
-                subject.login_type = 'form'
-                subject.save
-                visit "#{site_path( site )}#!/roles/1"
-            end
-
-            scenario 'sees form URL' do
-                expect(page).to have_content subject.login_form_url
-            end
-
-            scenario 'sees form parameters' do
-                parameters_table = find('table')
-
-                subject.login_form_parameters.each do |name, value|
-                    expect(parameters_table).to have_content name
-                    expect(parameters_table).to have_content value
-                end
-            end
-        end
-
-        feature 'script' do
-            before do
-                subject.login_type = 'script'
-                subject.save
-                visit "#{site_path( site )}#!/roles/1"
-            end
-
-            scenario 'sees script code' do
-                expect(page).to have_css 'table.CodeRay'
+        scenario 'sees associated scans' do
+            subject.scans.each do |scan|
+                expect(scans).to have_content scan.name
+                expect(scans).to have_content scan.site.to_s
             end
         end
     end
+
 end

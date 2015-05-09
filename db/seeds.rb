@@ -130,7 +130,7 @@ user_agent = UserAgent.create(
     browser_cluster_screen_height: 1600
 )
 
-scans_size         = 2
+scans_size         = 4
 revisions_per_scan = 3
 
 [
@@ -156,19 +156,36 @@ revisions_per_scan = 3
         }
     )
 
-    role = site.roles.create(
+    site.roles.create(
         name:                        'Administrator',
         description:                 'Administrator account',
         session_check_url:           site.url,
         session_check_pattern:       'logout',
         scope_exclude_path_patterns: ['logout'],
         login_type:                  'form',
-        login_form_url:              "#{site.url}/login",
+        login_form_url:              "#{site.url}/admin/login",
         login_form_parameters:       {
             'user'     => 'admin',
             'password' => 'secret'
         }
     )
+
+    site.roles.create(
+        name:                        'User',
+        description:                 'User account',
+        session_check_url:           site.url,
+        session_check_pattern:       'logout',
+        scope_exclude_path_patterns: ['logout'],
+        login_type:                  'form',
+        login_form_url:              "#{site.url}/login",
+        login_form_parameters:       {
+            'user'     => 'user',
+            'password' => 'not-so-secret'
+        }
+    )
+
+    site.reload
+    site.roles.reload
 
     scans_size.times do |i|
         break if issues.empty?
@@ -176,7 +193,7 @@ revisions_per_scan = 3
         puts "[#{i}] Creating scan"
         scan = site.scans.create(
             profile:     p,
-            site_role:   role,
+            site_role:   site.roles[i % site.roles.size],
             user_agent:  user_agent,
             name:        "my scan #{i}",
             description: 'my description'
