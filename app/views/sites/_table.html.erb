@@ -61,7 +61,9 @@
 
             <td class="last-scanned">
                 <% if site.scanned_at %>
-                    <%= time_ago_in_words site.scanned_at %> ago
+                    <%= link_to [site, site.revisions.last.scan, site.revisions.last] do %>
+                        <%= time_ago_in_words site.scanned_at %> ago
+                    <% end %>
                 <% else %>
                     No scans have been performed yet.
                 <% end %>

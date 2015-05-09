@@ -3,7 +3,7 @@
    breadcrumb_add 'Sites', sites_path
 %>
 
-<div class="row">
+<div class="row" id="site-info">
     <div class="col-md-12">
         <h1>
             <%= link_to_url_with_external external: @site.url, internal: @site %>
@@ -19,6 +19,15 @@
                 <i class="fa fa-trash"></i>
             <% end %>
         </h1>
+
+        <% if @site.scanned? %>
+            <p class="text-muted" id="site-info-scan-time">
+                Last scanned on <%= l @site.revisions.last.started_at %> by
+                <%= link_to @site.revisions.last.scan.name, [@site, @site.revisions.last.scan] %>
+                (<%= link_to @site.revisions.last, [@site, @site.scans.last, @site.revisions.last] %>).
+            </p>
+        <% end %>
+
     </div>
 </div>
 

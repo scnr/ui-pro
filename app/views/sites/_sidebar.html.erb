@@ -21,19 +21,19 @@
         <% end %>
     </li>
 
-        <li>
-            <small>
-                <span class="text-muted">
-                    <% if scan.revisions.size > 0 %>
-                        <%= pluralize scan.revisions.size, 'revision' %>,
-                        <%= pluralize scan.sitemap_entries.size, 'page' %> &
-                        <%= pluralize scan.issues.size, 'issue' %>
-                        using <%= link_to scan.profile, scan.profile %>.
-                    <% else %>
-                        Has not run.
-                    <% end %>
-                </span>
-            </small>
-        </li>
+    <li>
+        <small>
+            <span class="text-muted">
+                <% if scan.revisions.size > 0 %>
+                    <%= pluralize scan.revisions.size, 'revision' %>,
+                    <%= pluralize scan.sitemap_entries.size, 'page' %> &
+                    <%= pluralize scan.issues.size, 'issue' %>
+                    using <%= link_to scan.profile, scan.profile %>.
+                <% else %>
+                    Has not run.
+                <% end %>
+            </span>
+        </small>
+    </li>
     <% end %>
 </ul>

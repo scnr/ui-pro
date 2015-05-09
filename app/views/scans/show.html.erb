@@ -5,7 +5,7 @@
 %>
 
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-12" id="scan-info">
         <h1>
             <%= link_to @scan.name.capitalize, [@scan.site, @scan] %>
             (<%= link_to @scan.profile, @scan.profile %>)
@@ -33,6 +33,15 @@
                 Running <%= link_to @scan.schedule, '#' %>.
             <% end %>
         </p>
+
+        <% if (last_revision = @scan.revisions.last) && last_revision.stopped_at %>
+            <p class="text-muted" id="scan-info-last-revision-time">
+                Last performed on <%= l last_revision.started_at %>,
+                stopped on <%= l last_revision.stopped_at %>
+                &mdash;
+                <%= Arachni::Utilities.seconds_to_hms last_revision.stopped_at - last_revision.started_at %>.
+            </p>
+        <% end %>
     </div>
 </div>
 

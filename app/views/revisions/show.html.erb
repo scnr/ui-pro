@@ -6,7 +6,7 @@
 %>
 
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-12" id="revision-info">
         <h1>
             <%= link_to "Revision ##{@revision.index}", [@revision.scan.site, @revision.scan, @revision] %> of
             <%= link_to @revision.scan.name, [@revision.scan.site, @revision.scan] %>
@@ -24,6 +24,15 @@
                 Running <%= link_to @scan.schedule, '#' %>.
             <% end %>
         </p>
+
+        <% if @revision.stopped_at %>
+            <p class="text-muted" id="revision-info-time">
+                Started on <%= l @revision.started_at %>,
+                stopped on <%= l @revision.stopped_at %>
+                &mdash;
+                <%= Arachni::Utilities.seconds_to_hms @revision.stopped_at - @revision.started_at %>.
+            </p>
+        <% end %>
     </div>
 </div>
 

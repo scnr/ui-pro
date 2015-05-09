@@ -21,6 +21,8 @@ feature 'Revision page' do
         visit site_scan_revision_path( site, scan, revision )
     end
 
+    let(:info) { find '#revision-info' }
+
     scenario 'has title' do
         expect(page).to have_title "Revision ##{revision.index}"
         expect(page).to have_title scan.name
@@ -67,4 +69,17 @@ feature 'Revision page' do
         expect(find('.description strong')).to have_content 'Stuff'
     end
 
+    feature 'when the revision has stopped' do
+        scenario 'user sees last revision start datetime' do
+            expect(info).to have_content I18n.l( revision.started_at )
+        end
+
+        scenario 'user sees last revision stop datetime' do
+            expect(info).to have_content I18n.l( revision.stopped_at )
+        end
+
+        scenario 'user sees scan duration' do
+            expect(info).to have_content Arachni::Utilities.seconds_to_hms( revision.stopped_at - revision.started_at )
+        end
+    end
 end

@@ -11,6 +11,7 @@ feature 'Scan page' do
     let(:other_user) { FactoryGirl.create :user, email: 'dd@ss.cc', shared_sites: [site] }
     let(:site) { FactoryGirl.create :site}
     let(:scan) { FactoryGirl.create :scan, site: site, profile: FactoryGirl.create(:profile) }
+    let(:revision) { FactoryGirl.create :revision, scan: scan }
 
     after(:each) do
         Warden.test_reset!
@@ -20,6 +21,8 @@ feature 'Scan page' do
         login_as user, scope: :user
         visit site_scan_path( site, scan )
     end
+
+    let(:info) { find '#scan-info' }
 
     scenario 'has title' do
         expect(page).to have_title scan.name
@@ -63,13 +66,57 @@ feature 'Scan page' do
         expect(page).to have_xpath "//a[@href='#{profile_path(scan.profile)}']"
     end
 
-    scenario 'user sees schedule'
+    scenario 'user can see edit link' do
+        expect(page).to have_xpath "//a[@href='#{edit_site_scan_path(site, scan)}']"
+    end
 
-    scenario 'user sees the revisions'
+    feature 'when the scan is scheduled' do
+        scenario 'user sees schedule'
+    end
 
-    feature 'user is the site owner' do
-        scenario 'user can see edit link' do
-            expect(page).to have_xpath "//a[@href='#{edit_site_scan_path(site, scan)}']"
+    feature 'when the scan has revisions' do
+        before do
+            revision
+            site.scans << scan
+            site.save
+
+            visit site_scan_path( site, scan )
+        end
+
+        scenario 'user sees last revision start datetime' do
+            expect(info).to have_content I18n.l( revision.started_at )
+        end
+
+        scenario 'user sees last revision stop datetime' do
+            expect(info).to have_content I18n.l( revision.stopped_at )
+        end
+
+        scenario 'user sees scan duration' do
+            expect(info).to have_content Arachni::Utilities.seconds_to_hms( revision.stopped_at - revision.started_at )
+        end
+
+        feature 'sidebar' do
+            let(:sidebar) { find '#sidebar' }
+
+            feature 'revision list' do
+                let(:revisions) { find '#scan-sidebar' }
+
+                scenario 'user sees index' do
+                    expect(revisions).to have_content "##{revision.index}"
+                end
+
+                scenario 'user sees amount of new pages' do
+                    expect(revisions).to have_content "#{revision.sitemap_entries.size} new pages"
+                end
+
+                scenario 'user sees amount of fixed issues'
+
+                scenario 'user sees amount of new issues'
+
+                scenario 'user sees stop datetime' do
+                    expect(revisions).to have_content I18n.l( revision.stopped_at )
+                end
+            end
         end
     end
 end

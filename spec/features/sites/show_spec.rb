@@ -25,6 +25,8 @@ feature 'Site page' do
         Warden.test_reset!
     end
 
+    let(:site_info) { find '#site-info' }
+
     scenario 'has title' do
         expect(page).to have_title site.url
         expect(page).to have_title 'Sites'
@@ -56,7 +58,29 @@ feature 'Site page' do
     end
 
     scenario 'user sees the site URL as a heading' do
-        expect(find('h1').text).to match site.url
+        expect(site_info.find('h1').text).to match site.url
+    end
+
+    feature 'when the site has been scanned' do
+        before do
+            revision
+            site.scans << scan
+            site.save
+
+            visit site_path( site )
+        end
+
+        scenario 'user sees last revision start datetime' do
+            expect(site_info).to have_content I18n.l( revision.started_at )
+        end
+
+        scenario 'user sees last performed scan link' do
+            expect(site_info).to have_xpath "//a[@href='#{site_scan_path( site, site.revisions.last.scan )}']"
+        end
+
+        scenario 'user sees last revision link' do
+            expect(site_info).to have_xpath "//a[@href='#{site_scan_revision_path( site, site.revisions.last.scan, site.revisions.last )}']"
+        end
     end
 
     feature 'Overview tab' do
@@ -73,9 +97,10 @@ feature 'Site page' do
 
         feature 'with scans' do
             before do
-                other_scan.revisions.create
-                site.scans << other_scan
+                revision
+                site.scans << scan
                 scan.reload
+
                 visit site_path( site )
             end
 
@@ -175,7 +200,6 @@ feature 'Site page' do
                     end
                 end
 
-
                 feature 'statistics' do
                     let(:statistics) { find '#summary-statistics' }
 
@@ -196,11 +220,11 @@ feature 'Site page' do
                     end
 
                     scenario 'user sees amount of scan revisions' do
-                        expect(statistics).to have_text "#{site.revisions.size} revisions"
+                        expect(statistics).to have_text "#{site.revisions.size} revision"
                     end
 
                     scenario 'user sees amount of scans' do
-                        expect(statistics).to have_text "#{site.scans.size} scans"
+                        expect(statistics).to have_text "#{site.scans.size} scan"
                     end
 
                     scenario 'user sees amount of issues by severity' do
