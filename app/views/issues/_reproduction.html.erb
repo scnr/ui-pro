@@ -1,3 +1,11 @@
+<% if !(role = issue.revision.scan.site_role).guest? %>
+    <div class="alert alert-info" id="reproduction-site-role">
+        This issue was identified by logging in as
+        <a target="_blank" href="<%= site_path role.site %>#!/roles/<%= role.id %>"><%= role %></a>,
+        it is likely that you will need the same privileges in order to reproduce it.
+    </div>
+<% end %>
+
 <% if issue.active? && issue.vector.inputs.any? %>
     <div id="reproduction-inputs">
         In order to reproduce the issue please submit the

@@ -280,6 +280,27 @@ feature 'Issue page' do
     feature 'reproduction' do
         let(:reproduction) { find '#reproduction' }
 
+        feature 'when the scan was performed as a non-Guest role' do
+            let(:role_info) { reproduction.find '#reproduction-site-role' }
+
+            scenario 'shows a notice' do
+                expect(role_info).to have_content scan.site_role.name
+            end
+        end
+
+        feature 'when the scan was performed as a Guest role' do
+            before do
+                scan.site_role = FactoryGirl.create( :site_role, login_type: 'none' )
+                scan.save
+
+                refresh
+            end
+
+            scenario 'does not show notice' do
+                expect(reproduction).to_not have_css '#reproduction-site-role'
+            end
+        end
+
         feature 'when the issue is active' do
             before do
                 issue.active = true
