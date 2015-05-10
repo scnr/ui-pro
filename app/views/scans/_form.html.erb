@@ -10,7 +10,8 @@
         <div class="form-inputs col-md-6">
             <%= f.association :site_role,
                               disabled: @scan.revisions.any?,
-                              collection: @site.roles.all
+                              collection: @site.roles.all,
+                              selected: @site.roles.guest
             %>
 
             <%= f.association :profile,

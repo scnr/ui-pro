@@ -27,6 +27,52 @@ describe SiteRole, type: :model do
         end
     end
 
+    describe '.guest' do
+        it 'returns the Guest role' do
+            site = subject.site
+            site.roles.delete_all
+
+            guest = FactoryGirl.create( :site_role, site: site, login_type: 'none' )
+            FactoryGirl.create( :site_role, site: site )
+
+            expect(described_class.guest).to eq guest
+        end
+    end
+
+    describe '#guest?' do
+        context 'when login_type is' do
+            describe 'none' do
+                before do
+                    subject.login_type = 'none'
+                end
+
+                it 'returns true' do
+                    expect(subject).to be_guest
+                end
+            end
+
+            describe 'form' do
+                before do
+                    subject.login_type = 'form'
+                end
+
+                it 'returns false' do
+                    expect(subject).to_not be_guest
+                end
+            end
+
+            describe 'script' do
+                before do
+                    subject.login_type = 'script'
+                end
+
+                it 'returns false' do
+                    expect(subject).to_not be_guest
+                end
+            end
+        end
+    end
+
     describe '#login_type' do
         it 'can be form' do
             subject.login_type = 'form'

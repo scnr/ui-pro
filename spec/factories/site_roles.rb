@@ -1,6 +1,6 @@
 FactoryGirl.define do
     factory :site_role do
-        name "MyString"
+        name { "MyString - #{rand 99999}" }
         description "MyText"
         session_check_url 'http://stuff/'
         session_check_pattern 'logout.php'

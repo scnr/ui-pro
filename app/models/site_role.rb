@@ -33,6 +33,10 @@ class SiteRole < ActiveRecord::Base
     validate :validate_login_script_code_syntax
     validate :validate_session_check_pattern
 
+    def self.guest
+        where( login_type: 'none' ).first
+    end
+
     %w(login_form_parameters).each do |m|
         define_method "#{m}=" do |string_or_hash|
             super self.class.string_list_to_hash( string_or_hash, '=' )
