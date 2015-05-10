@@ -379,6 +379,11 @@ EORUBY
                 end
             end
         end
+    end
 
+    describe '#to_s' do
+        it 'returns the name' do
+            expect(subject.to_s.object_id).to eq subject.name.object_id
+        end
     end
 end

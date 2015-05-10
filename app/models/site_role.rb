@@ -94,6 +94,10 @@ class SiteRole < ActiveRecord::Base
         login_type == 'none'
     end
 
+    def to_s
+        name
+    end
+
     private
 
     def validate_login_script_code_syntax
