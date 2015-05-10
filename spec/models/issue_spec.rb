@@ -11,6 +11,8 @@ describe Issue do
     expect_it { to have_one(:vector).dependent(:destroy) }
     expect_it { to have_many(:remarks).dependent(:destroy) }
 
+    expect_it { to validate_presence_of :state }
+
     IssueTypeSeverity::SEVERITIES.each do |severity|
         let("#{severity}_severity") do
             FactoryGirl.create( :issue_type_severity, name: severity )
@@ -21,7 +23,7 @@ describe Issue do
         end
 
         let("#{severity}_severity_issue") do
-            send( "#{severity}_severity_type" ).issues.create
+            send( "#{severity}_severity_type" ).issues.create( state: 'trusted' )
         end
     end
 
@@ -80,21 +82,21 @@ describe Issue do
                                          severity: informational_severity
                 )
 
-                ha.issues.create
-                hc.issues.create
-                hb.issues.create
+                ha.issues.create( state: 'trusted' )
+                hc.issues.create( state: 'trusted' )
+                hb.issues.create( state: 'trusted' )
 
-                ma.issues.create
-                mc.issues.create
-                mb.issues.create
+                ma.issues.create( state: 'trusted' )
+                mc.issues.create( state: 'trusted' )
+                mb.issues.create( state: 'trusted' )
 
-                la.issues.create
-                lc.issues.create
-                lb.issues.create
+                la.issues.create( state: 'trusted' )
+                lc.issues.create( state: 'trusted' )
+                lb.issues.create( state: 'trusted' )
 
-                ia.issues.create
-                ic.issues.create
-                ib.issues.create
+                ia.issues.create( state: 'trusted' )
+                ic.issues.create( state: 'trusted' )
+                ib.issues.create( state: 'trusted' )
 
                 expect(described_class.all.map(&:type).map(&:name)).to eq %w(a1 b1 c1 a2 b2 c2 a3 b3 c3 a4 b4 c4)
             end

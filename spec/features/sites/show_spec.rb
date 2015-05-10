@@ -224,7 +224,8 @@ feature 'Site page' do
                                 referring_page: FactoryGirl.create(:issue_page),
                                 vector:         FactoryGirl.create(:vector),
                                 sitemap_entry:  sitemap_entry,
-                                digest:         rand(99999999999999).to_s
+                                digest:         rand(99999999999999).to_s,
+                                state:          'trusted'
                             )
                         end
                     end
@@ -397,7 +398,8 @@ feature 'Site page' do
                                                 referring_page: FactoryGirl.create(:issue_page),
                                                 vector:         FactoryGirl.create(:vector, affected_input_name: 'stuff'),
                                                 sitemap_entry:  site.sitemap_entries.first,
-                                                digest:         rand(99999999999999).to_s
+                                                digest:         rand(99999999999999).to_s,
+                                                state:          'trusted'
                                             )
 
                                             issue.referring_page.dom.url = issue.vector.action
@@ -423,7 +425,8 @@ feature 'Site page' do
                                                 referring_page: FactoryGirl.create(:issue_page),
                                                 vector:         FactoryGirl.create(:vector, affected_input_name: 'stuff'),
                                                 sitemap_entry:  site.sitemap_entries.first,
-                                                digest:         rand(99999999999999).to_s
+                                                digest:         rand(99999999999999).to_s,
+                                                state:          'trusted'
                                             )
 
                                             issue.referring_page.dom.url = "#{issue.vector.action}/2"
@@ -450,7 +453,8 @@ feature 'Site page' do
                                             referring_page: FactoryGirl.create(:issue_page),
                                             vector:         FactoryGirl.create(:vector, affected_input_name: 'stuff'),
                                             sitemap_entry:  site.sitemap_entries.first,
-                                            digest:         rand(99999999999999).to_s
+                                            digest:         rand(99999999999999).to_s,
+                                            state:          'trusted'
                                         )
                                     end
 
@@ -471,7 +475,8 @@ feature 'Site page' do
                                             referring_page: FactoryGirl.create(:issue_page),
                                             vector:         FactoryGirl.create(:vector, affected_input_name: nil),
                                             sitemap_entry:  site.sitemap_entries.first,
-                                            digest:         rand(99999999999999).to_s
+                                            digest:         rand(99999999999999).to_s,
+                                            state:          'trusted'
                                         )
                                     end
 

@@ -3,7 +3,7 @@ FactoryGirl.define do
         digest "MyString"
         signature "MyText"
         proof "MyText"
-        trusted false
+        state 'trusted'
         active false
     end
 end

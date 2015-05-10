@@ -219,10 +219,10 @@ ActiveRecord::Schema.define(version: 20150406191208) do
 
   create_table "issues", force: true do |t|
     t.string   "digest"
-    t.text     "signature"
-    t.text     "proof"
-    t.boolean  "trusted"
+    t.string   "state"
     t.boolean  "active"
+    t.text     "proof"
+    t.text     "signature"
     t.integer  "referring_issue_page_id"
     t.integer  "revision_id"
     t.integer  "issue_page_id"
@@ -241,7 +241,7 @@ ActiveRecord::Schema.define(version: 20150406191208) do
   add_index "issues", ["referring_issue_page_id"], name: "index_issues_on_referring_issue_page_id"
   add_index "issues", ["revision_id"], name: "index_issues_on_revision_id"
   add_index "issues", ["sitemap_entry_id"], name: "index_issues_on_sitemap_entry_id"
-  add_index "issues", ["trusted"], name: "index_issues_on_trusted"
+  add_index "issues", ["state"], name: "index_issues_on_state"
 
   create_table "profiles", force: true do |t|
     t.integer  "user_id"

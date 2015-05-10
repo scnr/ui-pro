@@ -1,4 +1,6 @@
 class Issue < ActiveRecord::Base
+    STATES = %w(trusted untrusted false_positive)
+
     belongs_to :revision
     has_one :scan, through: :revision
     has_one :site, through: :scan
@@ -20,6 +22,8 @@ class Issue < ActiveRecord::Base
     has_one  :vector,  as: :with_vector, dependent: :destroy
     has_many :remarks, class_name: 'IssueRemark', foreign_key: 'issue_id',
                 dependent: :destroy
+
+    validates :state, presence: true, inclusion: { in: STATES }
 
     IssueTypeSeverity::SEVERITIES.each do |severity|
         scope "#{severity}_severity", -> do
@@ -56,7 +60,7 @@ class Issue < ActiveRecord::Base
             digest:         issue.digest.to_s,
             signature:      issue.signature,
             proof:          issue.proof,
-            trusted:        issue.trusted,
+            state:          (issue.trusted? ? 'trusted' : 'untrusted'),
             active:         issue.active?,
             page:           IssuePage.create_from_arachni( issue.page ),
             referring_page: IssuePage.create_from_arachni( issue.referring_page ),
@@ -65,4 +69,5 @@ class Issue < ActiveRecord::Base
             platform:       (IssuePlatform.find_by_shortname( issue.platform_name.to_s ) if issue.platform_name),
        }.merge(options))
     end
+
 end

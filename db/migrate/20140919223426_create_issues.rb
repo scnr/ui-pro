@@ -2,10 +2,12 @@ class CreateIssues < ActiveRecord::Migration
     def change
         create_table :issues do |t|
             t.string :digest
-            t.text :signature
-            t.text :proof
-            t.boolean :trusted
+            t.string :state
+
             t.boolean :active
+            t.text :proof
+            t.text :signature
+
             t.integer :referring_issue_page_id
             t.belongs_to :revision, index: true
             t.belongs_to :issue_page, index: true
@@ -15,9 +17,10 @@ class CreateIssues < ActiveRecord::Migration
 
             t.timestamps
         end
+
         add_index :issues, :referring_issue_page_id
         add_index :issues, :digest
-        add_index :issues, :trusted
+        add_index :issues, :state
         add_index :issues, :active
     end
 end

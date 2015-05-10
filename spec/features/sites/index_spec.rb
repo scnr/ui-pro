@@ -80,7 +80,10 @@ feature 'Site index page' do
             feature 'with issues' do
                 before do
                     10.times do
-                        type.issues.create( revision: site.revisions.first )
+                        type.issues.create(
+                            revision: site.revisions.first,
+                            state:    'trusted'
+                        )
                     end
 
                     visit sites_path

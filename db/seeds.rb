@@ -241,7 +241,11 @@ sites.each.with_index do |afr, si|
 
                     next if !solo.check
 
-                    revision.issues.create_from_arachni( solo, sitemap_entry: sitemap_entry )
+                    revision.issues.create_from_arachni(
+                        solo,
+                        sitemap_entry: sitemap_entry,
+                        state:         Issue::STATES.sample
+                    )
 
                     break
                 end
