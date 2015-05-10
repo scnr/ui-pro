@@ -7,6 +7,40 @@ class Revision < ActiveRecord::Base
 
     before_save :set_index
 
+    scope :in_progress, -> do
+        where.not( started_at: nil ).where( stopped_at: nil )
+    end
+
+    def self.last_performed
+        order( stopped_at: :desc ).where.not( stopped_at: nil ).first
+    end
+
+    def self.last_performed_at
+        order( stopped_at: :desc ).limit(1).pluck(:stopped_at).first
+    end
+
+    def self.in_progress?
+        in_progress.any?
+    end
+
+    def duration
+        return if !started_at
+
+        (stopped_at || Time.now) - started_at
+    end
+
+    def stopped?
+        !!stopped_at
+    end
+
+    def performed_at
+        stopped_at
+    end
+
+    def in_progress?
+        started_at && !stopped_at
+    end
+
     def to_s
         "Revision ##{index}"
     end

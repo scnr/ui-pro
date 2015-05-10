@@ -84,15 +84,35 @@ feature 'Scan page' do
         end
 
         scenario 'user sees last revision start datetime' do
+            expect(info).to have_content 'Last started on'
             expect(info).to have_content I18n.l( revision.started_at )
-        end
-
-        scenario 'user sees last revision stop datetime' do
-            expect(info).to have_content I18n.l( revision.stopped_at )
         end
 
         scenario 'user sees scan duration' do
             expect(info).to have_content Arachni::Utilities.seconds_to_hms( revision.stopped_at - revision.started_at )
+        end
+
+        feature 'which are in progress' do
+            before do
+                revision.stopped_at = nil
+                revision.save
+
+                site.scans << scan
+                site.save
+
+                visit site_scan_path( site, scan )
+            end
+
+            scenario 'user does not see last revision stop datetime' do
+                expect(info).to_not have_content 'stopped on'
+            end
+        end
+
+        feature 'which are not in progress' do
+            scenario 'user sees last revision stop datetime' do
+                expect(info).to have_content 'stopped on'
+                expect(info).to have_content I18n.l( revision.stopped_at )
+            end
         end
 
         feature 'sidebar' do
@@ -113,10 +133,44 @@ feature 'Scan page' do
 
                 scenario 'user sees amount of new issues'
 
-                scenario 'user sees stop datetime' do
-                    expect(revisions).to have_content I18n.l( revision.stopped_at )
+                feature 'when the revision is in progress' do
+                    before do
+                        revision.stopped_at = nil
+                        revision.save
+
+                        visit site_scan_path( site, scan )
+                    end
+
+                    scenario 'user sees start datetime' do
+                        expect(revisions).to have_content 'Started on'
+                        expect(revisions).to have_content I18n.l( revision.started_at )
+                    end
+
+                    scenario 'user does not sees stop datetime' do
+                        expect(revisions).to_not have_content 'Performed on'
+                    end
+                end
+
+                feature 'when the revision has been performed' do
+                    scenario 'user sees stop datetime' do
+                        expect(revisions).to have_content 'Performed on'
+                        expect(revisions).to have_content I18n.l( revision.performed_at )
+                    end
                 end
             end
+        end
+    end
+
+    feature 'when the scan has no revisions' do
+        before do
+            scan.revisions = []
+            scan.save
+
+            visit site_scan_path( site, scan )
+        end
+
+        scenario 'user does not see time info' do
+            expect(info).to_not have_css '#scan-info-last-revision-time'
         end
     end
 end

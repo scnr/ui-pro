@@ -32,7 +32,15 @@ class Scan < ActiveRecord::Base
     #     )
     # end
 
-    scope :with_revisions, -> { joins(:revisions).where( 'revisions.id IS NOT NULL' ) }
+    scope :with_revisions, -> { joins(:revisions).where.not( revisions: { id: nil } ) }
+
+    def in_progress?
+        revisions.in_progress?
+    end
+
+    def last_performed_at
+        revisions.last_performed_at
+    end
 
     def scheduled?
         !!(schedule && schedule.start_at)

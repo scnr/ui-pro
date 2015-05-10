@@ -54,7 +54,7 @@ feature 'Site index page' do
 
         feature 'without revisions' do
             scenario 'user sees undetermined last scan time' do
-                expect(find('.last-scanned')).to have_content 'No scans have been performed yet'
+                expect(find('.last-scanned')).to have_content 'never'
             end
 
             scenario "user sees 'Undetermined' state label" do
@@ -126,7 +126,6 @@ feature 'Site index page' do
             expect(page).to_not have_content('#sites')
         end
     end
-
 
     scenario 'user can add new site' do
         select 'http', from: 'site[protocol]'

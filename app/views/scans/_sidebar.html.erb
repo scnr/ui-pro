@@ -40,13 +40,27 @@
                             </span>
                         <% end %>
                     </li>
-                    <li>
-                        <small>
-                            <span class="text-muted">
-                                Stopped on <%= l revision.stopped_at %>.
-                            </span>
-                        </small>
-                    </li>
+
+                        <% if (performed_at = revision.performed_at) %>
+                        <li>
+                            <small>
+                                <span class="text-muted">
+                                    Performed on <%= l performed_at %>.
+                                </span>
+                            </small>
+                        </li>
+                        <% end %>
+
+                        <% if revision.in_progress? %>
+                            <li>
+                                <small>
+                                    <span class="text-muted">
+                                        <i class="fa fa-spin fa-circle-o-notch"></i>
+                                        Started on <%= l revision.started_at %>.
+                                    </span>
+                                </small>
+                            </li>
+                        <% end %>
                     <% end %>
                 </ul>
             </li>

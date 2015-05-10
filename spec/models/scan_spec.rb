@@ -181,6 +181,131 @@ describe Scan do
         end
     end
 
+    describe '#in_progress?' do
+        context 'when there is a started but not stopped revision' do
+            before do
+                subject.revisions << FactoryGirl.create(
+                    :revision,
+                    scan: subject,
+                    started_at: Time.now,
+                    stopped_at: nil
+                )
+                subject.revisions << FactoryGirl.create(
+                    :revision,
+                    scan: subject,
+                    started_at: Time.now + 1000,
+                    stopped_at: Time.now + 2000
+                )
+            end
+
+            it 'returns true' do
+                expect(subject).to be_in_progress
+            end
+        end
+
+        context 'when there is a started and stopped revision' do
+            before do
+                subject.revisions << FactoryGirl.create(
+                    :revision,
+                    scan: subject,
+                    started_at: Time.now,
+                    stopped_at: Time.now + 3000
+                )
+                subject.revisions << FactoryGirl.create(
+                    :revision,
+                    scan: subject,
+                    started_at: Time.now + 1000,
+                    stopped_at: Time.now + 2000
+                )
+            end
+
+            it 'returns false' do
+                expect(subject).to_not be_in_progress
+            end
+        end
+
+        context 'when there is not a started and nor stopped revision' do
+            before do
+                subject.revisions << FactoryGirl.create(
+                    :revision,
+                    scan: subject,
+                    started_at: nil,
+                    stopped_at: nil
+                )
+            end
+
+            it 'returns false' do
+                expect(subject).to_not be_in_progress
+            end
+        end
+    end
+
+    describe '#last_performed_at' do
+        context 'when there are stopped revisions' do
+            before do
+                subject.revisions << FactoryGirl.create(
+                    :revision,
+                    scan: subject,
+                    started_at: Time.now,
+                    stopped_at: nil
+                )
+                subject.revisions << FactoryGirl.create(
+                    :revision,
+                    scan: subject,
+                    started_at: Time.now + 1000,
+                    stopped_at: nil
+                )
+                subject.revisions << FactoryGirl.create(
+                    :revision,
+                    scan: subject,
+                    started_at: Time.now + 2000,
+                    stopped_at: Time.now + 3000,
+                )
+                subject.revisions << last_performed
+            end
+            let(:last_performed) do
+                FactoryGirl.create(
+                    :revision,
+                    scan: subject,
+                    started_at: Time.now,
+                    stopped_at: Time.now + 4000
+                )
+            end
+
+            it 'returns the time the last revision was performed' do
+                expect(subject.last_performed_at.to_s).to eq last_performed.performed_at.to_s
+            end
+        end
+
+        context 'when there are no stopped revisions' do
+            before do
+                subject.revisions << FactoryGirl.create(
+                    :revision,
+                    scan: subject,
+                    started_at: Time.now,
+                    stopped_at: nil
+                )
+                subject.revisions << FactoryGirl.create(
+                    :revision,
+                    scan: subject,
+                    started_at: Time.now + 1000,
+                    stopped_at: nil
+                )
+            end
+
+            it 'returns nil' do
+                expect(subject.last_performed_at).to be_nil
+            end
+        end
+
+        context 'when there are no revisions' do
+            it 'returns nil' do
+                expect(subject.revisions).to_not be_any
+                expect(subject.last_performed_at).to be_nil
+            end
+        end
+    end
+
     describe '#rpc_options' do
         before :each do
             settings

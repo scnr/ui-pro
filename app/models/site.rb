@@ -43,12 +43,24 @@ class Site < ActiveRecord::Base
     end
     alias :to_s :url
 
-    def scanned?
-        revisions.order( stopped_at: :desc ).limit(1).pluck(:started_at).first
+    def scanned_or_being_scanned?
+        revisions.where.not( started_at: nil ).any?
     end
 
-    def scanned_at
-        revisions.order( stopped_at: :desc ).limit(1).pluck(:stopped_at).first
+    def being_scanned?
+        revisions.in_progress?
+    end
+
+    def revision_in_progress
+        revisions.in_progress.first
+    end
+
+    def scanned?
+        !!last_scanned_at
+    end
+
+    def last_scanned_at
+        revisions.last_performed_at
     end
 
     def https?

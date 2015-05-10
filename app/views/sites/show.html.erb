@@ -20,9 +20,16 @@
             <% end %>
         </h1>
 
-        <% if @site.scanned? %>
+        <% if (revision = @site.revision_in_progress) %>
             <p class="text-muted" id="site-info-scan-time">
-                Last scanned on <%= l @site.revisions.last.started_at %> by
+                <i class="fa fa-spin fa-circle-o-notch"></i>
+                Started on <%= l revision.started_at %> &mdash;
+                <%= link_to revision.scan.name, [@site, revision.scan] %>
+                (<%= link_to revision, [@site, revision.scan, revision] %>).
+            </p>
+        <% elsif @site.scanned? %>
+            <p class="text-muted" id="site-info-scan-time">
+                Last scanned on <%= l @site.last_scanned_at %> by
                 <%= link_to @site.revisions.last.scan.name, [@site, @site.revisions.last.scan] %>
                 (<%= link_to @site.revisions.last, [@site, @site.scans.last, @site.revisions.last] %>).
             </p>

@@ -34,12 +34,19 @@
             <% end %>
         </p>
 
-        <% if (last_revision = @scan.revisions.last) && last_revision.stopped_at %>
+        <% if (last_revision = @scan.revisions.last) %>
             <p class="text-muted" id="scan-info-last-revision-time">
-                Last performed on <%= l last_revision.started_at %>,
+            <% if @scan.in_progress? %>
+                <i class="fa fa-spin fa-circle-o-notch"></i>
+                Started on <%= l last_revision.started_at %>
+                &mdash;
+                <%= Arachni::Utilities.seconds_to_hms last_revision.duration %>.
+            <% elsif last_revision.stopped_at %>
+                Last started on <%= l last_revision.started_at %>,
                 stopped on <%= l last_revision.stopped_at %>
                 &mdash;
-                <%= Arachni::Utilities.seconds_to_hms last_revision.stopped_at - last_revision.started_at %>.
+                <%= Arachni::Utilities.seconds_to_hms last_revision.duration %>.
+            <% end %>
             </p>
         <% end %>
     </div>

@@ -133,11 +133,13 @@ user_agent = UserAgent.create(
 scans_size         = 4
 revisions_per_scan = 3
 
-[
-    '/home/zapotek/workspace/arachni/spec/support/fixtures/report.afr',
+sites = [
+    # '/home/zapotek/workspace/arachni/spec/support/fixtures/report.afr',
     '/home/zapotek/Downloads/testhtml5.vulnweb.com.afr',
     '/home/zapotek/Downloads/testfire.net.afr'
-].each do |afr|
+]
+
+sites.each.with_index do |afr, si|
     sitemap    = nil
     report     = Arachni::Report.load( afr )
     parsed_url = Arachni::URI( report.url )
@@ -209,7 +211,9 @@ revisions_per_scan = 3
             revision = scan.revisions.create(
                 state:      'started',
                 started_at: Time.now - 8000,
-                stopped_at: Time.now - 4000
+                stopped_at: (sites.size == si + 1) && (scans_size == i + 1) &&
+                                (revisions_per_scan == j + 1) ?
+                                    nil : (Time.now - 4000)
             )
 
             sitemap ||= report.sitemap.each do |url, code|

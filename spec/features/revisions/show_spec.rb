@@ -69,17 +69,32 @@ feature 'Revision page' do
         expect(find('.description strong')).to have_content 'Stuff'
     end
 
-    feature 'when the revision has stopped' do
-        scenario 'user sees last revision start datetime' do
-            expect(info).to have_content I18n.l( revision.started_at )
-        end
+    scenario 'user sees last revision start datetime' do
+        expect(info).to have_content 'Started on'
+        expect(info).to have_content I18n.l( revision.started_at )
+    end
 
+    scenario 'user sees scan duration' do
+        expect(info).to have_content Arachni::Utilities.seconds_to_hms( revision.duration )
+    end
+
+    feature 'when the revision has stopped' do
         scenario 'user sees last revision stop datetime' do
+            expect(info).to have_content 'stopped on'
             expect(info).to have_content I18n.l( revision.stopped_at )
         end
+    end
 
-        scenario 'user sees scan duration' do
-            expect(info).to have_content Arachni::Utilities.seconds_to_hms( revision.stopped_at - revision.started_at )
+    feature 'when the revision is in progress' do
+        before do
+            revision.stopped_at = nil
+            revision.save
+
+            visit site_scan_revision_path( site, scan, revision )
+        end
+
+        scenario 'user does not sees last revision stop datetime' do
+            expect(info).to_not have_content 'stopped on'
         end
     end
 end

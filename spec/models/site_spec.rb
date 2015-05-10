@@ -248,32 +248,200 @@ describe Site, type: :model do
         end
     end
 
-    describe '#scanned?' do
-        context 'when the site has at least one started revision' do
-            it 'returns true' do
+    describe '#scanned_or_being_scanned?' do
+        context 'when the site has a revision that has started but not stopped' do
+            before do
                 scan.revisions.create(
                     started_at: Time.now - 9000
                 )
+            end
+
+            it 'returns true' do
+                expect(subject).to be_scanned_or_being_scanned
+            end
+        end
+
+        context 'when the site has a stopped revision' do
+            before do
+                scan.revisions.create(
+                    started_at: Time.now - 9000,
+                    stopped_at: Time.now
+                )
+            end
+
+            it 'returns true' do
+                expect(subject).to be_scanned_or_being_scanned
+            end
+        end
+
+        context 'when the site has neither started nor stopped revisions' do
+            before do
+                scan.revisions.create
+            end
+
+            it 'returns false' do
+                expect(subject).to_not be_scanned_or_being_scanned
+            end
+        end
+
+        context 'when the site has no revisions' do
+            before do
+                scan.revisions = []
+                scan.save
+            end
+
+            it 'returns false' do
+                expect(subject).to_not be_scanned_or_being_scanned
+            end
+        end
+    end
+
+    describe '#being_scanned?' do
+        context 'when the site has a revision that has started but not stopped' do
+            before do
+                scan.revisions.create(
+                    started_at: Time.now - 9000
+                )
+            end
+
+            it 'returns true' do
+                expect(subject.being_scanned?).to be_truthy
+            end
+        end
+
+        context 'when the site has a stopped revision' do
+            before do
+                scan.revisions.create(
+                    started_at: Time.now - 9000,
+                    stopped_at: Time.now
+                )
+            end
+
+            it 'returns false' do
+                expect(subject.being_scanned?).to be_falsey
+            end
+        end
+
+        context 'when the site has neither started nor stopped revisions' do
+            before do
+                scan.revisions.create
+            end
+
+            it 'returns false' do
+                expect(subject.being_scanned?).to be_falsey
+            end
+        end
+
+        context 'when the site has no revisions' do
+            before do
+                scan.revisions = []
+                scan.save
+            end
+
+            it 'returns false' do
+                expect(subject.being_scanned?).to be_falsey
+            end
+        end
+    end
+
+    describe '#revision_in_progress' do
+        context 'when the site has a revisions that has started but not stopped' do
+            before do
+                scan.revisions << revision
+                scan.revisions << FactoryGirl.create(
+                    :revision,
+                    scan: scan,
+                    stopped_at: nil
+                )
+            end
+            let(:revision) do
+                FactoryGirl.create(
+                    :revision,
+                    scan: scan,
+                    stopped_at: nil
+                )
+            end
+
+            it 'returns the first one' do
+                expect(subject.revision_in_progress).to eq revision
+            end
+        end
+
+        context 'when the site has a stopped revision' do
+            before do
+                scan.revisions.create(
+                    started_at: Time.now - 9000,
+                    stopped_at: Time.now
+                )
+            end
+
+            it 'returns nil' do
+                expect(subject.revision_in_progress).to be_nil
+            end
+        end
+
+        context 'when the site has neither started nor stopped revisions' do
+            before do
+                scan.revisions.create
+            end
+
+            it 'returns false' do
+                expect(subject.revision_in_progress).to be_nil
+            end
+        end
+
+        context 'when the site has no revisions' do
+            before do
+                scan.revisions = []
+                scan.save
+            end
+
+            it 'returns false' do
+                expect(subject.revision_in_progress).to be_nil
+            end
+        end
+    end
+
+    describe '#scanned?' do
+        context 'when the site has at least one stopped revision' do
+            before do
+                scan.revisions.create(
+                    started_at: Time.now - 9000,
+                    stopped_at: Time.now
+                )
+            end
+
+            it 'returns true' do
                 expect(subject).to be_scanned
             end
         end
 
-        context 'when the site does not have started revisions' do
+        context 'when the site does not have stopped revisions' do
+            before do
+                scan.revisions.create(
+                    started_at: Time.now - 9000
+                )
+            end
+
             it 'returns false' do
-                scan.revisions.create
                 expect(subject).to_not be_scanned
             end
         end
 
         context 'when the site has no revisions' do
+            before do
+                scan.revisions = []
+                scan.save
+            end
+
             it 'returns false' do
                 expect(subject).to_not be_scanned
             end
         end
     end
 
-    describe '#scanned_at' do
-        it 'returns the latest stop_time' do
+    describe '#last_scanned_at' do
+        it 'returns the latest stop time' do
             scan.revisions.create(
                 stopped_at: Time.now - 9000
             )
@@ -286,12 +454,12 @@ describe Site, type: :model do
 
             scan.revisions.create
 
-            expect(subject.scanned_at.to_s).to eq latest.stopped_at.to_s
+            expect(subject.last_scanned_at.to_s).to eq latest.stopped_at.to_s
         end
 
         context 'when no scans have been performed' do
             it 'returns nil' do
-                expect(subject.scanned_at).to be_nil
+                expect(subject.last_scanned_at).to be_nil
             end
         end
     end

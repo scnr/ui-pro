@@ -70,7 +70,33 @@ feature 'Site page' do
             visit site_path( site )
         end
 
-        scenario 'user sees last revision start datetime' do
+        scenario 'user sees the time of the last performed' do
+            expect(site_info).to have_content 'Last scanned on'
+            expect(site_info).to have_content I18n.l( site.last_scanned_at )
+        end
+
+        scenario 'user sees last performed scan link' do
+            expect(site_info).to have_xpath "//a[@href='#{site_scan_path( site, site.revisions.last.scan )}']"
+        end
+
+        scenario 'user sees last revision link' do
+            expect(site_info).to have_xpath "//a[@href='#{site_scan_revision_path( site, site.revisions.last.scan, site.revisions.last )}']"
+        end
+    end
+
+    feature 'when the site is being scanned' do
+        before do
+            revision.stopped_at = nil
+            revision.save
+
+            site.scans << scan
+            site.save
+
+            visit site_path( site )
+        end
+
+        scenario 'user sees the start time' do
+            expect(site_info).to have_content 'Started on'
             expect(site_info).to have_content I18n.l( revision.started_at )
         end
 
@@ -133,6 +159,31 @@ feature 'Site page' do
 
                     scenario 'user sees link' do
                         expect(scans).to have_xpath "//a[@href='#{site_scan_path( site, scan )}' and not(@data-method)]"
+                    end
+
+                    feature 'when the scan is in progress' do
+                        before do
+                            revision.stopped_at = nil
+                            revision.save
+
+                            visit site_path( site )
+                        end
+
+                        scenario 'user sees start datetime' do
+                            expect(scans).to have_content 'Started on'
+                            expect(scans).to have_content I18n.l( revision.started_at )
+                        end
+
+                        scenario 'user does not sees stop datetime' do
+                            expect(scans).to_not have_content 'Performed on'
+                        end
+                    end
+
+                    feature 'when the scan has been performed' do
+                        scenario 'user sees stop datetime' do
+                            expect(scans).to have_content 'Last performed on'
+                            expect(scans).to have_content I18n.l( revision.performed_at )
+                        end
                     end
                 end
             end
