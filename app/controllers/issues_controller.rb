@@ -16,9 +16,10 @@ class IssuesController < ApplicationController
     # PATCH/PUT /issues/1.json
     def update
         respond_to do |format|
-            if @issue.update(issue_params)
+            if @issue.update( issue_params )
                 format.html { redirect_to @issue, notice: 'Issue was successfully updated.' }
                 format.json { render :show, status: :ok, location: @issue }
+                format.js { head :ok }
             else
                 format.html { render :edit }
                 format.json { render json: @issue.errors, status: :unprocessable_entity }
@@ -33,6 +34,10 @@ class IssuesController < ApplicationController
     end
 
     def issue_params
-        params[:issue]
+        params.require(:issue).permit( permitted_attributes )
+    end
+
+    def permitted_attributes
+        [ :state ]
     end
 end

@@ -1,10 +1,16 @@
-<%= simple_form_for(@issue) do |f| %>
-  <%= f.error_notification %>
+<%= simple_form_for( [@issue.revision.scan.site, @issue.revision.scan, @issue.revision, @issue], remote: true ) do |f| %>
+    <%= f.error_notification %>
 
-  <div class="form-inputs">
-  </div>
+    <div class="form-inputs">
+        <%= f.input :state,
+                    as:            :select,
+                    collection:    Issue::STATES,
+                    default:       Issue::DEFAULT_STATES,
+                    label_method:  proc { |v| v.humanize },
+                    include_blank: false,
+                    label:         false,
+                    input_html:    { autocomplete: 'off' }
+        %>
+    </div>
 
-  <div class="form-actions">
-    <%= f.button :submit %>
-  </div>
 <% end %>

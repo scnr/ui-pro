@@ -96,6 +96,20 @@ feature 'Issue page' do
         end
     end
 
+    feature 'sidebar' do
+        let(:sidebar) { find '#sidebar' }
+
+        feature 'form' do
+            scenario 'can set the state', js: true do
+                select 'Fixed', from: 'issue_state'
+                sleep 1
+
+                issue.reload
+                expect(issue.state).to eq 'fixed'
+            end
+        end
+    end
+
     feature 'info' do
         let(:info) { find '#info' }
 

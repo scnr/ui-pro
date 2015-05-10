@@ -1,5 +1,6 @@
 class Issue < ActiveRecord::Base
-    STATES = %w(trusted untrusted false_positive)
+    DEFAULT_STATES = 'trusted'
+    STATES         = %w(trusted untrusted false_positive fixed)
 
     belongs_to :revision
     has_one :scan, through: :revision
