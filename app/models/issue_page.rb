@@ -9,12 +9,13 @@ class IssuePage < ActiveRecord::Base
             dependent: :destroy
 
     belongs_to :issue
+    belongs_to :sitemap_entry, counter_cache: true
 
-    def self.create_from_arachni( page )
-        create(
+    def self.create_from_arachni( page, options = {} )
+        create({
             dom:      IssuePageDom.create_from_arachni( page.dom ),
             request:  HttpRequest.create_from_arachni( page.request ),
             response: HttpResponse.create_from_arachni( page.response )
-        )
+        }.merge(options))
     end
 end

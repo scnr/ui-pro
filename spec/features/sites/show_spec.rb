@@ -27,6 +27,41 @@ feature 'Site page' do
 
     let(:site_info) { find '#site-info' }
 
+    def set_sitemap_entries( issue )
+        page_sitemap_entry   = site.sitemap_entries.find_by_url( issue.page.dom.url )
+        page_sitemap_entry ||= site.sitemap_entries.create(
+            url:      issue.page.dom.url,
+            code:     issue.page.response.code,
+            revision: revision
+        )
+
+        issue.page.sitemap_entry = page_sitemap_entry
+        issue.page.save
+
+        page_sitemap_entry   = site.sitemap_entries.find_by_url( issue.referring_page.dom.url )
+        page_sitemap_entry ||= site.sitemap_entries.create(
+            url:      issue.referring_page.dom.url,
+            code:     issue.referring_page.response.code,
+            revision: revision
+        )
+
+        issue.referring_page.sitemap_entry = page_sitemap_entry
+        issue.referring_page.save
+
+        vector_sitemap_entry   = site.sitemap_entries.find_by_url( issue.vector.action )
+        vector_sitemap_entry ||= site.sitemap_entries.create(
+            url:      issue.vector.action,
+            code:     issue.page.response.code,
+            revision: revision
+        )
+        issue.vector.sitemap_entry = vector_sitemap_entry
+        issue.vector.save
+
+        issue.sitemap_entry = vector_sitemap_entry
+        issue.save
+        issue
+    end
+
     scenario 'has title' do
         expect(page).to have_title site.url
         expect(page).to have_title 'Sites'
@@ -202,6 +237,8 @@ feature 'Site page' do
                     @types      = {}
                     25.times do |i|
                         IssueTypeSeverity::SEVERITIES.each do |severity|
+                            next if [:informational].include? severity
+
                             @severities[severity] ||=
                                 FactoryGirl.create(:issue_type_severity,
                                                name: severity )
@@ -219,8 +256,9 @@ feature 'Site page' do
                                 revision: site.revisions.sample
                             )
 
-                            revision.issues.create(
+                            set_sitemap_entries revision.issues.create(
                                 type:           type,
+                                page:           FactoryGirl.create(:issue_page),
                                 referring_page: FactoryGirl.create(:issue_page),
                                 vector:         FactoryGirl.create(:vector),
                                 sitemap_entry:  sitemap_entry,
@@ -378,66 +416,31 @@ feature 'Site page' do
                                     end
                                 end
 
-                                scenario 'user sees the referring page URL without scheme, host and port' do
-                                    site.issues.each do |issue|
-                                        url = ApplicationHelper.url_without_scheme_host_port( issue.referring_page.dom.url )
-                                        expect(issues.find("#summary-issue-#{issue.digest}")).to have_content "at #{url}"
-                                    end
-                                end
-
-                                feature 'when the vector action is' do
-                                    feature 'the same as the referring page' do
-                                        before do
-                                            issue
-                                            visit site_path( site )
-                                        end
-
-                                        let(:issue) do
-                                            issue = revision.issues.create(
-                                                type:           types.first,
-                                                referring_page: FactoryGirl.create(:issue_page),
-                                                vector:         FactoryGirl.create(:vector, affected_input_name: 'stuff'),
-                                                sitemap_entry:  site.sitemap_entries.first,
-                                                digest:         rand(99999999999999).to_s,
-                                                state:          'trusted'
-                                            )
-
-                                            issue.referring_page.dom.url = issue.vector.action
-                                            issue.referring_page.dom.save
-                                            issue
-                                        end
-
-                                        scenario 'user does not see vector action URL' do
-                                            url = ApplicationHelper.url_without_scheme_host_port( issue.vector.action )
-                                            expect(issues.find("#summary-issue-#{issue.digest}")).to_not have_content "pointing to #{url}"
-                                        end
+                                feature 'different from the referring page' do
+                                    before do
+                                        issue
+                                        visit site_path( site )
                                     end
 
-                                    feature 'different from the referring page' do
-                                        before do
-                                            issue
-                                            visit site_path( site )
-                                        end
+                                    let(:issue) do
+                                        issue = revision.issues.create(
+                                            type:           types.first,
+                                            page:           FactoryGirl.create(:issue_page),
+                                            referring_page: FactoryGirl.create(:issue_page),
+                                            vector:         FactoryGirl.create(:vector, affected_input_name: 'stuff'),
+                                            sitemap_entry:  site.sitemap_entries.first,
+                                            digest:         rand(99999999999999).to_s,
+                                            state:          'trusted'
+                                        )
 
-                                        let(:issue) do
-                                            issue = revision.issues.create(
-                                                type:           types.first,
-                                                referring_page: FactoryGirl.create(:issue_page),
-                                                vector:         FactoryGirl.create(:vector, affected_input_name: 'stuff'),
-                                                sitemap_entry:  site.sitemap_entries.first,
-                                                digest:         rand(99999999999999).to_s,
-                                                state:          'trusted'
-                                            )
+                                        issue.referring_page.dom.url = "#{issue.vector.action}/2"
+                                        issue.referring_page.dom.save
+                                        set_sitemap_entries issue
+                                    end
 
-                                            issue.referring_page.dom.url = "#{issue.vector.action}/2"
-                                            issue.referring_page.dom.save
-                                            issue
-                                        end
-
-                                        scenario 'user sees vector action URL without scheme, host and port' do
-                                            url = ApplicationHelper.url_without_scheme_host_port( issue.vector.action )
-                                            expect(issues.find("#summary-issue-#{issue.digest}")).to have_content "pointing to #{url}"
-                                        end
+                                    scenario 'user sees vector action URL without scheme, host and port' do
+                                        url = ApplicationHelper.url_without_scheme_host_port( issue.vector.action )
+                                        expect(issues.find("#summary-issue-#{issue.digest}")).to have_content "pointing to #{url}"
                                     end
                                 end
 
@@ -448,8 +451,9 @@ feature 'Site page' do
                                     end
 
                                     let(:issue) do
-                                        revision.issues.create(
+                                        set_sitemap_entries revision.issues.create(
                                             type:           types.first,
+                                            page:           FactoryGirl.create(:issue_page),
                                             referring_page: FactoryGirl.create(:issue_page),
                                             vector:         FactoryGirl.create(:vector, affected_input_name: 'stuff'),
                                             sitemap_entry:  site.sitemap_entries.first,
@@ -470,8 +474,9 @@ feature 'Site page' do
                                     end
 
                                     let(:issue) do
-                                        revision.issues.create(
+                                        set_sitemap_entries revision.issues.create(
                                             type:           types.first,
+                                            page:           FactoryGirl.create(:issue_page),
                                             referring_page: FactoryGirl.create(:issue_page),
                                             vector:         FactoryGirl.create(:vector, affected_input_name: nil),
                                             sitemap_entry:  site.sitemap_entries.first,

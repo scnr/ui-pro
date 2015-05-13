@@ -10,7 +10,8 @@ class CreateVectors < ActiveRecord::Migration
             t.text :source
             t.string :http_method
             t.text :affected_input_name
-            t.belongs_to :with_vector, polymorphic: true, index: true
+            t.belongs_to :sitemap_entry
+            t.belongs_to :issue
 
             t.timestamps
         end

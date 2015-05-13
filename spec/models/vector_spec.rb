@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Vector do
     subject { FactoryGirl.create :vector }
 
-    expect_it { to belong_to :with_vector }
+    expect_it { to belong_to(:sitemap_entry).counter_cache(true) }
 
     describe '#default_inputs' do
         it 'is a Hash' do

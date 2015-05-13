@@ -56,9 +56,12 @@
             <ul class="list-unstyled">
         <% end %>
 
-            <li id="summary-issue-<%= issue.digest %>" class="with-list-info issue-summary-vector-<%= issue.vector.kind %>">
-                <%= link_to site_scan_revision_issue_path( issue.site, issue.scan, issue.revision, issue ), title: 'Inspect' do %>
-                    <i class="fa fa-eye"></i>
+            <li id="summary-issue-<%= issue.digest %>"
+                class="with-list-info issue-summary-vector-<%= issue.vector.kind %>">
+
+                <%= link_to site_scan_revision_issue_path( issue.site, issue.scan, issue.revision, issue ),
+                            title: "Inspect (#{issue.state.humanize})" do %>
+                    <i class="fa fa-<%= issue_state_to_icon issue.state %>"></i>
                 <% end %>
 
                 <code><%= issue.vector.kind %></code>
@@ -67,19 +70,14 @@
                     input <code><%= issue.vector.affected_input_name %></code>
                 <% end %>
 
-                at
+                pointing to
 
-                <%= link_to_url_with_external external: issue.referring_page.dom.url,
-                                              internal: '#',
-                                              display_path_only: true %>
-
-                <% if issue.referring_page.dom.url != issue.vector.action %>
-                    pointing to
-
-                    <%= link_to_url_with_external external: issue.vector.action,
-                                                  internal: '#',
-                                                  display_path_only: true %>
-                <% end %>
+                <%= link_to_url_with_external(
+                        external: issue.vector.action,
+                        internal: sitemap_entry_url( issue.vector.sitemap_entry ),
+                        display_path_only: true
+                    )
+                %>
 
                 <% if !@revision %>
                     <ul class="issue-summary-info list-info">

@@ -1,8 +1,55 @@
 module IssuesHelper
+    include IssuesSummary
 
     def data_dump( data )
         ap = AwesomePrint::Inspector.new( plain: true, html: true )
         "<pre class='data-dump'>#{ap.awesome( data )}</pre>".html_safe
+    end
+
+    def filter_params_without_page
+        prepare_issue_filters
+
+        np         = params[:filter].dup
+        np[:pages] = []
+        { filter: np }
+    end
+
+    def sitemap_entry_url( sitemap_entry )
+        filter_params_without_page.merge(
+            'filter[pages][]' => sitemap_entry.id
+        )
+    end
+
+    def issue_state_to_icon( state )
+        case state
+            when 'trusted'
+                'circle'
+
+            when 'untrusted'
+                'exclamation-circle'
+
+            when 'false_positive'
+                'remove'
+
+            when 'fixed'
+                'check'
+        end
+    end
+
+    def issue_state_to_unicode( state )
+        case state
+            when 'trusted'
+                '&#xf111;'
+
+            when 'untrusted'
+                '&#xf06a;'
+
+            when 'false_positive'
+                '&#xf00d;'
+
+            when 'fixed'
+                '&#xf00c;'
+        end
     end
 
     def id_to_location( id )

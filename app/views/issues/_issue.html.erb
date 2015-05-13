@@ -8,13 +8,25 @@
             <% end %>
 
             at
-            <%= link_to_url_with_external external: @issue.referring_page.dom.url,
-                                          internal: '#',
-                                          display_path_only: true %>
+            <%= link_to_url_with_external(
+                    external: @issue.referring_page.dom.url,
+                    internal: site_path(
+                        issue.revision.scan.site,
+                        sitemap_entry_url( issue.referring_page.sitemap_entry )
+                    ),
+                    display_path_only: true
+                )
+            %>
             pointing to
-            <%= link_to_url_with_external external: @issue.vector.action,
-                                          internal: '#',
-                                          display_path_only: true %>.
+            <%= link_to_url_with_external(
+                    external: @issue.vector.action,
+                    internal: site_path(
+                        issue.revision.scan.site,
+                        sitemap_entry_url( issue.vector.sitemap_entry )
+                    ),
+                    display_path_only: true
+                )
+            %>.
         </small>
     </h1>
 

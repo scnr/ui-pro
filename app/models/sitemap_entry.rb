@@ -3,6 +3,8 @@ class SitemapEntry < ActiveRecord::Base
     belongs_to :revision
 
     has_many :issues
+    has_many :vectors
+    has_many :pages, class_name: 'IssuePage', foreign_key: 'sitemap_entry_id'
 
     scope :with_issues, -> { joins(:issues).where.not( issues: { sitemap_entry_id: nil } ) }
     scope :without_issues, -> { joins(:issues).where( issues: { sitemap_entry_id: nil } ) }

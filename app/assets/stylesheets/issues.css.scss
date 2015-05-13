@@ -125,3 +125,40 @@
     .diff-unchanged {
     }
 }
+
+#issue-summary-filter-actions {
+    text-align: center;
+
+    label {
+        text-decoration: line-through;
+    }
+
+    .check_boxes {
+        display: none;
+    }
+
+    .check_boxes:checked + label {
+        font-weight: bold;
+        text-decoration: none;
+    }
+}
+
+.edit_issue {
+    font-family: 'FontAwesome', 'Open Sans', sans-serif
+}
+
+ul.sitemap {
+    list-style: none;
+    padding-left: 0;
+}
+
+ul.sitemap > li {
+    border-radius: 4px;
+    display: block;
+    padding-top: 10px;
+    position: relative;
+}
+
+ul.sitemap > li.inactive {
+    opacity: 0.5
+}

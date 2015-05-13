@@ -1,5 +1,5 @@
 class Vector < ActiveRecord::Base
-    belongs_to :with_vector, polymorphic: true
+    belongs_to :sitemap_entry, counter_cache: true
 
     serialize :inputs,         Hash
     serialize :default_inputs, Hash
@@ -18,7 +18,7 @@ class Vector < ActiveRecord::Base
         )
     end
 
-    def self.create_from_arachni( vector )
+    def self.create_from_arachni( vector, options = {}  )
         h = {}
         [:action, :http_method, :seed, :inputs, :affected_input_name, :source,
          :default_inputs].each do |attr|
@@ -28,7 +28,7 @@ class Vector < ActiveRecord::Base
         h[:kind]          = vector.class.type
         h[:arachni_class] = vector.class.to_s
 
-        create h
+        create h.merge( options )
     end
 
 end

@@ -20,11 +20,17 @@ class Issue < ActiveRecord::Base
     belongs_to :platform, class_name: 'IssuePlatform',
                foreign_key: 'issue_platform_id'
 
-    has_one  :vector,  as: :with_vector, dependent: :destroy
+    has_one  :vector, dependent: :destroy
     has_many :remarks, class_name: 'IssueRemark', foreign_key: 'issue_id',
                 dependent: :destroy
 
     validates :state, presence: true, inclusion: { in: STATES }
+
+    STATES.each do |state|
+        scope state, -> do
+            where( state: state )
+        end
+    end
 
     IssueTypeSeverity::SEVERITIES.each do |severity|
         scope "#{severity}_severity", -> do
@@ -33,12 +39,22 @@ class Issue < ActiveRecord::Base
     end
 
     scope :by_severity, -> { includes(:severity).order IssueTypeSeverity.order_sql }
+
     default_scope do
-        includes(:type).includes(:vector).by_severity.order('issue_types.name asc')
+        includes(:type).includes(:vector).by_severity.
+            order('issue_types.name asc').order( state_order_sql )
     end
 
     def to_s
         "#{type.name} in #{vector.kind} input '#{vector.affected_input_name}'"
+    end
+
+    def self.state_order_sql
+        ret = 'CASE'
+        STATES.each_with_index do |p, i|
+            ret << " WHEN issues.state = '#{p}' THEN #{i}"
+        end
+        ret << ' END'
     end
 
     def self.max_severity
@@ -56,7 +72,7 @@ class Issue < ActiveRecord::Base
             end
         end
 
-        create({
+        issue = create({
             type:           IssueType.find_by_check_shortname( issue.check[:shortname] ),
             digest:         issue.digest.to_s,
             signature:      issue.signature,
@@ -69,6 +85,35 @@ class Issue < ActiveRecord::Base
             remarks:        issue_remarks,
             platform:       (IssuePlatform.find_by_shortname( issue.platform_name.to_s ) if issue.platform_name),
        }.merge(options))
+
+        issue.page.sitemap_entry = issue.get_sitemap_entry(
+            url:  issue.page.dom.url,
+            code: issue.page.response.code
+        )
+        issue.page.save
+
+        issue.referring_page.sitemap_entry = issue.get_sitemap_entry(
+            url:  issue.referring_page.dom.url,
+            code: issue.referring_page.response.code
+        )
+        issue.referring_page.save
+
+        issue.vector.sitemap_entry = issue.get_sitemap_entry(
+            url:  issue.vector.action,
+            code: issue.page.response.code
+        )
+        issue.vector.save
+
+        issue.sitemap_entry = issue.vector.sitemap_entry
+        issue.save
+
+        issue
+    end
+
+    def get_sitemap_entry( options = {} )
+        site = revision.scan.site
+        site.sitemap_entries.find_by_url( options[:url] ) ||
+            site.sitemap_entries.create( { revision: revision }.merge(options) )
     end
 
 end

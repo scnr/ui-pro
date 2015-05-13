@@ -2,9 +2,23 @@ module IssuesSummary
 
     def issues_summary_data( data )
         if !data[:scans].is_a?( Array )
-            data[:scans] = data[:scans].includes(:revisions).includes(:schedule).
-                includes(:profile)
+            data[:scans] = data[:scans].includes(:revisions).
+                includes(:schedule).includes(:profile)
         end
+
+        issues = data[:issues].includes(:referring_page).
+            includes(referring_page: :dom).includes(:revision).
+            includes(revision: :scan)
+
+        states     = count_states( issues )
+        severities = count_severities( issues )
+
+        issues = filter_states( issues )
+        issues = filter_severities( issues )
+
+        issue_ids = issues.pluck(:id)
+
+        issues = filter_pages( issues )
 
         {
             site:       data[:site],
@@ -12,15 +26,15 @@ module IssuesSummary
                             includes(:schedule).includes(:profile),
             scans:      data[:scans],
             revisions:  data[:revisions],
-            sitemap:    data[:sitemap].includes(:revision).
-                            includes(revision: :scan),
-            sitemap_with_issues:  data[:site].sitemap_entries.
-                            includes(:revision).includes(revision: :scan).
-                            where( issues: { id: data[:issues].pluck(:id) } ),
-            issues:     data[:issues].includes(:referring_page).
-                            includes(referring_page: :dom).
-                            includes(:revision).includes(revision: :scan),
-            chart_data: chart_data( data[:issues] )
+            sitemap:    data[:sitemap],
+            sitemap_with_issues: data[:site].sitemap_entries.includes(:revision).
+                                     includes(revision: :scan).joins(:issues).
+                                     where( 'issues.id IN (?) OR sitemap_entries.id IN (?)',
+                                            issue_ids, params[:filter][:pages] ),
+            issues:     issues,
+            states:     states,
+            severities: severities,
+            chart_data: chart_data( issues )
         }
     end
 
@@ -65,4 +79,67 @@ module IssuesSummary
 
         data
     end
+
+    def count_severities( issues )
+        IssueTypeSeverity::SEVERITIES.inject({}) do |h, severity|
+            h.merge! severity => issues.send("#{severity}_severity").count
+        end
+    end
+
+    def count_states( issues )
+        Issue::STATES.inject({}) do |h, state|
+            h.merge! state => issues.send(state).count
+        end
+    end
+
+    def filter_states( issues )
+        prepare_issue_filters
+
+        return issues if params[:filter][:states].empty?
+
+        if params[:filter][:type] == 'exclude'
+            issues.where.not( state: params[:filter][:states] )
+        else
+            issues.where( state: params[:filter][:states] )
+        end
+    end
+
+    def filter_severities( issues )
+        prepare_issue_filters
+
+        return issues if params[:filter][:severities].empty?
+
+        if params[:filter][:type] == 'exclude'
+            issues.where.not(
+                'issue_type_severities.name IN (?)',
+                params[:filter][:severities]
+            )
+        else
+            issues.where(
+                'issue_type_severities.name IN (?)',
+                params[:filter][:severities]
+            )
+        end
+    end
+
+    def filter_pages( issues )
+        return issues if params[:filter][:pages].empty?
+
+        @sitemap_entry = SitemapEntry.find( params[:filter][:pages].first )
+
+        issues.joins(:page).where(
+            'issues.sitemap_entry_id IN (?) OR issue_pages.sitemap_entry_id IN (?)',
+            params[:filter][:pages], params[:filter][:pages]
+        )
+    end
+
+    def prepare_issue_filters
+        params[:filter]              ||= {}
+        params[:filter][:type]       ||= 'include'
+        params[:filter][:pages]      ||= []
+        params[:filter][:states]     ||= %w(trusted untrusted)
+        params[:filter][:severities] ||=
+            IssueTypeSeverity::SEVERITIES.map(&:to_s) - ['informational']
+    end
+
 end

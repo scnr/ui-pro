@@ -133,6 +133,7 @@ ActiveRecord::Schema.define(version: 20150406191208) do
   add_index "issue_page_doms", ["url"], name: "index_issue_page_doms_on_url"
 
   create_table "issue_pages", force: true do |t|
+    t.integer  "sitemap_entry_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -383,8 +384,10 @@ ActiveRecord::Schema.define(version: 20150406191208) do
   create_table "sitemap_entries", force: true do |t|
     t.text     "url"
     t.integer  "code"
-    t.integer  "issues_count", default: 0
-    t.integer  "integer",      default: 0
+    t.integer  "issues_count",      default: 0
+    t.integer  "integer",           default: 0
+    t.integer  "issue_pages_count", default: 0
+    t.integer  "vectors_count",     default: 0
     t.integer  "site_id"
     t.integer  "revision_id"
     t.datetime "created_at"
@@ -455,13 +458,12 @@ ActiveRecord::Schema.define(version: 20150406191208) do
     t.text     "source"
     t.string   "http_method"
     t.text     "affected_input_name"
-    t.integer  "with_vector_id"
-    t.string   "with_vector_type"
+    t.integer  "sitemap_entry_id"
+    t.integer  "issue_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "vectors", ["kind"], name: "index_vectors_on_kind"
-  add_index "vectors", ["with_vector_id", "with_vector_type"], name: "index_vectors_on_with_vector_id_and_with_vector_type"
 
 end

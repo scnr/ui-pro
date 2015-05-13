@@ -6,6 +6,7 @@ describe IssuePage do
     expect_it { to have_one(:request).dependent(:destroy) }
     expect_it { to have_one(:response).dependent(:destroy) }
     expect_it { to have_one(:dom).dependent(:destroy) }
+    expect_it { to belong_to(:sitemap_entry).counter_cache(true) }
 
     describe '.create_from_arachni' do
         let(:arachni_page) do

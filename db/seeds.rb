@@ -217,22 +217,14 @@ sites.each.with_index do |afr, si|
             )
 
             sitemap ||= report.sitemap.each do |url, code|
-                site.sitemap_entries.create(
-                    url:      url,
-                    code:     code,
-                    revision: revision
+                revision.sitemap_entries.create(
+                    url:  url,
+                    code: code
                 )
             end
 
             puts "[#{i} - #{j}] Creating issues"
             issues.pop.each do |issue|
-                sitemap_entry = site.sitemap_entries.find_by_url( issue.variations.first.page.dom.url )
-                sitemap_entry ||= site.sitemap_entries.create(
-                    url:      issue.variations.first.page.dom.url,
-                    code:     issue.variations.first.response.code,
-                    revision: revision
-                )
-
                 issue.variations.each do |variation|
                     ap issue.unique_id
                     ap issue.variations.first.page.dom.url
@@ -241,11 +233,43 @@ sites.each.with_index do |afr, si|
 
                     next if !solo.check
 
-                    revision.issues.create_from_arachni(
+                    is = revision.issues.create_from_arachni(
                         solo,
-                        sitemap_entry: sitemap_entry,
-                        state:         Issue::STATES.sample
+                        state: Issue::STATES.sample
                     )
+                    ap is.errors.messages
+
+                    # page_sitemap_entry   = site.sitemap_entries.find_by_url( is.page.dom.url )
+                    # page_sitemap_entry ||= site.sitemap_entries.create(
+                    #     url:      is.page.dom.url,
+                    #     code:     is.page.response.code,
+                    #     revision: revision
+                    # )
+                    #
+                    # is.page.sitemap_entry = page_sitemap_entry
+                    # is.page.save
+                    #
+                    # page_sitemap_entry   = site.sitemap_entries.find_by_url( is.referring_page.dom.url )
+                    # page_sitemap_entry ||= site.sitemap_entries.create(
+                    #     url:      is.referring_page.dom.url,
+                    #     code:     is.referring_page.response.code,
+                    #     revision: revision
+                    # )
+                    #
+                    # is.referring_page.sitemap_entry = page_sitemap_entry
+                    # is.referring_page.save
+                    #
+                    # vector_sitemap_entry   = site.sitemap_entries.find_by_url( is.vector.action )
+                    # vector_sitemap_entry ||= site.sitemap_entries.create(
+                    #     url:      is.vector.action,
+                    #     code:     is.page.response.code,
+                    #     revision: revision
+                    # )
+                    # is.vector.sitemap_entry = vector_sitemap_entry
+                    # is.vector.save
+                    #
+                    # is.sitemap_entry = vector_sitemap_entry
+                    # is.save
 
                     break
                 end

@@ -57,7 +57,19 @@
     <div class="row">
         <div class="col-md-12">
             <h4>
-                Overall, there <%= issues.size == 1 ? 'is' : 'are' %>
+                <% if @sitemap_entry %>
+                    Page
+                    <%= link_to_url_with_external(
+                                external: @sitemap_entry.url,
+                                internal: sitemap_entry_url( @sitemap_entry ),
+                                display_path_only: true,
+                                class: "text-severity text-severity-#{issues.max_severity}"
+                        )
+                    %>
+                    has
+                <% else %>
+                    There <%= issues.size == 1 ? 'is' : 'are' %>
+                <% end %>
 
                 <%
                     severities_h = @issues_summary[:chart_data][:severities]

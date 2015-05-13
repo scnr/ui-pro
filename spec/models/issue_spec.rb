@@ -102,6 +102,26 @@ describe Issue do
             end
         end
 
+        Issue::STATES.each do |state|
+            describe state do
+                it "returns #{state} issues" do
+
+                    # Create issues of all states
+                    Issue::STATES.each do |s|
+                        described_class.create( state: s )
+                    end
+
+                    issues = Issue.send( state )
+                    expect(Issue.count).to be > issues.size
+
+                    expect( issues ).to be_any
+                    issues.each do |issue|
+                        issue.state == state
+                    end
+                end
+            end
+        end
+
         IssueTypeSeverity::SEVERITIES.each do |severity|
             describe "#{severity}_severity" do
                 it "returns #{severity} severity issues" do
