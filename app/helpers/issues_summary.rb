@@ -137,7 +137,7 @@ module IssuesSummary
         params[:filter]              ||= {}
         params[:filter][:type]       ||= 'include'
         params[:filter][:pages]      ||= []
-        params[:filter][:states]     ||= %w(trusted untrusted)
+        params[:filter][:states]     ||= %w(trusted)
         params[:filter][:severities] ||=
             IssueTypeSeverity::SEVERITIES.map(&:to_s) - ['informational']
     end
