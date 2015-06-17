@@ -24,8 +24,6 @@
                 sitemap-entry-with<% 'out' if entry.issues.size == 0 %>-issues"
             id="sitemap-entry-<%= entry.id %>"
         >
-            <code>[<%= entry.code %>]</code>
-
             <%= link_to_url_with_external(
                     external: entry.url,
                     internal: sitemap_entry_url( entry ),
@@ -38,13 +36,7 @@
                 <ul class="list-info">
                     <li>
                         <span>
-
-                            Has <%= pluralize entry.issues.size, 'issue' %>
-                            and was originally found by the
-                            <%= link_to "#{entry.revision.index.ordinalize} revision",
-                                        [site, entry.revision.scan, entry.revision] %>
-                            of
-                            <%= link_to entry.revision.scan.name, [site, entry.revision.scan] %>.
+                            Has <%= pluralize entry.issues.size, 'issue' %>.
                         </span>
                     </li>
                 </ul>
