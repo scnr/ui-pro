@@ -120,7 +120,7 @@ class ProfilesController < ApplicationController
             :description,
 
             { checks:    [] },
-            { plugins:   plugins_with_options },
+            # { plugins:   plugins_with_options },
 
             :audit_links,
             :audit_forms,

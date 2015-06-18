@@ -367,24 +367,3 @@
         <p class="alert alert-info">No checks have been selected.</p>
     <% end %>
 </div>
-
-<hr/>
-
-<div id="plugins">
-    <h2 id="plugins-h">
-        Plugins
-        <small>Assisting components to be enabled during the process.</small>
-    </h2>
-
-    <% if @profile.plugins.any? %>
-        <%= render partial: '/shared/components_twin_accordion',
-                   locals: {
-                           components: profile.plugins_with_info,
-                           selected:   @profile.plugins,
-                           input:      :plugins,
-                           class_name: 'col-md-6'
-                   } %>
-    <% else %>
-        <p class="alert alert-info">No plugins have been selected.</p>
-    <% end %>
-</div>

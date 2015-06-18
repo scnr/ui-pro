@@ -871,45 +871,45 @@ feature 'Profile page', :devise do
                 end
             end
 
-            feature 'Plugins' do
-                let(:plugins) { find '#plugins' }
-
-                feature 'when no plugins are selected' do
-                    before do
-                        subject.plugins = {}
-                        subject.save
-
-                        visit profile_path( subject )
-                    end
-
-                    scenario "sees 'No plugins have been selected'" do
-                        expect(plugins).to have_content 'No plugins have been selected'
-                    end
-                end
-
-                feature 'when plugins are selected' do
-                    before do
-                        subject.plugins = {
-                            'content_types' => {
-                                'exclude' => 'Stuff here'
-                            }
-                        }
-                        subject.save
-
-                        visit profile_path( subject )
-                    end
-
-                    scenario 'sees them' do
-                        %w(content_types).each do |check|
-                            expect(plugins).to have_css "##{check}"
-                        end
-                    end
-
-                    scenario 'sees their options' do
-                        expect(plugins.find('#profile_plugins_content_types_exclude').value).to eq 'Stuff here'
-                    end
-                end
-            end
+            # feature 'Plugins' do
+                # let(:plugins) { find '#plugins' }
+                #
+                # feature 'when no plugins are selected' do
+                #     before do
+                #         subject.plugins = {}
+                #         subject.save
+                #
+                #         visit profile_path( subject )
+                #     end
+                #
+                #     scenario "sees 'No plugins have been selected'" do
+                #         expect(plugins).to have_content 'No plugins have been selected'
+                #     end
+                # end
+                #
+                # feature 'when plugins are selected' do
+                #     before do
+                #         subject.plugins = {
+                #             'content_types' => {
+                #                 'exclude' => 'Stuff here'
+                #             }
+                #         }
+                #         subject.save
+                #
+                #         visit profile_path( subject )
+                #     end
+                #
+                #     scenario 'sees them' do
+                #         %w(content_types).each do |check|
+                #             expect(plugins).to have_css "##{check}"
+                #         end
+                #     end
+                #
+                #     scenario 'sees their options' do
+                #         expect(plugins.find('#profile_plugins_content_types_exclude').value).to eq 'Stuff here'
+                #     end
+                # end
+            # end
         end
     end
 

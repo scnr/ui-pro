@@ -377,156 +377,156 @@ feature 'Profile new page' do
                 end
             end
 
-            feature 'Plugins' do
-                feature 'Beep notify' do
-                    scenario 'is not listed' do
-                        expect(page).to_not have_selector( '#profile_plugins_beep_notify' )
-                    end
-                end
-
-                feature 'Content-types' do
-                    before do
-                        check 'profile_plugins_content_types'
-                    end
-
-                    scenario 'can be set without options' do
-                        submit
-
-                        expect(Profile.last.plugins['content_types']).to eq ({
-                            'exclude' => 'text'
-                        })
-                    end
-
-                    scenario 'can be set with options' do
-                        fill_in 'profile_plugins_content_types_exclude', with: 'stuff'
-                        submit
-
-                        expect(Profile.last.plugins['content_types']).to eq ({
-                            'exclude' => 'stuff'
-                        })
-                    end
-                end
-
-                feature 'Cookie collector' do
-                    scenario 'is not listed' do
-                        expect(page).to_not have_selector( '#profile_plugins_cookie_collector' )
-                    end
-                end
-
-                feature 'E-mail notify' do
-                    scenario 'is not listed' do
-                        expect(page).to_not have_selector( '#profile_plugins_email_notify' )
-                    end
-                end
-
-                feature 'Autologin' do
-                    scenario 'is not listed' do
-                        expect(page).to_not have_selector( '#profile_plugins_autologin' )
-                    end
-                end
-
-                feature 'Login script' do
-                    scenario 'is not listed' do
-                        expect(page).to_not have_selector( '#profile_plugins_login_script' )
-                    end
-                end
-
-                feature 'Headers collector' do
-                    before do
-                        check 'profile_plugins_headers_collector'
-                    end
-
-                    scenario 'can be set without options' do
-                        submit
-
-                        expect(Profile.last.plugins['headers_collector']).to eq ({
-                            'include' => '',
-                            'exclude' => ''
-                        })
-                    end
-
-                    scenario 'can be set with options' do
-                        fill_in 'profile_plugins_headers_collector_include', with: 'include_stuff'
-                        fill_in 'profile_plugins_headers_collector_exclude', with: 'exclude_stuff'
-                        submit
-
-                        expect(Profile.last.plugins['headers_collector']).to eq ({
-                            'include' => 'include_stuff',
-                            'exclude' => 'exclude_stuff'
-                        })
-                    end
-                end
-
-                feature 'Proxy' do
-                    before do
-                        check 'profile_plugins_proxy'
-                    end
-
-                    scenario 'can be set without options' do
-                        submit
-
-                        expect(Profile.last.plugins['proxy']).to eq ({
-                            'port'             => '8282',
-                            'bind_address'     => '0.0.0.0',
-                            'session_token'    => '',
-                            'timeout'          => '20000'
-                        })
-                    end
-
-                    scenario 'can be set with options' do
-                        fill_in 'profile_plugins_proxy_port', with: '8080'
-                        fill_in 'profile_plugins_proxy_bind_address', with: '127.0.0.1'
-                        check 'profile_plugins_proxy_ignore_responses'
-                        fill_in 'profile_plugins_proxy_session_token', with: 'secret'
-                        fill_in 'profile_plugins_proxy_timeout', with: '10'
-                        submit
-
-                        expect(Profile.last.plugins['proxy']).to eq ({
-                            'port'             => '8080',
-                            'bind_address'     => '127.0.0.1',
-                            'ignore_responses' => 'on',
-                            'session_token'    => 'secret',
-                            'timeout'          => '10'
-                        })
-                    end
-                end
-
-                feature 'Script' do
-                    scenario 'is not listed' do
-                        expect(page).to_not have_selector( '#profile_plugins_script' )
-                    end
-                end
-
-                feature 'Uncommon headers' do
-                    before do
-                        check 'profile_plugins_uncommon_headers'
-                    end
-
-                    scenario 'can be set' do
-                        submit
-
-                        expect(Profile.last.plugins).to include 'uncommon_headers'
-                    end
-                end
-
-                feature 'Vector collector' do
-                    scenario 'is not listed' do
-                        expect(page).to_not have_selector( '#profile_plugins_vector_collector' )
-                    end
-                end
-
-                feature 'Vector feed' do
-                    scenario 'is not listed' do
-                        expect(page).to_not have_selector( '#profile_plugins_vector_feed' )
-                    end
-                end
-
-                feature 'WAF Detector' do
-                    scenario 'is not listed' do
-                        expect(page).to_not have_selector( '#profile_plugins_waf_detector' )
-                    end
-                end
-            end
+            # feature 'Plugins' do
+                # feature 'Beep notify' do
+                #     scenario 'is not listed' do
+                #         expect(page).to_not have_selector( '#profile_plugins_beep_notify' )
+                #     end
+                # end
+                #
+                # feature 'Content-types' do
+                #     before do
+                #         check 'profile_plugins_content_types'
+                #     end
+                #
+                #     scenario 'can be set without options' do
+                #         submit
+                #
+                #         expect(Profile.last.plugins['content_types']).to eq ({
+                #             'exclude' => 'text'
+                #         })
+                #     end
+                #
+                #     scenario 'can be set with options' do
+                #         fill_in 'profile_plugins_content_types_exclude', with: 'stuff'
+                #         submit
+                #
+                #         expect(Profile.last.plugins['content_types']).to eq ({
+                #             'exclude' => 'stuff'
+                #         })
+                #     end
+                # end
+                #
+                # feature 'Cookie collector' do
+                #     scenario 'is not listed' do
+                #         expect(page).to_not have_selector( '#profile_plugins_cookie_collector' )
+                #     end
+                # end
+                #
+                # feature 'E-mail notify' do
+                #     scenario 'is not listed' do
+                #         expect(page).to_not have_selector( '#profile_plugins_email_notify' )
+                #     end
+                # end
+                #
+                # feature 'Autologin' do
+                #     scenario 'is not listed' do
+                #         expect(page).to_not have_selector( '#profile_plugins_autologin' )
+                #     end
+                # end
+                #
+                # feature 'Login script' do
+                #     scenario 'is not listed' do
+                #         expect(page).to_not have_selector( '#profile_plugins_login_script' )
+                #     end
+                # end
+                #
+                # feature 'Headers collector' do
+                #     before do
+                #         check 'profile_plugins_headers_collector'
+                #     end
+                #
+                #     scenario 'can be set without options' do
+                #         submit
+                #
+                #         expect(Profile.last.plugins['headers_collector']).to eq ({
+                #             'include' => '',
+                #             'exclude' => ''
+                #         })
+                #     end
+                #
+                #     scenario 'can be set with options' do
+                #         fill_in 'profile_plugins_headers_collector_include', with: 'include_stuff'
+                #         fill_in 'profile_plugins_headers_collector_exclude', with: 'exclude_stuff'
+                #         submit
+                #
+                #         expect(Profile.last.plugins['headers_collector']).to eq ({
+                #             'include' => 'include_stuff',
+                #             'exclude' => 'exclude_stuff'
+                #         })
+                #     end
+                # end
+                #
+                # feature 'Proxy' do
+                #     before do
+                #         check 'profile_plugins_proxy'
+                #     end
+                #
+                #     scenario 'can be set without options' do
+                #         submit
+                #
+                #         expect(Profile.last.plugins['proxy']).to eq ({
+                #             'port'             => '8282',
+                #             'bind_address'     => '0.0.0.0',
+                #             'session_token'    => '',
+                #             'timeout'          => '20000'
+                #         })
+                #     end
+                #
+                #     scenario 'can be set with options' do
+                #         fill_in 'profile_plugins_proxy_port', with: '8080'
+                #         fill_in 'profile_plugins_proxy_bind_address', with: '127.0.0.1'
+                #         check 'profile_plugins_proxy_ignore_responses'
+                #         fill_in 'profile_plugins_proxy_session_token', with: 'secret'
+                #         fill_in 'profile_plugins_proxy_timeout', with: '10'
+                #         submit
+                #
+                #         expect(Profile.last.plugins['proxy']).to eq ({
+                #             'port'             => '8080',
+                #             'bind_address'     => '127.0.0.1',
+                #             'ignore_responses' => 'on',
+                #             'session_token'    => 'secret',
+                #             'timeout'          => '10'
+                #         })
+                #     end
+                # end
+                #
+                # feature 'Script' do
+                #     scenario 'is not listed' do
+                #         expect(page).to_not have_selector( '#profile_plugins_script' )
+                #     end
+                # end
+                #
+                # feature 'Uncommon headers' do
+                #     before do
+                #         check 'profile_plugins_uncommon_headers'
+                #     end
+                #
+                #     scenario 'can be set' do
+                #         submit
+                #
+                #         expect(Profile.last.plugins).to include 'uncommon_headers'
+                #     end
+                # end
+                #
+                # feature 'Vector collector' do
+                #     scenario 'is not listed' do
+                #         expect(page).to_not have_selector( '#profile_plugins_vector_collector' )
+                #     end
+                # end
+                #
+                # feature 'Vector feed' do
+                #     scenario 'is not listed' do
+                #         expect(page).to_not have_selector( '#profile_plugins_vector_feed' )
+                #     end
+                # end
+                #
+                # feature 'WAF Detector' do
+                #     scenario 'is not listed' do
+                #         expect(page).to_not have_selector( '#profile_plugins_waf_detector' )
+                #     end
+                # end
+            # end
         end
     end
 

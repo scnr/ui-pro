@@ -320,34 +320,6 @@
         </fieldset>
     </div>
 
-    <hr/>
-
-    <div id="plugins">
-        <span id="profile_plugins"></span>
-        <fieldset>
-            <h2 id="plugins-h">
-                Plugins
-                <small>Assisting components to be enabled during the process.</small>
-            </h2>
-
-            <% if errors = @profile.errors.messages[:plugins]%>
-                <% errors.each do |message| %>
-                    <pre class="alert alert-danger"><%= message %></pre>
-                <%end%>
-            <%end%>
-
-            <% if plugins.any? %>
-                <%= render partial: '/shared/components_twin_accordion_form',
-                           locals: {
-                                   components: plugins,
-                                   form:       f,
-                                   selected:   @profile.plugins,
-                                   input:      :plugins,
-                                   class_name: 'col-md-6'
-                           } %>
-            <% end %>
-        </fieldset>
-    </div>
 
     <div class="form-actions">
         <%= f.button :submit, class: 'hide',
