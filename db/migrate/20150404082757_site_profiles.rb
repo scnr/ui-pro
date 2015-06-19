@@ -21,6 +21,7 @@ class SiteProfiles < ActiveRecord::Migration
             t.string   :http_authentication_password
 
             t.boolean  :browser_cluster_ignore_images
+            t.text     :browser_cluster_wait_for_elements
 
             t.belongs_to :site, index: true
 

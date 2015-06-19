@@ -317,6 +317,45 @@
 
             <div class="row">
                 <div class="col-md-6">
+                    <%= f.input :browser_cluster_wait_for_elements,
+                                label: 'Wait for elements to appear',
+                                placeholder: 'No need for special rules regarding the ready-state of pages',
+                                input_html: {
+                                        value: @site.profile.browser_cluster_wait_for_elements.
+                                                       map { |k, v| "#{k}:#{v}" }.join( "\n" )
+                                }
+                    %>
+                    <%= messages_for( :browser_cluster_wait_for_elements ) %>
+                    <div class="help-block alert alert-info">
+                        <p>
+                            Rules take the format of <em>pattern:css</em>,
+                            input each rule in its own line.
+                        </p>
+
+                        <p>
+                            For example, to wait for an element with an ID attribute
+                            of <code>myElement</code> to appear when visiting a page
+                            whose URL includes the string <code>withElement</code>
+                            (like: <code>http://test.com/blah#withElement</code>)
+                            you can use: <code>withElement:#myElement</code>
+                        </p>
+
+                        <p>
+                            Sometimes it is necessary to wait for an element for a
+                            page whose URL does not include a string. This is common
+                            for client-side MVC frameworks when URLs include no
+                            route information in the fragment section.
+                        </p>
+
+                        <p>
+                            In this case, in order to wait for an element with an ID
+                            attribute of <code>myElement</code> when the URL has no
+                            hash (<code>#</code>) part, use: <code>^((?!#).)*$:#myElement</code>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
                     <%= f.input :browser_cluster_ignore_images,
                                 label: 'Do not load images'
                     %>

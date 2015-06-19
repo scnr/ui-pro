@@ -359,6 +359,7 @@ ActiveRecord::Schema.define(version: 20150406191208) do
     t.string   "http_authentication_username"
     t.string   "http_authentication_password"
     t.boolean  "browser_cluster_ignore_images"
+    t.text     "browser_cluster_wait_for_elements"
     t.integer  "site_id"
     t.datetime "created_at"
     t.datetime "updated_at"

@@ -78,7 +78,7 @@ feature 'Site profile form' do
                     check 'Only follow HTTPS URLs'
                     submit
 
-                    expect(https_site.reload.profile.scope_https_only).to eq true
+                    expect(https_site.reload.profile.reload.scope_https_only).to eq true
                 end
             end
 
@@ -612,6 +612,48 @@ feature 'Site profile form' do
         end
 
         feature 'Browser' do
+            feature 'Wait for elements to appear' do
+                scenario 'can be set' do
+                    rules = "stuff:#myElement\n"
+                    rules << 'blah:#myOtherElement'
+
+                    fill_in 'Wait for elements to appear', with: rules
+                    submit
+
+                    expect(profile.browser_cluster_wait_for_elements).to eq ({
+                        'stuff' => '#myElement',
+                        'blah'  => '#myOtherElement'
+                    })
+                end
+
+                feature 'when missing the pattern' do
+                    scenario 'shows error' do
+                        fill_in 'Wait for elements to appear', with: ':2'
+                        submit
+
+                        expect(find('.site_profile_browser_cluster_wait_for_elements.has-error').text).to include 'pattern cannot be empty'
+                    end
+                end
+
+                feature 'when missing the counter' do
+                    scenario 'shows error' do
+                        fill_in 'Wait for elements to appear', with: 'stuff:'
+                        submit
+
+                        expect(find('.site_profile_browser_cluster_wait_for_elements.has-error').text).to include 'is missing a CSS selector'
+                    end
+                end
+
+                feature 'when given invalid pattern' do
+                    scenario 'shows error' do
+                        fill_in 'Wait for elements to appear', with: '(stuff:#myElement'
+                        submit
+
+                        expect(find('.site_profile_browser_cluster_wait_for_elements.has-error').text).to include 'invalid pattern'
+                    end
+                end
+            end
+
             scenario 'can set Do not load images' do
                 check 'Do not load images'
                 submit

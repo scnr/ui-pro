@@ -108,7 +108,8 @@ class SitesController < ApplicationController
 
             :audit_link_templates,
 
-            :browser_cluster_ignore_images
+            :browser_cluster_ignore_images,
+            :browser_cluster_wait_for_elements
         ]])
 
     end

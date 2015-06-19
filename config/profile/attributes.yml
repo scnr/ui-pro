@@ -76,6 +76,9 @@ session_check_url: >
   When requested, the contents of HTTP response body must be matched by the
   check pattern.
 
+browser_cluster_wait_for_elements: >
+  Waits for elements matching the given CSS selectors to appear, when visiting
+  a page whose URL matches the given patterns.
 browser_cluster_pool_size: 'Amount of browser workers to keep in the pool and put to work.'
 browser_cluster_job_timeout: 'Maximum allowed time for each job in seconds.'
 browser_cluster_worker_time_to_live: 'Time-to-live of each browser (before re-spawning) counted in jobs.'

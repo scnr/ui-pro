@@ -26,27 +26,12 @@
         height: 250px;
     }
 
-    #site_profile_attributes_scope_redundant_path_patterns {
-        width:  100%;
-        height: 150px;
-    }
-
-    #site_profile_attributes_audit_link_templates {
-        width:  100%;
-        height: 150px;
-    }
-
-    #site_profile_attributes_scope_url_rewrites {
-        width:  100%;
-        height: 150px;
-    }
-
-    #site_profile_attributes_http_cookies {
-        width:  100%;
-        height: 150px;
-    }
-
-    #site_profile_attributes_http_request_headers {
+    #site_profile_attributes_scope_redundant_path_patterns,
+    #site_profile_attributes_audit_link_templates,
+    #site_profile_attributes_scope_url_rewrites,
+    #site_profile_attributes_http_cookies,
+    #site_profile_attributes_http_request_headers,
+    #site_profile_attributes_browser_cluster_wait_for_elements {
         width:  100%;
         height: 150px;
     }

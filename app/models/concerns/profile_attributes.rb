@@ -26,7 +26,9 @@ module ProfileAttributes
             :audit_include_vector_patterns,
             :audit_link_templates,
 
-            :input_values
+            :input_values,
+
+            :browser_cluster_wait_for_elements
         ].each do |attr|
             next if !has_option?( attr )
 
@@ -61,7 +63,9 @@ module ProfileAttributes
     
             audit_exclude_vector_patterns:  Array,
             audit_include_vector_patterns:  Array,
-            audit_link_templates:           Array
+            audit_link_templates:           Array,
+
+            browser_cluster_wait_for_elements: Hash
         }.each do |attr, type|
             next if !has_option?( attr )
 
@@ -100,7 +104,8 @@ module ProfileAttributes
             end
         end
 
-        %w(scope_redundant_path_patterns scope_url_rewrites).each do |m|
+        %w(scope_redundant_path_patterns scope_url_rewrites
+            browser_cluster_wait_for_elements).each do |m|
             next if !has_option?( m )
 
             define_method "#{m}=" do |string_or_hash|
@@ -183,6 +188,21 @@ module ProfileAttributes
             if counter.to_i <= 0
                 errors.add :scope_redundant_path_patterns,
                            "rule '#{pattern}' needs an integer counter greater than 0"
+            end
+        end
+    end
+
+    def validate_browser_cluster_wait_for_elements
+        browser_cluster_wait_for_elements.each do |pattern, css|
+            if pattern.empty?
+                errors.add :browser_cluster_wait_for_elements, 'pattern cannot be empty'
+            end
+
+            check_pattern( pattern, :browser_cluster_wait_for_elements )
+
+            if css.to_s.strip.empty?
+                errors.add :browser_cluster_wait_for_elements,
+                           "rule '#{pattern}' is missing a CSS selector"
             end
         end
     end
