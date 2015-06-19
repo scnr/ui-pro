@@ -372,41 +372,6 @@ feature 'Profile page', :devise do
                         end
                     end
 
-                    feature 'Extend paths' do
-                        let(:option) { find('#scope_extend_paths') }
-
-                        feature 'when set' do
-                            before do
-                                subject.scope_extend_paths = [
-                                    '/stuff',
-                                    '/more-stuff'
-                                ]
-                                subject.save
-
-                                visit profile_path( subject )
-                            end
-
-                            scenario 'sees them' do
-                                subject.scope_extend_paths.each do |path|
-                                    expect(option).to have_content path
-                                end
-                            end
-                        end
-
-                        feature 'when not set' do
-                            before do
-                                subject.scope_extend_paths = []
-                                subject.save
-
-                                visit profile_path( subject )
-                            end
-
-                            scenario "sees 'Only use paths discovered by the crawl'" do
-                                expect(option).to have_content 'Only use paths discovered by the crawl'
-                            end
-                        end
-                    end
-
                     feature 'Content exclusion patterns' do
                         let(:option) { find('#scope_exclude_content_patterns') }
 

@@ -139,17 +139,6 @@
                         <p class="help-block alert alert-info">Input each path in its own line.</p>
                     </div>
                     <div class="col-md-6">
-                        <%= f.input :scope_extend_paths,
-                                    label: 'Extend paths',
-                                    placeholder: 'Only use paths discovered by the crawl',
-                                    input_html: { value: @profile.scope_extend_paths.join( "\n" ) } %>
-                        <%= messages_for( :scope_extend_paths ) %>
-                        <p class="help-block alert alert-info">Input each path in its own line.</p>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6">
                         <%= f.input :scope_exclude_content_patterns,
                                     label: 'Content exclusion patterns',
                                     placeholder: 'Include all pages',

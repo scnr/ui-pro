@@ -23,9 +23,6 @@ FactoryGirl.define do
             'only-include-me',
             'only-include-me-too'
         ]
-        scope_extend_paths [
-            'include-me', 'include-me-too'
-        ]
         audit_include_vector_patterns [
             'search', 'username'
         ]

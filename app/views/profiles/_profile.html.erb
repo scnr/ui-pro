@@ -119,26 +119,6 @@
 
                 <%= messages_for( :scope_restrict_paths ) %>
             </div>
-            <div id="scope_extend_paths" class="col-md-6">
-                <strong>Extend paths:</strong>
-
-                <% if profile.scope_extend_paths.empty? %>
-                    Only use paths discovered by the crawl.
-                <% else %>
-                    <ol>
-                        <% profile.scope_extend_paths.each do |path| %>
-                            <li>
-                                <%= path %>
-                            </li>
-                        <% end %>
-                    </ol>
-                <% end %>
-
-                <%= messages_for( :scope_extend_paths ) %>
-            </div>
-        </div>
-
-        <div class="row">
             <div id="scope_exclude_content_patterns" class="col-md-6">
                 <strong>Content exclusion patterns:</strong>
 

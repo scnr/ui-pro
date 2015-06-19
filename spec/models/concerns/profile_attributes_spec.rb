@@ -119,7 +119,7 @@ describe ProfileAttributes do
         end
     end
 
-    %w(scope_extend_paths scope_restrict_paths checks).each do |attr|
+    %w(scope_restrict_paths checks).each do |attr|
         describe "#{attr}" do
             it 'is a Array' do
                 expect(subject.send(attr)).to be_kind_of Array

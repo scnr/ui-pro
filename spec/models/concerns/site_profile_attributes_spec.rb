@@ -196,7 +196,7 @@ describe 'SiteProfileAttributes' do
         end
     end
 
-    %w(scope_template_path_patterns audit_link_templates platforms).each do |attr|
+    %w(scope_template_path_patterns scope_extend_paths audit_link_templates platforms).each do |attr|
 
         describe "#{attr}" do
             it 'is a Array' do

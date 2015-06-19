@@ -136,7 +136,6 @@ class ProfilesController < ApplicationController
             :audit_include_vector_patterns,
 
             :scope_page_limit,
-            :scope_extend_paths,
             :scope_restrict_paths,
             :scope_include_path_patterns,
             :scope_exclude_path_patterns,

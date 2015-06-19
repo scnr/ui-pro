@@ -85,29 +85,16 @@
                 <% end %>
             </div>
 
-            <div class="row">
-                <div class="col-md-12">
-                    <button class="btn btn-sm btn-primary" type="button" data-toggle="collapse"
-                            data-target="#platforms-advanced" aria-expanded="false"
-                            aria-controls="collapseExample">
-                        Advanced
-                    </button>
-                    <div class="collapse" id="platforms-advanced">
-                        <div class="well well-sm">
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <%= f.input :no_fingerprinting,
-                                                label: 'Disable fingerprinting'
-                                    %>
-                                    <%= messages_for( :no_fingerprinting ) %>
-                                </div>
-                            </div>
-
-                        </div>
+            <%= advanced id: 'platforms' do %>
+                <div class="row">
+                    <div class="col-md-6">
+                        <%= f.input :no_fingerprinting,
+                                    label: 'Disable fingerprinting'
+                        %>
+                        <%= messages_for( :no_fingerprinting ) %>
                     </div>
                 </div>
-            </div>
+            <% end %>
 
         </fieldset>
     </div>
@@ -141,15 +128,27 @@
                 </div>
             </div>
 
+            <% if @site.https? %>
             <div class="row">
-                <% if @site.https? %>
-                    <div class="col-md-6">
-                        <%= f.input :scope_https_only,
-                                    label: 'Only follow HTTPS URLs' %>
-                    </div>
-                <% end %>
+                <div class="col-md-6">
+                    <%= f.input :scope_https_only,
+                                label: 'Only follow HTTPS URLs' %>
+                </div>
             </div>
+            <% end %>
 
+            <%= advanced id: 'scope' do %>
+                <div class="row">
+                    <div class="col-md-6">
+                        <%= f.input :scope_extend_paths,
+                                    label: 'Extend paths',
+                                    placeholder: 'Only use paths discovered by the crawl',
+                                    input_html: { value: @site.profile.scope_extend_paths.join( "\n" ) } %>
+                        <%= messages_for( :scope_extend_paths ) %>
+                        <p class="help-block alert alert-info">Input each path in its own line.</p>
+                    </div>
+                </div>
+            <% end %>
         </fieldset>
     </div>
 
@@ -274,30 +273,17 @@
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-md-12">
-                    <button class="btn btn-sm btn-primary" type="button" data-toggle="collapse"
-                            data-target="#http-advanced" aria-expanded="false"
-                            aria-controls="collapseExample">
-                        Advanced
-                    </button>
-                    <div class="collapse" id="http-advanced">
-                        <div class="well well-sm">
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <%= f.input :http_request_concurrency,
-                                                label: 'Request concurrency',
-                                                placeholder: Arachni::Options.http.request_concurrency.to_s
-                                    %>
-                                    <%= messages_for( :http_request_concurrency ) %>
-                                </div>
-                            </div>
-
-                        </div>
+            <%= advanced id: 'http' do %>
+                <div class="row">
+                    <div class="col-md-6">
+                        <%= f.input :http_request_concurrency,
+                                    label: 'Request concurrency',
+                                    placeholder: Arachni::Options.http.request_concurrency.to_s
+                        %>
+                        <%= messages_for( :http_request_concurrency ) %>
                     </div>
                 </div>
-            </div>
+            <% end %>
 
         </fieldset>
     </div>

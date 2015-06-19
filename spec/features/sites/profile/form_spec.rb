@@ -188,6 +188,15 @@ feature 'Site profile form' do
                     expect(profile.scope_auto_redundant_paths).to eq 10
                 end
             end
+
+            feature 'Advanced' do
+                scenario 'can set Extend paths' do
+                    fill_in 'Extend paths', with: "test\ntest2"
+                    submit
+
+                    expect(profile.scope_extend_paths).to eq [ 'test', 'test2' ]
+                end
+            end
         end
 
         feature 'Audit' do

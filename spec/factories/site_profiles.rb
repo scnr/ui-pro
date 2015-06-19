@@ -24,6 +24,9 @@ FactoryGirl.define do
         audit_link_templates [
              'input1/(?<input1>\w+)/input2/(?<input2>\w+)'
          ]
+        scope_extend_paths [
+            'include-me', 'include-me-too'
+        ]
         scope_url_rewrites(
             'articles\/[\w-]+\/(\d+)' => 'articles.php?id=\1'
         )
