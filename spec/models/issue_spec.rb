@@ -147,6 +147,15 @@ describe Issue do
         let(:arachni_issue) do
             Factory[:issue]
         end
+        let(:revision) do
+            FactoryGirl.create(
+                :revision,
+                scan: FactoryGirl.create(
+                    :scan,
+                    site: FactoryGirl.create( :site )
+                )
+            )
+        end
 
         it "creates a #{described_class} from #{Arachni::Issue}" do
             platform = IssuePlatform.create(
@@ -154,7 +163,10 @@ describe Issue do
                 name:      arachni_issue.platform_name.to_s.upcase
             )
 
-            issue = described_class.create_from_arachni( arachni_issue ).reload
+            issue = described_class.create_from_arachni(
+                arachni_issue,
+                revision: revision
+            ).reload
             expect(issue).to be_valid
 
             expect(issue.page).to be_kind_of IssuePage
