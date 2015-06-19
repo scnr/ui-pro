@@ -20,36 +20,43 @@ module IssuesHelper
         )
     end
 
+    def fa_icon_to_unicode( icon )
+        case icon
+            when 'circle'
+                '&#xf111;'
+
+            when 'exclamation-circle'
+                '&#xf06a;'
+
+            when 'remove'
+                '&#xf00d;'
+
+            when 'question-circle'
+                '&#xf059;'
+
+            when 'check'
+                '&#xf00c;'
+        end
+    end
+
     def issue_state_to_icon( state )
         case state
             when 'trusted'
-                'circle'
+                'check'
 
             when 'untrusted'
-                'exclamation-circle'
+                'question-circle'
 
             when 'false_positive'
-                'remove'
+                'exclamation-circle'
 
             when 'fixed'
-                'check'
+                'remove'
         end
     end
 
     def issue_state_to_unicode( state )
-        case state
-            when 'trusted'
-                '&#xf111;'
-
-            when 'untrusted'
-                '&#xf06a;'
-
-            when 'false_positive'
-                '&#xf00d;'
-
-            when 'fixed'
-                '&#xf00c;'
-        end
+        fa_icon_to_unicode( issue_state_to_icon( state ) )
     end
 
     def id_to_location( id )
