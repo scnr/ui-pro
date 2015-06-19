@@ -237,8 +237,6 @@ feature 'Site page' do
                     @types      = {}
                     25.times do |i|
                         IssueTypeSeverity::SEVERITIES.each do |severity|
-                            next if [:informational].include? severity
-
                             @severities[severity] ||=
                                 FactoryGirl.create(:issue_type_severity,
                                                name: severity )
@@ -268,86 +266,34 @@ feature 'Site page' do
                         end
                     end
 
-                    visit site_path( site )
+                    visit "#{site_path( site )}?filter[states][]=trusted&filter[states][]=untrusted&filter[states][]=false_positive&filter[states][]=fixed&filter[severities][]=high&filter[severities][]=medium&filter[severities][]=low&filter[severities][]=informational&filter[type]=include"
                 end
 
                 let(:types) { @types.values }
                 let(:severities) { @severities.values }
 
-                feature 'sidebar' do
-                    let(:sidebar) { find '#sidebar' }
+                feature 'when filtering' do
+                    ['Trusted', 'untrusted', 'false positive', 'fixed'].each do |type|
+                        feature "#{type} issues for" do
+                            feature 'inclusion' do
+                                it "shows #{type} issues"
+                            end
 
-                    feature 'scan list' do
-                        let(:scans) { find '#site-sidebar' }
-
-                        scenario 'user sees amount of pages' do
-                            expect(scans).to have_content "#{scan.sitemap_entries.size} pages"
-                        end
-
-                        scenario 'user sees amount of issues' do
-                            expect(scans).to have_content "#{scan.issues.size} issues"
-                        end
-                    end
-                end
-
-                feature 'statistics' do
-                    let(:statistics) { find '#summary-statistics' }
-
-                    scenario 'user sees amount of pages with issues' do
-                        expect(statistics).to have_text "#{site.sitemap_entries.with_issues.size} pages with issues"
-                    end
-
-                    scenario 'user sees total amount of pages' do
-                        expect(statistics).to have_text "out of #{site.sitemap_entries.size}"
-                    end
-
-                    scenario 'user sees amount of issues' do
-                        expect(statistics).to have_text "#{site.issues.size} issues"
-                    end
-
-                    scenario 'user sees maximum severity of issues' do
-                        expect(statistics).to have_text "maximum severity of #{site.issues.max_severity.capitalize}"
-                    end
-
-                    scenario 'user sees amount of scan revisions' do
-                        expect(statistics).to have_text "#{site.revisions.size} revision"
-                    end
-
-                    scenario 'user sees amount of scans' do
-                        expect(statistics).to have_text "#{site.scans.size} scan"
-                    end
-
-                    scenario 'user sees amount of issues by severity' do
-                        IssueTypeSeverity::SEVERITIES.each do |severity|
-                            elem = statistics.find(".text-severity-#{severity}")
-
-                            expectation =
-                                "#{site.issues.send("#{severity}_severity").size} #{severity}"
-
-                            expect(elem).to have_text expectation
-                        end
-                    end
-                end
-
-                feature 'sitemap' do
-                    let(:sitemap) { find '#summary-sitemap' }
-
-                    scenario 'URLs link to the Page page'
-                    scenario 'URLs are color-coded by severity'
-
-                    scenario 'user sees amount of pages in the heading' do
-                        expect(sitemap.find('h3')).to have_text site.sitemap_entries.with_issues.size
-                    end
-
-                    scenario 'includes pages with issues' do
-                        site.sitemap_entries.with_issues.each do |entry|
-                            expect(sitemap).to have_text ApplicationHelper.url_without_scheme_host_port( entry.url )
+                            feature 'exclusion' do
+                                "it 'does not show #{type} issues'"
+                            end
                         end
                     end
 
-                    scenario 'includes HTTP response status code' do
-                        site.sitemap_entries.with_issues.each do |entry|
-                            expect(sitemap).to have_text entry.code
+                    IssueTypeSeverity::SEVERITIES.each do |type|
+                        feature "#{type} severity issues for" do
+                            feature 'inclusion' do
+                                it "shows #{type} severity issues"
+                            end
+
+                            feature 'exclusion' do
+                                "it 'does not show #{type} severity issues'"
+                            end
                         end
                     end
                 end
@@ -490,6 +436,78 @@ feature 'Site page' do
                                     end
                                 end
                             end
+                        end
+                    end
+                end
+
+                feature 'sidebar' do
+                    let(:sidebar) { find '#sidebar' }
+
+                    feature 'scan list' do
+                        let(:scans) { find '#site-sidebar' }
+
+                        scenario 'user sees amount of pages' do
+                            expect(scans).to have_content "#{scan.sitemap_entries.size} pages"
+                        end
+
+                        scenario 'user sees amount of issues' do
+                            expect(scans).to have_content "#{scan.issues.size} issues"
+                        end
+                    end
+                end
+
+                feature 'statistics' do
+                    let(:statistics) { find '#summary-statistics' }
+
+                    scenario 'user sees amount of pages with issues' do
+                        expect(statistics).to have_text "#{site.sitemap_entries.with_issues.size} page with issues"
+                    end
+
+                    scenario 'user sees total amount of pages' do
+                        expect(statistics).to have_text "out of #{site.sitemap_entries.size}"
+                    end
+
+                    scenario 'user sees amount of issues' do
+                        expect(statistics).to have_text "#{site.issues.size} issues"
+                    end
+
+                    scenario 'user sees maximum severity of issues' do
+                        expect(statistics).to have_text "maximum severity of #{site.issues.max_severity.capitalize}"
+                    end
+
+                    scenario 'user sees amount of scan revisions' do
+                        expect(statistics).to have_text "#{site.revisions.size} revision"
+                    end
+
+                    scenario 'user sees amount of scans' do
+                        expect(statistics).to have_text "#{site.scans.size} scan"
+                    end
+
+                    scenario 'user sees amount of issues by severity' do
+                        IssueTypeSeverity::SEVERITIES.each do |severity|
+                            elem = statistics.find(".text-severity-#{severity}")
+
+                            expectation =
+                                "#{site.issues.send("#{severity}_severity").size} #{severity}"
+
+                            expect(elem).to have_text expectation
+                        end
+                    end
+                end
+
+                feature 'sitemap' do
+                    let(:sitemap) { find '#summary-sitemap' }
+
+                    scenario 'entries filter issues'
+                    scenario 'URLs are color-coded by severity'
+
+                    scenario 'user sees amount of pages in the heading' do
+                        expect(sitemap.find('h3')).to have_text site.sitemap_entries.with_issues.size
+                    end
+
+                    scenario 'includes pages with issues' do
+                        site.sitemap_entries.with_issues.each do |entry|
+                            expect(sitemap).to have_text ApplicationHelper.url_without_scheme_host_port( entry.url )
                         end
                     end
                 end
