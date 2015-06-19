@@ -158,44 +158,24 @@ feature 'Site profile form' do
                 end
             end
 
-            feature 'Path redundancy patterns' do
+            feature 'Path template patterns' do
                 scenario 'can be set' do
-                    rules = "stuff:3\n"
-                    rules << 'blah:4'
+                    rules = "stuff\nblah"
 
-                    fill_in 'Path redundancy patterns', with: rules
+                    fill_in 'Path template patterns', with: rules
                     submit
 
-                    expect(profile.scope_redundant_path_patterns).to eq ({
-                        'stuff' => '3',
-                        'blah'  => '4'
-                    })
-                end
-
-                feature 'when missing the pattern' do
-                    scenario 'shows error' do
-                        fill_in 'Path redundancy patterns', with: ':2'
-                        submit
-
-                        expect(find('.site_profile_scope_redundant_path_patterns.has-error').text).to include "pattern cannot be empty"
-                    end
-                end
-
-                feature 'when missing the counter' do
-                    scenario 'shows error' do
-                        fill_in 'Path redundancy patterns', with: "stuff:"
-                        submit
-
-                        expect(find('.site_profile_scope_redundant_path_patterns.has-error').text).to include "needs an integer counter greater than 0"
-                    end
+                    expect(profile.scope_template_path_patterns).to eq ([
+                        'stuff', 'blah'
+                    ])
                 end
 
                 feature 'when given invalid pattern' do
                     scenario 'shows error' do
-                        fill_in 'Path redundancy patterns', with: '(articles:1'
+                        fill_in 'Path template patterns', with: '(articles'
                         submit
 
-                        expect(find('.site_profile_scope_redundant_path_patterns.has-error').text).to include 'invalid pattern'
+                        expect(find('.site_profile_scope_template_path_patterns.has-error').text).to include 'invalid pattern'
                     end
                 end
             end

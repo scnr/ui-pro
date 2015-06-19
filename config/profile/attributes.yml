@@ -41,8 +41,9 @@ scope_include_subdomains: 'Allows the crawler to follow paths to subdomains.'
 scope_include_path_patterns: 'Only crawls and audits URLs matching the given patterns.'
 scope_page_limit: 'Limits the amount of pages to crawl and audit.'
 scope_https_only: 'Only follow HTTPS URLs.'
-scope_redundant_path_patterns: 'Limits crawl on redundant pages like galleries or catalogs by following
-    URLs that match certain patterns a limited amount of times.'
+scope_template_path_patterns: >
+  Limits processing of redundant pages which are based on common templates (like blog
+  posts, galleries, catalogs etc.).
 scope_restrict_paths: 'Uses the given paths instead of crawling.'
 
 http_request_headers: 'Adds custom headers to every HTTP request.'

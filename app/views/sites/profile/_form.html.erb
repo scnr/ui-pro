@@ -123,19 +123,15 @@
 
             <div class="row">
                 <div class="col-md-6">
-                    <%= f.input :scope_redundant_path_patterns,
-                                label: 'Path redundancy patterns',
+                    <%= f.input :scope_template_path_patterns,
+                                label: 'Path template patterns',
                                 placeholder: 'Process all resources identically',
                                 input_html: {
-                                        value: @site.profile.scope_redundant_path_patterns.
-                                                       map { |k, v| "#{k}:#{v}" }.join( "\n" )
+                                        value: @site.profile.scope_template_path_patterns.join( "\n" )
                                 } %>
 
-                    <%= messages_for( :scope_redundant_path_patterns ) %>
-                    <p class="help-block alert alert-info">
-                        Rules take the format of <em>pattern:times</em>,
-                        input each rule in its own line.
-                    </p>
+                    <%= messages_for( :scope_template_path_patterns ) %>
+                    <p class="help-block alert alert-info">Input each rule in its own line.</p>
                 </div>
                 <div class="col-md-6">
                     <%= f.input :scope_auto_redundant_paths,

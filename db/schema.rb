@@ -348,7 +348,7 @@ ActiveRecord::Schema.define(version: 20150406191208) do
     t.boolean  "no_fingerprinting"
     t.text     "input_values"
     t.text     "audit_link_templates"
-    t.text     "scope_redundant_path_patterns"
+    t.text     "scope_template_path_patterns"
     t.integer  "scope_auto_redundant_paths"
     t.text     "scope_url_rewrites"
     t.boolean  "scope_https_only"

@@ -15,7 +15,7 @@ module ProfileAttributes
             :http_request_headers,
 
             :scope_url_rewrites,
-            :scope_redundant_path_patterns,
+            :scope_template_path_patterns,
             :scope_exclude_path_patterns,
             :scope_exclude_content_patterns,
             :scope_include_path_patterns,
@@ -58,7 +58,7 @@ module ProfileAttributes
             scope_include_path_patterns:    Array,
             scope_extend_paths:             Array,
             scope_restrict_paths:           Array,
-            scope_redundant_path_patterns:  Hash,
+            scope_template_path_patterns:   Array,
             scope_url_rewrites:             Hash,
     
             audit_exclude_vector_patterns:  Array,
@@ -87,6 +87,7 @@ module ProfileAttributes
         end
 
         %w(
+            scope_template_path_patterns
             scope_exclude_path_patterns
             scope_exclude_content_patterns
             scope_include_path_patterns
@@ -104,8 +105,7 @@ module ProfileAttributes
             end
         end
 
-        %w(scope_redundant_path_patterns scope_url_rewrites
-            browser_cluster_wait_for_elements).each do |m|
+        %w(scope_url_rewrites browser_cluster_wait_for_elements).each do |m|
             next if !has_option?( m )
 
             define_method "#{m}=" do |string_or_hash|
@@ -174,21 +174,6 @@ module ProfileAttributes
             end
 
             check_pattern( pattern, :input_values )
-        end
-    end
-
-    def validate_scope_redundant_path_patterns
-        scope_redundant_path_patterns.each do |pattern, counter|
-            if pattern.empty?
-                errors.add :scope_redundant_path_patterns, 'pattern cannot be empty'
-            end
-
-            check_pattern( pattern, :scope_redundant_path_patterns )
-
-            if counter.to_i <= 0
-                errors.add :scope_redundant_path_patterns,
-                           "rule '#{pattern}' needs an integer counter greater than 0"
-            end
         end
     end
 

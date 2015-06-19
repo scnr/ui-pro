@@ -3,6 +3,8 @@ require 'active_support/concern'
 module ProfileRpcHelpers
     extend ActiveSupport::Concern
 
+    TEMPLATE_PATH_PATTERN_COUNTER = 1
+
     RPC_OPTS = [
         :plugins,
 
@@ -45,7 +47,6 @@ module ProfileRpcHelpers
         :scope_exclude_path_patterns,
         :scope_extend_paths,
         :scope_include_path_patterns,
-        :scope_redundant_path_patterns,
         :scope_restrict_paths,
         :scope_url_rewrites,
         :scope_dom_depth_limit,
@@ -100,6 +101,14 @@ module ProfileRpcHelpers
             else
                 opts[k] = v
             end
+        end
+
+        if has_option?( :scope_template_path_patterns ) &&
+            scope_template_path_patterns.any?
+
+            opts['scope']['redundant_path_patterns'] =
+                scope_template_path_patterns.
+                    inject({}) { |h, pattern| h[pattern] = TEMPLATE_PATH_PATTERN_COUNTER; h }
         end
 
         opts

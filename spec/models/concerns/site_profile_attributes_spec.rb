@@ -6,29 +6,12 @@ describe 'SiteProfileAttributes' do
     let(:site) { FactoryGirl.create :site }
 
     describe :validations do
-        describe '#scope_redundant_path_patterns' do
-            it 'does not allow 0 counters' do
-                subject.scope_redundant_path_patterns = {
-                    'stuff' => 1
-                }
-
-                expect(subject.save).to be_truthy
-
-                subject.scope_redundant_path_patterns = {
-                    'stuff' => 0
-                }
-
-                expect(subject.save).to be_falsey
-                expect(subject.errors).to include :scope_redundant_path_patterns
-            end
-
+        describe '#scope_template_path_patterns' do
             it 'does not allow invalid patterns' do
-                subject.scope_redundant_path_patterns = {
-                    '(stuff' => 2
-                }
+                subject.scope_template_path_patterns = [ '(stuff' ]
 
                 expect(subject.save).to be_falsey
-                expect(subject.errors).to include :scope_redundant_path_patterns
+                expect(subject.errors).to include :scope_template_path_patterns
             end
         end
 
@@ -204,8 +187,7 @@ describe 'SiteProfileAttributes' do
         end
     end
 
-    %w(http_cookies http_request_headers scope_redundant_path_patterns
-        scope_url_rewrites input_values).each do |attr|
+    %w(http_cookies http_request_headers scope_url_rewrites input_values).each do |attr|
 
         describe "#{attr}" do
             it 'is a Hash' do
@@ -214,7 +196,7 @@ describe 'SiteProfileAttributes' do
         end
     end
 
-    %w(audit_link_templates platforms).each do |attr|
+    %w(scope_template_path_patterns audit_link_templates platforms).each do |attr|
 
         describe "#{attr}" do
             it 'is a Array' do

@@ -101,7 +101,7 @@ class SitesController < ApplicationController
             :http_authentication_username,
             :http_authentication_password,
 
-            :scope_redundant_path_patterns,
+            :scope_template_path_patterns,
             :scope_auto_redundant_paths,
             :scope_url_rewrites,
             :scope_https_only,

@@ -2,10 +2,10 @@
 
 FactoryGirl.define do
     factory :site_profile do
-        scope_redundant_path_patterns(
-            'redundant'       => 2,
-            'other-redundant' => 3
-        )
+        scope_template_path_patterns([
+            'redundant',
+            'other-redundant'
+        ])
         http_cookies(
             'my-name'      => 'my value',
             'another-name' => 'another value'
@@ -34,5 +34,8 @@ FactoryGirl.define do
         http_authentication_username "johny"
         http_authentication_password "secret"
         browser_cluster_ignore_images true
+        browser_cluster_wait_for_elements({
+            'stuff' => '#myElement'
+        })
     end
 end
