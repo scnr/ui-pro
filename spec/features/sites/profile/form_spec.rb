@@ -347,8 +347,8 @@ feature 'Site profile form' do
                     end
                 end
 
-                feature 'Linux, Nginx, Postgresql, Ruby, Rack' do
-                    let(:button) { 'Linux, Nginx, Postgresql, Ruby, Rack' }
+                feature 'Linux, Nginx, Postgresql, Ruby, Ruby on Rails' do
+                    let(:button) { 'Linux, Nginx, Postgresql, Ruby, Ruby on Rails' }
 
                     scenario 'sets Linux' do
                         expect(platforms).to include 'linux'
@@ -366,13 +366,13 @@ feature 'Site profile form' do
                         expect(platforms).to include 'ruby'
                     end
 
-                    scenario 'sets Rack' do
-                        expect(platforms).to include 'rack'
+                    scenario 'sets Ruby on Rails' do
+                        expect(platforms).to include 'rails'
                     end
                 end
 
-                feature 'Linux, TomCat, Generic SQL family, JSP' do
-                    let(:button) { 'Linux, TomCat, Generic SQL family, JSP' }
+                feature 'Linux, TomCat, Generic SQL family, Java' do
+                    let(:button) { 'Linux, TomCat, Generic SQL family, Java' }
 
                     scenario 'sets Linux' do
                         expect(platforms).to include 'linux'
@@ -386,8 +386,8 @@ feature 'Site profile form' do
                         expect(platforms).to include 'sql'
                     end
 
-                    scenario 'sets JSP' do
-                        expect(platforms).to include 'jsp'
+                    scenario 'sets Java' do
+                        expect(platforms).to include 'java'
                     end
                 end
 
@@ -556,11 +556,11 @@ feature 'Site profile form' do
                     expect(profile.platforms).to include 'aspx'
                 end
 
-                scenario 'can set JSP' do
-                    check 'JSP'
+                scenario 'can set Java' do
+                    check 'Java'
                     submit
 
-                    expect(profile.platforms).to include 'jsp'
+                    expect(profile.platforms).to include 'java'
                 end
 
                 scenario 'can set Perl' do
