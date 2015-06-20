@@ -227,18 +227,26 @@ section {
 }
 
 .cascade-container {
-    -moz-column-count: 3;
+    -moz-column-count: 2;
     -moz-column-gap: 10px;
-    -webkit-column-count: 3;
+    -moz-column-rule: 1px solid #eeeeee;
+
+    -webkit-column-count: 2;
     -webkit-column-gap: 10px;
-    column-count: 3;
+    -webkit-column-rule: 1px solid #eeeeee;
+
+    column-count: 2;
     column-gap: 10px;
+    column-rule: 1px solid #eeeeee;
+
     width: 100%;
 }
 
 .cascade-container div {
     display: inline-block;
     width: 100%;
+    border-top: 1px solid #eeeeee;
+    padding: 10px;
 }
 
 .table-borderless > thead > tr > th,

@@ -331,25 +331,25 @@ feature 'Site page' do
                                 feature 'scan info' do
                                     scenario 'user sees scan name' do
                                         site.issues.each do |issue|
-                                            expect(issues.find("#summary-issue-#{issue.digest} ul.issue-summary-info")).to have_content issue.revision.scan.name
+                                            expect(issues.find("#summary-issue-#{issue.digest}")).to have_content issue.revision.scan.name
                                         end
                                     end
 
                                     scenario 'user sees scan link' do
                                         site.issues.each do |issue|
-                                            expect(issues.find("#summary-issue-#{issue.digest} ul.issue-summary-info li span")).to have_xpath "//a[@href='#{site_scan_path(issue.revision.scan.site, issue.revision.scan)}']"
+                                            expect(issues.find("#summary-issue-#{issue.digest}")).to have_xpath "//a[@href='#{site_scan_path(issue.revision.scan.site, issue.revision.scan)}']"
                                         end
                                     end
 
                                     scenario 'user sees revision index' do
                                         site.issues.each do |issue|
-                                            expect(issues.find("#summary-issue-#{issue.digest} ul.issue-summary-info")).to have_content issue.revision.index
+                                            expect(issues.find("#summary-issue-#{issue.digest}")).to have_content issue.revision.index
                                         end
                                     end
 
                                     scenario 'user sees revision link' do
                                         site.issues.each do |issue|
-                                            expect(issues.find("#summary-issue-#{issue.digest} ul.issue-summary-info li span")).to have_xpath "//a[@href='#{site_scan_revision_path(issue.revision.scan.site, issue.revision.scan, issue.revision)}']"
+                                            expect(issues.find("#summary-issue-#{issue.digest}")).to have_xpath "//a[@href='#{site_scan_revision_path(issue.revision.scan.site, issue.revision.scan, issue.revision)}']"
                                         end
                                     end
                                 end
@@ -386,7 +386,7 @@ feature 'Site page' do
 
                                     scenario 'user sees vector action URL without scheme, host and port' do
                                         url = ApplicationHelper.url_without_scheme_host_port( issue.vector.action )
-                                        expect(issues.find("#summary-issue-#{issue.digest}")).to have_content "pointing to #{url}"
+                                        expect(issues.find("#summary-issue-#{issue.digest}")).to have_content url
                                     end
                                 end
 

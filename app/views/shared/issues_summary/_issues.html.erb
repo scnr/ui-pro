@@ -14,7 +14,8 @@
     <%
        last_name = nil
        if last_severity %>
-            </ul>
+            </tbody>
+            </table>
             </div>
             </div>
             </div>
@@ -39,7 +40,8 @@
 
         <% if issue.type.name != last_name %>
             <% if last_name %>
-                </ul>
+                </tbody>
+                </table>
                 </div>
             <% end %>
 
@@ -53,56 +55,76 @@
 
                     <small>via:</small>
                 </h4>
-            <ul class="list-unstyled">
+
+            <table class="table table-condensed table-borderless">
+                <thead>
+                    <th></th>
+
+                    <th>Type</th>
+
+                    <% if issue.vector.affected_input_name %>
+                        <th>Name</th>
+                    <% end %>
+
+                    <th>Resource</th>
+
+                    <% if !@scan || !@revision %>
+                        <th>Logged by</th>
+                    <% end %>
+                </thead>
+                <tbody>
         <% end %>
 
-            <li id="summary-issue-<%= issue.digest %>"
+            <tr id="summary-issue-<%= issue.digest %>"
                 class="with-list-info issue-summary-vector-<%= issue.vector.kind %>">
 
-                <%= link_to site_scan_revision_issue_path( issue.site, issue.scan, issue.revision, issue ),
-                            title: "Inspect (#{issue.state.humanize})" do %>
-                    <i class="fa fa-<%= issue_state_to_icon issue.state %>"></i>
-                <% end %>
+                <td>
+                    <%= link_to site_scan_revision_issue_path( issue.site, issue.scan, issue.revision, issue ),
+                                title: issue.state.humanize do %>
+                        <i class="fa fa-<%= issue_state_to_icon issue.state %>"></i>
+                    <% end %>
+                </td>
 
-                <code><%= issue.vector.kind %></code>
+                <td>
+                    <code><%= issue.vector.kind %></code>
+                </td>
 
                 <% if issue.vector.affected_input_name %>
-                    input <code><%= issue.vector.affected_input_name %></code>
+                    <td>
+                        <code><%= issue.vector.affected_input_name %></code>
+                    </td>
                 <% end %>
 
-                pointing to
+                <td>
+                    <%= link_to_url_with_external(
+                            external: issue.vector.action,
+                            internal: sitemap_entry_url( issue.vector.sitemap_entry ),
+                            display_path_only: true
+                        )
+                    %>
+                </td>
 
-                <%= link_to_url_with_external(
-                        external: issue.vector.action,
-                        internal: sitemap_entry_url( issue.vector.sitemap_entry ),
-                        display_path_only: true
-                    )
-                %>
+                <% if !@scan || !@revision %>
+                    <td>
+                        <% if @scan %>
+                            <%= link_to "#{issue.revision.index.ordinalize} revision",
+                                        [site, issue.revision.scan, issue.revision] %>
+                        <% else %>
+                            <%= link_to issue.revision.index.ordinalize,
+                                        [site, issue.revision.scan, issue.revision] %>
 
-                <% if !@revision %>
-                    <ul class="issue-summary-info list-info">
-                        <li>
-                            <span>
-                                Found by the
-                                <%= link_to "#{issue.revision.index.ordinalize} revision",
-                                            [site, issue.revision.scan, issue.revision] %>
-
-                                <% if !@scan %>
-                                    of
-                                    <%= link_to issue.revision.scan.name, [site, issue.revision.scan] %>.
-                                <% end %>
-                            </span>
-                        </li>
-                    </ul>
+                            <%= link_to issue.revision.scan.name, [site, issue.revision.scan] %>
+                        <% end %>
+                    </td>
                 <% end %>
-            </li>
-
+            </tr>
 
 <%
    last_name = issue.type.name
    last_severity = issue.severity.name
    end %>
-</ul>
+</tbody>
+</table>
 </div>
 </div>
 </div>
