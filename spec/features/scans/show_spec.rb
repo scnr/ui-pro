@@ -49,8 +49,8 @@ feature 'Scan page' do
         expect(find('h1').text).to match scan.name.capitalize
     end
 
-    scenario 'user sees site url in heading' do
-        expect(find('h1').text).to match site.url
+    scenario 'user sees scan url in heading' do
+        expect(find('h1').text).to match scan.url
     end
 
     scenario 'sees rendered Markdown description' do

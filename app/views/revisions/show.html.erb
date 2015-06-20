@@ -1,7 +1,7 @@
 <%
    title "Revision ##{@revision.index}"
    breadcrumb_add 'Sites', sites_path
-   breadcrumb_add @site.url, site_path( @site )
+   breadcrumb_add @scan.url, site_path( @site )
    breadcrumb_add @scan.name, site_scan_path( @site, @scan )
 %>
 
@@ -12,7 +12,9 @@
             <%= link_to @revision.scan.name, [@revision.scan.site, @revision.scan] %>
             (<%= link_to @scan.profile, @scan.profile %>)
             for
-            <%= link_to_url_with_external external: @site.url, internal: @site %>
+            <%= link_to_url_with_external display: @scan.url,
+                                          external: @site.url,
+                                          internal: @site %>
         </h1>
 
         <div class="description">

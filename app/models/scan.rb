@@ -46,6 +46,15 @@ class Scan < ActiveRecord::Base
         !!(schedule && schedule.start_at)
     end
 
+    def path=( p )
+        p = p.to_s
+        super p.start_with?( '/' ) ? p : "/#{p}"
+    end
+
+    def url
+        "#{site.url}#{path}"
+    end
+
     def rpc_options
         options = profile.to_rpc_options
 
@@ -75,6 +84,9 @@ class Scan < ActiveRecord::Base
         options.deep_merge!( site_role_rpc_options )
 
         options.merge!( 'authorized_by' => site.user.email )
+
+        options['url'] = url
+
         options
     end
 

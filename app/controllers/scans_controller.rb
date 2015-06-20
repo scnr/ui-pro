@@ -109,6 +109,7 @@ class ScansController < ApplicationController
         [
             :name,
             :description,
+            :path,
             :site_role_id,
             :profile_id,
             :user_agent_id,

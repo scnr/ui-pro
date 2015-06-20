@@ -1,7 +1,7 @@
 <%
    title @scan.name
    breadcrumb_add 'Sites', sites_path
-   breadcrumb_add @site.url, site_path( @site )
+   breadcrumb_add @scan.url, site_path( @site )
 %>
 
 <div class="row">
@@ -10,7 +10,9 @@
             <%= link_to @scan.name.capitalize, [@scan.site, @scan] %>
             (<%= link_to @scan.profile, @scan.profile %>)
             for
-            <%= link_to_url_with_external external: @site.url, internal: @site %>
+            <%= link_to_url_with_external display: @scan.url,
+                                          external: @site.url,
+                                          internal: @site %>
 
             <%= link_to edit_site_scan_path( @site, @scan ),
                         class: 'btn btn-xs btn-warning' do %>

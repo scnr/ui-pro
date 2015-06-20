@@ -18,6 +18,7 @@ feature 'New scan page' do
 
     let(:name) { 'name blahblah' }
     let(:description) { 'description blahblah' }
+    let(:path) { 'my-path' }
 
     after(:each) do
         Warden.test_reset!
@@ -55,6 +56,28 @@ feature 'New scan page' do
 
     scenario 'user sees site url in heading' do
         expect(find('h1').text).to match site.url
+    end
+
+    scenario 'user can set the path' do
+        fill_in 'scan_name', with: name
+        fill_in 'scan_description', with: description
+        fill_in 'scan_path', with: path
+        select site_role.name, from: 'scan_site_role_id'
+        select profile.name, from: 'scan_profile_id'
+        select user_agent.name, from: 'scan_user_agent_id'
+
+        click_button 'Create'
+
+        expect(page).to have_content 'Scan was successfully created.'
+
+        scan = site.scans.last
+
+        expect(scan.name).to eq name
+        expect(scan.description).to eq description
+        expect(scan.path).to eq "/#{path}"
+        expect(scan.user_agent).to eq user_agent
+        expect(scan.site_role).to eq site_role
+        expect(scan.profile).to eq profile
     end
 
     scenario 'user can set the schedule' do

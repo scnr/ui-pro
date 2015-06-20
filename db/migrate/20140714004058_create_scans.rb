@@ -3,6 +3,7 @@ class CreateScans < ActiveRecord::Migration
     create_table :scans do |t|
       t.string :name
       t.text :description
+      t.text :path
       t.integer :revisions_count, :integer, default: 0
 
       t.belongs_to :site, index: true

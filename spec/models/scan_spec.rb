@@ -306,6 +306,36 @@ describe Scan do
         end
     end
 
+    describe '#path=' do
+        context 'when the path starts with /' do
+            it 'just stores it' do
+                subject.path = '/stuff'
+                expect(subject.path).to eq '/stuff'
+            end
+        end
+
+        context 'when the path does not start with /' do
+            it 'suffixes one' do
+                subject.path = 'stuff'
+                expect(subject.path).to eq '/stuff'
+            end
+        end
+
+        context 'when given nil' do
+            it 'defaults to /' do
+                subject.path = nil
+                expect(subject.path).to eq '/'
+            end
+        end
+    end
+
+    describe '#url' do
+        it 'returns the site URL combined with the #path' do
+            subject.path = '/stuff'
+            expect(subject.url).to eq "#{site.url}/stuff"
+        end
+    end
+
     describe '#rpc_options' do
         before :each do
             settings
@@ -346,6 +376,7 @@ describe Scan do
                     site.profile.scope_exclude_content_patterns).sort
             )
 
+            options['url'] = subject.url
             options['plugins']['autologin'] = {
                 'url'        => subject.site_role.site.url,
                 'parameters' => 'username=joe&password=secret',
