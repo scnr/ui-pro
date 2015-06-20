@@ -56,7 +56,9 @@
                     <small>via:</small>
                 </h4>
 
-            <table class="table table-condensed table-borderless table-hover table-striped">
+            <table class="table table-condensed table-borderless table-hover
+                table-striped table-issue-summary">
+
                 <thead>
                     <th></th>
 
@@ -76,7 +78,7 @@
         <% end %>
 
             <tr id="summary-issue-<%= issue.digest %>"
-                class="with-list-info issue-summary-vector-<%= issue.vector.kind %>">
+                class="issue-summary-vector-<%= issue.vector.kind %>">
 
                 <td>
                     <%= link_to site_scan_revision_issue_path( issue.site, issue.scan, issue.revision, issue ),
