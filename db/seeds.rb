@@ -134,7 +134,7 @@ scans_size         = 4
 revisions_per_scan = 3
 
 sites = [
-    '/home/zapotek/workspace/arachni/spec/support/fixtures/report.afr',
+    # '/home/zapotek/workspace/arachni/spec/support/fixtures/report.afr',
     '/home/zapotek/Downloads/testhtml5.vulnweb.com.afr',
     '/home/zapotek/Downloads/testfire.net.afr'
 ]

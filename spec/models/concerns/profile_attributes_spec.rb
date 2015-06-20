@@ -91,12 +91,12 @@ describe ProfileAttributes do
 
             context 'when given missing options' do
                 it 'is invalid' do
-                    subject.plugins = { 'form_dicattack' => {} }
+                    subject.plugins = { 'restrict_to_dom_state' => {} }
 
                     expect(subject.save).to be_falsey
                     expect(subject.errors).to include :plugins
 
-                    expect(subject.errors.messages[:plugins].first).to include 'Missing value: username_list'
+                    expect(subject.errors.messages[:plugins].first).to include 'Missing value: fragment'
                 end
             end
         end

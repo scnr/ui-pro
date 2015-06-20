@@ -7,7 +7,10 @@ EXCLUDE_PLUGINS = [
     :vector_collector,
     :waf_detector,
     :autologin,
-    :login_script
+    :login_script,
+    :form_dicattack,
+    :http_dicattack,
+    :exec
 ]
 
 EXCLUDE_REPORTERS = [
