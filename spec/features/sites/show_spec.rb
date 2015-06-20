@@ -510,6 +510,16 @@ feature 'Site page' do
                             expect(sitemap).to have_text ApplicationHelper.url_without_scheme_host_port( entry.url )
                         end
                     end
+
+                    feature 'when no entry is selected' do
+                        scenario 'the All link is .active' do
+                            expect(sitemap.find( '#sitemap-entry-all' )[:class]).to include 'active'
+                        end
+                    end
+
+                    feature 'when an entry is selected' do
+                        scenario 'becomes .active'
+                    end
                 end
             end
         end

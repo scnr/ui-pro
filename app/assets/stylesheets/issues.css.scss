@@ -155,10 +155,16 @@ ul.sitemap {
 ul.sitemap > li {
     border-radius: 4px;
     display: block;
-    padding-top: 10px;
+    padding-left: 5px;
+    padding-top: 4px;
+    padding-bottom: 6px;
     position: relative;
 }
 
-ul.sitemap > li.inactive {
-    opacity: 0.5
+ul.sitemap > li.active {
+    background-color: #337ab7;
+
+    ul li, a {
+        color: white;
+    }
 }

@@ -1,5 +1,4 @@
 <%
-   site    = @issues_summary[:site]
    sitemap = @issues_summary[:sitemap_with_issues]
    filter  = params[:filter][:pages]
 %>
@@ -13,14 +12,17 @@
 </h3>
 
 <ul class="sitemap">
-    <li>
+    <li id="sitemap-entry-all" class="sitemap-entry <%= 'active' if filter.empty? %>">
         <%= link_to 'All', filter_params_without_page %>
     </li>
 
-    <% scoped_find_each(sitemap) do |entry| %>
+    <% scoped_find_each(sitemap) do |entry|
+        active = filter.include?( entry.id.to_s )
+    %>
+
         <li
             class="with-list-info sitemap-entry
-                <%= 'inactive' if filter.any? && !filter.include?( entry.id.to_s ) %>
+                <%= 'active' if active %>
                 sitemap-entry-with<% 'out' if entry.issues.size == 0 %>-issues"
             id="sitemap-entry-<%= entry.id %>"
         >
@@ -28,7 +30,7 @@
                     external: entry.url,
                     internal: sitemap_entry_url( entry ),
                     display_path_only: true,
-                    class: "text-severity text-severity-#{entry.issues.max_severity}"
+                    class: ("text-severity text-severity-#{entry.issues.max_severity}" if !active)
                 )
             %>
 
