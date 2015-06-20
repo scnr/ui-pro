@@ -33,6 +33,12 @@ FactoryGirl.define do
         http_request_concurrency 20
         scope_include_subdomains false
         scope_auto_redundant_paths 100
+        scope_exclude_path_patterns [
+            'site-profile-exclude-this', 'site-profile-exclude-this-too'
+        ]
+        scope_exclude_content_patterns [
+            'site-profile-Not found', 'site-profile-Not found either'
+        ]
         scope_https_only false
         http_authentication_username "johny"
         http_authentication_password "secret"

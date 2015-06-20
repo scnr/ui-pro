@@ -48,7 +48,14 @@ class Scan < ActiveRecord::Base
 
     def rpc_options
         options = profile.to_rpc_options
-        options.deep_merge!( site.profile.to_rpc_options )
+
+        profile_rpc_options = site.profile.to_rpc_options
+        profile_exclude_path_patterns =
+            profile_rpc_options['scope'].delete( 'exclude_path_patterns' ) || []
+        profile_exclude_content_patterns =
+            profile_rpc_options['scope'].delete( 'exclude_content_patterns' ) || []
+
+        options.deep_merge!( profile_rpc_options )
         options.deep_merge!( user_agent.to_rpc_options )
         options.deep_merge!( Setting.get.to_rpc_options )
 
@@ -57,9 +64,13 @@ class Scan < ActiveRecord::Base
         options['scope']                          ||= {}
         options['scope']['exclude_path_patterns'] ||= []
         site_role_rpc_options['scope']            ||= {}
+        profile_rpc_options['scope']              ||= {}
 
         options['scope']['exclude_path_patterns'] |=
             site_role_rpc_options['scope'].delete( 'exclude_path_patterns' ) || []
+
+        options['scope']['exclude_path_patterns']    |= profile_exclude_path_patterns
+        options['scope']['exclude_content_patterns'] |= profile_exclude_content_patterns
 
         options.deep_merge!( site_role_rpc_options )
 

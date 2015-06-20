@@ -121,6 +121,17 @@
                     <p class="help-block alert alert-info">Input each rule in its own line.</p>
                 </div>
                 <div class="col-md-6">
+                    <%= f.input :scope_exclude_path_patterns,
+                                label: 'Path exclusion patterns',
+                                placeholder: 'Do not exclude any resources',
+                                input_html: { value: @site.profile.scope_exclude_path_patterns.join( "\n" ) } %>
+                    <%= messages_for( :scope_exclude_path_patterns ) %>
+                    <p class="help-block alert alert-info">Input each rule in its own line.</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
                     <%= f.input :scope_auto_redundant_paths,
                                 label: 'Parameter redundancy limit',
                                 placeholder: 'Infinite' %>
@@ -146,6 +157,16 @@
                                     input_html: { value: @site.profile.scope_extend_paths.join( "\n" ) } %>
                         <%= messages_for( :scope_extend_paths ) %>
                         <p class="help-block alert alert-info">Input each path in its own line.</p>
+                    </div>
+                    <div class="col-md-6">
+                        <%= f.input :scope_exclude_content_patterns,
+                                    label: 'Content exclusion patterns',
+                                    placeholder: 'Include all pages',
+                                    input_html: {
+                                            value: @site.profile.scope_exclude_content_patterns.join( "\n" )
+                                    } %>
+                        <%= messages_for( :scope_exclude_content_patterns ) %>
+                        <p class="help-block alert alert-info">Input each rule in its own line.</p>
                     </div>
                 </div>
             <% end %>

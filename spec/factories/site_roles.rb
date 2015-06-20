@@ -5,7 +5,7 @@ FactoryGirl.define do
         session_check_url 'http://stuff/'
         session_check_pattern 'logout.php'
         scope_exclude_path_patterns [
-            'exclude-that', 'exclude-that-too'
+            'site-role-exclude-that', 'site-role-exclude-that-too'
         ]
         login_type 'form'
         login_form_url { site.url }

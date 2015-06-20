@@ -189,12 +189,60 @@ feature 'Site profile form' do
                 end
             end
 
+            feature 'Path exclusion patterns' do
+                scenario 'can be set' do
+                    fill_in 'Path exclusion patterns', with: "test\\w+\ninclude this (.*)"
+                    submit
+
+                    expect(profile.scope_exclude_path_patterns).to eq [
+                        /test\w+/.source,
+                        /include this (.*)/.source
+                    ]
+                end
+
+                feature 'when given invalid patterns' do
+                    scenario 'shows error' do
+                        rules = "(test\ntest4)"
+                        exp = 'invalid pattern "(test" (end pattern with unmatched parenthesis: /(test/) and invalid pattern "test4)" (unmatched close parenthesis: /test4)/)'
+
+                        fill_in 'Path exclusion patterns', with: rules
+                        submit
+
+                        expect(find('.site_profile_scope_exclude_path_patterns.has-error').text).to include exp
+                    end
+                end
+            end
+
             feature 'Advanced' do
                 scenario 'can set Extend paths' do
                     fill_in 'Extend paths', with: "test\ntest2"
                     submit
 
                     expect(profile.scope_extend_paths).to eq [ 'test', 'test2' ]
+                end
+
+                feature 'Content exclusion patterns' do
+                    scenario 'can be set ' do
+                        fill_in 'Content exclusion patterns', with: "test\\w+\ninclude this (.*)"
+                        submit
+
+                        expect(profile.scope_exclude_content_patterns).to eq [
+                            /test\w+/.source,
+                            /include this (.*)/.source
+                        ]
+                    end
+
+                    feature 'when given invalid patterns' do
+                        scenario 'shows error' do
+                            rules = "(test\ntest4)"
+                            exp = 'invalid pattern "(test" (end pattern with unmatched parenthesis: /(test/) and invalid pattern "test4)" (unmatched close parenthesis: /test4)/)'
+
+                            fill_in 'Content exclusion patterns', with: rules
+                            submit
+
+                            expect(find('.site_profile_scope_exclude_content_patterns.has-error').text).to include exp
+                        end
+                    end
                 end
             end
         end

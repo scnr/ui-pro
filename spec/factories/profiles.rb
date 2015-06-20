@@ -11,10 +11,10 @@ FactoryGirl.define do
         audit_headers false
         checks ['xss', 'xss_tag']
         scope_exclude_path_patterns [
-            'exclude-this', 'exclude-this-too'
+            'profile-exclude-this', 'profile-exclude-this-too'
         ]
         scope_exclude_content_patterns [
-            'Not found', 'Not found either'
+            'profile-Not found', 'profile-Not found either'
         ]
         scope_include_path_patterns [
             'username', 'id'

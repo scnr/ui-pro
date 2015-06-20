@@ -337,8 +337,8 @@ EORUBY
                 },
                 'scope' => {
                     'exclude_path_patterns' => [
-                        'exclude-that',
-                        'exclude-that-too'
+                        'site-role-exclude-that',
+                        'site-role-exclude-that-too'
                     ]
                 }
             })

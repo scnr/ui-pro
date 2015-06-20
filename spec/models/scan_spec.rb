@@ -323,7 +323,7 @@ describe Scan do
             expect(normalized_rpc_options).to eq Arachni::Options.update( rpc_options ).to_rpc_data
         end
 
-        it 'merges the site profile, user-agent and global settings' do
+        it 'merges the profile, site profile, user-agent and global settings' do
             options = subject.profile.to_rpc_options.
                 merge( 'authorized_by' => user.email ).
                 deep_merge( site.profile.to_rpc_options ).
@@ -331,11 +331,19 @@ describe Scan do
                 deep_merge( settings.to_rpc_options )
 
             options['scope'].delete( 'exclude_path_patterns' )
+            options['scope'].delete( 'exclude_content_patterns' )
 
             options['session'] = subject.site_role.to_rpc_options['session']
 
-            expect(rpc_options['scope'].delete( 'exclude_path_patterns' )).to eq(
-                [ 'exclude-this', 'exclude-this-too', 'exclude-that', 'exclude-that-too']
+            expect(rpc_options['scope'].delete( 'exclude_path_patterns' ).sort).to eq(
+                (subject.profile.scope_exclude_path_patterns |
+                    site.profile.scope_exclude_path_patterns |
+                    subject.site_role.scope_exclude_path_patterns).sort
+            )
+
+            expect(rpc_options['scope'].delete( 'exclude_content_patterns' ).sort).to eq(
+                (subject.profile.scope_exclude_content_patterns |
+                    site.profile.scope_exclude_content_patterns).sort
             )
 
             options['plugins']['autologin'] = {
