@@ -178,65 +178,28 @@ feature 'Profile index page' do
         end
 
         feature 'and the profile has scans' do
-            feature 'without revisions' do
-                before do
-                    profile.scans << scan
+            before do
+                profile.scans << scan
 
-                    login_as( user, scope: :user )
-                    visit profiles_path
-                end
-
-                # Scenario: Profiles without scan revisions are accompanied by edit links
-                #   Given I am signed in
-                #   When I visit the profile index page
-                #   And the profile has no associated scans with revisions
-                #   Then I see my profiles with edit links
-                scenario 'can edit' do
-                    expect(page).to have_xpath "//a[@href='#{edit_profile_path( profile )}']"
-                end
-
-                scenario 'can copy' do
-                    expect(page).to have_xpath "//a[@href='#{copy_profile_path( profile )}']"
-                end
-
-                # Scenario: Profiles without scan revisions are accompanied by delete links
-                #   Given I am signed in
-                #   When I visit the profile index page
-                #   And the profile has no associated scans with revisions
-                #   Then I see profiles with delete links
-                scenario 'cannot delete' do
-                    expect(page).to_not have_xpath "//a[@href='#{profile_path( profile )}' and @data-method='delete']"
-                end
+                login_as( user, scope: :user )
+                visit profiles_path
             end
 
-            feature 'with revisions' do
-                before do
-                    scan.revisions << FactoryGirl.create(:revision, scan: scan)
-                    profile.scans << scan
-                    visit profiles_path
-                end
+            scenario 'cannot edit' do
+                expect(find(:xpath, "//a[@href='#{edit_profile_path( profile )}']")[:class]).to include 'disabled'
+            end
 
-                # Scenario: Profiles with scans are not accompanied by edit links
-                #   Given I am signed in
-                #   When I visit the profile index page
-                #   And the profile has associated scans
-                #   Then I don't see edit links
-                scenario 'cannot edit' do
-                    expect(page).to_not have_xpath "//a[@href='#{edit_profile_path(profile)}']"
-                end
+            scenario 'can copy' do
+                expect(page).to have_xpath "//a[@href='#{copy_profile_path( profile )}']"
+            end
 
-                scenario 'can copy' do
-                    expect(page).to have_xpath "//a[@href='#{copy_profile_path( profile )}']"
-                end
-
-                # Scenario: Profiles with scans are not accompanied by delete links
-                #   Given I am signed in
-                #   When I visit the profile index page
-                #   And the profile has associated scans
-                #   Then I don't see delete links
-                scenario 'cannot delete' do
-                    expect(page).to_not have_xpath "//a[@href='#{profile_path( profile )}' and @data-method='delete']"
-                end
+            # Scenario: Profiles without scan revisions are accompanied by delete links
+            #   Given I am signed in
+            #   When I visit the profile index page
+            #   And the profile has no associated scans with revisions
+            #   Then I see profiles with delete links
+            scenario 'cannot delete' do
+                expect(find(:xpath, "//a[@href='#{profile_path( profile )}' and @data-method='delete']")[:class]).to include 'disabled'
             end
 
             feature 'when a profile is default' do
@@ -252,7 +215,7 @@ feature 'Profile index page' do
                 #   And the profile has associated scans
                 #   Then I don't see delete links
                 scenario 'cannot delete' do
-                    expect(page).to_not have_xpath "//a[@href='#{profile_path( profile )}' and @data-method='delete']"
+                    expect(find(:xpath, "//a[@href='#{profile_path( profile )}' and @data-method='delete']")[:class]).to include 'disabled'
                 end
             end
         end

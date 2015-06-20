@@ -95,8 +95,8 @@ feature 'Profile page', :devise do
                     end
                 end
 
-                scenario 'can edit' do
-                    expect(page).to have_xpath "//a[@href='#{edit_profile_path( subject )}']"
+                scenario 'cannot edit' do
+                    expect(find(:xpath, "//a[@href='#{edit_profile_path( subject )}']")[:class]).to include 'disabled'
                 end
 
                 scenario 'can copy' do
@@ -104,7 +104,7 @@ feature 'Profile page', :devise do
                 end
 
                 scenario 'cannot delete' do
-                    expect(page).to_not have_xpath "//a[@href='#{profile_path( subject )}' and @data-method='delete']"
+                    expect(find(:xpath, "//a[@href='#{profile_path( subject )}' and @data-method='delete']")[:class]).to include 'disabled'
                 end
             end
 
@@ -139,7 +139,7 @@ feature 'Profile page', :devise do
                 end
 
                 scenario 'cannot delete' do
-                    expect(page).to_not have_xpath "//a[@href='#{profile_path( subject )}' and @data-method='delete']"
+                    expect(find(:xpath, "//a[@href='#{profile_path( subject )}' and @data-method='delete']")[:class]).to include 'disabled'
                 end
             end
 

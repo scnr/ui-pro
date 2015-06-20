@@ -177,7 +177,7 @@ function setupScroll(){
 
 function setup() {
     // Init all tooltips.
-    $("[rel=tooltip]").tooltip();
+    $('[data-toggle="tooltip"]').tooltip();
 
     $('a[data-toggle="tab"]').on('shown.bs.tab', setupScroll);
 
