@@ -155,8 +155,17 @@ ul.sitemap {
 ul.sitemap > li {
     border-radius: 4px;
     display: block;
-    padding: 10px 15px;
+    padding: 5px 15px;
     position: relative;
+}
+
+#sitemap-entry-all .badge {
+    float: right
+}
+
+ul.sitemap > li:hover, ul.sitemap > li:focus {
+    background-color: #eeeeee;
+    text-decoration: none;
 }
 
 ul.sitemap > li.active {

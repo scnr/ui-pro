@@ -1,47 +1,54 @@
 <%
-   sitemap = @issues_summary[:sitemap_with_issues]
-   filter  = params[:filter][:pages]
+   sitemap                = @issues_summary[:sitemap_with_issues]
+   filter                 = params[:filter][:pages]
+   pre_page_filter_issues = @issues_summary[:pre_page_filter_issues]
+   total_max_severity     = pre_page_filter_issues.max_severity
+   pre_page_filter_issue_count = pre_page_filter_issues.size
 %>
 
 <ul class="sitemap">
-    <li id="sitemap-entry-all" class="sitemap-entry <%= 'active' if filter.empty? %>">
-        <%= link_to 'All', filter_params_without_page %>
+    <li
+        id="sitemap-entry-all" class="sitemap-entry <%= 'active' if filter.empty? %>"
+        title="<%= pluralize pre_page_filter_issue_count, 'issue' %> with a maximum severity of <%= total_max_severity %>."
+    >
+        <%= link_to "All #{pluralize sitemap.size, 'page'}", filter_params_without_page %>
 
-        <span class="badge">
-            <%= sitemap.size %>
-        </span>
+        <%= link_to filter_params_without_page do %>
+            <span class="badge badge-severity-<%= total_max_severity %>">
+                <%= pre_page_filter_issue_count %>
+            </span>
+        <% end %>
     </li>
 
     <% scoped_find_each(sitemap) do |entry|
-        active = filter.include?( entry.id.to_s )
+        active       = filter.include?( entry.id.to_s )
+        max_severity = entry.issues.max_severity
+        issue_count  = entry.issues.size
     %>
 
         <li
             class="with-list-info sitemap-entry
                 <%= 'active' if active %>
-                sitemap-entry-with<% 'out' if entry.issues.size == 0 %>-issues"
+                sitemap-entry-with<% 'out' if issue_count == 0 %>-issues"
             id="sitemap-entry-<%= entry.id %>"
+            title="<%= pluralize issue_count, 'issue' %> with a maximum severity of <%= max_severity %>."
         >
             <%= link_to_url_with_external(
                     external: entry.url,
                     internal: sitemap_entry_url( entry ),
                     display_path_only: true,
-                    class: ("text-severity text-severity-#{entry.issues.max_severity}" if !active)
+                    class: ("text-severity text-severity-#{max_severity}" if !active)
                 )
             %>
 
             <%= link_to sitemap_entry_url( entry ) do %>
-                <i class="fa fa-arrow-right"></i>
-            <% end %>
-
-            <% if entry.revision %>
-                <ul class="list-info">
-                    <li>
-                        <span>
-                            Has <%= pluralize entry.issues.size, 'issue' %>.
+                <i class="fa fa-arrow-right">
+                    <% if entry.revision %>
+                        <span class="badge badge-severity-<%= max_severity %>">
+                            <%= entry.issues.size if entry.revision %>
                         </span>
-                    </li>
-                </ul>
+                    <% end %>
+                </i>
             <% end %>
         </li>
     <% end %>

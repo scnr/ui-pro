@@ -16,24 +16,27 @@ module IssuesSummary
         issues = filter_states( issues )
         issues = filter_severities( issues )
 
+        pre_page_filter_issues = issues
+
         issue_ids = issues.pluck(:id)
 
         issues = filter_pages( issues )
 
         {
-            site:       data[:site],
-            site_scans: data[:site].scans.includes(:revisions).
-                            includes(:schedule).includes(:profile),
-            scans:      data[:scans],
-            revisions:  data[:revisions],
-            sitemap:    data[:sitemap],
-            sitemap_with_issues: data[:site].sitemap_entries.includes(:revision).
-                                     includes(revision: :scan).joins(:issues).
-                                     where( 'issues.id IN (?)', issue_ids ),
-            issues:     issues,
-            states:     states,
-            severities: severities,
-            chart_data: chart_data( issues )
+            site:                   data[:site],
+            site_scans:             data[:site].scans.includes(:revisions).
+                                        includes(:schedule).includes(:profile),
+            scans:                  data[:scans],
+            revisions:              data[:revisions],
+            sitemap:                data[:sitemap],
+            sitemap_with_issues:    data[:site].sitemap_entries.includes(:revision).
+                                        includes(revision: :scan).joins(:issues).
+                                        where( 'issues.id IN (?)', issue_ids ),
+            issues:                 issues,
+            pre_page_filter_issues: pre_page_filter_issues,
+            states:                 states,
+            severities:             severities,
+            chart_data:             chart_data( issues )
         }
     end
 

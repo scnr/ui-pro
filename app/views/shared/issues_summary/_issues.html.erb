@@ -85,7 +85,8 @@
                 <td>
                     <%= link_to site_scan_revision_issue_path( issue.site, issue.scan, issue.revision, issue ),
                                 title: issue.state.humanize do %>
-                        <i class="fa fa-<%= issue_state_to_icon issue.state %>"></i>
+                        <i class="fa fa-<%= issue_state_to_icon issue.state %>">
+                        </i>
                     <% end %>
                 </td>
 
