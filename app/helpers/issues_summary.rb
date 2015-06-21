@@ -127,7 +127,7 @@ module IssuesSummary
     def filter_pages( issues )
         return issues if params[:filter][:pages].empty?
 
-        @sitemap_entry = SitemapEntry.find( params[:filter][:pages].first )
+        @sitemap_entry = @site.sitemap_entries.find( params[:filter][:pages].first )
 
         issues.joins(:page).where(
             'issues.sitemap_entry_id IN (?) OR issue_pages.sitemap_entry_id IN (?)',
