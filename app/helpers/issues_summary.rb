@@ -19,6 +19,12 @@ module IssuesSummary
 
         issues = filter_pages( issues )
 
+        # OPTIMIZE:
+        #   Go over all issues and build a sitemap_with_issues Hash with the
+        #   relevant data to avoid subsequent SQL quires when building the
+        #   sitemap.
+        #   We'll be going over all issues anyways, the cache will be re-used
+        #   then.
         {
             site:                   data[:site],
             site_scans:             data[:site].scans.includes(:revisions).
