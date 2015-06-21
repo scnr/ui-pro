@@ -204,6 +204,7 @@ sites.each.with_index do |afr, si|
         scan.build_schedule
         scan.save
 
+        last_revision = nil
         revisions_per_scan.times do |j|
             break if issues.empty?
 
@@ -276,6 +277,18 @@ sites.each.with_index do |afr, si|
 
                 # ap sitemap_entry.reload.issues.size
             end
+
+            if last_revision
+                last_revision.issues.each do |iss|
+                    next if iss.state != 'fixed'
+
+                    iss.fixed_by_revision = revision
+                    iss.save
+                    ap iss.errors.messages
+                end
+            end
+
+            last_revision = revision
         end
     end
 end

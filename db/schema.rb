@@ -228,6 +228,7 @@ ActiveRecord::Schema.define(version: 20150406191208) do
     t.text     "proof"
     t.text     "signature"
     t.integer  "referring_issue_page_id"
+    t.integer  "fixed_by_revision_id"
     t.integer  "revision_id"
     t.integer  "issue_page_id"
     t.integer  "issue_type_id"

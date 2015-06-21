@@ -3,6 +3,9 @@ class Issue < ActiveRecord::Base
     STATES         = %w(trusted untrusted false_positive fixed)
 
     belongs_to :revision
+    belongs_to :fixed_by_revision, class_name: 'Revision',
+               foreign_key: 'fixed_by_revision_id'
+
     has_one :scan, through: :revision
     has_one :site, through: :scan
 
@@ -43,6 +46,10 @@ class Issue < ActiveRecord::Base
     default_scope do
         includes(:type).includes(:vector).by_severity.
             order('issue_types.name asc').order( state_order_sql )
+    end
+
+    def fixed_by_revision?
+        state == 'fixed' && fixed_by_revision
     end
 
     def to_s

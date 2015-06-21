@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe Issue do
     expect_it { to belong_to :revision }
+    expect_it { to belong_to :fixed_by_revision }
     expect_it { to belong_to(:page).dependent(:destroy) }
     expect_it { to belong_to(:referring_page).dependent(:destroy) }
     expect_it { to belong_to(:sitemap_entry).counter_cache(true)}
@@ -151,6 +152,54 @@ describe Issue do
                         issue.severity.name == severity.to_s
                     end
                 end
+            end
+        end
+    end
+
+    describe '#fixed_by_revision?' do
+        let(:fixer_revision) do
+            FactoryGirl.create( :revision, scan: scan )
+        end
+        subject do
+            FactoryGirl.create(
+                :issue_type,
+                name: 'a1',
+                severity: high_severity
+            ).issues.create(
+                state: 'trusted',
+                revision: revision
+            )
+        end
+
+        context 'when state is fixed' do
+            subject do
+                s = super()
+                s.state = 'fixed'
+                s
+            end
+
+            context 'and has #fixed_by_revision' do
+                subject do
+                    s = super()
+                    s.fixed_by_revision = fixer_revision
+                    s
+                end
+
+                it 'returns true' do
+                    expect(subject).to be_fixed_by_revision
+                end
+            end
+
+            context 'and has no #fixed_by_revision' do
+                it 'returns false' do
+                    expect(subject).to_not be_fixed_by_revision
+                end
+            end
+        end
+
+        context 'when state is not fixed' do
+            it 'returns false' do
+                expect(subject).to_not be_fixed_by_revision
             end
         end
     end

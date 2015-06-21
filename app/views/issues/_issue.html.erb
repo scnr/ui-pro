@@ -30,9 +30,22 @@
         </small>
     </h1>
 
-    <p class="pull-left label label-severity-<%= @issue.severity.to_s.downcase %>">
+    <p class="pull-left label label-emphasis label-severity-<%= @issue.severity.to_s.downcase %>">
         <%= @issue.severity.to_s.capitalize %> severity
     </p>
+
+    <% if @issue.fixed_by_revision? %>
+    <p class="pull-left label label-success label-emphasis">
+        Fixed by <%= link_to @issue.fixed_by_revision,
+                    site_scan_revision_path(
+                            @issue.site,
+                            @issue.scan,
+                            @issue.fixed_by_revision
+                    ) %>
+
+    </p>
+    <% end %>
+
 </div>
 
 <% has_references = @issue.type.references.any? || @issue.type.cwe %>

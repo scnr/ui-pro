@@ -94,6 +94,20 @@ feature 'Issue page' do
         scenario 'has severity label' do
             expect(header.find("p.label-severity-#{issue.type.severity}")).to have_content "#{issue.type.severity.capitalize} severity"
         end
+
+        feature 'when fixed by a revision' do
+            before do
+                issue.state = 'fixed'
+                issue.fixed_by_revision = revision
+                issue.save
+
+                refresh
+            end
+
+            scenario 'shows a link to the revision' do
+                expect(header.find('p.label-success')).to have_xpath "//a[@href='#{site_scan_revision_path( site, scan, revision )}']"
+            end
+        end
     end
 
     feature 'sidebar' do
