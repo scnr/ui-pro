@@ -68,7 +68,9 @@
                         <th>Name</th>
                     <% end %>
 
-                    <th>Resource</th>
+                    <% if !@sitemap_entry %>
+                        <th>Resource</th>
+                    <% end %>
 
                     <% if !@scan || !@revision %>
                         <th>Logged by</th>
@@ -97,14 +99,16 @@
                     </td>
                 <% end %>
 
-                <td>
-                    <%= link_to_url_with_external(
-                            external: issue.vector.action,
-                            internal: sitemap_entry_url( issue.vector.sitemap_entry ),
-                            display_path_only: true
-                        )
-                    %>
-                </td>
+                <% if !@sitemap_entry %>
+                    <td>
+                        <%= link_to_url_with_external(
+                                external: issue.vector.action,
+                                internal: sitemap_entry_url( issue.vector.sitemap_entry ),
+                                display_path_only: true
+                            )
+                        %>
+                    </td>
+                <% end %>
 
                 <% if !@scan || !@revision %>
                     <td>

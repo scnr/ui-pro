@@ -43,7 +43,7 @@ class Scan < ActiveRecord::Base
     end
 
     def scheduled?
-        !!(schedule && schedule.start_at)
+        !!(schedule && schedule.scheduled?)
     end
 
     def path=( p )

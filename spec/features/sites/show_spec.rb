@@ -501,8 +501,8 @@ feature 'Site page' do
                     scenario 'entries filter issues'
                     scenario 'URLs are color-coded by severity'
 
-                    scenario 'user sees amount of pages in the heading' do
-                        expect(sitemap.find('h3')).to have_text site.sitemap_entries.with_issues.size
+                    scenario 'user sees amount of pages' do
+                        expect(sitemap.find('#sitemap-entry-all')).to have_text site.sitemap_entries.with_issues.size
                     end
 
                     scenario 'includes pages with issues' do

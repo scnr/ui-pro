@@ -3,17 +3,13 @@
    filter  = params[:filter][:pages]
 %>
 
-<h3>
-    Pages with issues
-
-    <span class="badge">
-        <%= sitemap.size %>
-    </span>
-</h3>
-
 <ul class="sitemap">
     <li id="sitemap-entry-all" class="sitemap-entry <%= 'active' if filter.empty? %>">
         <%= link_to 'All', filter_params_without_page %>
+
+        <span class="badge">
+            <%= sitemap.size %>
+        </span>
     </li>
 
     <% scoped_find_each(sitemap) do |entry|
@@ -33,6 +29,10 @@
                     class: ("text-severity text-severity-#{entry.issues.max_severity}" if !active)
                 )
             %>
+
+            <%= link_to sitemap_entry_url( entry ) do %>
+                <i class="fa fa-arrow-right"></i>
+            <% end %>
 
             <% if entry.revision %>
                 <ul class="list-info">

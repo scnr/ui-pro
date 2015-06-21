@@ -1,23 +1,39 @@
 <% if @site.scanned? %>
-    <br/>
-    <%= render partial: 'shared/issues_summary/filter' %>
-    <hr/>
-
     <% if @issues_summary[:issues].any? %>
-        <%= render partial: 'shared/issues_summary/statistics' %>
-
-        <hr/>
-
         <div class="row">
             <div class="col-md-3 summary-sitemap-container" id="summary-sitemap">
                 <%= render partial: 'shared/issues_summary/sitemap' %>
             </div>
 
-            <div class="col-md-9 summary-issues-container" id="summary-issues">
-                <%= render partial: 'shared/issues_summary/issues' %>
+            <div class="col-md-9">
+                <div class="row">
+                    <div class="col-md-12">
+                        <%= render partial: 'shared/issues_summary/filter' %>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12" id="summary-data">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <%= render partial: 'shared/issues_summary/statistics' %>
+                                <hr/>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 summary-issues-container" id="summary-issues">
+                                <%= render partial: 'shared/issues_summary/issues' %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     <% else %>
+        <%= render partial: 'shared/issues_summary/filter' %>
+        <hr/>
+
         <p class="alert alert-info">
             No issues.
         </p>

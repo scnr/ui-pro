@@ -27,7 +27,9 @@
 
             <li class="with-list-info">
                 <ul class="nav nav-pills nav-stacked">
-                    <% scan.revisions.each do |revision| %>
+                    <%
+                       last_revision = nil
+                       scan.revisions.each do |revision| %>
                     <li class="<%= 'active' if @revision && @revision.id == revision.id %>">
 
                         <%= link_to [revision.scan.site, revision.scan, revision] do %>
@@ -36,8 +38,15 @@
                             <span class="text-muted">
                                 &ndash;
                                 <%= pluralize revision.sitemap_entries.size, 'new page' %>,
-                                10 fixed issues, <%= revision.issues.size %> new.
+
+                                <% if last_revision %>
+                                    <%= pluralize last_revision.issues.fixed.size, 'fixed issue' %>,
+                                <% end %>
+
+                                <%= revision.issues.size %> new.
                             </span>
+
+                            <i class="fa fa-arrow-right"></i>
                         <% end %>
                     </li>
 
@@ -61,7 +70,10 @@
                                 </small>
                             </li>
                         <% end %>
-                    <% end %>
+
+                    <%
+                       last_revision = revision
+                       end %>
                 </ul>
             </li>
             <% end %>

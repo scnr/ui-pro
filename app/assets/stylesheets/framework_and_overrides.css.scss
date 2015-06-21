@@ -245,7 +245,6 @@ section {
 .cascade-container div {
     display: inline-block;
     width: 100%;
-    border-top: 1px solid #eeeeee;
     padding: 10px;
 }
 
@@ -300,4 +299,8 @@ h1, h2, h3, h4, h5 {
 .table .alert {
     margin-bottom: 0;
     padding:       10px;
+}
+
+.tab-content {
+    padding-top: 10px;
 }

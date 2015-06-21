@@ -29,8 +29,7 @@ module IssuesSummary
             sitemap:    data[:sitemap],
             sitemap_with_issues: data[:site].sitemap_entries.includes(:revision).
                                      includes(revision: :scan).joins(:issues).
-                                     where( 'issues.id IN (?) OR sitemap_entries.id IN (?)',
-                                            issue_ids, params[:filter][:pages] ),
+                                     where( 'issues.id IN (?)', issue_ids ),
             issues:     issues,
             states:     states,
             severities: severities,
