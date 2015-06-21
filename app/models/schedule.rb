@@ -34,22 +34,36 @@ class Schedule < ActiveRecord::Base
 
     before_save :sanitize_start_at
 
+    scope :scheduled, -> do
+        where( 'start_at > ? OR day_frequency IS NOT NULL OR month_frequency IS NOT NULL', Time.now )
+    end
     scope :due, -> { where( 'start_at <= ?', Time.now ) }
 
-    def to_s
-        return '' if !recurring?
+    def scheduled?
+        start_at || day_frequency || month_frequency
+    end
 
-        s = []
+    def to_s
+        s = ''
+        if self.start_at
+            s = "on #{I18n.localize( self.start_at )}"
+        end
+
+        return s if !recurring?
+
+        parts = []
 
         if day_frequency
-            s << "#{day_frequency} #{'days'.pluralize(day_frequency)}"
+            parts << "#{day_frequency} #{'day'.pluralize( day_frequency )}"
         end
 
         if month_frequency
-            s << "#{month_frequency} #{'months'.pluralize(month_frequency)}"
+            parts << "#{month_frequency} #{'month'.pluralize( month_frequency )}"
         end
 
-        'every ' + s.join( ' & ' )
+        s << ' - ' if !s.empty?
+
+        s + 'every ' + parts.join( ' & ' )
     end
 
     def recurring?

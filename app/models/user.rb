@@ -5,6 +5,9 @@ class User < ActiveRecord::Base
     has_and_belongs_to_many :shared_sites, class_name: 'Site',
                             foreign_key: :user_id
 
+    has_many :scans, through: :sites
+    has_many :schedules, through: :scans
+
     # Include default devise modules. Others available are:
     # :confirmable, :lockable, :timeoutable and :omniauthable
     devise :database_authenticatable, :rememberable, :trackable, :registerable,

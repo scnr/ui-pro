@@ -57,6 +57,75 @@ describe Schedule do
                 expect(described_class.due).to eq due
             end
         end
+
+        describe 'scheduled' do
+            it 'returns records with a start date in the future' do
+                s = FactoryGirl.create(
+                    :scan,
+                    site: site,
+                    name: 'stuff3',
+                    schedule_attributes: {
+                        start_at: Time.now + 10000
+                    }
+                ).schedule
+
+                expect(described_class.scheduled).to include s
+            end
+
+            it 'returns records with a day_frequency' do
+                s = FactoryGirl.create(
+                    :scan,
+                    site: site,
+                    name: 'stuff3',
+                    schedule_attributes: {
+                        day_frequency: 1
+                    }
+                ).schedule
+
+                expect(described_class.scheduled).to include s
+            end
+
+            it 'returns records with a month_frequency' do
+                s = FactoryGirl.create(
+                    :scan,
+                    site: site,
+                    name: 'stuff3',
+                    schedule_attributes: {
+                        month_frequency: 1
+                    }
+                ).schedule
+
+                expect(described_class.scheduled).to include s
+            end
+
+            context 'when a start date is in the past' do
+                it 'is not included' do
+                    FactoryGirl.create(
+                        :scan,
+                        site: site,
+                        name: 'stuff3',
+                        schedule_attributes: {
+                            start_at: Time.now - 10000
+                        }
+                    )
+
+                    expect(described_class.scheduled).to be_empty
+                end
+            end
+
+            context 'when there are no scheduling data' do
+                it 'is not included' do
+                    FactoryGirl.create(
+                        :scan,
+                        site: site,
+                        name: 'stuff3',
+                        schedule_attributes: {}
+                    )
+
+                    expect(described_class.scheduled).to be_empty
+                end
+            end
+        end
     end
 
     describe 'validations' do
