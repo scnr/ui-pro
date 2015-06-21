@@ -305,8 +305,9 @@ ActiveRecord::Schema.define(version: 20150406191208) do
     t.string   "name"
     t.text     "description"
     t.text     "path"
-    t.integer  "revisions_count", default: 0
-    t.integer  "integer",         default: 0
+    t.integer  "revisions_count",           default: 0
+    t.integer  "integer",                   default: 0
+    t.boolean  "mark_missing_issues_fixed"
     t.integer  "site_id"
     t.integer  "user_agent_id"
     t.integer  "site_role_id"

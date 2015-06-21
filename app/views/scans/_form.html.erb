@@ -54,9 +54,10 @@
             </fieldset>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-3">
             <fieldset>
                 <legend>Frequency</legend>
+
                 Every
                 <%= sf.input :day_frequency,
                                   collection: (1..29),
@@ -64,6 +65,7 @@
                                   label: false,
                                   placeholder: 'Days (1-29)'
                 %> days and
+
                 <%= sf.input :month_frequency,
                                   collection: (1..12),
                                   as: :select,
@@ -71,6 +73,12 @@
                                   placeholder: 'Months (1-12)'
                 %>
                 months.
+
+                <br/>
+
+                <%= f.input :mark_missing_issues_fixed,
+                            label: 'Mark issues which do not appear in subsequent scans as fixed'
+                %>
             </fieldset>
         </div>
     </div>

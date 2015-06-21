@@ -113,6 +113,7 @@ class ScansController < ApplicationController
             :site_role_id,
             :profile_id,
             :user_agent_id,
+            :mark_missing_issues_fixed,
             {
                 schedule_attributes: [
                     :month_frequency,
