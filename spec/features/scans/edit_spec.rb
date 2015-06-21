@@ -135,7 +135,7 @@ feature 'Edit scan page' do
     scenario 'user can change mark_missing_issues_fixed' do
         expect(scan.mark_missing_issues_fixed).to be_falsey
 
-        check 'Mark issues which do not appear in subsequent scans as fixed'
+        check 'Mark issues which do not appear in subsequent revisions as fixed'
         click_button 'Update'
 
         expect(scan.reload.mark_missing_issues_fixed).to be_truthy

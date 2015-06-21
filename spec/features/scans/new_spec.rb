@@ -98,7 +98,7 @@ feature 'New scan page' do
         select 11, from: 'scan_schedule_attributes_month_frequency'
 
         check 'Suspend instead of aborting'
-        check 'Mark issues which do not appear in subsequent scans as fixed'
+        check 'Mark issues which do not appear in subsequent revisions as fixed'
 
         click_button 'Create'
 
