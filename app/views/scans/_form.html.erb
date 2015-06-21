@@ -8,7 +8,11 @@
         </div>
 
         <div class="form-inputs col-md-6">
-            <%= f.input :path, placeholder: '/', as: :string %>
+            <%= f.input :path,
+                        placeholder: '/',
+                        as: :string,
+                        disabled: @scan.revisions.any?
+            %>
 
             <%= f.association :site_role,
                               disabled: @scan.revisions.any?,

@@ -79,6 +79,7 @@ feature 'Edit scan page' do
         fill_in 'scan_schedule_attributes_stop_after_hours', with: 1.5
         select 10, from: 'scan_schedule_attributes_day_frequency'
         select 11, from: 'scan_schedule_attributes_month_frequency'
+        check 'Suspend instead of aborting'
 
         click_button 'Update'
 
@@ -98,6 +99,7 @@ feature 'Edit scan page' do
         expect(schedule.stop_after_hours).to eq 1.5
         expect(schedule.day_frequency).to eq 10
         expect(schedule.month_frequency).to eq 11
+        expect(schedule.stop_suspend).to be_truthy
 
         expect(scan).to be_scheduled
     end
@@ -130,6 +132,15 @@ feature 'Edit scan page' do
         expect(scan.reload.profile).to eq profile
     end
 
+    scenario 'user can change mark_missing_issues_fixed' do
+        expect(scan.mark_missing_issues_fixed).to be_falsey
+
+        check 'Mark issues which do not appear in subsequent scans as fixed'
+        click_button 'Update'
+
+        expect(scan.reload.mark_missing_issues_fixed).to be_truthy
+    end
+
     feature 'when the scan has at least one revision' do
         before do
             scan.revisions << FactoryGirl.create(:revision, scan: scan)
@@ -138,8 +149,20 @@ feature 'Edit scan page' do
             visit edit_site_scan_path( site, scan )
         end
 
+        scenario 'user cannot change the path' do
+            expect(page).to have_css '#scan_path.disabled'
+        end
+
         scenario 'user cannot change the profile' do
             expect(page).to have_css '#scan_profile_id.disabled'
+        end
+
+        scenario 'user cannot change the site role' do
+            expect(page).to have_css '#scan_site_role_id.disabled'
+        end
+
+        scenario 'user cannot change the user agent' do
+            expect(page).to have_css '#scan_user_agent_id.disabled'
         end
     end
 
