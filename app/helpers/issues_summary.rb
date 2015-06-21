@@ -20,11 +20,11 @@ module IssuesSummary
         issues = filter_pages( issues )
 
         # OPTIMIZE:
-        #   Go over all issues and build a sitemap_with_issues Hash with the
-        #   relevant data to avoid subsequent SQL quires when building the
-        #   sitemap.
-        #   We'll be going over all issues anyways, the cache will be re-used
-        #   then.
+        #   Instead of using SQL queries to build the data, iterate over the
+        #   'issues' and build Hashes.
+        #   We'll be iterating over the issues for the template anyways and
+        #   the SQL queries will be cached and re-used.
+        #   Much better than the boatload of SQL query calls we're doing now.
         {
             site:                   data[:site],
             site_scans:             data[:site].scans.includes(:revisions).
