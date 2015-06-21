@@ -192,8 +192,8 @@ feature 'Site page' do
                         expect(scans).to have_xpath "//a[@href='#{profile_path( scan.profile )}']"
                     end
 
-                    scenario 'user sees link' do
-                        expect(scans).to have_xpath "//a[@href='#{site_scan_path( site, scan )}' and not(@data-method)]"
+                    scenario 'user sees scan link with filtering options' do
+                        expect(scans).to have_xpath "//a[starts-with(@href, '#{site_scan_path( site, scan )}?filter') and not(@data-method)]"
                     end
 
                     feature 'when the scan is in progress' do
@@ -273,6 +273,16 @@ feature 'Site page' do
                 let(:severities) { @severities.values }
 
                 feature 'when filtering' do
+                    feature 'page' do
+                        scenario 'only shows issues for that page'
+
+                        feature 'that has no issues' do
+                            scenario 'message includes internal page URL'
+                            scenario 'message includes external page URL'
+                            scenario 'message includes URL without page filter'
+                        end
+                    end
+
                     ['Trusted', 'untrusted', 'false positive', 'fixed'].each do |type|
                         feature "#{type} issues for" do
                             feature 'inclusion' do
@@ -335,9 +345,9 @@ feature 'Site page' do
                                         end
                                     end
 
-                                    scenario 'user sees scan link' do
+                                    scenario 'user sees scan link with filtering options' do
                                         site.issues.each do |issue|
-                                            expect(issues.find("#summary-issue-#{issue.digest}")).to have_xpath "//a[@href='#{site_scan_path(issue.revision.scan.site, issue.revision.scan)}']"
+                                            expect(issues.find("#summary-issue-#{issue.digest}")).to have_xpath "//a[starts-with(@href, '#{site_scan_path(issue.revision.scan.site, issue.revision.scan)}?filter')]"
                                         end
                                     end
 
@@ -347,9 +357,9 @@ feature 'Site page' do
                                         end
                                     end
 
-                                    scenario 'user sees revision link' do
+                                    scenario 'user sees revision link with filtering options' do
                                         site.issues.each do |issue|
-                                            expect(issues.find("#summary-issue-#{issue.digest}")).to have_xpath "//a[@href='#{site_scan_revision_path(issue.revision.scan.site, issue.revision.scan, issue.revision)}']"
+                                            expect(issues.find("#summary-issue-#{issue.digest}")).to have_xpath "//a[starts-with(@href, '#{site_scan_revision_path(issue.revision.scan.site, issue.revision.scan, issue.revision)}?filter')]"
                                         end
                                     end
                                 end
@@ -499,7 +509,8 @@ feature 'Site page' do
                     let(:sitemap) { find '#summary-sitemap' }
 
                     scenario 'entries filter issues'
-                    scenario 'URLs are color-coded by severity'
+                    scenario 'URLs are color-coded by max severity'
+                    scenario 'shows amount of issues per entry'
 
                     scenario 'user sees amount of pages' do
                         expect(sitemap.find('#sitemap-entry-all')).to have_text site.sitemap_entries.with_issues.size
@@ -511,6 +522,10 @@ feature 'Site page' do
                         end
                     end
 
+                    feature 'when filtering criteria exclude some issues' do
+                        scenario 'the shown info only refers to the included issues'
+                    end
+
                     feature 'when no entry is selected' do
                         scenario 'the All link is .active' do
                             expect(sitemap.find( '#sitemap-entry-all' )[:class]).to include 'active'
@@ -519,6 +534,17 @@ feature 'Site page' do
 
                     feature 'when an entry is selected' do
                         scenario 'becomes .active'
+                    end
+                end
+            end
+
+            feature 'without issues' do
+                scenario 'shows notice'
+
+                feature 'and a filtered page' do
+                    feature 'which has issues' do
+                        scenario 'lists revisions which have issues for it'
+                        scenario 'lists scans which have issues for it'
                     end
                 end
             end

@@ -115,12 +115,27 @@
                     <td>
                         <% if @scan %>
                             <%= link_to "#{issue.revision.index.ordinalize} revision",
-                                        [site, issue.revision.scan, issue.revision] %>
+                                        site_scan_revision_path(
+                                                site,
+                                                issue.revision.scan,
+                                                issue.revision,
+                                                filter_params
+                                        ) %>
                         <% else %>
                             <%= link_to issue.revision.index.ordinalize,
-                                        [site, issue.revision.scan, issue.revision] %>
+                                        site_scan_revision_path(
+                                                site,
+                                                issue.revision.scan,
+                                                issue.revision,
+                                                filter_params
+                                        ) %>
 
-                            <%= link_to issue.revision.scan.name, [site, issue.revision.scan] %>
+                            <%= link_to issue.revision.scan.name,
+                                        site_scan_path(
+                                                site,
+                                                issue.revision.scan,
+                                                filter_params
+                                        ) %>
                         <% end %>
                     </td>
                 <% end %>

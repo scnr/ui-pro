@@ -6,7 +6,7 @@ class CreateRevisions < ActiveRecord::Migration
       t.integer :index
       t.datetime :started_at
       t.datetime :stopped_at
-      t.string :snapshot_location
+      t.text :snapshot_location
 
       t.timestamps
     end

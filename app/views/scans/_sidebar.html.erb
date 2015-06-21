@@ -5,7 +5,7 @@
 <ul id="scan-sidebar" class="nav nav-pills nav-stacked">
 
     <li>
-        <%= link_to @site do %>
+        <%= link_to site_path( @site, filter_params ) do %>
             <i class="fa fa-arrow-left"></i>
             Site overview
         <% end %>
@@ -14,7 +14,7 @@
     </li>
 
     <li class="<%= 'active' if request.path == site_scan_path( @site, @scan ) %>">
-        <%= link_to [@scan.site, @scan] do %>
+        <%= link_to site_scan_path( @scan.site, @scan, filter_params ) do %>
             Scan overview
         <% end %>
 
@@ -32,7 +32,7 @@
                        scan.revisions.each do |revision| %>
                     <li class="<%= 'active' if @revision && @revision.id == revision.id %>">
 
-                        <%= link_to [revision.scan.site, revision.scan, revision] do %>
+                        <%= link_to site_scan_revision_path( revision.scan.site, revision.scan, revision, filter_params ) do %>
                             #<%= revision.index %>
 
                             <span class="text-muted">

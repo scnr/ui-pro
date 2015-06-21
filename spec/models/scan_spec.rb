@@ -329,6 +329,13 @@ describe Scan do
         end
     end
 
+    describe '#to_s' do
+        it 'returns #name' do
+            subject.name = 'stuff'
+            expect(subject.to_s).to eq 'stuff'
+        end
+    end
+
     describe '#url' do
         it 'returns the site URL combined with the #path' do
             subject.path = '/stuff'

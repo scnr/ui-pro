@@ -8,7 +8,7 @@ class CreateHttpResponses < ActiveRecord::Migration
             t.text :body
             t.float :time
             t.string :return_code
-            t.string :return_message
+            t.text :return_message
             t.text :raw_headers
             t.belongs_to :responsable, polymorphic: true, index: true
 

@@ -6,6 +6,11 @@ module IssuesHelper
         "<pre class='data-dump'>#{ap.awesome( data )}</pre>".html_safe
     end
 
+    def filter_params
+        prepare_issue_filters
+        { filter: params[:filter] }
+    end
+
     def filter_params_without_page
         prepare_issue_filters
 

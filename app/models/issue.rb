@@ -57,6 +57,12 @@ class Issue < ActiveRecord::Base
         ret << ' END'
     end
 
+    def self.unique_revisions
+        Revision.where(
+            id: select( 'issues.revision_id' ).pluck( 'issues.revision_id' ).uniq
+        )
+    end
+
     def self.max_severity
         issue = by_severity.first
         return if !issue

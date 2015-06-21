@@ -548,19 +548,19 @@ feature 'Issue page' do
             let(:remarks) { identification.find '#identification-remarks' }
 
             scenario 'it shows them in groups' do
-                dude = remarks.find('ul.list-unstyled > li:nth-of-type(1)')
+                dude = remarks.find('ul.list-unstyled > li:nth-of-type(2)')
                 expect(dude.find('strong')).to have_content 'The dude'
 
                 dude_texts = dude.find( 'ul' )
-                expect(dude_texts.find( 'li:nth-of-type(1)' )).to have_content issue.remarks[0].text
-                expect(dude_texts.find( 'li:nth-of-type(2)' )).to have_content issue.remarks[1].text
+                expect(dude_texts.find( 'li:nth-of-type(1)' )).to have_content issue.remarks[1].text
+                expect(dude_texts.find( 'li:nth-of-type(2)' )).to have_content issue.remarks[0].text
 
-                other_dude = remarks.find('ul.list-unstyled > li:nth-of-type(2)')
+                other_dude = remarks.find('ul.list-unstyled > li:nth-of-type(1)')
                 expect(other_dude.find('strong')).to have_content 'The other dude'
 
                 other_dude_texts = other_dude.find( 'ul' )
-                expect(other_dude_texts.find( 'li:nth-of-type(1)' )).to have_content issue.remarks[2].text
-                expect(other_dude_texts.find( 'li:nth-of-type(2)' )).to have_content issue.remarks[3].text
+                expect(other_dude_texts.find( 'li:nth-of-type(1)' )).to have_content issue.remarks[3].text
+                expect(other_dude_texts.find( 'li:nth-of-type(2)' )).to have_content issue.remarks[2].text
             end
         end
 

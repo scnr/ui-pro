@@ -133,6 +133,10 @@ feature 'Scan page' do
 
                 scenario 'user sees amount of new issues'
 
+                scenario 'user sees revision link with filtering options' do
+                    expect(revisions).to have_xpath "//a[starts-with(@href, '#{site_scan_revision_path( site, scan, revision )}?filter') and not(@data-method)]"
+                end
+
                 feature 'when the revision is in progress' do
                     before do
                         revision.stopped_at = nil

@@ -46,6 +46,10 @@ class Scan < ActiveRecord::Base
         !!(schedule && schedule.scheduled?)
     end
 
+    def to_s
+        name
+    end
+
     def path=( p )
         p = p.to_s
         super p.start_with?( '/' ) ? p : "/#{p}"

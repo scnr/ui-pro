@@ -27,6 +27,18 @@ describe Issue do
         end
     end
 
+    let(:site) do
+        FactoryGirl.create( :site )
+    end
+
+    let(:scan) do
+        FactoryGirl.create( :scan, site: site )
+    end
+
+    let(:revision) do
+        FactoryGirl.create( :revision, scan: scan )
+    end
+
     describe 'scopes' do
         describe 'default' do
             it 'orders issues by severity and type name' do
@@ -143,18 +155,55 @@ describe Issue do
         end
     end
 
+    describe '.unique_revisions' do
+        it 'returns unique revisions' do
+            r1 = FactoryGirl.create( :revision, scan: scan )
+            r2 = FactoryGirl.create( :revision, scan: scan )
+            r3 = FactoryGirl.create( :revision, scan: scan )
+
+            type = FactoryGirl.create(
+                 :issue_type,
+                 name: 'a1',
+                 severity: high_severity
+            )
+
+            type.issues.create(
+                state: 'trusted',
+                revision: r1
+            )
+            type.issues.create(
+                state: 'trusted',
+                revision: r1
+            )
+            type.issues.create(
+                state: 'trusted',
+                revision: r1
+            )
+
+            type.issues.create(
+                state: 'trusted',
+                revision: r2
+            )
+            type.issues.create(
+                state: 'trusted',
+                revision: r2
+            )
+
+            type.issues.create(
+                state: 'trusted',
+                revision: r3
+            )
+
+            unique_revisions = described_class.unique_revisions
+
+            expect(unique_revisions).to be_kind_of Revision::ActiveRecord_Relation
+            expect(unique_revisions.pluck(:id)).to eq [r1.id, r2.id, r3.id]
+        end
+    end
+
     describe '.create_from_arachni' do
         let(:arachni_issue) do
             Factory[:issue]
-        end
-        let(:revision) do
-            FactoryGirl.create(
-                :revision,
-                scan: FactoryGirl.create(
-                    :scan,
-                    site: FactoryGirl.create( :site )
-                )
-            )
         end
 
         it "creates a #{described_class} from #{Arachni::Issue}" do

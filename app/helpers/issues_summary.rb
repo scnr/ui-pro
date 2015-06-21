@@ -7,15 +7,12 @@ module IssuesSummary
         end
 
         issues = data[:issues].includes(:referring_page).
-            includes(referring_page: :dom).includes(:revision).
-            includes(revision: :scan)
+            includes(referring_page: :dom).includes(:revision).includes(:scan)
 
         states     = count_states( issues )
         severities = count_severities( issues )
 
-        issues = filter_states( issues )
-        issues = filter_severities( issues )
-
+        issues = filter_issues( issues )
         pre_page_filter_issues = issues
 
         issue_ids = issues.pluck(:id)
@@ -50,7 +47,7 @@ module IssuesSummary
 
         last_severity = nil
 
-        type_ids = issues.group(:issue_type_id).pluck(:issue_type_id)
+        type_ids = issues.pluck(:issue_type_id).uniq
         IssueType.where( id: type_ids ).each do |type|
             severity = type.severity.to_sym
 
@@ -92,6 +89,10 @@ module IssuesSummary
         Issue::STATES.inject({}) do |h, state|
             h.merge! state => issues.send(state).count
         end
+    end
+
+    def filter_issues( issues )
+        filter_severities( filter_states( issues ) )
     end
 
     def filter_states( issues )

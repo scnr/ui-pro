@@ -22,8 +22,9 @@
 
     <% scoped_find_each(sitemap) do |entry|
         active       = filter.include?( entry.id.to_s )
-        max_severity = entry.issues.max_severity
-        issue_count  = entry.issues.size
+        entry_issues = filter_issues( entry.issues )
+        max_severity = entry_issues.max_severity
+        issue_count  = entry_issues.size
     %>
 
         <li
@@ -31,7 +32,7 @@
                 <%= 'active' if active %>
                 sitemap-entry-with<% 'out' if issue_count == 0 %>-issues"
             id="sitemap-entry-<%= entry.id %>"
-            title="<%= pluralize issue_count, 'issue' %> with a maximum severity of <%= max_severity %>."
+            title="<%= pluralize issue_count, 'issue' %> with a <%= 'maximum' if issue_count > 1 %> severity of <%= max_severity %>."
         >
             <%= link_to_url_with_external(
                     external: entry.url,

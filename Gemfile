@@ -28,6 +28,8 @@ gem 'ace-rails-ap'
 gem 'coderay'
 gem 'diffy'
 
+gem 'pg'
+
 group :doc do
     gem 'sdoc', '~> 0.4.0'
 end
@@ -35,7 +37,7 @@ end
 group :development do
     gem 'spring'
     gem 'better_errors'
-    gem 'binding_of_caller', platforms: [:mri_21]
+    gem 'binding_of_caller'#, platforms: [:mri_21]
     gem 'quiet_assets'
     gem 'rails_layout'
     gem 'bullet'
@@ -58,7 +60,6 @@ end
 
 group :development, :test do
     gem 'puma'
-    gem 'sqlite3'
     gem 'awesome_print'
 end
 

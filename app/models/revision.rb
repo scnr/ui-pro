@@ -16,7 +16,8 @@ class Revision < ActiveRecord::Base
     end
 
     def self.last_performed_at
-        order( stopped_at: :desc ).limit(1).pluck(:stopped_at).first
+        where.not( stopped_at: nil ).order( stopped_at: :desc ).limit(1).
+            pluck(:stopped_at).first
     end
 
     def self.in_progress?

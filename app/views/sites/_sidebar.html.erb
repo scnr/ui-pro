@@ -5,7 +5,7 @@
     <li>&nbsp;</li>
 
     <li class="<%= 'active' if request.path == site_path( @site ) %>">
-        <%= link_to @site do %>
+        <%= link_to site_path( @site, filter_params ) do %>
             Site overview
         <% end %>
 
@@ -14,7 +14,7 @@
 
     <% site_scans.each do |scan| %>
     <li>
-        <%= link_to [scan.site, scan] do %>
+        <%= link_to site_scan_path( scan.site, scan, filter_params ) do %>
             <%= scan.name %>
 
             <i class="fa fa-arrow-right"></i>
