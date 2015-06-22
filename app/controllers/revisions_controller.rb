@@ -1,5 +1,5 @@
 class RevisionsController < ApplicationController
-    include IssuesSummary
+    include IssuesHelper
 
     before_filter :authenticate_user!
 
@@ -13,7 +13,7 @@ class RevisionsController < ApplicationController
             site:      @scan.site,
             sitemap:   @revision.sitemap_entries,
             scans:     [@revision.scan],
-            revisions: [@revision],
+            revisions: @scan.revisions.order( id: :desc ),
             issues:    @revision.issues
         )
     end
@@ -34,7 +34,7 @@ class RevisionsController < ApplicationController
     private
 
     def set_scan
-        @scan = Scan.find_by_id( params[:scan_id] )
+        @scan = current_user.scans.joins(:revisions).find_by_id( params[:scan_id] )
 
         raise ActionController::RoutingError.new( 'Scan not found.' ) if !@scan
 

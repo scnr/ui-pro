@@ -2,12 +2,12 @@ class Issue < ActiveRecord::Base
     DEFAULT_STATES = 'trusted'
     STATES         = %w(trusted untrusted false_positive fixed)
 
-    belongs_to :revision
+    belongs_to :revision, counter_cache: true
     belongs_to :fixed_by_revision, class_name: 'Revision',
                foreign_key: 'fixed_by_revision_id'
 
-    has_one :scan, through: :revision
-    has_one :site, through: :scan
+    belongs_to :scan, counter_cache: true
+    belongs_to :site, counter_cache: true
 
     belongs_to :page, class_name: 'IssuePage', foreign_key: 'issue_page_id',
                dependent: :destroy
@@ -28,6 +28,8 @@ class Issue < ActiveRecord::Base
                 dependent: :destroy
 
     validates :state, presence: true, inclusion: { in: STATES }
+
+    before_save :set_owners
 
     STATES.each do |state|
         scope state, -> do
@@ -54,6 +56,41 @@ class Issue < ActiveRecord::Base
 
     def to_s
         "#{type.name} in #{vector.kind} input '#{vector.affected_input_name}'"
+    end
+
+    def revision=( rev )
+        self.scan = rev.scan
+        self.site = rev.site
+        super rev
+    end
+
+    def self.count_states
+        # We need to remove the order since we're counting fields that are
+        # used for ordering and PG will go ape.
+        counted_states = reorder('').group( 'issues.state' ).count
+
+        states = {}
+        Issue::STATES.each do |state|
+            states[state.to_s] = counted_states[state.to_s]
+            states[state.to_s] ||= 0
+        end
+
+        states
+    end
+
+    def self.count_severities
+        # We need to remove the order since we're counting fields that are
+        # used for ordering and PG will go ape.
+        counted_severities = reorder('').joins(:severity).
+            group( 'issue_type_severities.name' ).count
+
+        severities = {}
+        IssueTypeSeverity::SEVERITIES.each do |severity|
+            severities[severity.to_s] = counted_severities[severity.to_s]
+            severities[severity.to_s] ||= 0
+        end
+
+        severities
     end
 
     def self.state_order_sql
@@ -96,7 +133,7 @@ class Issue < ActiveRecord::Base
             referring_page: IssuePage.create_from_arachni( issue.referring_page ),
             vector:         Vector.create_from_arachni( issue.vector ),
             remarks:        issue_remarks,
-            platform:       (IssuePlatform.find_by_shortname( issue.platform_name.to_s ) if issue.platform_name),
+            platform:       (IssuePlatform.find_by_shortname( issue.platform_name.to_s ) if issue.platform_name)
        }.merge(options))
 
         issue.page.sitemap_entry = issue.get_sitemap_entry(
@@ -124,9 +161,16 @@ class Issue < ActiveRecord::Base
     end
 
     def get_sitemap_entry( options = {} )
-        site = revision.scan.site
         site.sitemap_entries.find_by_url( options[:url] ) ||
-            site.sitemap_entries.create( { revision: revision }.merge(options) )
+            site.sitemap_entries.create({
+                scan:     scan,
+                revision: revision
+            }.merge(options) )
+    end
+
+    def set_owners
+        # The revision setter handles this.
+        self.revision = revision
     end
 
 end

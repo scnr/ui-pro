@@ -1,5 +1,5 @@
 class ScansController < ApplicationController
-    include IssuesSummary
+    include IssuesHelper
 
     before_filter :authenticate_user!
 
@@ -19,7 +19,7 @@ class ScansController < ApplicationController
             site:      @site,
             sitemap:   @scan.sitemap_entries,
             scans:     [@scan],
-            revisions: @scan.revisions,
+            revisions: @scan.revisions.order( id: :desc ),
             issues:    @scan.issues
         )
     end
@@ -87,7 +87,7 @@ class ScansController < ApplicationController
 
     # Use callbacks to share common setup or constraints between actions.
     def set_scan
-        @scan = @site.scans.find( params[:id] )
+        @scan = @site.scans.includes(:revisions).find( params[:id] )
 
         raise ActionController::RoutingError.new( 'Scan not found.' ) if !@scan
     end

@@ -1,11 +1,13 @@
 class Revision < ActiveRecord::Base
     belongs_to :scan, counter_cache: true
+    belongs_to :site, counter_cache: true
     has_many :issues,  dependent: :destroy
-    has_many :sitemap_entries, counter_cache: true
+    has_many :sitemap_entries
 
     validates_presence_of :scan
 
     before_save :set_index
+    before_save :set_site
 
     scope :in_progress, -> do
         where.not( started_at: nil ).where( stopped_at: nil )
@@ -48,5 +50,9 @@ class Revision < ActiveRecord::Base
 
     def set_index
         self.index ||= scan.revisions.count + 1
+    end
+
+    def set_site
+        self.site = scan.site
     end
 end

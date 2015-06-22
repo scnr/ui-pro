@@ -457,7 +457,7 @@ feature 'Site page' do
                         let(:scans) { find '#site-sidebar' }
 
                         scenario 'user sees amount of pages' do
-                            expect(scans).to have_content "#{scan.sitemap_entries.size} pages"
+                            expect(scans).to have_content "#{scan.reload.sitemap_entries.size} pages"
                         end
 
                         scenario 'user sees amount of issues' do
@@ -474,7 +474,7 @@ feature 'Site page' do
                     end
 
                     scenario 'user sees total amount of pages' do
-                        expect(statistics).to have_text "out of #{site.sitemap_entries.size}"
+                        expect(statistics).to have_text "out of #{site.reload.sitemap_entries.size}"
                     end
 
                     scenario 'user sees amount of issues' do
@@ -486,11 +486,11 @@ feature 'Site page' do
                     end
 
                     scenario 'user sees amount of scan revisions' do
-                        expect(statistics).to have_text "#{site.revisions.size} revision"
+                        expect(statistics).to have_text "#{site.reload.revisions.size} revision"
                     end
 
                     scenario 'user sees amount of scans' do
-                        expect(statistics).to have_text "#{site.scans.size} scan"
+                        expect(statistics).to have_text "#{site.reload.scans.size} scan"
                     end
 
                     scenario 'user sees amount of issues by severity' do

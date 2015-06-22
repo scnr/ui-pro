@@ -1,9 +1,9 @@
 <%
    sitemap                = @issues_summary[:sitemap_with_issues]
    filter                 = params[:filter][:pages]
-   pre_page_filter_issues = @issues_summary[:pre_page_filter_issues]
-   total_max_severity     = pre_page_filter_issues.max_severity
-   pre_page_filter_issue_count = pre_page_filter_issues.size
+   pre_page_filter_data   = @issues_summary[:pre_page_filter_data]
+   total_max_severity     = pre_page_filter_data[:max_severity]
+   pre_page_filter_issue_count = pre_page_filter_data[:count]
 %>
 
 <ul class="sitemap">
@@ -20,35 +20,32 @@
         <% end %>
     </li>
 
-    <% scoped_find_each(sitemap) do |entry|
-        active       = filter.include?( entry.id.to_s )
-        entry_issues = filter_issues( entry.issues )
-        max_severity = entry_issues.max_severity
-        issue_count  = entry_issues.size
+    <% sitemap.each do |url, data|
+        active       = filter.include?( data[:id].to_s )
+        max_severity = data[:max_severity]
+        issue_count  = data[:issue_count]
     %>
 
         <li
             class="with-list-info sitemap-entry
                 <%= 'active' if active %>
                 sitemap-entry-with<% 'out' if issue_count == 0 %>-issues"
-            id="sitemap-entry-<%= entry.id %>"
+            id="sitemap-entry-<%= data[:id] %>"
             title="<%= pluralize issue_count, 'issue' %> with a <%= 'maximum' if issue_count > 1 %> severity of <%= max_severity %>."
         >
             <%= link_to_url_with_external(
-                    external: entry.url,
-                    internal: sitemap_entry_url( entry ),
+                    external: url,
+                    internal: data[:internal],
                     display_path_only: true,
                     class: ("text-severity text-severity-#{max_severity}" if !active)
                 )
             %>
 
-            <%= link_to sitemap_entry_url( entry ) do %>
+            <%= link_to data[:internal] do %>
                 <i class="fa fa-arrow-right">
-                    <% if entry.revision %>
-                        <span class="badge badge-severity-<%= max_severity %>">
-                            <%= entry.issues.size if entry.revision %>
-                        </span>
-                    <% end %>
+                    <span class="badge badge-severity-<%= max_severity %>">
+                        <%= data[:issue_count] %>
+                    </span>
                 </i>
             <% end %>
         </li>

@@ -199,7 +199,7 @@ describe Scan do
             end
 
             it 'returns true' do
-                expect(subject).to be_in_progress
+                expect(subject.reload).to be_in_progress
             end
         end
 
@@ -273,7 +273,7 @@ describe Scan do
             end
 
             it 'returns the time the last revision was performed' do
-                expect(subject.last_performed_at.to_s).to eq last_performed.performed_at.to_s
+                expect(subject.reload.last_performed_at.to_s).to eq last_performed.performed_at.to_s
             end
         end
 

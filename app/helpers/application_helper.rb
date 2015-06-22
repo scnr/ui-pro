@@ -1,5 +1,7 @@
 module ApplicationHelper
 
+    SCOPED_FIND_EACH_BATCH_SIZE = 1000
+
     def refreshable_partial( resource, options = {} )
         options[:path]    = refreshable_partial_channel_path( resource )
         options[:partial] = refreshable_partial_path( resource, options )
@@ -76,9 +78,13 @@ module ApplicationHelper
         }
     end
 
-    def scoped_find_each( scope, batch = 1000, &block )
-        (0..scope.size).step( batch ) do |i|
-            scope.offset(i).limit(batch).each(&block)
+    def scoped_find_each( scope, size: nil, batch: SCOPED_FIND_EACH_BATCH_SIZE, &block )
+        if scope.is_a? Array
+            scope.each(&block)
+        else
+            (0..(size || scope.size)).step( batch ) do |i|
+                scope.offset(i).limit(batch).each(&block)
+            end
         end
     end
 

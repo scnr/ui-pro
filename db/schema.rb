@@ -230,6 +230,8 @@ ActiveRecord::Schema.define(version: 20150406191208) do
     t.integer  "referring_issue_page_id"
     t.integer  "fixed_by_revision_id"
     t.integer  "revision_id"
+    t.integer  "scan_id"
+    t.integer  "site_id"
     t.integer  "issue_page_id"
     t.integer  "issue_type_id"
     t.integer  "issue_platform_id"
@@ -245,6 +247,8 @@ ActiveRecord::Schema.define(version: 20150406191208) do
   add_index "issues", ["issue_type_id"], name: "index_issues_on_issue_type_id", using: :btree
   add_index "issues", ["referring_issue_page_id"], name: "index_issues_on_referring_issue_page_id", using: :btree
   add_index "issues", ["revision_id"], name: "index_issues_on_revision_id", using: :btree
+  add_index "issues", ["scan_id"], name: "index_issues_on_scan_id", using: :btree
+  add_index "issues", ["site_id"], name: "index_issues_on_site_id", using: :btree
   add_index "issues", ["sitemap_entry_id"], name: "index_issues_on_sitemap_entry_id", using: :btree
   add_index "issues", ["state"], name: "index_issues_on_state", using: :btree
 
@@ -290,23 +294,30 @@ ActiveRecord::Schema.define(version: 20150406191208) do
 
   create_table "revisions", force: true do |t|
     t.integer  "scan_id"
+    t.integer  "site_id"
     t.string   "state"
     t.integer  "index"
     t.datetime "started_at"
     t.datetime "stopped_at"
     t.text     "snapshot_location"
+    t.integer  "issues_count",          default: 0
+    t.integer  "integer",               default: 0
+    t.integer  "sitemap_entries_count", default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "revisions", ["scan_id"], name: "index_revisions_on_scan_id", using: :btree
+  add_index "revisions", ["site_id"], name: "index_revisions_on_site_id", using: :btree
 
   create_table "scans", force: true do |t|
     t.string   "name"
     t.text     "description"
     t.text     "path"
-    t.integer  "revisions_count", default: 0
-    t.integer  "integer",         default: 0
+    t.integer  "revisions_count",       default: 0
+    t.integer  "integer",               default: 0
+    t.integer  "issues_count",          default: 0
+    t.integer  "sitemap_entries_count", default: 0
     t.integer  "site_id"
     t.integer  "user_agent_id"
     t.integer  "site_role_id"
@@ -397,19 +408,26 @@ ActiveRecord::Schema.define(version: 20150406191208) do
     t.integer  "issue_pages_count", default: 0
     t.integer  "vectors_count",     default: 0
     t.integer  "site_id"
+    t.integer  "scan_id"
     t.integer  "revision_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "sitemap_entries", ["revision_id"], name: "index_sitemap_entries_on_revision_id", using: :btree
+  add_index "sitemap_entries", ["scan_id"], name: "index_sitemap_entries_on_scan_id", using: :btree
   add_index "sitemap_entries", ["site_id"], name: "index_sitemap_entries_on_site_id", using: :btree
   add_index "sitemap_entries", ["url", "site_id"], name: "index_sitemap_entries_on_url_and_site_id", unique: true, using: :btree
 
   create_table "sites", force: true do |t|
     t.integer  "protocol"
     t.string   "host"
-    t.integer  "port",       default: 80
+    t.integer  "port",                  default: 80
+    t.integer  "scans_count",           default: 0
+    t.integer  "integer",               default: 0
+    t.integer  "revisions_count",       default: 0
+    t.integer  "issues_count",          default: 0
+    t.integer  "sitemap_entries_count", default: 0
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"

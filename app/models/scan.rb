@@ -1,5 +1,5 @@
 class Scan < ActiveRecord::Base
-    belongs_to :site
+    belongs_to :site, counter_cache: true
     belongs_to :site_role
     belongs_to :profile
     belongs_to :user_agent
@@ -8,8 +8,8 @@ class Scan < ActiveRecord::Base
     accepts_nested_attributes_for :schedule
 
     has_many :revisions, dependent: :destroy
-    has_many :issues, through: :revisions
-    has_many :sitemap_entries, through: :revisions
+    has_many :issues
+    has_many :sitemap_entries
 
     validates_associated    :schedule
 
@@ -35,10 +35,12 @@ class Scan < ActiveRecord::Base
     scope :with_revisions, -> { joins(:revisions).where.not( revisions: { id: nil } ) }
 
     def in_progress?
+        return if revisions.size == 0
         revisions.in_progress?
     end
 
     def last_performed_at
+        return if revisions.size == 0
         revisions.last_performed_at
     end
 

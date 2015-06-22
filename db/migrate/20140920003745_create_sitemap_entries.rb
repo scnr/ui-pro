@@ -10,6 +10,7 @@ class CreateSitemapEntries < ActiveRecord::Migration
             # We could have done this via a through :revisions association in
             # the model but we need it here for deduplication and easier analytics.
             t.belongs_to :site, index: true
+            t.belongs_to :scan, index: true
             t.belongs_to :revision, index: true
 
             t.timestamps

@@ -129,6 +129,26 @@ section {
     background-color: $severity-informational-color;
 }
 
+.bg-severity {
+    @extend .bg;
+}
+
+.bg-severity-high {
+    background-color: #fbe9ea;
+}
+
+.bg-severity-medium {
+    background-color: #fff2e7;
+}
+
+.bg-severity-low {
+    background-color: #fef7ed;
+}
+
+.bg-severity-informational {
+    background-color: #e9f1f8;
+}
+
 .label-emphasis {
     font-size: 12px;
 }
@@ -159,7 +179,7 @@ section {
 }
 
 .btn-severity-medium {
-    background-color: $severity-medium-color;
+    fill: $severity-medium-color;
 }
 
 .btn-severity-low {

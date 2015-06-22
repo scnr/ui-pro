@@ -11,6 +11,8 @@ class CreateIssues < ActiveRecord::Migration
             t.integer :referring_issue_page_id
             t.integer :fixed_by_revision_id
             t.belongs_to :revision, index: true
+            t.belongs_to :scan, index: true
+            t.belongs_to :site, index: true
             t.belongs_to :issue_page, index: true
             t.belongs_to :issue_type, index: true
             t.belongs_to :issue_platform, index: true

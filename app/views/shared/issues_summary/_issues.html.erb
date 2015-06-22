@@ -23,7 +23,7 @@
         <hr/>
     <% end %>
 
-    <div class="row" id="issue-summary-severity-<%= severity %>">
+    <div class="row bg-severity-<%= severity %>" id="issue-summary-severity-<%= severity %>">
         <div class="col-md-12">
 
             <h3>
@@ -117,7 +117,7 @@
                             <%= link_to "#{issue.revision.index.ordinalize} revision",
                                         site_scan_revision_path(
                                                 site,
-                                                issue.revision.scan,
+                                                issue.scan,
                                                 issue.revision,
                                                 filter_params
                                         ) %>
@@ -125,15 +125,15 @@
                             <%= link_to issue.revision.index.ordinalize,
                                         site_scan_revision_path(
                                                 site,
-                                                issue.revision.scan,
+                                                issue.scan,
                                                 issue.revision,
                                                 filter_params
                                         ) %>
 
-                            <%= link_to issue.revision.scan.name,
+                            <%= link_to issue.scan.name,
                                         site_scan_path(
                                                 site,
-                                                issue.revision.scan,
+                                                issue.scan,
                                                 filter_params
                                         ) %>
                         <% end %>

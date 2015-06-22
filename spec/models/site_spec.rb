@@ -347,8 +347,8 @@ describe Site, type: :model do
     describe '#revision_in_progress' do
         context 'when the site has a revisions that has started but not stopped' do
             before do
-                scan.revisions << revision
-                scan.revisions << FactoryGirl.create(
+                revision
+                FactoryGirl.create(
                     :revision,
                     scan: scan,
                     stopped_at: nil
@@ -363,7 +363,7 @@ describe Site, type: :model do
             end
 
             it 'returns the first one' do
-                expect(subject.revision_in_progress).to eq revision
+                expect(subject.reload.revision_in_progress).to eq revision
             end
         end
 

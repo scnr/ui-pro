@@ -1,5 +1,5 @@
 <%
-   site_scans = @issues_summary[:scans]
+   scans = @issues_summary[:scans]
 %>
 <ul id="site-sidebar" class="nav nav-pills nav-stacked">
     <li>&nbsp;</li>
@@ -12,7 +12,7 @@
         <hr/>
     </li>
 
-    <% site_scans.each do |scan| %>
+    <% scans.each do |scan| %>
     <li>
         <%= link_to site_scan_path( scan.site, scan, filter_params ) do %>
             <%= scan.name %>
@@ -28,7 +28,7 @@
                     <%= pluralize scan.revisions.size, 'revision' %>,
                     <%= pluralize scan.sitemap_entries.size, 'page' %> &
                     <%= pluralize scan.issues.size, 'issue' %>
-                    using <%= link_to scan.profile, scan.profile %>.
+                    using <%= link_to scan.profile %>.
                 <% elsif scan.scheduled? %>
                     Running <%= link_to scan.schedule, '#' %>.
                 <% else %>

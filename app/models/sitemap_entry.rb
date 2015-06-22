@@ -1,6 +1,7 @@
 class SitemapEntry < ActiveRecord::Base
-    belongs_to :site
-    belongs_to :revision
+    belongs_to :site, counter_cache: true
+    belongs_to :scan, counter_cache: true
+    belongs_to :revision, counter_cache: true
 
     has_many :issues
     has_many :vectors
@@ -10,7 +11,21 @@ class SitemapEntry < ActiveRecord::Base
     scope :without_issues, -> { joins(:issues).where( issues: { sitemap_entry_id: nil } ) }
     default_scope { includes(:issues).order(:url).uniq }
 
+    before_save :set_owners
+
     def self.with_issues_in_revision( revision )
         joins(:issues).where( issues: revision.issues )
+    end
+
+    def set_owners
+        if revision
+            self.scan = revision.scan
+        end
+
+        if scan
+            self.site = scan.site
+        end
+
+        true
     end
 end

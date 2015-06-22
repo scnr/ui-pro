@@ -1,5 +1,5 @@
 class SitesController < ApplicationController
-    include IssuesSummary
+    include IssuesHelper
 
     before_filter :authenticate_user!
 
@@ -74,7 +74,7 @@ class SitesController < ApplicationController
 
     # Use callbacks to share common setup or constraints between actions.
     def set_site
-        @site = current_user.sites.find_by_id( params[:id] )
+        @site = current_user.sites.includes(:profile).find_by_id( params[:id] )
 
         raise ActionController::RoutingError.new( 'Site not found.' ) if !@site
     end
@@ -118,16 +118,16 @@ class SitesController < ApplicationController
     end
 
     def prepare_show_data
-        if @site.scans.empty?
+        if @site.scans.size == 0
             @scan = @site.scans.new
             @scan.build_schedule
             @active_tab = 'scan-form'
         else
-            @scans = @site.scans
+            @scans = @site.scans.order( id: :desc )
             @issues_summary = issues_summary_data(
                 site:      @site,
                 sitemap:   @site.sitemap_entries,
-                scans:     @site.scans,
+                scans:     @scans,
                 revisions: @site.revisions,
                 issues:    @site.issues
             )

@@ -6,22 +6,11 @@ module IssuesHelper
         "<pre class='data-dump'>#{ap.awesome( data )}</pre>".html_safe
     end
 
-    def filter_params
-        prepare_issue_filters
-        { filter: params[:filter] }
-    end
-
-    def filter_params_without_page
-        prepare_issue_filters
-
-        np         = params[:filter].dup
-        np[:pages] = []
-        { filter: np }
-    end
-
     def sitemap_entry_url( sitemap_entry )
         filter_params_without_page.merge(
-            'filter[pages][]' => sitemap_entry.id
+            'filter[pages][]' =>
+                sitemap_entry.is_a?( Integer ) ?
+                    sitemap_entry : sitemap_entry.id
         )
     end
 

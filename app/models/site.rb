@@ -52,7 +52,8 @@ class Site < ActiveRecord::Base
     end
 
     def revision_in_progress
-        revisions.in_progress.first
+        return if revisions.size == 0
+        revisions.includes(:scan).in_progress.first
     end
 
     def scanned?

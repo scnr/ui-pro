@@ -24,7 +24,7 @@ describe Issue do
         end
 
         let("#{severity}_severity_issue") do
-            send( "#{severity}_severity_type" ).issues.create( state: 'trusted' )
+            send( "#{severity}_severity_type" ).issues.create( state: 'trusted', revision: revision )
         end
     end
 
@@ -95,21 +95,21 @@ describe Issue do
                                          severity: informational_severity
                 )
 
-                ha.issues.create( state: 'trusted' )
-                hc.issues.create( state: 'trusted' )
-                hb.issues.create( state: 'trusted' )
+                ha.issues.create( state: 'trusted', revision: revision )
+                hc.issues.create( state: 'trusted', revision: revision )
+                hb.issues.create( state: 'trusted', revision: revision )
 
-                ma.issues.create( state: 'trusted' )
-                mc.issues.create( state: 'trusted' )
-                mb.issues.create( state: 'trusted' )
+                ma.issues.create( state: 'trusted', revision: revision )
+                mc.issues.create( state: 'trusted', revision: revision )
+                mb.issues.create( state: 'trusted', revision: revision )
 
-                la.issues.create( state: 'trusted' )
-                lc.issues.create( state: 'trusted' )
-                lb.issues.create( state: 'trusted' )
+                la.issues.create( state: 'trusted', revision: revision )
+                lc.issues.create( state: 'trusted', revision: revision )
+                lb.issues.create( state: 'trusted', revision: revision )
 
-                ia.issues.create( state: 'trusted' )
-                ic.issues.create( state: 'trusted' )
-                ib.issues.create( state: 'trusted' )
+                ia.issues.create( state: 'trusted', revision: revision )
+                ic.issues.create( state: 'trusted', revision: revision )
+                ib.issues.create( state: 'trusted', revision: revision )
 
                 expect(described_class.all.map(&:type).map(&:name)).to eq %w(a1 b1 c1 a2 b2 c2 a3 b3 c3 a4 b4 c4)
             end
@@ -121,7 +121,7 @@ describe Issue do
 
                     # Create issues of all states
                     Issue::STATES.each do |s|
-                        described_class.create( state: s )
+                        described_class.create( state: s, revision: revision )
                     end
 
                     issues = Issue.send( state )
@@ -238,7 +238,7 @@ describe Issue do
                 revision: r2
             )
 
-            type.issues.create(
+            i = type.issues.create(
                 state: 'trusted',
                 revision: r3
             )
