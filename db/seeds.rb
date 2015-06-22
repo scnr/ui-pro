@@ -192,12 +192,58 @@ sites.each.with_index do |afr, si|
     scans_size.times do |i|
         break if issues.empty?
 
+        site.scans.create(
+            profile:             p,
+            site_role:           site.roles[i % site.roles.size],
+            user_agent:          user_agent,
+            name:                "my scheduled scan #{i}",
+            schedule_attributes: {
+                start_at: Time.now + 3600
+            }
+        )
+
+        site.scans.create(
+            profile:              p,
+            site_role:           site.roles[i % site.roles.size],
+            user_agent:          user_agent,
+            name:                "my scheduled scan #{i+1}",
+            schedule_attributes: {
+                day_frequency:   10,
+                month_frequency: 1
+            }
+        )
+
+        site.scans.create(
+            profile:             p,
+            site_role:           site.roles[i % site.roles.size],
+            user_agent:          user_agent,
+            name:                "my scheduled scan #{i+2}",
+            schedule_attributes: {
+                day_frequency:    1,
+                stop_after_hours: 10
+            }
+        )
+
+        site.scans.create(
+            profile:             p,
+            site_role:           site.roles[i % site.roles.size],
+            user_agent:          user_agent,
+            name:                "my scheduled scan #{i+3}",
+            schedule_attributes: {
+                start_at:         Time.now + 3600,
+                day_frequency:    1,
+                month_frequency:  2,
+                stop_after_hours: 10
+            }
+        )
+
+
         puts "[#{i}] Creating scan"
         scan = site.scans.create(
             profile:     p,
             site_role:   site.roles[i % site.roles.size],
             user_agent:  user_agent,
-            name:        "my scan #{i}",
+            name:        "my scan #{i+4}",
             description: 'my description'
         )
 
