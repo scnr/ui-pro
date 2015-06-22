@@ -8,7 +8,8 @@
 
 <ul class="sitemap">
     <li
-        id="sitemap-entry-all" class="sitemap-entry <%= 'active' if filter.empty? %>"
+        id="sitemap-entry-all"
+        class="bg-severity-<%= total_max_severity %> sitemap-entry <%= 'active' if filter.empty? %>"
         title="<%= pluralize pre_page_filter_issue_count, 'issue' %> with a maximum severity of <%= total_max_severity %>."
     >
         <%= link_to "All #{pluralize sitemap.size, 'page'}", filter_params_without_page %>
@@ -28,6 +29,7 @@
 
         <li
             class="with-list-info sitemap-entry
+                bg-severity-<%= max_severity %>
                 <%= 'active' if active %>
                 sitemap-entry-with<% 'out' if issue_count == 0 %>-issues"
             id="sitemap-entry-<%= data[:id] %>"
