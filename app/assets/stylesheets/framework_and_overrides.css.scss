@@ -253,15 +253,15 @@ section {
 .cascade-container {
     -moz-column-count: 2;
     -moz-column-gap: 10px;
-    -moz-column-rule: 1px solid #eeeeee;
+    -moz-column-rule: 1px solid #ccc;
 
     -webkit-column-count: 2;
     -webkit-column-gap: 10px;
-    -webkit-column-rule: 1px solid #eeeeee;
+    -webkit-column-rule: 1px solid #ccc;
 
     column-count: 2;
     column-gap: 10px;
-    column-rule: 1px solid #eeeeee;
+    column-rule: 1px solid #ccc;
 
     width: 100%;
 }
