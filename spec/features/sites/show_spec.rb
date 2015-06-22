@@ -312,15 +312,9 @@ feature 'Site page' do
                     let(:issues) { find '#summary-issues' }
 
                     feature 'grouped by severity' do
-                        scenario 'user sees color-coded headings' do
+                        scenario 'user sees color-coded containers' do
                             IssueTypeSeverity::SEVERITIES.each do |severity|
-                                expect(issues.find("h3 span.text-severity-#{severity}")).to have_content "#{severity.capitalize} severity"
-                            end
-                        end
-
-                        scenario 'user sees amount of issues in the heading' do
-                            IssueTypeSeverity::SEVERITIES.each do |severity|
-                                expect(issues.find("h3 span.badge-severity-#{severity}")).to have_content site.issues.send("#{severity}_severity").size
+                                expect(issues.find("div#issue-summary-severity-#{severity}")[:class]).to include "bg-severity-#{severity}"
                             end
                         end
 
