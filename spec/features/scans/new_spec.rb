@@ -98,7 +98,6 @@ feature 'New scan page' do
         select 11, from: 'scan_schedule_attributes_month_frequency'
 
         check 'Suspend instead of aborting'
-        check 'Mark issues which do not appear in subsequent revisions as fixed'
 
         click_button 'Create'
 
@@ -111,7 +110,6 @@ feature 'New scan page' do
         expect(scan.user_agent).to eq user_agent
         expect(scan.site_role).to eq site_role
         expect(scan.profile).to eq profile
-        expect(scan.mark_missing_issues_fixed).to be_truthy
 
         schedule = scan.schedule
 

@@ -132,15 +132,6 @@ feature 'Edit scan page' do
         expect(scan.reload.profile).to eq profile
     end
 
-    scenario 'user can change mark_missing_issues_fixed' do
-        expect(scan.mark_missing_issues_fixed).to be_falsey
-
-        check 'Mark issues which do not appear in subsequent revisions as fixed'
-        click_button 'Update'
-
-        expect(scan.reload.mark_missing_issues_fixed).to be_truthy
-    end
-
     feature 'when the scan has at least one revision' do
         before do
             scan.revisions << FactoryGirl.create(:revision, scan: scan)
