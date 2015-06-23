@@ -1,5 +1,6 @@
 <%
-   revisions = @issues_summary[:revisions]
+   revisions     = @issues_summary[:revisions]
+   revision_data = @issues_summary[:revision_data]
 %>
 
 <ul id="scan-sidebar" class="nav nav-pills nav-stacked">
@@ -23,29 +24,52 @@
 
     <%
        last_revision = nil
-       revisions.each do |revision| %>
-    <li class="<%= 'active' if @revision && @revision.id == revision.id %>">
+       revisions.each do |revision|
+           active = (@revision && @revision.id == revision.id)
+
+           max_severity   = revision_data[revision.id] ?
+                   revision_data[revision.id][:max_severity] : nil
+
+           issue_count    = revision_data[revision.id] ?
+                   revision_data[revision.id][:issue_count] : 0
+
+           if issue_count == 0
+               max_severity = 'none'
+           end
+    %>
+
+    <li
+        <% if issue_count > 0 %>
+            title="<%= pluralize issue_count, 'new issue' %> with a maximum severity of <%= max_severity %>."
+        <% else %>
+            title="<%= pluralize issue_count, 'new issue' %>."
+        <% end %>
+
+        class="<%= 'active' if active %>"
+    >
 
         <%= link_to site_scan_revision_path( revision.scan.site, revision.scan, revision, filter_params ) do %>
             #<%= revision.index %>
 
             <span class="text-muted">
                 &ndash;
-                <%= pluralize revision.sitemap_entries.size, 'new page' %>,
+                <%= pluralize revision.sitemap_entries.size, 'new page' %>
 
                 <% if last_revision %>
-                    <%= pluralize last_revision.issues.fixed.size, 'fixed issue' %>,
+                    , <%= last_revision.issues.fixed.size %> fixed issues.
                 <% end %>
-
-                <%= revision.issues.size %> new.
             </span>
 
-            <i class="fa fa-arrow-right"></i>
+            <span>
+                <span class="badge badge-severity-<%= max_severity %>">
+                    <%= issue_count %>
+                </span>
+            </span>
         <% end %>
     </li>
 
         <% if (performed_at = revision.performed_at) %>
-        <li>
+        <li class="sidebar-info">
             <small>
                 <span class="text-muted">
                     Performed on <%= l performed_at %>.
@@ -55,14 +79,14 @@
         <% end %>
 
         <% if revision.in_progress? %>
-            <li>
-                <small>
-                    <span class="text-muted">
-                        <i class="fa fa-spin fa-circle-o-notch"></i>
-                        Started on <%= l revision.started_at %>.
-                    </span>
-                </small>
-            </li>
+        <li class="sidebar-info">
+            <small>
+                <span class="text-muted">
+                    <i class="fa fa-spin fa-circle-o-notch"></i>
+                    Started on <%= l revision.started_at %>.
+                </span>
+            </small>
+        </li>
         <% end %>
 
     <%

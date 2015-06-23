@@ -6,9 +6,13 @@ module IssuesSummary
                 includes(:schedule).includes(:profile)
         end
 
-        issues = data[:issues].includes(:site).includes(:scan).includes(:revision).
-            includes(:type).includes(:severity).
-            includes(:vector).includes( vector: :sitemap_entry )
+        issues         = preload_issue_associations( data[:issues] )
+        sitemap_issues = nil
+
+        if filter_pages?
+            @sitemap_entry = @site.sitemap_entries.find( params[:filter][:pages].first )
+            sitemap_issues = preload_issue_associations( @sitemap_entry.issues )
+        end
 
         # This needs to happen here, we want this for filtering feedback and
         # thus has to refer to the big, pre-filtering picture.
@@ -20,11 +24,20 @@ module IssuesSummary
         sitemap_with_issues  = {}
         chart_data           = {}
         pre_page_filter_data = {}
+        scan_data            = {}
+        revision_data        = {}
 
         page_filtered_issues = []
         max_severity         = nil
 
         pre_page_filter_data[:count] = issues.size
+
+        # If we're filtering by page, also filter out scans and revisions which
+        # haven't logged issues for it.
+        if filter_pages?
+            data[:scans]     = Set.new
+            data[:revisions] = Set.new
+        end
 
         # Page filters should not affect the sitemap because it needs to show
         # all pages, so it takes place here.
@@ -41,12 +54,34 @@ module IssuesSummary
             update_sitemap_data( sitemap_with_issues, issue )
 
             # First level page issue filtering here...
-            if filter_pages? && !page_id_in_filter?( issue.vector.sitemap_entry_id )
-                next
+            if filter_pages?
+                next if @sitemap_entry != issue.vector.sitemap_entry
+
+                # Only include scans and revisions for issues for the page
+                # and scan we're filtering for.
+                data[:scans] << issue.scan
+                sitemap_issues.each do |i|
+                    next if @scan && i.scan != @scan
+                    data[:revisions] << i.revision
+                end
             end
 
             #... because we at least want to grab the filtered max severity now...
             max_severity ||= issue.severity.to_s
+
+            scan_data[issue.scan_id] ||= {}
+            scan_data[issue.scan_id][:max_severity] ||= issue.severity.to_s
+
+            scan_data[issue.scan_id][:issue_count] ||= 0
+            scan_data[issue.scan_id][:issue_count]  += 1
+
+            revision_data[issue.revision_id] ||= {}
+            revision_data[issue.revision_id][:max_severity] ||= issue.severity.to_s
+
+            revision_data[issue.revision_id][:issue_count] ||= 0
+            revision_data[issue.revision_id][:issue_count]  += 1
+
+            next if @revision && @revision.id != issue.revision.id
 
             # ... but only store the issues if their count is bellow the acceptable
             # batch size.
@@ -57,6 +92,15 @@ module IssuesSummary
             page_filtered_issues << issue
         end
 
+        # If we're in scan overview and the scan only has one revision, redirect
+        # to it.
+        if @scan && !@revision && data[:revisions].size == 1
+            redirect_to site_scan_revision_path(
+                @site, @scan, data[:revisions].first, filter_params
+            )
+            return
+        end
+
         if chart_data[:severity_regions]
             chart_data[:severity_regions] = chart_data[:severity_regions].values
         end
@@ -65,30 +109,47 @@ module IssuesSummary
         # via a scope.
         if pre_page_filter_data[:count] > ApplicationHelper::SCOPED_FIND_EACH_BATCH_SIZE
             page_filtered_issues = filter_pages( issues )
+
+            if @revision
+                page_filtered_issues = page_filtered_issues.where( revision: @revision )
+            end
         end
 
-        if filter_pages?
-            @sitemap_entry = @site.sitemap_entries.find( params[:filter][:pages].first )
+        sitemap_data = {}
+        if sitemap_with_issues.any?
+            sitemap_data[:max_severity] =
+                sitemap_with_issues.values.first[:max_severity]
+
+            sitemap_data[:issue_count]  =
+                sitemap_with_issues.values.map{ |v| v[:issue_count] }.inject(:+)
+        end
+
+        if @revision && revision_data[@revision.id]
+            max_severity = revision_data[@revision.id][:max_severity]
         end
 
         {
-            site:                 data[:site],
-            site_scans:           data[:site].scans.includes(:revisions).
-                                      includes(:schedule).includes(:profile),
-            scans:                data[:scans],
-            revisions:            data[:revisions],
-            sitemap:              data[:sitemap],
-            sitemap_with_issues:  sitemap_with_issues,
-            states:               states,
-            severities:           severities,
-            pre_page_filter_data: pre_page_filter_data,
-            max_severity:         max_severity,
-            issues:               page_filtered_issues,
-            chart_data:           chart_data
+            site:                      data[:site],
+            site_scans:                data[:site].scans.includes(:revisions).
+                                            includes(:schedule).includes(:profile),
+            scans:                     data[:scans],
+            revisions:                 data[:revisions],
+            sitemap:                   data[:sitemap],
+            sitemap_with_issues:       sitemap_with_issues,
+            states:                    states,
+            severities:                severities,
+            sitemap_data:      sitemap_data,
+            max_severity:              max_severity,
+            issues:                    page_filtered_issues,
+            chart_data:                chart_data,
+            scan_data:              scan_data,
+            revision_data:          revision_data
         }
     end
 
     def update_sitemap_data( data, issue )
+        return if @revision && @revision.id != issue.revision.id
+
         data[issue.vector.action] ||= {
             internal:     sitemap_entry_url( issue.vector.sitemap_entry_id ),
 
@@ -102,6 +163,8 @@ module IssuesSummary
     end
 
     def update_chart_data( data, issue )
+        return if @revision && @revision.id != issue.revision.id
+
         if data.empty?
             data.merge!(
                 issue_names:              {},
@@ -181,22 +244,26 @@ module IssuesSummary
 
         if params[:filter][:type] == 'exclude'
             issues.where.not(
-                'issue_type_severities.name IN (?)',
-                params[:filter][:severities]
+                issue_type_severities: {
+                    name: params[:filter][:severities]
+                }
             )
         else
             issues.where(
-                'issue_type_severities.name IN (?)',
-                params[:filter][:severities]
+                issue_type_severities: {
+                    name: params[:filter][:severities]
+                }
             )
         end
     end
 
     def filter_pages?
+        prepare_issue_filters
         params[:filter][:pages].any?
     end
 
     def page_id_in_filter?( page_id )
+        prepare_issue_filters
         params[:filter][:pages].include? page_id.to_s
     end
 
@@ -207,6 +274,12 @@ module IssuesSummary
             'issues.sitemap_entry_id IN (?) OR issue_pages.sitemap_entry_id IN (?)',
             params[:filter][:pages], params[:filter][:pages]
         )
+    end
+
+    def preload_issue_associations( issues )
+        issues.includes(:site).includes(:scan).includes(:revision).
+            includes(:type).includes(:severity).
+            includes(:vector).includes( vector: :sitemap_entry )
     end
 
     def prepare_issue_filters

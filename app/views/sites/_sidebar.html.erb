@@ -1,6 +1,8 @@
 <%
-   scans = @issues_summary[:scans]
+   scans     = @issues_summary[:scans]
+   scan_data = @issues_summary[:scan_data]
 %>
+
 <ul id="site-sidebar" class="nav nav-pills nav-stacked">
     <li>&nbsp;</li>
 
@@ -12,22 +14,50 @@
         <hr/>
     </li>
 
-    <% scans.each do |scan| %>
-    <li>
+    <% scans.each do |scan|
+        max_severity   = scan_data[scan.id] ?
+                scan_data[scan.id][:max_severity] : nil
+
+        issue_count    = scan_data[scan.id] ?
+                scan_data[scan.id][:issue_count] : 0
+
+        revision_count = scan.revisions.size
+
+        if revision_count > 0 && issue_count == 0
+            max_severity = 'none'
+        end
+    %>
+
+    <li
+        <% if revision_count > 0 %>
+            <% if issue_count > 0 %>
+                title="<%= pluralize issue_count, 'issue' %> with a maximum severity of <%= max_severity %>."
+            <% else %>
+                title="<%= pluralize issue_count, 'issue' %>."
+            <% end %>
+        <% else %>
+            title="Has not run yet."
+        <% end %>
+    >
         <%= link_to site_scan_path( scan.site, scan, filter_params ) do %>
             <%= scan.name %>
 
-            <i class="fa fa-arrow-right"></i>
+            <i class="fa fa-arrow-right">
+                <% if revision_count > 0 %>
+                    <span class="badge badge-severity-<%= max_severity %>">
+                        <%= issue_count %>
+                    </span>
+                <% end %>
+            </i>
         <% end %>
     </li>
 
-    <li>
+    <li class="sidebar-info " >
         <small>
             <span class="text-muted">
-                <% if scan.revisions.size > 0 %>
+                <% if revision_count > 0 %>
                     <%= pluralize scan.revisions.size, 'revision' %>,
-                    <%= pluralize scan.sitemap_entries.size, 'page' %> &
-                    <%= pluralize scan.issues.size, 'issue' %>
+                    <%= pluralize scan.sitemap_entries.size, 'page' %>
                     using <%= link_to scan.profile %>.
                 <% elsif scan.scheduled? %>
                     Running <%= link_to scan.schedule, '#' %>.

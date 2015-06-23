@@ -14,7 +14,10 @@ class RevisionsController < ApplicationController
             sitemap:   @revision.sitemap_entries,
             scans:     [@revision.scan],
             revisions: @scan.revisions.order( id: :desc ),
-            issues:    @revision.issues
+
+            # We'll filter revision manually because we need issue data from
+            # all revisions.
+            issues:    @scan.issues
         )
     end
 

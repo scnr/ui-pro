@@ -7,15 +7,7 @@
 
 <div class="row">
     <div class="col-md-12" id="revision-info">
-        <h1>
-            <%= link_to "Revision ##{@revision.index}", [@revision.scan.site, @revision.scan, @revision] %> of
-            <%= link_to @revision.scan.name, [@revision.scan.site, @revision.scan] %>
-            (<%= link_to @scan.profile, @scan.profile %>)
-            for
-            <%= link_to_url_with_external display: @scan.url,
-                                          external: @site.url,
-                                          internal: @site %>
-        </h1>
+        <%= render partial: 'shared/scan_heading' %>
 
         <div class="description">
             <%= md @scan.description %>
@@ -47,16 +39,4 @@
 
 <hr/>
 
-<div class="row">
-    <div id="sidebar" class="col-md-2">
-        <%= render partial: 'scans/sidebar' %>
-    </div>
-
-    <div id="scan-data" class="col-md-10">
-        <% if @issues_summary %>
-            <%= render partial: 'shared/issues_summary' %>
-        <% else %>
-            No revisions...
-        <% end %>
-    </div>
-</div>
+<%= render partial: 'shared/scans_with_issue_summary' %>

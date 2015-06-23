@@ -1,7 +1,17 @@
-$severity-high-color:          #d62728;
-$severity-medium-color:        #ff7f0e;
-$severity-low-color:           #f0ad4e;
-$severity-informational-color: #1f77b4;
+$severity-high-color:       #d62728;
+$severity-high-color-faded: #fbe9ea;
+
+$severity-medium-color:       #ff7f0e;
+$severity-medium-color-faded: #fff2e7;
+
+$severity-low-color:       #f0ad4e;
+$severity-low-color-faded: #fef7ed;
+
+$severity-informational-color:       #1f77b4;
+$severity-informational-color-faded: #e9f1f8;
+
+$severity-none-color:       #5cb85c;
+$severity-none-color-faded: #dff0d8;
 
 // import the CSS framework
 @import "bootstrap";
@@ -129,24 +139,32 @@ section {
     background-color: $severity-informational-color;
 }
 
+.badge-severity-none {
+    background-color: $severity-none-color;
+}
+
 .bg-severity {
     @extend .bg;
 }
 
 .bg-severity-high {
-    background-color: #fbe9ea;
+    background-color: $severity-high-color-faded;
 }
 
 .bg-severity-medium {
-    background-color: #fff2e7;
+    background-color: $severity-medium-color-faded;
 }
 
 .bg-severity-low {
-    background-color: #fef7ed;
+    background-color: $severity-low-color-faded;
 }
 
 .bg-severity-informational {
-    background-color: #e9f1f8;
+    background-color: $severity-informational-color-faded;
+}
+
+.bg-severity-none {
+    background-color: $severity-none-color-faded;
 }
 
 .label-emphasis {
@@ -190,6 +208,10 @@ section {
     background-color: $severity-informational-color;
 }
 
+.btn-severity-none {
+    background-color: $severity-informational-color;
+}
+
 .label-severity {
     @extend .label;
 }
@@ -208,6 +230,10 @@ section {
 
 .label-severity-informational {
     background-color: $severity-informational-color;
+}
+
+.label-severity-none {
+    background-color: $severity-none-color;
 }
 
 .label-severity-undetermined {
@@ -232,6 +258,10 @@ section {
 
 .text-severity-informational {
     color: $severity-informational-color;
+}
+
+.text-severity-none {
+    color: $severity-none-color;
 }
 
 .c3-region.severity-high {

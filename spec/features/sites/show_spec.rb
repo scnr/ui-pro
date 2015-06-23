@@ -96,6 +96,10 @@ feature 'Site page' do
         expect(site_info.find('h1').text).to match site.url
     end
 
+    feature 'when page filtering is enabled' do
+        scenario 'user sees the page URL in the heading'
+    end
+
     feature 'when the site has been scanned' do
         before do
             revision
@@ -184,7 +188,7 @@ feature 'Site page' do
                     end
 
                     scenario 'user sees amount of issues' do
-                        expect(scans).to have_content "#{scan.issues.size} issues"
+                        expect(scans.find('.badge')).to have_content scan.issues.size
                     end
 
                     scenario 'user sees profile' do
@@ -455,7 +459,7 @@ feature 'Site page' do
                         end
 
                         scenario 'user sees amount of issues' do
-                            expect(scans).to have_content "#{scan.issues.size} issues"
+                            expect(scans.find('.badge')).to have_content scan.issues.size
                         end
                     end
                 end
@@ -503,6 +507,8 @@ feature 'Site page' do
                     let(:sitemap) { find '#summary-sitemap' }
 
                     scenario 'entries filter issues'
+                    scenario 'entries filter scans'
+
                     scenario 'URLs are color-coded by max severity'
                     scenario 'shows amount of issues per entry'
 

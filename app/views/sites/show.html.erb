@@ -5,20 +5,7 @@
 
 <div class="row" id="site-info">
     <div class="col-md-12">
-        <h1>
-            <%= link_to_url_with_external external: @site.url, internal: @site %>
-
-            <%= link_to new_site_scan_path(@site), title: 'New scan',
-                        class: 'btn btn-xs btn-primary' do %>
-                <i class="fa fa-search"></i>
-            <% end %>
-
-            <%= link_to @site, method: :delete, title: 'Delete site',
-                        class: 'btn btn-xs btn-danger',
-                        data: { confirm: 'Are you sure?' } do %>
-                <i class="fa fa-trash"></i>
-            <% end %>
-        </h1>
+        <%= render partial: 'shared/scan_heading' %>
 
         <% if (revision = @site.revision_in_progress) %>
             <p class="text-muted" id="site-info-scan-time">
@@ -68,15 +55,7 @@
 
     <div class="tab-content">
         <div class="tab-pane <%= 'active' if @active_tab == 'overview' %>" id="overview">
-            <div class="row">
-                <div id="sidebar" class="col-md-2">
-                    <%= render partial: 'sidebar' %>
-                </div>
-
-                <div id="scan-data" class="col-md-10">
-                    <%= render partial: 'shared/issues_summary' %>
-                </div>
-            </div>
+            <%= render partial: 'shared/scans_with_issue_summary' %>
         </div>
 
         <div class="tab-pane <%= 'active' if @active_tab == 'scans' %>" id="scans">

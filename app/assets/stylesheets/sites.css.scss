@@ -19,6 +19,18 @@
     margin-left: -40px
 }
 
+#sidebar li {
+    margin: 0;
+}
+
+#scan-sidebar li .badge {
+    float: right;
+}
+
+#sidebar li.sidebar-info {
+    padding-left: 5px
+}
+
 #sidebar .nav-pills li.active .text-muted {
     color: white;
 }

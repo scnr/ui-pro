@@ -1,22 +1,23 @@
 <%
-   sitemap                = @issues_summary[:sitemap_with_issues]
-   filter                 = params[:filter][:pages]
-   pre_page_filter_data   = @issues_summary[:pre_page_filter_data]
-   total_max_severity     = pre_page_filter_data[:max_severity]
-   pre_page_filter_issue_count = pre_page_filter_data[:count]
+   sitemap            = @issues_summary[:sitemap_with_issues]
+   sitemap_data       = @issues_summary[:sitemap_data]
+
+   filter             = params[:filter][:pages]
+   total_max_severity = sitemap_data[:max_severity]
+   total_issue_count  = sitemap_data[:issue_count]
 %>
 
 <ul class="sitemap">
     <li
         id="sitemap-entry-all"
         class="bg-severity-<%= total_max_severity %> sitemap-entry <%= 'active' if filter.empty? %>"
-        title="<%= pluralize pre_page_filter_issue_count, 'issue' %> with a maximum severity of <%= total_max_severity %>."
+        title="<%= pluralize total_issue_count, 'issue' %> with a maximum severity of <%= total_max_severity %>."
     >
         <%= link_to "All #{pluralize sitemap.size, 'page'}", filter_params_without_page %>
 
         <%= link_to filter_params_without_page do %>
             <span class="badge badge-severity-<%= total_max_severity %>">
-                <%= pre_page_filter_issue_count %>
+                <%= total_issue_count %>
             </span>
         <% end %>
     </li>
@@ -35,6 +36,7 @@
             id="sitemap-entry-<%= data[:id] %>"
             title="<%= pluralize issue_count, 'issue' %> with a <%= 'maximum' if issue_count > 1 %> severity of <%= max_severity %>."
         >
+
             <%= link_to_url_with_external(
                     external: url,
                     internal: data[:internal],
@@ -44,11 +46,9 @@
             %>
 
             <%= link_to data[:internal] do %>
-                <i class="fa fa-arrow-right">
-                    <span class="badge badge-severity-<%= max_severity %>">
-                        <%= data[:issue_count] %>
-                    </span>
-                </i>
+                <span class="badge badge-severity-<%= max_severity %>">
+                    <%= data[:issue_count] %>
+                </span>
             <% end %>
         </li>
     <% end %>

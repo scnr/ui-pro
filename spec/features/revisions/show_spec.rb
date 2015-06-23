@@ -60,6 +60,10 @@ feature 'Revision page' do
         expect(find('h1').text).to match scan.url
     end
 
+    feature 'when page filtering is enabled' do
+        scenario 'user sees the page URL in the heading'
+    end
+
     scenario 'sees rendered Markdown scan description' do
         scan.description = '**Stuff**'
         scan.save

@@ -203,7 +203,7 @@ sites.each.with_index do |afr, si|
         )
 
         site.scans.create(
-            profile:              p,
+            profile:             p,
             site_role:           site.roles[i % site.roles.size],
             user_agent:          user_agent,
             name:                "my scheduled scan #{i+1}",
@@ -237,13 +237,31 @@ sites.each.with_index do |afr, si|
             }
         )
 
+        s = site.scans.create(
+            profile:             p,
+            site_role:           site.roles[i % site.roles.size],
+            user_agent:          user_agent,
+            name:                "my scheduled scan #{i+4}",
+            schedule_attributes: {
+                day_frequency:    1,
+                month_frequency:  2,
+                stop_after_hours: 10
+            }
+        )
+        s.save
+
+        s.revisions.create(
+            state:      'started',
+            started_at: Time.now - 8000,
+            stopped_at: Time.now - 4000
+        )
 
         puts "[#{i}] Creating scan"
         scan = site.scans.create(
             profile:     p,
             site_role:   site.roles[i % site.roles.size],
             user_agent:  user_agent,
-            name:        "my scan #{i+4}",
+            name:        "my scan #{i+5}",
             description: 'my description'
         )
 
@@ -258,9 +276,13 @@ sites.each.with_index do |afr, si|
             revision = scan.revisions.create(
                 state:      'started',
                 started_at: Time.now - 8000,
-                stopped_at: (sites.size == si + 1) && (scans_size == i + 1) &&
-                                (revisions_per_scan == j + 1) ?
-                                    nil : (Time.now - 4000)
+                stopped_at: Time.now - 4000
+            )
+
+            scan.revisions.create(
+                state:      'started',
+                started_at: Time.now - 8000,
+                stopped_at: Time.now - 4000
             )
 
             sitemap ||= report.sitemap.each do |url, code|
@@ -336,5 +358,10 @@ sites.each.with_index do |afr, si|
 
             last_revision = revision
         end
+
+        scan.revisions.create(
+            state:      'started',
+            started_at: Time.now - 8000
+        )
     end
 end

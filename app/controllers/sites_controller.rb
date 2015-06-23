@@ -123,7 +123,7 @@ class SitesController < ApplicationController
             @scan.build_schedule
             @active_tab = 'scan-form'
         else
-            @scans = @site.scans.order( id: :desc )
+            @scans = @site.scans.includes(:profile).order( id: :desc )
             @issues_summary = issues_summary_data(
                 site:      @site,
                 sitemap:   @site.sitemap_entries,
