@@ -131,10 +131,10 @@ module IssuesHelper
     end
 
     def highlight_proof( string, proof )
-        return if !string_has_proof?( string, proof )
-
         escaped_proof         = h( proof.to_s.recode )
         escaped_response_body = h( string.to_s.recode )
+
+        return if !string_has_proof?( escaped_response_body, escaped_proof)
 
         escaped_response_body.gsub(
             Regexp.new(
