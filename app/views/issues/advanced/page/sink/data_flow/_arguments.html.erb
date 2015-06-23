@@ -4,7 +4,10 @@
     </a>
 </h5>
 
-<%= highlight_proof( data_dump( sink.function.arguments ), sink.taint_value ).html_safe %>
+<%=
+    args = data_dump( sink.function.arguments )
+    (highlight_proof( args, sink.taint_value ) || args).html_safe
+%>
 
 <hr/>
 
@@ -51,7 +54,9 @@
             <% end %>
         </td>
         <td>
-            <%= highlight_proof( data_dump( sink.tainted_argument_value ), sink.taint_value ).html_safe %>
+            <%=
+                arg = data_dump( sink.tainted_argument_value )
+                (highlight_proof( arg, sink.taint_value ) || arg).html_safe %>
         </td>
 
         <% if sink.tainted_argument_value != sink.tainted_value %>
