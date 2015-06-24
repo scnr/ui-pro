@@ -40,6 +40,12 @@
             </a>
         </li>
 
+        <li class="<%= 'active' if @active_tab == 'schedule' %>">
+            <a href="#!/schedule">
+                Schedule
+            </a>
+        </li>
+
         <li class="<%= 'active' if @active_tab == 'roles' %>">
             <a href="#!/roles">
                 Roles
@@ -66,6 +72,12 @@
             class="tab-pane <%= 'active' if @active_tab == 'roles' %>"
             id="roles">
             Roles.
+        </div>
+
+        <div data-js="<%= site_schedules_path( @site ) %>"
+             class="tab-pane <%= 'active' if @active_tab == 'schedule' %>"
+             id="schedule">
+            Schedule.
         </div>
 
         <div class="tab-pane <%= 'active' if @active_tab == 'settings' %>" id="settings">

@@ -13,7 +13,7 @@
         </div>
 
         <p class="text-muted">
-            <% if @scan.schedule.scheduled? %>
+            <% if @scan.scheduled? %>
                 Running <%= link_to @scan.schedule, '#' %>.
             <% end %>
         </p>

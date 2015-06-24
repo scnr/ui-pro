@@ -60,10 +60,12 @@ module IssuesSummary
                 # Only include scans and revisions for issues for the page
                 # and scan we're filtering for.
                 data[:scans] << issue.scan
-                sitemap_issues.each do |i|
-                    next if @scan && i.scan != @scan
-                    data[:revisions] << i.revision
-                end
+                data[:revisions] << issue.revision
+                # sitemap_issues.each do |i|
+                #     next if @scan && i.scan != @scan
+                #     ap i.revision.id
+                #     data[:revisions] << i.revision
+                # end
             end
 
             #... because we at least want to grab the filtered max severity now...
@@ -92,15 +94,6 @@ module IssuesSummary
             page_filtered_issues << issue
         end
 
-        # If we're in scan overview and the scan only has one revision, redirect
-        # to it.
-        if @scan && !@revision && data[:revisions].size == 1
-            redirect_to site_scan_revision_path(
-                @site, @scan, data[:revisions].first, filter_params
-            )
-            return
-        end
-
         if chart_data[:severity_regions]
             chart_data[:severity_regions] = chart_data[:severity_regions].values
         end
@@ -115,7 +108,10 @@ module IssuesSummary
             end
         end
 
-        sitemap_data = {}
+        sitemap_data = {
+            issue_count: 0
+        }
+
         if sitemap_with_issues.any?
             sitemap_data[:max_severity] =
                 sitemap_with_issues.values.first[:max_severity]
@@ -126,6 +122,10 @@ module IssuesSummary
 
         if @revision && revision_data[@revision.id]
             max_severity = revision_data[@revision.id][:max_severity]
+        end
+
+        if data[:revisions].is_a? Set
+            data[:revisions] = data[:revisions].sort_by { |r| r.id }.reverse
         end
 
         {

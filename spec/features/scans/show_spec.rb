@@ -25,21 +25,7 @@ feature 'Scan page' do
 
     let(:info) { find '#scan-info' }
 
-    feature 'when the scan has only one revision' do
-        before do
-            revision
-            site.scans << scan
-            site.save
-
-            visit site_scan_path( site, scan )
-        end
-
-        scenario 'user gets redirected to it' do
-            expect(current_url).to start_with site_scan_revision_url( site, scan, revision )
-        end
-    end
-
-    feature 'when the scan has more than one revision' do
+    feature 'when the scan has revisions' do
         before do
             other_revision
             revision

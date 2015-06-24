@@ -21,16 +21,19 @@ class Scan < ActiveRecord::Base
     validates_presence_of   :profile
     validates_presence_of   :user_agent
 
-    before_save :ensure_schedule
+    # All scans should start with a schedule, which should be destroyed just
+    # before they run.
+    #
+    # Unless they're recurring, in which case they get a `nil` `Schedule#start_at`,
+    # which shall be updated once the scan finishes, based on the set freq.
+    before_create :ensure_schedule
 
     scope :scheduled,   -> do
-        joins(:schedule).where.not( schedules: { start_at: nil } )
+        includes(:schedule).where.not( schedules: { scan_id: nil } )
     end
-    # scope :unscheduled, -> do
-    #     where.not(
-    #         Schedule.where( 'schedules.scan_id = scans.id' ).limit(1).arel.exists
-    #     )
-    # end
+    scope :unscheduled, -> do
+        includes(:schedule).where( schedules: { scan_id: nil } )
+    end
 
     scope :with_revisions, -> { joins(:revisions).where.not( revisions: { id: nil } ) }
 
@@ -44,8 +47,12 @@ class Scan < ActiveRecord::Base
         revisions.last_performed_at
     end
 
+    def recurring?
+        scheduled? && schedule.recurring?
+    end
+
     def scheduled?
-        !!(schedule && schedule.scheduled?)
+        !!schedule
     end
 
     def to_s

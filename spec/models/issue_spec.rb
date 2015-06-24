@@ -246,7 +246,7 @@ describe Issue do
             unique_revisions = described_class.unique_revisions
 
             expect(unique_revisions).to be_kind_of Revision::ActiveRecord_Relation
-            expect(unique_revisions.pluck(:id)).to eq [r1.id, r2.id, r3.id]
+            expect(unique_revisions.pluck(:id).sort).to eq [r1.id, r2.id, r3.id].sort
         end
     end
 

@@ -153,7 +153,7 @@ feature 'New scan page' do
     end
 
     feature 'when start_at is missing' do
-        scenario 'the scan is not scheduled' do
+        scenario 'the scan is scheduled to run asap' do
             fill_in 'scan_name', with: name
             select site_role.name, from: 'scan_site_role_id'
             select profile.name, from: 'scan_profile_id'
@@ -161,7 +161,10 @@ feature 'New scan page' do
 
             click_button 'Create'
 
-            expect(site.scans.last.reload).to_not be_scheduled
+            scan = site.scans.last.reload
+
+            expect(scan).to be_scheduled
+            expect(scan.schedule).to be_due
         end
     end
 end

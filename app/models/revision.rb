@@ -2,6 +2,7 @@ class Revision < ActiveRecord::Base
     belongs_to :scan, counter_cache: true
     belongs_to :site, counter_cache: true
     has_many :issues,  dependent: :destroy
+    has_many :fixed_issues,  class: Issue, foreign_key: 'fixed_by_revision_id'
     has_many :sitemap_entries
 
     validates_presence_of :scan
@@ -14,7 +15,7 @@ class Revision < ActiveRecord::Base
     end
 
     def self.last_performed
-        order( stopped_at: :desc ).where.not( stopped_at: nil ).first
+        where.not( stopped_at: nil ).order( stopped_at: :desc ).limit(1).first
     end
 
     def self.last_performed_at
@@ -29,7 +30,7 @@ class Revision < ActiveRecord::Base
     def duration
         return if !started_at
 
-        (stopped_at || Time.now) - started_at
+        (stopped_at || Time.zone.now) - started_at
     end
 
     def stopped?

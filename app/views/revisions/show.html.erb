@@ -14,7 +14,7 @@
         </div>
 
         <p class="text-muted">
-            <% if @scan.schedule.recurring? %>
+            <% if @scan.recurring? %>
                 Running <%= link_to @scan.schedule, '#' %>.
             <% end %>
         </p>
@@ -31,7 +31,7 @@
                 <i class="fa fa-spin fa-circle-o-notch"></i>
                 Started on <%= l @revision.started_at %>
                 &mdash;
-                <%= Arachni::Utilities.seconds_to_hms Time.now - @revision.started_at %>.
+                <%= Arachni::Utilities.seconds_to_hms @revision.duration %>.
             </p>
         <% end %>
     </div>

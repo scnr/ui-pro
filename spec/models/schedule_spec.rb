@@ -57,75 +57,6 @@ describe Schedule do
                 expect(described_class.due).to eq due
             end
         end
-
-        describe 'scheduled' do
-            it 'returns records with a start date in the future' do
-                s = FactoryGirl.create(
-                    :scan,
-                    site: site,
-                    name: 'stuff3',
-                    schedule_attributes: {
-                        start_at: Time.now + 10000
-                    }
-                ).schedule
-
-                expect(described_class.scheduled).to include s
-            end
-
-            it 'returns records with a day_frequency' do
-                s = FactoryGirl.create(
-                    :scan,
-                    site: site,
-                    name: 'stuff3',
-                    schedule_attributes: {
-                        day_frequency: 1
-                    }
-                ).schedule
-
-                expect(described_class.scheduled).to include s
-            end
-
-            it 'returns records with a month_frequency' do
-                s = FactoryGirl.create(
-                    :scan,
-                    site: site,
-                    name: 'stuff3',
-                    schedule_attributes: {
-                        month_frequency: 1
-                    }
-                ).schedule
-
-                expect(described_class.scheduled).to include s
-            end
-
-            context 'when a start date is in the past' do
-                it 'is not included' do
-                    FactoryGirl.create(
-                        :scan,
-                        site: site,
-                        name: 'stuff3',
-                        schedule_attributes: {
-                            start_at: Time.now - 10000
-                        }
-                    )
-
-                    expect(described_class.scheduled).to be_empty
-                end
-            end
-
-            context 'when there are no scheduling data' do
-                it 'is not included' do
-                    FactoryGirl.create(
-                        :scan,
-                        site: site,
-                        name: 'stuff3',
-                        schedule_attributes: {}
-                    )
-
-                    expect(described_class.scheduled).to be_empty
-                end
-            end
-        end
     end
 
     describe 'validations' do
@@ -221,6 +152,62 @@ describe Schedule do
         end
     end
 
+    describe 'due?' do
+        context 'when there is #start_at' do
+            context 'in the past' do
+                before do
+                    subject.start_at = Time.now
+                end
+
+                it 'returns true' do
+                    expect(subject).to be_due
+                end
+            end
+
+            context 'in the future' do
+                before do
+                    subject.start_at = Time.now + 1000
+                end
+
+                it 'returns false' do
+                    expect(subject).to_not be_due
+                end
+            end
+        end
+
+        context 'when there is no #start_at' do
+            before do
+                subject.start_at = nil
+            end
+
+            it 'returns true' do
+                expect(subject).to_not be_due
+            end
+        end
+    end
+
+    describe 'in_progress?' do
+        context 'when there is #start_at' do
+            before do
+                subject.start_at = Time.now
+            end
+
+            it 'returns false' do
+                expect(subject).to_not be_in_progress
+            end
+        end
+
+        context 'when there is no #start_at' do
+            before do
+                subject.start_at = nil
+            end
+
+            it 'returns true' do
+                expect(subject).to be_in_progress
+            end
+        end
+    end
+
     describe '#recurring?' do
         context 'when #day_frequency has been specified' do
             before do
@@ -265,11 +252,10 @@ describe Schedule do
 
     describe '#schedule_next' do
         it 'sets the next #start_at' do
-            start_at = subject.start_at
-
+            subject.start_at = Time.now - 1000
             subject.schedule_next
 
-            expect(subject.start_at.to_s).to eq start_at.advance(
+            expect(subject.start_at.to_s).to eq Time.zone.now.advance(
                 months: subject.month_frequency,
                 days:   subject.day_frequency
             ).to_s

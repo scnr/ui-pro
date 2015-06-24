@@ -8,6 +8,7 @@ describe Revision do
 
     expect_it { to belong_to(:scan).counter_cache(true) }
     expect_it { to have_many(:issues).dependent(:destroy) }
+    expect_it { to have_many(:fixed_issues) }
     expect_it { to have_many(:sitemap_entries) }
 
     describe 'scopes' do

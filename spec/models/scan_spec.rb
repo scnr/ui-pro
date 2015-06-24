@@ -50,7 +50,7 @@ describe Scan do
             [
                 FactoryGirl.create( :scan, site: site, name: 'stuff3' ),
                 FactoryGirl.create( :scan, site: site, name: 'stuff4' )
-            ]
+            ].each { |s| s.schedule = nil; s.save; }
         end
 
         let(:with_revisions) do
@@ -80,7 +80,7 @@ describe Scan do
         end
 
         describe 'scheduled' do
-            it "returns scans with #{Scan}#start_at" do
+            it 'returns scans with #schedule' do
                 scheduled
                 unscheduled
 
@@ -88,16 +88,16 @@ describe Scan do
             end
         end
 
-        # describe 'unscheduled' do
-        #     before { described_class.delete_all }
-        #
-        #     it "returns scans without #{Scan}#start_at" do
-        #         scheduled
-        #         unscheduled
-        #
-        #         expect(described_class.unscheduled).to eq unscheduled
-        #     end
-        # end
+        describe 'unscheduled' do
+            before { described_class.delete_all }
+
+            it "returns scans without #{Scan}#start_at" do
+                scheduled
+                unscheduled
+
+                expect(described_class.unscheduled).to eq unscheduled
+            end
+        end
 
         describe 'with_revisions' do
             it "returns scans with #{Revision}" do
@@ -177,6 +177,62 @@ describe Scan do
                 subject.site = site
 
                 expect(subject.save).to be_truthy
+            end
+        end
+    end
+
+    describe '#scheduled?' do
+        context 'when there is a #schedule' do
+            before do
+                subject.build_schedule
+            end
+
+            it 'returns true' do
+                expect(subject).to be_scheduled
+            end
+        end
+
+        context 'when there is no #schedule' do
+            before do
+                subject.schedule = nil
+            end
+
+            it 'returns false' do
+                expect(subject).to_not be_scheduled
+            end
+        end
+    end
+
+    describe '#recurring?' do
+        context 'when there is a #schedule' do
+            context 'and it is recurring' do
+                before do
+                    allow(subject.schedule).to receive(:recurring?) { true }
+                end
+
+                it 'returns true' do
+                    expect(subject).to be_recurring
+                end
+            end
+
+            context 'and is not recurring' do
+                before do
+                    allow(subject.schedule).to receive(:recurring?) { false }
+                end
+
+                it 'returns false' do
+                    expect(subject).to_not be_recurring
+                end
+            end
+        end
+
+        context 'when there is no #schedule' do
+            before do
+                subject.schedule = nil
+            end
+
+            it 'returns false' do
+                expect(subject).to_not be_recurring
             end
         end
     end
@@ -405,20 +461,9 @@ describe Scan do
         end
 
         context 'when the scan has an associated schedule' do
-            context 'without #start_at set' do
-                it 'returns false' do
-                    subject.build_schedule
-
-                    expect(subject.schedule).to be_truthy
-                    expect(subject).to_not be_scheduled
-                end
-            end
-
-            context 'with #start_at set' do
-                it 'returns true' do
-                    subject.update( schedule_attributes: { start_at: Time.now } )
-                    expect(subject).to be_scheduled
-                end
+            it 'returns true' do
+                subject.schedule.start_at = Time.now
+                expect(subject).to be_scheduled
             end
         end
     end

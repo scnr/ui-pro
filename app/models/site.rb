@@ -11,6 +11,7 @@ class Site < ActiveRecord::Base
     accepts_nested_attributes_for :profile
 
     has_many :scans, dependent: :destroy
+    has_many :schedules, through: :scans
     has_many :revisions, through: :scans
     has_many :issues, through: :scans
 

@@ -1,26 +1,13 @@
-<h1>Listing scan schedules</h1>
+<h2>Schedule</h2>
 
-<table>
-    <thead>
-    <tr>
-        <th>Month frequency</th>
-        <th>Day frequency</th>
-        <th>Start at</th>
-        <th>Stop after</th>
-        <th colspan="2"></th>
-    </tr>
-    </thead>
+<div class="lead">
+    Keep track of pending, future and recurring scans.
+</div>
 
-    <tbody>
-    <% @schedules.each do |schedule| %>
-        <tr>
-            <td><%= schedule.month_frequency %></td>
-            <td><%= schedule.day_frequency %></td>
-            <td><%= schedule.start_at %></td>
-            <td><%= schedule.stop_after_hours %></td>
-            <td><%= link_to 'Show', site_scan_path( schedule.scan.site, schedule.scan ) %></td>
-            <td><%= link_to 'Edit', edit_site_scan_path( schedule.scan.site, schedule.scan ) %></td>
-        </tr>
-    <% end %>
-    </tbody>
-</table>
+<% if @schedules.any? %>
+    <%= render 'table' %>
+<% else %>
+    <p class="alert alert-info">
+        No scheduled scans.
+    </p>
+<% end %>

@@ -264,8 +264,7 @@ sites.each.with_index do |afr, si|
             name:        "my scan #{i+5}",
             description: 'my description'
         )
-
-        scan.build_schedule
+        scan.schedule.destroy
         scan.save
 
         last_revision = nil

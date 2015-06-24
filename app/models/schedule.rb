@@ -32,15 +32,26 @@ class Schedule < ActiveRecord::Base
     validates :start_at, datetime: true
     validates :stop_after_hours, numericality: { greater_than: 0 }, allow_nil: true
 
-    before_save :sanitize_start_at
+    # All schedules should start with a `#start_at`.
+    #
+    # However, if the #start_at becomes `nil`, that should remove them from being
+    # considered.
+    #
+    # Useful for recurring active scans, as we can temporarily remove the
+    # `#start_at` until the scan finishes, at which point it gets recalculated
+    # based on the finish time and the set freq.
+    after_create :ensure_start_at
 
-    scope :scheduled, -> do
-        where( 'start_at > ? OR day_frequency IS NOT NULL OR month_frequency IS NOT NULL', Time.now )
+    # Will not return nil #start_at.
+    scope :due, -> { where( 'start_at <= ?', Time.zone.now ) }
+    default_scope { order(:start_at) }
+
+    def due?
+        start_at && start_at < Time.zone.now
     end
-    scope :due, -> { where( 'start_at <= ?', Time.now ) }
 
-    def scheduled?
-        start_at || day_frequency || month_frequency
+    def in_progress?
+        !start_at
     end
 
     def to_s
@@ -75,16 +86,14 @@ class Schedule < ActiveRecord::Base
     end
 
     def schedule_next
-        self.start_at += interval
+        self.start_at = Time.zone.now + interval
         save
     end
 
     private
 
-    def sanitize_start_at
-        return true if !self.start_at
-
-        self.start_at = [start_at, Time.now].max
+    def ensure_start_at
+        self.start_at = [start_at || Time.zone.now, Time.zone.now].max
         true
     end
 

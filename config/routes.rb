@@ -3,6 +3,7 @@ Rails.application.routes.draw do
     root to: 'dashboard#index'
 
     resources :sites, except: [:edit] do
+        resources :schedules, only: [:index]
 
         resources :site_roles, as: 'roles', path: 'roles' do
             post  :import, on: :collection
@@ -23,8 +24,6 @@ Rails.application.routes.draw do
         patch :default, on: :member
         get   :copy,    on: :member
     end
-
-    resources :schedules, only: [:index]
 
     resources :settings
 
