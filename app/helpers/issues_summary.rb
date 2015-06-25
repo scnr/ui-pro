@@ -286,9 +286,15 @@ module IssuesSummary
         params[:filter]              ||= {}
         params[:filter][:type]       ||= 'include'
         params[:filter][:pages]      ||= []
-        params[:filter][:states]     ||= %w(trusted)
-        params[:filter][:severities] ||=
-            IssueTypeSeverity::SEVERITIES.map(&:to_s) - ['informational']
+
+        if params[:filter][:type] == 'include'
+            params[:filter][:states]     ||= %w(trusted)
+            params[:filter][:severities] ||=
+                IssueTypeSeverity::SEVERITIES.map(&:to_s) - ['informational']
+        else
+            params[:filter][:states]     ||= []
+            params[:filter][:severities] ||= []
+        end
     end
 
 end

@@ -29,6 +29,7 @@
     %>
 
     <li
+        id="site-sidebar-scan-id-<%= scan.id %>"
         <% if revision_count > 0 %>
             <% if issue_count > 0 %>
                 title="<%= pluralize issue_count, 'issue' %> with a maximum severity of <%= max_severity %>."
@@ -52,7 +53,7 @@
         <% end %>
     </li>
 
-    <li class="sidebar-info " >
+    <li class="sidebar-info" id="site-sidebar-scan-id-<%= scan.id %>-info">
         <small>
             <span class="text-muted">
                 <% if revision_count > 0 %>
