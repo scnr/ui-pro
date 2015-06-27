@@ -1,4 +1,4 @@
-require 'capybara/poltergeist'
+# require 'capybara/poltergeist'
 
 # See: https://github.com/teampoltergeist/poltergeist/issues/520#issuecomment-84828753
 class Capybara::Node::Element
@@ -12,11 +12,12 @@ class Capybara::Node::Element
     end
 end
 
-Capybara.register_driver :poltergeist do |app|
-    Capybara::Poltergeist::Driver.new( app, js_errors: false )
-end
+# Capybara.register_driver :poltergeist do |app|
+#     Capybara::Poltergeist::Driver.new( app, js_errors: false )
+# end
 
 # Capybara.asset_host        = 'http://localhost:3000'
 # Capybara.javascript_driver = :chrome
 
-Capybara.javascript_driver = :poltergeist
+# Capybara.javascript_driver = :poltergeist
+Capybara.javascript_driver = :webkit

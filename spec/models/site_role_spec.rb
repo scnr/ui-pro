@@ -103,7 +103,7 @@ describe SiteRole, type: :model do
                     expect(subject.errors.messages).to include :login_form_url
 
                     subject.login_form_url = subject.site.url
-                    expect(subject).to be_valid
+                    expect(subject.save).to be_truthy
                 end
             end
 
@@ -144,7 +144,7 @@ describe SiteRole, type: :model do
                     expect(subject.errors.messages).to include :login_form_parameters
 
                     subject.login_form_parameters = { '1' => '2' }
-                    expect(subject).to be_valid
+                    expect(subject.save).to be_truthy
                 end
             end
 
@@ -185,7 +185,7 @@ describe SiteRole, type: :model do
                     expect(subject.errors.messages).to include :login_script_code
 
                     subject.login_script_code = 'stuff'
-                    expect(subject).to be_valid
+                    expect(subject.save).to be_truthy
                 end
 
                 it 'has to be syntactically valid' do
@@ -194,7 +194,7 @@ describe SiteRole, type: :model do
                     expect(subject.errors.messages).to include :login_script_code
 
                     subject.login_script_code = 'puts "stuff"'
-                    expect(subject).to be_valid
+                    expect(subject.save).to be_truthy
                 end
             end
 

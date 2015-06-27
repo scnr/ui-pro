@@ -1,13 +1,13 @@
 source 'https://rubygems.org'
 ruby '2.2.1'
 
-gem 'rails', '4.1.4'
-gem 'sass-rails', '~> 4.0.3'
+gem 'rails', '4.2.3'
+gem 'sass-rails', '~> 5.0.3'
 gem 'uglifier', '>= 1.3.0'
-gem 'coffee-rails', '~> 4.0.0'
+gem 'coffee-rails', '~> 4.1.0'
 gem 'jquery-rails'
 gem 'turbolinks'
-gem 'jbuilder', '~> 2.0'
+gem 'jbuilder', '~> 2.3.0'
 gem 'bootstrap-sass'
 gem 'font-awesome-rails'
 gem 'font-kit-rails'
@@ -15,7 +15,7 @@ gem 'devise'
 gem 'devise_security_extension'
 gem 'simple_form'
 gem 'sidekiq'
-gem 'websocket-rails', '0.6.2'
+gem 'websocket-rails', '~> 0.7.0'
 
 gem 'kramdown'
 gem 'loofah'
@@ -37,7 +37,7 @@ end
 group :development do
     gem 'spring'
     gem 'better_errors'
-    gem 'binding_of_caller'#, platforms: [:mri_21]
+    gem 'binding_of_caller'
     gem 'quiet_assets'
     gem 'rails_layout'
     gem 'bullet'
@@ -46,8 +46,8 @@ end
 
 group :test do
     gem 'shoulda'
-    # gem 'capybara-webkit'
-    gem 'poltergeist'
+    gem 'capybara-webkit'
+    # gem 'poltergeist'
     gem 'capybara'
     gem 'database_cleaner'
     gem 'faker'

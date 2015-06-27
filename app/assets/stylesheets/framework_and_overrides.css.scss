@@ -144,7 +144,6 @@ section {
 }
 
 .bg-severity {
-    @extend .bg;
 }
 
 .bg-severity-high {
@@ -241,7 +240,6 @@ section {
 }
 
 .text-severity {
-    @extend .text;
 }
 
 .text-severity-high {
