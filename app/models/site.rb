@@ -7,7 +7,7 @@ class Site < ActiveRecord::Base
     has_and_belongs_to_many :users
 
     has_one :profile, autosave: true, dependent: :destroy,
-            foreign_key: 'site_id', class: SiteProfile
+            foreign_key: 'site_id', class_name: 'SiteProfile'
     accepts_nested_attributes_for :profile
 
     has_many :scans, dependent: :destroy
@@ -16,7 +16,7 @@ class Site < ActiveRecord::Base
     has_many :issues, through: :scans
 
     has_many :roles, dependent: :destroy, foreign_key: 'site_id',
-             class: SiteRole
+             class_name: 'SiteRole'
 
     has_many :sitemap_entries, dependent: :destroy
 

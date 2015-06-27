@@ -3,7 +3,7 @@
    revisions    = @issues_summary[:revisions]
    sitemap      = @issues_summary[:sitemap]
    sitemap_with_issues = @issues_summary[:sitemap_with_issues]
-   issues       = @issues_summary[:issues]
+   issues_count = @issues_summary[:unique_issues_count]
    max_severity = @issues_summary[:max_severity]
 %>
 
@@ -28,10 +28,10 @@
 
         <div class="col-md-<%= @sitemap_entry ? '6' : '4' %>">
             <h3>
-                <strong><%= issues.size %></strong>
-                <%= 'issues'.pluralize issues.size %>,
+                <strong><%= issues_count %></strong>
+                <%= 'issues'.pluralize issues_count %>,
 
-                <% if issues.size > 0 %>
+                <% if issues_count > 0 %>
                     <small>
                         with a maximum severity of
 
@@ -70,7 +70,7 @@
                     %>
                     has
                 <% else %>
-                    There <%= issues.size == 1 ? 'is' : 'are' %>
+                    There <%= issues_count == 1 ? 'is' : 'are' %>
                 <% end %>
 
                 <%
@@ -89,7 +89,7 @@
                     <%= ',' unless i > severities_a.size - 3 %>
                 <% end %>
 
-                severity <%= 'issue'.pluralize(issues.size) %>.
+                severity <%= 'issue'.pluralize(issues_count) %>.
             </h4>
 
             <div id="summary-charts-issues-container">

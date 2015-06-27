@@ -1,9 +1,9 @@
 <%
    title @issue.to_s.html_safe
    breadcrumb_add 'Sites', sites_path
-   breadcrumb_add @issue.site.url, site_path( @issue.site )
-   breadcrumb_add @issue.scan.name, site_scan_path( @issue.site, @issue.scan )
-   breadcrumb_add @issue.revision, site_scan_revision_path( @issue.site, @issue.scan, @issue.revision )
+   breadcrumb_add @site.url, site_path( @site )
+   breadcrumb_add @scan.name, site_scan_path( @site, @scan )
+   breadcrumb_add @revision, site_scan_revision_path( @site, @scan, @revision )
 %>
 
 <div id="issues">

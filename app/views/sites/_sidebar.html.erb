@@ -40,7 +40,7 @@
             title="Has not run yet."
         <% end %>
     >
-        <%= link_to site_scan_path( scan.site, scan, filter_params ) do %>
+        <%= link_to site_scan_path( @site, scan, filter_params ) do %>
             <%= scan.name %>
 
             <i class="fa fa-arrow-right">

@@ -18,7 +18,7 @@
         </tr>
     </thead>
     <tbody>
-    <% page.dom.transitions.each do |transition|
+    <% page.dom.transitions.sort_by(&:id).each do |transition|
            request = (transition.event == :request)
             next if request && !debug
     %>

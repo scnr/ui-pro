@@ -1,4 +1,4 @@
-<%= simple_form_for( [@issue.revision.scan.site, @issue.revision.scan, @issue.revision, @issue], remote: true ) do |f| %>
+<%= simple_form_for( [@site, @scan, @revision, @issue], remote: true ) do |f| %>
     <%= f.error_notification %>
 
     <div class="form-inputs">

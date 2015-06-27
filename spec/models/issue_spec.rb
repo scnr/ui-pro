@@ -156,6 +156,48 @@ describe Issue do
         end
     end
 
+    describe '#update_state' do
+        let(:digest) { 'mydigest' }
+        let(:state) { 'fixed' }
+
+        let(:type) do
+            FactoryGirl.create(
+                :issue_type,
+                name: 'a1',
+                severity: high_severity
+            )
+        end
+
+        let(:sibling) do
+            type.issues.create(
+                state: 'trusted',
+                revision: revision,
+                digest: digest
+            )
+        end
+
+        subject do
+            type.issues.create(
+                state: 'trusted',
+                revision: revision,
+                digest: digest
+            )
+        end
+
+        scenario 'sets the #state' do
+            subject.update_state  state
+            expect(subject.reload.state).to eq state
+        end
+
+        scenario 'sets the #state issues with the same #digest' do
+            sibling
+            subject.update_state  state
+
+            expect(subject.reload.state).to eq state
+            expect(sibling.reload.state).to eq state
+        end
+    end
+
     describe '#fixed_by_revision?' do
         let(:fixer_revision) do
             FactoryGirl.create( :revision, scan: scan )

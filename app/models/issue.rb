@@ -6,8 +6,10 @@ class Issue < ActiveRecord::Base
     belongs_to :fixed_by_revision, class_name: 'Revision',
                foreign_key: 'fixed_by_revision_id'
 
-    belongs_to :scan, counter_cache: true
     belongs_to :site, counter_cache: true
+    belongs_to :scan, counter_cache: true
+
+    has_many :siblings, class_name: 'Issue', foreign_key: :digest, primary_key: :digest
 
     belongs_to :page, class_name: 'IssuePage', foreign_key: 'issue_page_id',
                dependent: :destroy
@@ -158,6 +160,10 @@ class Issue < ActiveRecord::Base
         issue.save
 
         issue
+    end
+
+    def update_state( state )
+        Issue.reorder('').where( digest: digest ).update_all( state: state )
     end
 
     def get_sitemap_entry( options = {} )

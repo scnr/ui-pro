@@ -5,8 +5,13 @@
     chart_data = @issues_summary[:chart_data]
     site       = @issues_summary[:site]
 
+    siblings = {}
+
     scoped_find_each( @issues_summary[:issues] ) do |issue|
-        severity    = issue.severity
+        next if siblings[issue.digest]
+        siblings[issue.digest] = true
+
+        severity = issue.severity
 %>
 
 <% if severity.name != last_severity %>
@@ -70,7 +75,7 @@
                 class="issue-summary-vector-<%= issue.vector.kind %>">
 
                 <td>
-                    <%= link_to site_scan_revision_issue_path( issue.site, issue.scan, issue.revision, issue ),
+                    <%= link_to site_scan_revision_issue_path( @site, issue.scan, issue.revision, issue ),
                                 title: issue.state.humanize do %>
                         <i class="fa fa-<%= issue_state_to_icon issue.state %>">
                         </i>
@@ -123,6 +128,31 @@
                                                 issue.scan,
                                                 filter_params
                                         ) %>
+
+                            <%
+                               issue.siblings.each do |sibling|
+                                   # If the sibling is this issue then it won't
+                                   # have scan and revision data preloaded so
+                                   # do this little optimization here.
+                                   next if sibling.id == issue.id
+                            %>
+                                ,
+                                    <%= link_to sibling.revision.index.ordinalize,
+                                                site_scan_revision_path(
+                                                        site,
+                                                        sibling.revision.scan,
+                                                        sibling.revision,
+                                                        filter_params
+                                                ) %>
+
+                                    <%= link_to sibling.revision.scan.name,
+                                                site_scan_path(
+                                                        site,
+                                                        sibling.revision.scan,
+                                                        filter_params
+                                                ) %>
+                            <% end %>
+
                         <% end %>
                     </td>
                 <% end %>

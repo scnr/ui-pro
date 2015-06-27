@@ -5,6 +5,11 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+def scan_id
+    Scan.count + 1
+end
+
 user = User.create(
     email:                 'test@stuff.com',
     password:              'testtest',
@@ -189,6 +194,7 @@ sites.each.with_index do |afr, si|
     site.reload
     site.roles.reload
 
+    previous_scan = nil
     scans_size.times do |i|
         break if issues.empty?
 
@@ -196,7 +202,7 @@ sites.each.with_index do |afr, si|
             profile:             p,
             site_role:           site.roles[i % site.roles.size],
             user_agent:          user_agent,
-            name:                "my scheduled scan #{i}",
+            name:                "my scheduled scan #{scan_id}",
             schedule_attributes: {
                 start_at: Time.now + 3600
             }
@@ -206,7 +212,7 @@ sites.each.with_index do |afr, si|
             profile:             p,
             site_role:           site.roles[i % site.roles.size],
             user_agent:          user_agent,
-            name:                "my scheduled scan #{i+1}",
+            name:                "my scheduled scan #{scan_id}",
             schedule_attributes: {
                 day_frequency:   10,
                 month_frequency: 1
@@ -217,7 +223,7 @@ sites.each.with_index do |afr, si|
             profile:             p,
             site_role:           site.roles[i % site.roles.size],
             user_agent:          user_agent,
-            name:                "my scheduled scan #{i+2}",
+            name:                "my scheduled scan #{scan_id}",
             schedule_attributes: {
                 day_frequency:    1,
                 stop_after_hours: 10
@@ -228,7 +234,7 @@ sites.each.with_index do |afr, si|
             profile:             p,
             site_role:           site.roles[i % site.roles.size],
             user_agent:          user_agent,
-            name:                "my scheduled scan #{i+3}",
+            name:                "my scheduled scan #{scan_id}",
             schedule_attributes: {
                 start_at:         Time.now + 3600,
                 day_frequency:    1,
@@ -241,7 +247,7 @@ sites.each.with_index do |afr, si|
             profile:             p,
             site_role:           site.roles[i % site.roles.size],
             user_agent:          user_agent,
-            name:                "my scheduled scan #{i+4}",
+            name:                "my scheduled scan #{scan_id}",
             schedule_attributes: {
                 day_frequency:    1,
                 month_frequency:  2,
@@ -261,9 +267,10 @@ sites.each.with_index do |afr, si|
             profile:     p,
             site_role:   site.roles[i % site.roles.size],
             user_agent:  user_agent,
-            name:        "my scan #{i+5}",
+            name:        "my scan #{scan_id}",
             description: 'my description'
         )
+        ap scan.errors.messages
         scan.schedule.destroy
         scan.save
 
@@ -301,43 +308,27 @@ sites.each.with_index do |afr, si|
 
                     next if !solo.check
 
+                    if previous_scan = site.scans.all.find { |s| s != scan }
+                        ap previous_scan.id
+                        ap scan.id
+
+                        prev_scan_revision = previous_scan.revisions.create(
+                            state:      'started',
+                            started_at: Time.now - 8000,
+                            stopped_at: Time.now - 4000
+                        )
+
+                        prev_scan_revision.issues.create_from_arachni(
+                            solo,
+                            state: Issue::STATES.sample
+                        )
+                    end
+
                     is = revision.issues.create_from_arachni(
                         solo,
                         state: Issue::STATES.sample
                     )
                     ap is.errors.messages
-
-                    # page_sitemap_entry   = site.sitemap_entries.find_by_url( is.page.dom.url )
-                    # page_sitemap_entry ||= site.sitemap_entries.create(
-                    #     url:      is.page.dom.url,
-                    #     code:     is.page.response.code,
-                    #     revision: revision
-                    # )
-                    #
-                    # is.page.sitemap_entry = page_sitemap_entry
-                    # is.page.save
-                    #
-                    # page_sitemap_entry   = site.sitemap_entries.find_by_url( is.referring_page.dom.url )
-                    # page_sitemap_entry ||= site.sitemap_entries.create(
-                    #     url:      is.referring_page.dom.url,
-                    #     code:     is.referring_page.response.code,
-                    #     revision: revision
-                    # )
-                    #
-                    # is.referring_page.sitemap_entry = page_sitemap_entry
-                    # is.referring_page.save
-                    #
-                    # vector_sitemap_entry   = site.sitemap_entries.find_by_url( is.vector.action )
-                    # vector_sitemap_entry ||= site.sitemap_entries.create(
-                    #     url:      is.vector.action,
-                    #     code:     is.page.response.code,
-                    #     revision: revision
-                    # )
-                    # is.vector.sitemap_entry = vector_sitemap_entry
-                    # is.vector.save
-                    #
-                    # is.sitemap_entry = vector_sitemap_entry
-                    # is.save
 
                     break
                 end

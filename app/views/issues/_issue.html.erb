@@ -11,7 +11,7 @@
             <%= link_to_url_with_external(
                     external: @issue.referring_page.dom.url,
                     internal: site_path(
-                        issue.revision.scan.site,
+                        @site,
                         sitemap_entry_url( issue.referring_page.sitemap_entry )
                     ),
                     display_path_only: true
@@ -21,7 +21,7 @@
             <%= link_to_url_with_external(
                     external: @issue.vector.action,
                     internal: site_path(
-                        issue.revision.scan.site,
+                        @site,
                         sitemap_entry_url( issue.vector.sitemap_entry )
                     ),
                     display_path_only: true
@@ -38,24 +38,42 @@
     <p class="pull-left label label-success label-emphasis">
         Fixed by <%= link_to @issue.fixed_by_revision,
                     site_scan_revision_path(
-                            @issue.site,
-                            @issue.scan,
+                            @site,
+                            @scan,
                             @issue.fixed_by_revision
                     ) %>
+
+        <% if @issue.fixed_by_revision.scan != @scan %>
+            of
+            <%= link_to @issue.fixed_by_revision.scan.name,
+                        site_scan_path(
+                                @site,
+                                @issue.fixed_by_revision.scan
+                        ) %>
+        <% end %>
 
     </p>
     <% end %>
 
 </div>
 
-<% has_references = @issue.type.references.any? || @issue.type.cwe %>
+<%
+   has_references = @issue.type.references.any? || @issue.type.cwe
+   has_siblings   = @issue.siblings.size > 1
+%>
 
 <div class="row" id="info">
-    <div class="col-md-<%= has_references ? '10' : '12' %>">
+    <div class="col-md-<%= 12 - [has_siblings, has_references].compact.size * 2 %>">
         <div class="description">
             <%= md @issue.type.description %>
         </div>
     </div>
+
+    <% if has_siblings %>
+        <div class="col-md-2" id="siblings">
+            <%= render 'issues/siblings' %>
+        </div>
+    <% end %>
 
     <% if has_references %>
     <div class="col-md-2 references">

@@ -1,0 +1,15 @@
+<strong>Also logged by</strong>
+
+<ul class="list-unstyled">
+    <% @issue.siblings.each do |sibling| next if @issue.id == sibling.id %>
+    <li>
+        <%= link_to "#{sibling.revision.index.ordinalize} #{sibling.revision.scan.name}",
+                    site_scan_revision_issue_path(
+                            @site,
+                            sibling.revision.scan,
+                            sibling.revision,
+                            sibling
+                    ) %>
+    </li>
+    <% end %>
+</ul>

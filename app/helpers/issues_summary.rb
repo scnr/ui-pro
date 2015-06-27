@@ -6,12 +6,10 @@ module IssuesSummary
                 includes(:schedule).includes(:profile)
         end
 
-        issues         = preload_issue_associations( data[:issues] )
-        sitemap_issues = nil
+        issues = preload_issue_associations( data[:issues] )
 
         if filter_pages?
             @sitemap_entry = @site.sitemap_entries.find( params[:filter][:pages].first )
-            sitemap_issues = preload_issue_associations( @sitemap_entry.issues )
         end
 
         # This needs to happen here, we want this for filtering feedback and
@@ -26,6 +24,7 @@ module IssuesSummary
         pre_page_filter_data = {}
         scan_data            = {}
         revision_data        = {}
+        unique_issues_count  = Set.new
 
         page_filtered_issues = []
         max_severity         = nil
@@ -61,12 +60,9 @@ module IssuesSummary
                 # and scan we're filtering for.
                 data[:scans] << issue.scan
                 data[:revisions] << issue.revision
-                # sitemap_issues.each do |i|
-                #     next if @scan && i.scan != @scan
-                #     ap i.revision.id
-                #     data[:revisions] << i.revision
-                # end
             end
+
+            unique_issues_count << issue.digest
 
             #... because we at least want to grab the filtered max severity now...
             max_severity ||= issue.severity.to_s
@@ -129,21 +125,22 @@ module IssuesSummary
         end
 
         {
-            site:                      data[:site],
-            site_scans:                data[:site].scans.includes(:revisions).
-                                            includes(:schedule).includes(:profile),
-            scans:                     data[:scans],
-            revisions:                 data[:revisions],
-            sitemap:                   data[:sitemap],
-            sitemap_with_issues:       sitemap_with_issues,
-            states:                    states,
-            severities:                severities,
-            sitemap_data:      sitemap_data,
-            max_severity:              max_severity,
-            issues:                    page_filtered_issues,
-            chart_data:                chart_data,
-            scan_data:              scan_data,
-            revision_data:          revision_data
+            site:                data[:site],
+            site_scans:          data[:site].scans.includes(:revisions).
+                                    includes(:schedule).includes(:profile),
+            scans:               data[:scans],
+            revisions:           data[:revisions],
+            sitemap:             data[:sitemap],
+            sitemap_with_issues: sitemap_with_issues,
+            states:              states,
+            severities:          severities,
+            sitemap_data:        sitemap_data,
+            max_severity:        max_severity,
+            issues:              page_filtered_issues,
+            chart_data:          chart_data,
+            scan_data:           scan_data,
+            revision_data:       revision_data,
+            unique_issues_count: unique_issues_count.size
         }
     end
 
@@ -156,8 +153,12 @@ module IssuesSummary
             # Issues are sorted by severity first, the first one will be the max.
             max_severity: issue.severity.to_s,
             id:           issue.vector.sitemap_entry_id,
-            issue_count:  0
+            issue_count:  0,
+            seen:         Set.new
         }
+
+        return if data[issue.vector.action][:seen].include? issue.digest
+        data[issue.vector.action][:seen] << issue.digest
 
         data[issue.vector.action][:issue_count] += 1
     end
@@ -170,13 +171,20 @@ module IssuesSummary
                 issue_names:              {},
                 severities:               {},
                 severity_index_for_issue: {},
-                severity_regions:         {}
+                severity_regions:         {},
+                seen:                     Set.new,
+                total_issues:             0
             )
         end
 
         if filter_pages? && !page_id_in_filter?( issue.vector.sitemap_entry_id )
             return
         end
+
+        return if data[:seen].include?( issue.digest )
+        data[:seen] << issue.digest
+
+        data[:total_issues] += 1
 
         severity      = issue.severity.to_sym
         name          = issue.type.name
@@ -277,9 +285,11 @@ module IssuesSummary
     end
 
     def preload_issue_associations( issues )
-        issues.includes(:site).includes(:scan).includes(:revision).
+        issues.includes(:site).includes(:scan).
+            includes( revision: { scan: [:profile, :schedule] } ).
             includes(:type).includes(:severity).
-            includes(:vector).includes( vector: :sitemap_entry )
+            includes(:vector).includes( vector: :sitemap_entry ).
+            includes( siblings: { revision: :scan } )
     end
 
     def prepare_issue_filters

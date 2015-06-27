@@ -7,6 +7,7 @@ feature 'Site page Overview tab' do
     let(:other_site) { FactoryGirl.create :site, host: 'fff.com' }
     let(:scan) { FactoryGirl.create :scan, site: site, profile: profile }
     let(:revision) { FactoryGirl.create :revision, scan: scan }
+    let(:other_revision) { FactoryGirl.create :revision, scan: other_scan }
     let(:other_scan) { FactoryGirl.create :scan, site: site, profile: profile, name: 'Blah' }
 
     before do
@@ -480,6 +481,44 @@ feature 'Site page Overview tab' do
                                 scenario 'user sees revision link with filtering options' do
                                     site.issues.each do |issue|
                                         expect(issues.find("#summary-issue-#{issue.digest}")).to have_xpath "//a[starts-with(@href, '#{site_scan_revision_path(issue.revision.scan.site, issue.revision.scan, issue.revision)}?filter')]"
+                                    end
+                                end
+
+                                feature 'when the same issue has been logged by different scans' do
+                                    let(:sibling) do
+                                        issue  = site.issues.last
+
+                                        set_sitemap_entries other_revision.issues.create(
+                                            type:           issue.type,
+                                            page:           FactoryGirl.create(:issue_page),
+                                            referring_page: FactoryGirl.create(:issue_page),
+                                            vector:         FactoryGirl.create(:vector).
+                                                                tap { |v| v.action = issue.sitemap_entry.url },
+                                            sitemap_entry:  issue.sitemap_entry,
+                                            digest:         issue.digest,
+                                            state:          'trusted'
+                                        )
+                                    end
+
+                                    before do
+                                        sibling
+                                        visit current_url
+                                    end
+
+                                    scenario 'user sees scan name' do
+                                        expect(issues.find("#summary-issue-#{sibling.digest}")).to have_content sibling.revision.scan.name
+                                    end
+
+                                    scenario 'user sees scan link with filtering options' do
+                                        expect(issues.find("#summary-issue-#{sibling.digest}")).to have_xpath "//a[starts-with(@href, '#{site_scan_path(sibling.revision.scan.site, sibling.revision.scan)}?filter')]"
+                                    end
+
+                                    scenario 'user sees revision index' do
+                                        expect(issues.find("#summary-issue-#{sibling.digest}")).to have_content sibling.revision.index
+                                    end
+
+                                    scenario 'user sees revision link with filtering options' do
+                                        expect(issues.find("#summary-issue-#{sibling.digest}")).to have_xpath "//a[starts-with(@href, '#{site_scan_revision_path(sibling.revision.scan.site, sibling.revision.scan, sibling.revision)}?filter')]"
                                     end
                                 end
                             end

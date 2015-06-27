@@ -4,18 +4,32 @@ Warden.test_mode!
 feature 'Issue page' do
 
     let(:user) { FactoryGirl.create :user, sites: [site] }
+    let(:digest) { 'mydigest' }
+    let(:type) { FactoryGirl.create(:issue_type) }
     let(:issue) do
         Issue.create_from_arachni(
             Factory[:issue],
+            digest: digest,
             revision: revision,
-            type: FactoryGirl.create(:issue_type),
+            type: type,
             platform: FactoryGirl.create(
                 :issue_platform,
-                type: FactoryGirl.create( :issue_platform_type )
+                type: FactoryGirl.create(:issue_platform_type)
             )
         )
     end
+    let(:sibling) do
+        Issue.create_from_arachni(
+            Factory[:issue],
+            digest: digest,
+            revision: revision,
+            type: type
+        )
+    end
+
     let(:revision) { FactoryGirl.create :revision, scan: scan }
+    let(:other_revision) { FactoryGirl.create :revision, scan: other_scan }
+    let(:other_scan) { FactoryGirl.create :scan, site: site, profile: FactoryGirl.create(:profile) }
     let(:scan) { FactoryGirl.create :scan, site: site, profile: FactoryGirl.create(:profile) }
     let(:site) { FactoryGirl.create :site }
     let(:vector) { issue.vector }
@@ -23,12 +37,13 @@ feature 'Issue page' do
     def refresh
         visit site_scan_revision_issue_path( site, scan, revision, issue )
     end
-    
+
     after(:each) do
         Warden.test_reset!
     end
 
     before do
+        user.sites << site
         login_as user, scope: :user
         refresh
     end
@@ -105,7 +120,27 @@ feature 'Issue page' do
             end
 
             scenario 'shows a link to the revision' do
-                expect(header.find('p.label-success')).to have_xpath "//a[@href='#{site_scan_revision_path( site, scan, revision )}']"
+                expect(header.find('p.label-success')).to have_xpath "a[@href='#{site_scan_revision_path( site, scan, revision )}']"
+            end
+
+            feature 'when the revision is from the same scan' do
+                scenario 'does not show the scan' do
+                    expect(header.find('p.label-success')).to_not have_xpath "a[@href='#{site_scan_path( site, scan )}']"
+                end
+            end
+
+            feature 'when the revision is from a different scan' do
+                before do
+                    issue.state = 'fixed'
+                    issue.fixed_by_revision = other_revision
+                    issue.save
+
+                    refresh
+                end
+
+                scenario 'shows a link the scan' do
+                    expect(header.find('p.label-success')).to have_xpath "//a[@href='#{site_scan_path( site, other_scan )}']"
+                end
             end
         end
     end
@@ -113,13 +148,24 @@ feature 'Issue page' do
     feature 'sidebar' do
         let(:sidebar) { find '#sidebar' }
 
-        feature 'form' do
-            scenario 'can set the state', js: true do
+        before do
+            sibling
+            refresh
+        end
+
+        feature 'form', js: true do
+            scenario 'can set the state' do
                 select 'Fixed', from: 'issue_state'
                 sleep 1
 
-                issue.reload
-                expect(issue.state).to eq 'fixed'
+                expect(issue.reload.state).to eq 'fixed'
+            end
+
+            scenario 'sets the state for sibling issues too' do
+                select 'Fixed', from: 'issue_state'
+                sleep 1
+
+                expect(sibling.reload.state).to eq 'fixed'
             end
         end
     end
@@ -134,6 +180,31 @@ feature 'Issue page' do
             refresh
 
             expect(info.find('.description strong')).to have_content 'Stuff'
+        end
+
+        feature 'when there are siblings' do
+            before do
+                sibling
+                refresh
+            end
+
+            scenario 'links to them' do
+                path = site_scan_revision_issue_path(
+                    site,
+                    sibling.revision.scan,
+                    sibling.revision,
+                    sibling
+                )
+
+                expect(info.find('#siblings')).to have_content "#{sibling.revision.index.ordinalize} #{sibling.revision.scan.name}"
+                expect(info.find('#siblings')).to have_xpath "//a[@href='#{path}']"
+            end
+        end
+
+        feature 'when there are no siblings' do
+            scenario 'does not show list' do
+                expect(info).to_not have_css '#siblings'
+            end
         end
 
         feature 'when there is a CWE' do
@@ -562,19 +633,19 @@ feature 'Issue page' do
             let(:remarks) { identification.find '#identification-remarks' }
 
             scenario 'it shows them in groups' do
-                dude = remarks.find('ul.list-unstyled > li:nth-of-type(2)')
+                dude = remarks.find('ul.list-unstyled > li:nth-of-type(1)')
                 expect(dude.find('strong')).to have_content 'The dude'
 
                 dude_texts = dude.find( 'ul' )
-                expect(dude_texts.find( 'li:nth-of-type(1)' )).to have_content issue.remarks[1].text
-                expect(dude_texts.find( 'li:nth-of-type(2)' )).to have_content issue.remarks[0].text
+                expect(dude_texts.find( 'li:nth-of-type(1)' )).to have_content issue.remarks[0].text
+                expect(dude_texts.find( 'li:nth-of-type(2)' )).to have_content issue.remarks[1].text
 
-                other_dude = remarks.find('ul.list-unstyled > li:nth-of-type(1)')
+                other_dude = remarks.find('ul.list-unstyled > li:nth-of-type(2)')
                 expect(other_dude.find('strong')).to have_content 'The other dude'
 
                 other_dude_texts = other_dude.find( 'ul' )
-                expect(other_dude_texts.find( 'li:nth-of-type(1)' )).to have_content issue.remarks[3].text
-                expect(other_dude_texts.find( 'li:nth-of-type(2)' )).to have_content issue.remarks[2].text
+                expect(other_dude_texts.find( 'li:nth-of-type(1)' )).to have_content issue.remarks[2].text
+                expect(other_dude_texts.find( 'li:nth-of-type(2)' )).to have_content issue.remarks[3].text
             end
         end
 

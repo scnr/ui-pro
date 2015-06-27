@@ -1,22 +1,21 @@
 class IssuesController < ApplicationController
     before_filter :authenticate_user!
 
-    before_action :set_issue, only: [:show, :edit, :update]
+    before_action :set_site
+    before_action :set_scan
+    before_action :set_revision
+    before_action :set_issue, except: :update
 
     # GET /issues/1
     # GET /issues/1.json
     def show
     end
 
-    # GET /issues/1/edit
-    def edit
-    end
-
     # PATCH/PUT /issues/1
     # PATCH/PUT /issues/1.json
     def update
         respond_to do |format|
-            if @issue.update( issue_params )
+            if @revision.issues.find( params[:id] ).update_state( issue_params[:state] )
                 format.html { redirect_to @issue, notice: 'Issue was successfully updated.' }
                 format.json { render :show, status: :ok, location: @issue }
                 format.js { head :ok }
@@ -29,8 +28,56 @@ class IssuesController < ApplicationController
 
     private
 
+    def set_site
+        @site = current_user.sites.find_by_id( params[:site_id] )
+
+        raise ActionController::RoutingError.new( 'Site not found.' ) if !@site
+    end
+
+    # Use callbacks to share common setup or constraints between actions.
+    def set_scan
+        @scan = @site.scans.includes(:site_role).find( params[:scan_id] )
+
+        raise ActionController::RoutingError.new( 'Scan not found.' ) if !@scan
+    end
+
+    # Use callbacks to share common setup or constraints between actions.
+    def set_revision
+        @revision = @scan.revisions.find( params[:revision_id] )
+
+        raise ActionController::RoutingError.new( 'Revision not found.' ) if !@revision
+    end
+
     def set_issue
-        @issue = Issue.find( params[:id] )
+        page_preloads = [
+            {
+                dom: [
+                         {
+                             execution_flow_sinks: {
+                                 stackframes: :function
+                             }
+                         },
+                         {
+                             data_flow_sinks: [
+                                 :function,
+                                 stackframes: :function
+                            ]
+                         },
+                         :transitions
+                     ]
+            },
+            :response, :request, :sitemap_entry
+        ]
+
+        @issue = @revision.issues.includes(:sitemap_entry).
+            includes( fixed_by_revision: :scan ).
+            includes( vector: :sitemap_entry ).
+            includes(:platform).includes(:remarks).
+            includes( page: page_preloads ).
+            includes( referring_page: page_preloads ).
+            includes(:severity).includes(type: :references).
+            includes(:siblings).includes( siblings: { revision: :scan } ).
+            find( params[:id] )
     end
 
     def issue_params

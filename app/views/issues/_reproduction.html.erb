@@ -1,7 +1,7 @@
-<% if !(role = issue.revision.scan.site_role).guest? %>
+<% if !(role = @scan.site_role).guest? %>
     <div class="alert alert-info" id="reproduction-site-role">
         This issue was identified by logging in as
-        <a target="_blank" href="<%= site_path role.site %>#!/roles/<%= role.id %>"><%= role %></a>,
+        <a target="_blank" href="<%= site_path @site %>#!/roles/<%= role.id %>"><%= role %></a>,
         it is likely that you will need the same privileges in order to reproduce it.
     </div>
 <% end %>

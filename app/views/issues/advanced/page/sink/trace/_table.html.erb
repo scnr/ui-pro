@@ -22,7 +22,7 @@
             <th></th>
         </tr>
     </thead>
-    <% trace.each.with_index do |frame, i|
+    <% trace.sort_by(&:id).each.with_index do |frame, i|
 
            with_source = (frame.line.to_i > 0 && frame.url == page.dom.url) ||
                    !frame.function.source.to_s.empty?
