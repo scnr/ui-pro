@@ -170,6 +170,26 @@ section {
     font-size: 12px;
 }
 
+.panel-severity-high {
+    background-color: $severity-high-color-faded;
+}
+
+.panel-severity-medium {
+    background-color: $severity-medium-color-faded;
+}
+
+.panel-severity-low {
+    background-color: $severity-low-color-faded;
+}
+
+.panel-severity-informational {
+    background-color: $severity-informational-color-faded;
+}
+
+.panel-severity-none {
+    background-color: $severity-none-color-faded;
+}
+
 .btn-inverse {
     background-color: #363636;
     background-image: linear-gradient(to bottom, #444444, #222222);
