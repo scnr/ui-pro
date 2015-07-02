@@ -243,14 +243,14 @@ describe Scan do
                 subject.revisions << FactoryGirl.create(
                     :revision,
                     scan: subject,
-                    started_at: Time.now,
-                    stopped_at: nil
+                    started_at: Time.now + 1000,
+                    stopped_at: Time.now + 2000
                 )
                 subject.revisions << FactoryGirl.create(
                     :revision,
                     scan: subject,
-                    started_at: Time.now + 1000,
-                    stopped_at: Time.now + 2000
+                    started_at: Time.now,
+                    stopped_at: nil
                 )
             end
 
