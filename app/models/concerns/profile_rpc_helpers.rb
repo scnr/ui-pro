@@ -43,6 +43,7 @@ module ProfileRpcHelpers
         :http_request_redirect_limit,
         :http_request_timeout,
 
+        :scope_page_limit,
         :scope_exclude_content_patterns,
         :scope_exclude_path_patterns,
         :scope_extend_paths,
