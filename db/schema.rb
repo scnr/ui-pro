@@ -16,7 +16,7 @@ ActiveRecord::Schema.define(version: 20150406191208) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "active_admin_comments", force: true do |t|
+  create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace"
     t.text     "body"
     t.string   "resource_id",   null: false
@@ -31,7 +31,7 @@ ActiveRecord::Schema.define(version: 20150406191208) do
   add_index "active_admin_comments", ["namespace"], name: "index_active_admin_comments_on_namespace", using: :btree
   add_index "active_admin_comments", ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id", using: :btree
 
-  create_table "http_requests", force: true do |t|
+  create_table "http_requests", force: :cascade do |t|
     t.text     "url"
     t.string   "http_method"
     t.text     "parameters"
@@ -44,10 +44,10 @@ ActiveRecord::Schema.define(version: 20150406191208) do
     t.datetime "updated_at"
   end
 
-  add_index "http_requests", ["requestable_id", "requestable_type"], name: "index_http_requests_on_requestable_id_and_requestable_type", using: :btree
+  add_index "http_requests", ["requestable_type", "requestable_id"], name: "index_http_requests_on_requestable_type_and_requestable_id", using: :btree
   add_index "http_requests", ["url"], name: "index_http_requests_on_url", using: :btree
 
-  create_table "http_responses", force: true do |t|
+  create_table "http_responses", force: :cascade do |t|
     t.text     "url"
     t.integer  "code"
     t.string   "ip_address"
@@ -63,10 +63,10 @@ ActiveRecord::Schema.define(version: 20150406191208) do
     t.datetime "updated_at"
   end
 
-  add_index "http_responses", ["responsable_id", "responsable_type"], name: "index_http_responses_on_responsable_id_and_responsable_type", using: :btree
+  add_index "http_responses", ["responsable_type", "responsable_id"], name: "index_http_responses_on_responsable_type_and_responsable_id", using: :btree
   add_index "http_responses", ["url"], name: "index_http_responses_on_url", using: :btree
 
-  create_table "issue_page_dom_data_flow_sinks", force: true do |t|
+  create_table "issue_page_dom_data_flow_sinks", force: :cascade do |t|
     t.text     "object"
     t.integer  "tainted_argument_index"
     t.text     "tainted_value"
@@ -79,7 +79,7 @@ ActiveRecord::Schema.define(version: 20150406191208) do
   add_index "issue_page_dom_data_flow_sinks", ["issue_page_dom_id"], name: "index_issue_page_dom_data_flow_sinks_on_issue_page_dom_id", using: :btree
   add_index "issue_page_dom_data_flow_sinks", ["object"], name: "index_issue_page_dom_data_flow_sinks_on_object", using: :btree
 
-  create_table "issue_page_dom_execution_flow_sinks", force: true do |t|
+  create_table "issue_page_dom_execution_flow_sinks", force: :cascade do |t|
     t.text     "data"
     t.integer  "issue_page_dom_id"
     t.datetime "created_at"
@@ -88,7 +88,7 @@ ActiveRecord::Schema.define(version: 20150406191208) do
 
   add_index "issue_page_dom_execution_flow_sinks", ["issue_page_dom_id"], name: "index_issue_page_dom_execution_flow_sinks_on_issue_page_dom_id", using: :btree
 
-  create_table "issue_page_dom_functions", force: true do |t|
+  create_table "issue_page_dom_functions", force: :cascade do |t|
     t.text     "source"
     t.text     "arguments"
     t.text     "name"
@@ -99,9 +99,9 @@ ActiveRecord::Schema.define(version: 20150406191208) do
   end
 
   add_index "issue_page_dom_functions", ["name"], name: "index_issue_page_dom_functions_on_name", using: :btree
-  add_index "issue_page_dom_functions", ["with_dom_function_id", "with_dom_function_type"], name: "issue_page_dom_functions_poly_index", using: :btree
+  add_index "issue_page_dom_functions", ["with_dom_function_type", "with_dom_function_id"], name: "issue_page_dom_functions_poly_index", using: :btree
 
-  create_table "issue_page_dom_stack_frames", force: true do |t|
+  create_table "issue_page_dom_stack_frames", force: :cascade do |t|
     t.integer  "line"
     t.text     "url"
     t.integer  "with_dom_stack_frame_id"
@@ -110,9 +110,9 @@ ActiveRecord::Schema.define(version: 20150406191208) do
     t.datetime "updated_at"
   end
 
-  add_index "issue_page_dom_stack_frames", ["with_dom_stack_frame_id", "with_dom_stack_frame_type"], name: "issue_page_dom_stack_frames_poly_index", using: :btree
+  add_index "issue_page_dom_stack_frames", ["with_dom_stack_frame_type", "with_dom_stack_frame_id"], name: "issue_page_dom_stack_frames_poly_index", using: :btree
 
-  create_table "issue_page_dom_transitions", force: true do |t|
+  create_table "issue_page_dom_transitions", force: :cascade do |t|
     t.text     "element"
     t.text     "event"
     t.text     "options"
@@ -124,7 +124,7 @@ ActiveRecord::Schema.define(version: 20150406191208) do
 
   add_index "issue_page_dom_transitions", ["issue_page_dom_id"], name: "index_issue_page_dom_transitions_on_issue_page_dom_id", using: :btree
 
-  create_table "issue_page_doms", force: true do |t|
+  create_table "issue_page_doms", force: :cascade do |t|
     t.text     "url"
     t.text     "body"
     t.integer  "issue_page_id"
@@ -135,13 +135,13 @@ ActiveRecord::Schema.define(version: 20150406191208) do
   add_index "issue_page_doms", ["issue_page_id"], name: "index_issue_page_doms_on_issue_page_id", using: :btree
   add_index "issue_page_doms", ["url"], name: "index_issue_page_doms_on_url", using: :btree
 
-  create_table "issue_pages", force: true do |t|
+  create_table "issue_pages", force: :cascade do |t|
     t.integer  "sitemap_entry_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "issue_platform_types", force: true do |t|
+  create_table "issue_platform_types", force: :cascade do |t|
     t.string   "shortname"
     t.string   "name"
     t.datetime "created_at"
@@ -151,7 +151,7 @@ ActiveRecord::Schema.define(version: 20150406191208) do
   add_index "issue_platform_types", ["name"], name: "index_issue_platform_types_on_name", unique: true, using: :btree
   add_index "issue_platform_types", ["shortname"], name: "index_issue_platform_types_on_shortname", unique: true, using: :btree
 
-  create_table "issue_platforms", force: true do |t|
+  create_table "issue_platforms", force: :cascade do |t|
     t.string   "shortname"
     t.string   "name"
     t.integer  "issue_platform_type_id"
@@ -163,7 +163,7 @@ ActiveRecord::Schema.define(version: 20150406191208) do
   add_index "issue_platforms", ["name"], name: "index_issue_platforms_on_name", unique: true, using: :btree
   add_index "issue_platforms", ["shortname"], name: "index_issue_platforms_on_shortname", unique: true, using: :btree
 
-  create_table "issue_remarks", force: true do |t|
+  create_table "issue_remarks", force: :cascade do |t|
     t.string   "author"
     t.text     "text"
     t.integer  "issue_id"
@@ -173,7 +173,7 @@ ActiveRecord::Schema.define(version: 20150406191208) do
 
   add_index "issue_remarks", ["issue_id"], name: "index_issue_remarks_on_issue_id", using: :btree
 
-  create_table "issue_type_references", force: true do |t|
+  create_table "issue_type_references", force: :cascade do |t|
     t.string   "title"
     t.text     "url"
     t.integer  "issue_type_id"
@@ -183,7 +183,7 @@ ActiveRecord::Schema.define(version: 20150406191208) do
 
   add_index "issue_type_references", ["issue_type_id"], name: "index_issue_type_references_on_issue_type_id", using: :btree
 
-  create_table "issue_type_severities", force: true do |t|
+  create_table "issue_type_severities", force: :cascade do |t|
     t.string   "name"
     t.text     "description"
     t.datetime "created_at"
@@ -192,7 +192,7 @@ ActiveRecord::Schema.define(version: 20150406191208) do
 
   add_index "issue_type_severities", ["name"], name: "index_issue_type_severities_on_name", unique: true, using: :btree
 
-  create_table "issue_type_tags", force: true do |t|
+  create_table "issue_type_tags", force: :cascade do |t|
     t.string   "name"
     t.text     "description"
     t.datetime "created_at"
@@ -201,7 +201,7 @@ ActiveRecord::Schema.define(version: 20150406191208) do
 
   add_index "issue_type_tags", ["name"], name: "index_issue_type_tags_on_name", unique: true, using: :btree
 
-  create_table "issue_types", force: true do |t|
+  create_table "issue_types", force: :cascade do |t|
     t.string   "name"
     t.string   "check_shortname"
     t.text     "description"
@@ -216,13 +216,13 @@ ActiveRecord::Schema.define(version: 20150406191208) do
   add_index "issue_types", ["issue_type_severity_id"], name: "index_issue_types_on_issue_type_severity_id", using: :btree
   add_index "issue_types", ["name"], name: "index_issue_types_on_name", unique: true, using: :btree
 
-  create_table "issue_types_issue_type_tags", force: true do |t|
+  create_table "issue_types_issue_type_tags", force: :cascade do |t|
     t.integer "issue_type_id"
     t.integer "issue_type_tag_id"
   end
 
-  create_table "issues", force: true do |t|
-    t.string   "digest"
+  create_table "issues", force: :cascade do |t|
+    t.integer  "digest",                  limit: 8
     t.string   "state"
     t.boolean  "active"
     t.text     "proof"
@@ -252,7 +252,7 @@ ActiveRecord::Schema.define(version: 20150406191208) do
   add_index "issues", ["sitemap_entry_id"], name: "index_issues_on_sitemap_entry_id", using: :btree
   add_index "issues", ["state"], name: "index_issues_on_state", using: :btree
 
-  create_table "profiles", force: true do |t|
+  create_table "profiles", force: :cascade do |t|
     t.integer  "user_id"
     t.boolean  "default"
     t.string   "name"
@@ -283,7 +283,7 @@ ActiveRecord::Schema.define(version: 20150406191208) do
     t.datetime "updated_at"
   end
 
-  create_table "reports", force: true do |t|
+  create_table "reports", force: :cascade do |t|
     t.integer  "revision_id"
     t.text     "location"
     t.datetime "created_at"
@@ -292,7 +292,7 @@ ActiveRecord::Schema.define(version: 20150406191208) do
 
   add_index "reports", ["revision_id"], name: "index_reports_on_revision_id", using: :btree
 
-  create_table "revisions", force: true do |t|
+  create_table "revisions", force: :cascade do |t|
     t.integer  "scan_id"
     t.integer  "site_id"
     t.string   "state"
@@ -310,7 +310,7 @@ ActiveRecord::Schema.define(version: 20150406191208) do
   add_index "revisions", ["scan_id"], name: "index_revisions_on_scan_id", using: :btree
   add_index "revisions", ["site_id"], name: "index_revisions_on_site_id", using: :btree
 
-  create_table "scans", force: true do |t|
+  create_table "scans", force: :cascade do |t|
     t.string   "name"
     t.text     "description"
     t.text     "path"
@@ -329,7 +329,7 @@ ActiveRecord::Schema.define(version: 20150406191208) do
   add_index "scans", ["profile_id"], name: "index_scans_on_profile_id", using: :btree
   add_index "scans", ["site_id"], name: "index_scans_on_site_id", using: :btree
 
-  create_table "schedules", force: true do |t|
+  create_table "schedules", force: :cascade do |t|
     t.integer  "month_frequency"
     t.integer  "day_frequency"
     t.datetime "start_at"
@@ -342,7 +342,7 @@ ActiveRecord::Schema.define(version: 20150406191208) do
 
   add_index "schedules", ["scan_id"], name: "index_schedules_on_scan_id", using: :btree
 
-  create_table "settings", force: true do |t|
+  create_table "settings", force: :cascade do |t|
     t.integer  "http_request_timeout"
     t.integer  "http_request_queue_size"
     t.integer  "http_request_redirect_limit"
@@ -358,7 +358,7 @@ ActiveRecord::Schema.define(version: 20150406191208) do
     t.datetime "updated_at"
   end
 
-  create_table "site_profiles", force: true do |t|
+  create_table "site_profiles", force: :cascade do |t|
     t.text     "platforms"
     t.boolean  "no_fingerprinting"
     t.text     "input_values"
@@ -385,7 +385,7 @@ ActiveRecord::Schema.define(version: 20150406191208) do
 
   add_index "site_profiles", ["site_id"], name: "index_site_profiles_on_site_id", using: :btree
 
-  create_table "site_roles", force: true do |t|
+  create_table "site_roles", force: :cascade do |t|
     t.integer  "site_id"
     t.string   "name"
     t.text     "description"
@@ -400,7 +400,7 @@ ActiveRecord::Schema.define(version: 20150406191208) do
     t.datetime "updated_at"
   end
 
-  create_table "sitemap_entries", force: true do |t|
+  create_table "sitemap_entries", force: :cascade do |t|
     t.text     "url"
     t.integer  "code"
     t.integer  "issues_count",      default: 0
@@ -419,7 +419,7 @@ ActiveRecord::Schema.define(version: 20150406191208) do
   add_index "sitemap_entries", ["site_id"], name: "index_sitemap_entries_on_site_id", using: :btree
   add_index "sitemap_entries", ["url", "site_id"], name: "index_sitemap_entries_on_url_and_site_id", unique: true, using: :btree
 
-  create_table "sites", force: true do |t|
+  create_table "sites", force: :cascade do |t|
     t.integer  "protocol"
     t.string   "host"
     t.integer  "port",                  default: 80
@@ -436,7 +436,7 @@ ActiveRecord::Schema.define(version: 20150406191208) do
   add_index "sites", ["protocol", "host", "port"], name: "index_sites_on_protocol_and_host_and_port", using: :btree
   add_index "sites", ["user_id"], name: "index_sites_on_user_id", using: :btree
 
-  create_table "sites_users", id: false, force: true do |t|
+  create_table "sites_users", id: false, force: :cascade do |t|
     t.integer "site_id"
     t.integer "user_id"
   end
@@ -444,7 +444,7 @@ ActiveRecord::Schema.define(version: 20150406191208) do
   add_index "sites_users", ["site_id", "user_id"], name: "index_sites_users_on_site_id_and_user_id", using: :btree
   add_index "sites_users", ["user_id"], name: "index_sites_users_on_user_id", using: :btree
 
-  create_table "user_agents", force: true do |t|
+  create_table "user_agents", force: :cascade do |t|
     t.boolean  "default"
     t.string   "name"
     t.text     "http_user_agent"
@@ -454,7 +454,7 @@ ActiveRecord::Schema.define(version: 20150406191208) do
     t.datetime "updated_at"
   end
 
-  create_table "users", force: true do |t|
+  create_table "users", force: :cascade do |t|
     t.string   "email",                             default: "", null: false
     t.string   "encrypted_password",                default: "", null: false
     t.string   "reset_password_token"
@@ -474,7 +474,7 @@ ActiveRecord::Schema.define(version: 20150406191208) do
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
-  create_table "vectors", force: true do |t|
+  create_table "vectors", force: :cascade do |t|
     t.text     "default_inputs"
     t.text     "inputs"
     t.text     "seed"

@@ -156,8 +156,38 @@ describe Issue do
         end
     end
 
+    describe '.digests' do
+        it 'returns unique digests' do
+            type = FactoryGirl.create(
+                :issue_type,
+                name: 'a1',
+                severity: high_severity
+            )
+
+            type.issues.create(
+                state: 'trusted',
+                revision: revision,
+                digest: 1
+            )
+
+            type.issues.create(
+                state: 'trusted',
+                revision: revision,
+                digest: 1
+            )
+
+            type.issues.create(
+                state: 'trusted',
+                revision: revision,
+                digest: 2
+            )
+
+            expect(type.issues.digests).to eq [1,2]
+        end
+    end
+
     describe '#update_state' do
-        let(:digest) { 'mydigest' }
+        let(:digest) { rand(9999999) }
         let(:state) { 'fixed' }
 
         let(:type) do

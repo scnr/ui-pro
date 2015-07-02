@@ -4,7 +4,7 @@ Warden.test_mode!
 feature 'Issue page' do
 
     let(:user) { FactoryGirl.create :user, sites: [site] }
-    let(:digest) { 'mydigest' }
+    let(:digest) { rand(999999999) }
     let(:type) { FactoryGirl.create(:issue_type) }
     let(:issue) do
         Issue.create_from_arachni(

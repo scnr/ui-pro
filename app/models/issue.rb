@@ -66,6 +66,10 @@ class Issue < ActiveRecord::Base
         super rev
     end
 
+    def self.digests
+        pluck(:digest).uniq
+    end
+
     def self.count_states
         # We need to remove the order since we're counting fields that are
         # used for ordering and PG will go ape.
@@ -126,7 +130,7 @@ class Issue < ActiveRecord::Base
 
         issue = create({
             type:           IssueType.find_by_check_shortname( issue.check[:shortname] ),
-            digest:         issue.digest.to_s,
+            digest:         issue.digest,
             signature:      issue.signature,
             proof:          issue.proof,
             state:          (issue.trusted? ? 'trusted' : 'untrusted'),
