@@ -79,3 +79,4 @@ pickle-email-*.html
 .powenv
 
 /config/component_cache/*.yml
+/reports/*
