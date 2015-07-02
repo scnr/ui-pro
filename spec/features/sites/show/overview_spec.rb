@@ -61,8 +61,11 @@ feature 'Site page Overview tab' do
 
     feature 'without revisions' do
         before do
-            site.scans.first.revisions.clear
-            visit site_path( site )
+            FactoryGirl.create( :scan, site: other_site, profile: profile )
+
+            user.sites << other_site
+
+            visit site_path( other_site )
         end
 
         scenario 'user sees notice' do
@@ -184,7 +187,7 @@ feature 'Site page Overview tab' do
                             vector:         FactoryGirl.create(:vector).
                                                 tap { |v| v.action = sitemap_entry.url },
                             sitemap_entry:  sitemap_entry,
-                            digest:         rand(99999999999999).to_s,
+                            digest:         rand(99999999999999),
                             state:          'trusted'
                         )
                     end
@@ -286,7 +289,7 @@ feature 'Site page Overview tab' do
                                     vector:         FactoryGirl.create(:vector).
                                                         tap { |v| v.action = sitemap_entry.url },
                                     sitemap_entry:  sitemap_entry,
-                                    digest:         rand(99999999999999).to_s,
+                                    digest:         rand(99999999999999),
                                     state:          t.sub( ' ', '_' ).downcase
                                 )
                             end
@@ -372,7 +375,7 @@ feature 'Site page Overview tab' do
                                     vector:         FactoryGirl.create(:vector).
                                                         tap { |v| v.action = sitemap_entry.url },
                                     sitemap_entry:  sitemap_entry,
-                                    digest:         rand(99999999999999).to_s,
+                                    digest:         rand(99999999999999),
                                     state:          'trusted'
                                 )
                             end
@@ -544,7 +547,7 @@ feature 'Site page Overview tab' do
                                         referring_page: FactoryGirl.create(:issue_page),
                                         vector:         FactoryGirl.create(:vector, affected_input_name: 'stuff'),
                                         sitemap_entry:  site.sitemap_entries.first,
-                                        digest:         rand(99999999999999).to_s,
+                                        digest:         rand(99999999999999),
                                         state:          'trusted'
                                     )
 
@@ -572,7 +575,7 @@ feature 'Site page Overview tab' do
                                         referring_page: FactoryGirl.create(:issue_page),
                                         vector:         FactoryGirl.create(:vector, affected_input_name: 'stuff'),
                                         sitemap_entry:  site.sitemap_entries.first,
-                                        digest:         rand(99999999999999).to_s,
+                                        digest:         rand(99999999999999),
                                         state:          'trusted'
                                     )
                                 end
@@ -595,7 +598,7 @@ feature 'Site page Overview tab' do
                                         referring_page: FactoryGirl.create(:issue_page),
                                         vector:         FactoryGirl.create(:vector, affected_input_name: nil),
                                         sitemap_entry:  site.sitemap_entries.first,
-                                        digest:         rand(99999999999999).to_s,
+                                        digest:         rand(99999999999999),
                                         state:          'trusted'
                                     )
                                 end

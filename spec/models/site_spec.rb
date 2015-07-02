@@ -405,7 +405,7 @@ describe Site, type: :model do
     end
 
     describe '#scanned?' do
-        context 'when the site has at least one stopped revision' do
+        context 'when the site has revisions' do
             before do
                 scan.revisions.create(
                     started_at: Time.now - 9000,
@@ -414,19 +414,7 @@ describe Site, type: :model do
             end
 
             it 'returns true' do
-                expect(subject).to be_scanned
-            end
-        end
-
-        context 'when the site does not have stopped revisions' do
-            before do
-                scan.revisions.create(
-                    started_at: Time.now - 9000
-                )
-            end
-
-            it 'returns false' do
-                expect(subject).to_not be_scanned
+                expect(subject.reload).to be_scanned
             end
         end
 
@@ -437,7 +425,7 @@ describe Site, type: :model do
             end
 
             it 'returns false' do
-                expect(subject).to_not be_scanned
+                expect(subject.reload).to_not be_scanned
             end
         end
     end

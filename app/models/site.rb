@@ -12,8 +12,8 @@ class Site < ActiveRecord::Base
 
     has_many :scans, dependent: :destroy
     has_many :schedules, through: :scans
-    has_many :revisions, through: :scans
-    has_many :issues, through: :scans
+    has_many :revisions
+    has_many :issues
 
     has_many :roles, dependent: :destroy, foreign_key: 'site_id',
              class_name: 'SiteRole'
@@ -58,7 +58,7 @@ class Site < ActiveRecord::Base
     end
 
     def scanned?
-        !!last_scanned_at
+        revisions.size > 0
     end
 
     def last_scanned_at
