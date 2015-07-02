@@ -14,9 +14,9 @@
                 <%= link_to revision.scan.name, [@site, revision.scan] %>
                 (<%= link_to revision, [@site, revision.scan, revision] %>).
             </p>
-        <% elsif @site.scanned? %>
+        <% elsif (last_scanned_at = @site.last_scanned_at) %>
             <p class="text-muted" id="site-info-scan-time">
-                Last scanned on <%= l @site.last_scanned_at %> by
+                Last scanned on <%= l last_scanned_at %> by
                 <%= link_to @site.revisions.last.scan.name, [@site, @site.revisions.last.scan] %>
                 (<%= link_to @site.revisions.last, [@site, @site.scans.last, @site.revisions.last] %>).
             </p>
