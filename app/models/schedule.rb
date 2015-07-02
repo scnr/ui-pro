@@ -86,7 +86,9 @@ class Schedule < ActiveRecord::Base
     end
 
     def schedule_next
-        self.start_at = Time.zone.now + interval
+        return if !recurring?
+
+        self.start_at = Time.now + interval
         save
     end
 

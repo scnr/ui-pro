@@ -251,14 +251,36 @@ describe Schedule do
     end
 
     describe '#schedule_next' do
-        it 'sets the next #start_at' do
-            subject.start_at = Time.now - 1000
-            subject.schedule_next
+        context 'if #recurring?' do
+            before do
+                subject.day_frequency   = 3
+                subject.month_frequency = 2
+            end
 
-            expect(subject.start_at.to_s).to eq Time.zone.now.advance(
-                months: subject.month_frequency,
-                days:   subject.day_frequency
-            ).to_s
+            it 'sets the next #start_at' do
+                subject.start_at = Time.now - 1000
+                subject.schedule_next
+
+                expect(subject.start_at.to_s).to eq Time.zone.now.advance(
+                    months: subject.month_frequency,
+                    days:   subject.day_frequency
+                ).to_s
+            end
+        end
+
+        context 'if not #recurring?' do
+            before do
+                subject.day_frequency   = nil
+                subject.month_frequency = nil
+            end
+
+            it 'does nothing' do
+                start_at = Time.zone.now
+                subject.start_at = start_at
+                subject.schedule_next
+
+                expect(subject.start_at.to_s).to eq start_at.to_s
+            end
         end
     end
 end
