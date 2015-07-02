@@ -103,6 +103,9 @@ feature 'Scan page' do
                 revision.stopped_at = nil
                 revision.save
 
+                scan.revisions = [revision]
+                scan.save
+
                 site.scans << scan
                 site.save
 

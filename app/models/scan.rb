@@ -39,12 +39,12 @@ class Scan < ActiveRecord::Base
 
     def in_progress?
         return if revisions.size == 0
-        revisions.in_progress?
+        revisions.last.in_progress?
     end
 
     def last_performed_at
         return if revisions.size == 0
-        revisions.last_performed_at
+        revisions.last.performed_at
     end
 
     def recurring?
@@ -72,6 +72,8 @@ class Scan < ActiveRecord::Base
         options = profile.to_rpc_options
 
         profile_rpc_options = site.profile.to_rpc_options
+        profile_rpc_options['scope'] ||= {}
+
         profile_exclude_path_patterns =
             profile_rpc_options['scope'].delete( 'exclude_path_patterns' ) || []
         profile_exclude_content_patterns =
@@ -83,10 +85,11 @@ class Scan < ActiveRecord::Base
 
         site_role_rpc_options = site_role.to_rpc_options
 
-        options['scope']                          ||= {}
-        options['scope']['exclude_path_patterns'] ||= []
-        site_role_rpc_options['scope']            ||= {}
-        profile_rpc_options['scope']              ||= {}
+        options['scope']                             ||= {}
+        options['scope']['exclude_path_patterns']    ||= []
+        options['scope']['exclude_content_patterns'] ||= []
+        site_role_rpc_options['scope']               ||= {}
+        profile_rpc_options['scope']                 ||= {}
 
         options['scope']['exclude_path_patterns'] |=
             site_role_rpc_options['scope'].delete( 'exclude_path_patterns' ) || []
