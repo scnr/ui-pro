@@ -152,6 +152,30 @@ describe Schedule do
         end
     end
 
+    describe '#unschedule' do
+        it 'sets #start_at to nil' do
+            subject.start_at = Time.now
+            subject.unschedule
+            expect(subject.start_at).to be_nil
+        end
+    end
+
+    describe '#scheduled?' do
+        context 'when #start_at is not nil' do
+            it 'returns true' do
+                subject.start_at = Time.now
+                expect(subject).to be_scheduled
+            end
+        end
+
+        context 'when #start_at is nil' do
+            it 'returns false' do
+                subject.start_at = nil
+                expect(subject).to_not be_scheduled
+            end
+        end
+    end
+
     describe 'due?' do
         context 'when there is #start_at' do
             context 'in the past' do

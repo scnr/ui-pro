@@ -85,6 +85,15 @@ class Schedule < ActiveRecord::Base
         day_frequency.to_i.days + month_frequency.to_i.months
     end
 
+    def scheduled?
+        !!self.start_at
+    end
+
+    def unschedule
+        self.start_at = nil
+        save
+    end
+
     def schedule_next
         return if !recurring?
 
