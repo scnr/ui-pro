@@ -54,7 +54,8 @@ module IssuesSummary
 
             # First level page issue filtering here...
             if filter_pages?
-                next if @sitemap_entry != issue.vector.sitemap_entry
+                next if @sitemap_entry != issue.vector.sitemap_entry &&
+                    @sitemap_entry != issue.page.sitemap_entry
 
                 # Only include scans and revisions for issues for the page
                 # and scan we're filtering for.
@@ -289,6 +290,7 @@ module IssuesSummary
             includes( revision: { scan: [:profile, :schedule] } ).
             includes(:type).includes(:severity).
             includes(:vector).includes( vector: :sitemap_entry ).
+            includes( page: :sitemap_entry ).
             includes( siblings: { revision: :scan } )
     end
 
