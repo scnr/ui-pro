@@ -48,11 +48,13 @@ module Scan
         instance = instance_for( revision )
 
         instance.service.suspend do |r|
-            log_info_for revision, 'Suspended, grabbing snapshot path.'
-
             handle_if_rpc_error( revision, r )
 
+            log_info_for revision, 'Suspended, grabbing snapshot path.'
+
             instance.service.snapshot_path do |path|
+                handle_if_rpc_error( revision, path )
+
                 log_info_for revision, "Suspended, got snapshot path: #{path}"
 
                 revision.scan.snapshot_path = path
@@ -80,8 +82,14 @@ module Scan
     def perform( scan )
         log_info "Performing: #{scan}"
 
-        # Remove this scan from the schedule list.
-        scan.schedule.unschedule
+        if scan.schedule.recurring?
+            # Remove this scan from the schedule list.
+            scan.schedule.unschedule
+        else
+            # Completely remove scheduling for this scan, it was an one-off.
+            scan.schedule.destroy
+            scan.save
+        end
 
         revision = scan.revisions.create(
             state:      'initializing',
