@@ -314,6 +314,7 @@ ActiveRecord::Schema.define(version: 20150406191208) do
     t.string   "name"
     t.text     "description"
     t.text     "path"
+    t.text     "snapshot_path"
     t.integer  "revisions_count",       default: 0
     t.integer  "integer",               default: 0
     t.integer  "issues_count",          default: 0
