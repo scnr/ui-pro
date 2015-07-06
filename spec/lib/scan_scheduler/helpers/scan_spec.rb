@@ -56,9 +56,17 @@ describe ScanScheduler::Helpers::Scan do
     end
 
     describe '#suspend' do
-        it 'suspends the scan'
-        it 'sets #snapshot_path'
-        it 'passes the response to #handle_if_rpc_error'
+        it 'suspends the scan' do
+            expect(instance.service).to receive(:suspend)
+            subject.suspend( revision )
+        end
+
+        it 'sets #snapshot_path' do
+            instance
+            subject.suspend( revision )
+
+            expect(scan.reload.snapshot_path).to eq '/my/path'
+        end
     end
 
     describe '#pause' do
@@ -103,14 +111,6 @@ describe ScanScheduler::Helpers::Scan do
             settings
         end
 
-        it 'removes the scan from the schedule' do
-            expect(scan.schedule).to be_scheduled
-
-            subject.perform( scan ) rescue Arachni::Reactor::Error::NotRunning
-
-            expect(scan.schedule).to_not be_scheduled
-        end
-
         it 'creates a new revision' do
             expect(scan.revisions.size).to be 0
 
@@ -150,6 +150,38 @@ describe ScanScheduler::Helpers::Scan do
 
             context 'false' do
                 it 'does not cancel the job'
+            end
+        end
+
+        context 'when the scan is not recurring' do
+            before do
+                scan.schedule.month_frequency = nil
+                scan.schedule.day_frequency = nil
+                scan.schedule.save
+            end
+
+            it 'destroys the scan schedule' do
+                expect(scan.schedule).to be_scheduled
+
+                subject.perform( scan ) rescue Arachni::Reactor::Error::NotRunning
+
+                expect(scan.reload).to_not be_scheduled
+            end
+        end
+
+        context 'when the scan is recurring' do
+            before do
+                scan.schedule.month_frequency = 1
+                scan.schedule.day_frequency = 2
+                scan.schedule.save
+            end
+
+            it 'removes the scan from the schedule' do
+                expect(scan.schedule).to be_scheduled
+
+                subject.perform( scan ) rescue Arachni::Reactor::Error::NotRunning
+
+                expect(scan.schedule).to_not be_scheduled
             end
         end
 

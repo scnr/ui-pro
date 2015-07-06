@@ -7,6 +7,14 @@ class MockInstanceClientService
         block.call
     end
 
+    def suspend( &block )
+        block.call
+    end
+
+    def snapshot_path( &block )
+        block.call '/my/path'
+    end
+
     def scan( options, &block )
         block.call
     end
