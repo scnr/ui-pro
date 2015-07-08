@@ -1,4 +1,8 @@
 class MockInstanceClientService
+    def abort( &block )
+        block.call
+    end
+
     def pause( &block )
         block.call
     end

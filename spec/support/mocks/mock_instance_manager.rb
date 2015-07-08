@@ -3,7 +3,9 @@ class MockInstanceManager
         @instances = {}
     end
 
-    def spawn( &block )
+    def spawn( options = {}, &block )
+        raise ':fork must be false.' if options[:fork] != false
+
         i = MockInstanceClient.new
         @instances[i.url] = i
 
