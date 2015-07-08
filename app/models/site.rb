@@ -65,6 +65,10 @@ class Site < ActiveRecord::Base
         revisions.last_performed_at
     end
 
+    def last_revision
+        revisions.order( id: :desc ).first
+    end
+
     def https?
         protocol == 'https'
     end
