@@ -14,8 +14,13 @@ module IssuesSummary
 
         # This needs to happen here, we want this for filtering feedback and
         # thus has to refer to the big, pre-filtering picture.
-        states     = issues.count_states
-        severities = issues.count_severities
+        if @revision
+            states     = issues.where( revision: @revision ).count_states
+            severities = issues.where( revision: @revision ).count_severities
+        else
+            states     = issues.count_states
+            severities = issues.count_severities
+        end
 
         issues = filter_issues_by_severity_and_state( issues )
 
