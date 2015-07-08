@@ -1,4 +1,6 @@
 class Scan < ActiveRecord::Base
+    include ScanStates
+
     belongs_to :site, counter_cache: true
     belongs_to :site_role
     belongs_to :profile
@@ -39,16 +41,24 @@ class Scan < ActiveRecord::Base
 
     def in_progress?
         return if revisions.size == 0
-        revisions.last.in_progress?
+        last_revision.in_progress?
     end
 
     def last_performed_at
         return if revisions.size == 0
-        revisions.last.performed_at
+        last_revision.performed_at
+    end
+
+    def last_revision
+        revisions.order( id: :desc ).first
     end
 
     def recurring?
         scheduled? && schedule.recurring?
+    end
+
+    def schedule_next
+        schedule.schedule_next
     end
 
     def scheduled?
