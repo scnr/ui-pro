@@ -295,11 +295,9 @@ ActiveRecord::Schema.define(version: 20150406191208) do
   create_table "revisions", force: :cascade do |t|
     t.integer  "scan_id"
     t.integer  "site_id"
-    t.string   "state"
     t.integer  "index"
     t.datetime "started_at"
     t.datetime "stopped_at"
-    t.text     "snapshot_location"
     t.integer  "issues_count",          default: 0
     t.integer  "integer",               default: 0
     t.integer  "sitemap_entries_count", default: 0
@@ -315,6 +313,7 @@ ActiveRecord::Schema.define(version: 20150406191208) do
     t.text     "description"
     t.text     "path"
     t.text     "snapshot_path"
+    t.string   "status"
     t.integer  "revisions_count",       default: 0
     t.integer  "integer",               default: 0
     t.integer  "issues_count",          default: 0
