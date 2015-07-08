@@ -3,9 +3,7 @@
 FactoryGirl.define do
     factory :revision do
         scan nil
-        state "MyString"
         started_at "2014-07-25 15:23:09"
         stopped_at "2014-07-25 15:23:10"
-        snapshot_location "MyString"
     end
 end
