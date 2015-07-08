@@ -15,10 +15,11 @@
                 (<%= link_to revision, [@site, revision.scan, revision] %>).
             </p>
         <% elsif (last_scanned_at = @site.last_scanned_at) %>
+            <% last_revision = @site.last_revision %>
             <p class="text-muted" id="site-info-scan-time">
                 Last scanned on <%= l last_scanned_at %> by
-                <%= link_to @site.revisions.last.scan.name, [@site, @site.revisions.last.scan] %>
-                (<%= link_to @site.revisions.last, [@site, @site.scans.last, @site.revisions.last] %>).
+                <%= link_to last_revision.scan.name, [@site, last_revision.scan] %>
+                (<%= link_to last_revision, [@site, last_revision.scan, last_revision] %>).
             </p>
         <% end %>
 

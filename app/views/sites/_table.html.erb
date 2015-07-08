@@ -62,7 +62,7 @@
 
                 <% if site.being_scanned? %>
                     <% has_something = true %>
-                    <%= link_to [site, site.revisions.last.scan, site.revisions.last] do %>
+                    <%= link_to [site, site.last_revision.scan, site.last_revision] do %>
                         <i class="fa fa-spin fa-circle-o-notch"></i>
                     <% end %>
                 <% end %>

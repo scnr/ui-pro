@@ -18,7 +18,7 @@
             <% end %>
         </p>
 
-        <% if (last_revision = @scan.revisions.last) %>
+        <% if (last_revision = @scan.last_revision) %>
             <p class="text-muted" id="scan-info-last-revision-time">
             <% if @scan.in_progress? %>
                 <i class="fa fa-spin fa-circle-o-notch"></i>
