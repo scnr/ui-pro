@@ -48,5 +48,15 @@ describe ScanScheduler::Helpers::ErrorHandling do
             expect(subject).to receive(:kill_instance_for).with( revision )
             subject.handle_rpc_error( *args )
         end
+
+        it 'passes the revision to #finish' do
+            expect(subject).to receive(:finish).with( revision )
+            subject.handle_rpc_error( *args )
+        end
+
+        it 'sets the scan status to failed' do
+            subject.handle_rpc_error( *args )
+            expect(scan).to be_failed
+        end
     end
 end

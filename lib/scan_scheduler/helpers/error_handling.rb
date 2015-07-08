@@ -6,11 +6,16 @@ module ErrorHandling
         return if !response.rpc_exception?
 
         handle_rpc_error( revision, response )
+
+        true
     end
 
     def handle_rpc_error( revision, error )
         log_exception_for( revision, error )
-        kill_instance_for( revision )
+
+        revision.scan.failed!
+
+        finish revision
     end
 
 end

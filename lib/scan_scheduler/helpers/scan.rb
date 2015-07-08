@@ -39,6 +39,29 @@ module Scan
         end
     end
 
+    # Resumes the scan for the given `revision`.
+    #
+    # @param    [Revision]  revision
+    def restore( revision )
+        log_info_for revision, 'Restoring'
+
+        revision.scan.restoring!
+        revision.update(
+            started_at: Time.now,
+            stopped_at: nil
+        )
+
+        spawn_instance_for( revision ) do |instance |
+            instance.service.restore( revision.scan.snapshot_path ) do |r|
+                log_info_for revision, 'Restoring'
+
+                next if handle_if_rpc_error( revision, r )
+
+                monitor( revision )
+            end
+        end
+    end
+
     # Suspends the scan for the given `revision`.
     #
     # @param    [Revision]  revision
@@ -48,18 +71,8 @@ module Scan
         instance = instance_for( revision )
 
         instance.service.suspend do |r|
-            handle_if_rpc_error( revision, r )
-
             log_info_for revision, 'Suspended, grabbing snapshot path.'
-
-            instance.service.snapshot_path do |path|
-                handle_if_rpc_error( revision, path )
-
-                log_info_for revision, "Suspended, got snapshot path: #{path}"
-
-                revision.scan.snapshot_path = path
-                revision.scan.save
-            end
+            handle_if_rpc_error( revision, r )
         end
     end
 
@@ -69,7 +82,21 @@ module Scan
     def abort( revision )
         log_info_for revision, 'Aborting'
 
-        download_report_and_shutdown( revision )
+        stop_monitor( revision )
+
+        revision.scan.aborting!
+
+        instance_for( revision ).service.abort do |r|
+            handle_if_rpc_error( revision, r )
+
+            log_info_for revision, 'Aborted'
+
+            download_report_and_shutdown(
+                revision,
+                mark_issues_fixed: false,
+                status:            'aborted'
+            )
+        end
     end
 
     # Performs the scan.
@@ -91,8 +118,9 @@ module Scan
             scan.save
         end
 
+        scan.initializing!
+
         revision = scan.revisions.create(
-            state:      'initializing',
             started_at: Time.now
         )
 
@@ -100,25 +128,28 @@ module Scan
 
         spawn_instance_for( revision ) do |instance|
             instance.service.scan( scan.rpc_options ) do |response|
-                if response.rpc_exception?
-                    next handle_rpc_error( revision, response )
-                end
+                next if handle_if_rpc_error( revision, response )
 
-                reactor.at_interval TICK do |task|
-                    update( revision ) do |done|
-                        next if !done
-
-                        task.done
-                    end
-                end
+                monitor( revision )
             end
         end
+    end
+
+    def monitor( revision )
+        reactor.at_interval TICK do |task|
+            @monitors[revision.id] = task
+            update( revision )
+        end
+    end
+
+    def stop_monitor( revision )
+        @monitors.delete( revision.id ).done
     end
 
     # Polls the `revision` for progress and updates its data.
     #
     # @param    [Revision]  revision
-    def update( revision, &block )
+    def update( revision )
         instance = instance_for( revision )
 
         log_info_for revision, 'Checking progress.'
@@ -144,6 +175,8 @@ module Scan
                 next
             end
 
+            ap progress[:busy]
+            ap progress[:status]
             ap progress[:statistics]
 
             log_debug_for revision, "Busy: #{progress[:busy]}"
@@ -158,25 +191,45 @@ module Scan
                     create_issue( revision, issue )
                 end
 
-                revision.update( state: progress[:status] )
+                revision.scan.update( status: progress[:status] )
             else
-                download_report_and_shutdown( revision )
+                stop_monitor( revision )
 
-                revision.update(
-                    state:      nil,
-                    stopped_at: Time.now
-                )
+                # Special case...
+                if progress[:status] == :suspended
+                    instance.service.snapshot_path do |path|
+                        next if handle_if_rpc_error( revision, path )
 
-                # This one's done, schedule the next one if it's recurring.
-                if revision.scan.schedule.recurring?
-                    revision.scan.schedule.schedule_next
-                    log_info_for revision, 'Scheduled next occurrence for: ' +
-                        revision.scan.schedule.start_at.to_s
+                        log_info_for revision, "Suspended, got snapshot path: #{path}"
+
+                        revision.scan.update(
+                            status:        'suspended',
+                            snapshot_path: path
+                        )
+
+                        finish( revision )
+                    end
+                else
+                    download_report_and_shutdown( revision, status: 'completed' )
                 end
             end
-
-            block.call !progress[:busy]
         end
+    end
+
+    def finish( revision )
+        scan = revision.scan
+
+        revision.update( stopped_at: Time.now )
+
+        # This one's done, schedule the next one if it's recurring.
+        if !scan.suspended? && scan.recurring?
+            scan.schedule_next
+
+            log_info_for revision, 'Scheduled next occurrence for: ' +
+                scan.schedule.start_at.to_s
+        end
+
+        kill_instance_for( revision )
     end
 
     # Aborts the scan for the `revision`, downloads and stores the report under
@@ -186,7 +239,11 @@ module Scan
     # It will also shutdown the associated instance.
     #
     # @param    [Revision]  revision
-    def download_report_and_shutdown( revision )
+    def download_report_and_shutdown(
+        revision,
+        mark_issues_fixed: true,
+        status:            nil
+    )
         log_info_for revision, 'Grabbing report'
 
         instance = instance_for( revision )
@@ -200,15 +257,21 @@ module Scan
 
             import_issues_from_report( revision, report )
 
-            mark_other_issues_fixed( revision, report.issues.map(&:digest) )
+            if mark_issues_fixed && revision.scan.revisions.size > 1
+                mark_other_issues_fixed( revision, report.issues.map(&:digest) )
+            end
 
-            kill_instance_for( revision )
+            finish( revision )
+
+            revision.scan.status = status
+            revision.scan.save
         end
     end
 
     # @private
     def reset_scan_state
         @issue_digests_per_revision_id = {}
+        @monitors = {}
     end
 
 end

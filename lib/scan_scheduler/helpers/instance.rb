@@ -27,7 +27,8 @@ module Instance
     def spawn_instance_for( revision, &block )
         log_info_for revision, 'Spawning instance.'
 
-        instances.spawn do |instance|
+        # Don't fork, we don't want the entire Rails env.
+        instances.spawn fork: false do |instance|
             log_info_for revision, "Spawned instance at #{instance.url}"
 
             @revision_id_to_instance_url[revision.id] = instance.url

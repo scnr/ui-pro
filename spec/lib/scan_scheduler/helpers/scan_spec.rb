@@ -60,13 +60,6 @@ describe ScanScheduler::Helpers::Scan do
             expect(instance.service).to receive(:suspend)
             subject.suspend( revision )
         end
-
-        it 'sets #snapshot_path' do
-            instance
-            subject.suspend( revision )
-
-            expect(scan.reload.snapshot_path).to eq '/my/path'
-        end
     end
 
     describe '#pause' do
@@ -98,10 +91,25 @@ describe ScanScheduler::Helpers::Scan do
     end
 
     describe '#abort' do
+        before do
+            instance
+            expect(subject).to receive(:stop_monitor).with( revision )
+            expect(subject).to receive(:download_report_and_shutdown).
+                                   with( revision, { mark_issues_fixed: false, status: 'aborted' } )
+        end
+
+        it 'sets status to aborting' do
+            subject.abort( revision )
+            expect(scan).to be_aborting
+        end
+
+        it 'aborts progress monitoring' do
+            instance
+            subject.abort( revision )
+        end
+
         it 'calls #download_report_and_shutdown' do
             instance
-
-            expect(subject).to receive(:download_report_and_shutdown).with( revision )
             subject.abort( revision )
         end
     end
@@ -109,6 +117,12 @@ describe ScanScheduler::Helpers::Scan do
     describe '#perform' do
         before do
             settings
+        end
+
+        it 'sets status to initializing' do
+            subject.perform( scan ) rescue Arachni::Reactor::Error::NotRunning
+
+            expect(scan).to be_initializing
         end
 
         it 'creates a new revision' do
@@ -132,10 +146,10 @@ describe ScanScheduler::Helpers::Scan do
             subject.perform( scan )
         end
 
-        it 'calls #update every TICK seconds' do
+        it 'sets up progress monitoring' do
             subject.start
 
-            expect(subject).to receive(:update) do |revision|
+            expect(subject).to receive(:monitor) do |revision|
                 expect(revision).to eq scan.revisions.reload.first
             end
             subject.perform( scan )
@@ -203,10 +217,62 @@ describe ScanScheduler::Helpers::Scan do
             end
 
             it 'does not setup progress monitoring' do
-                expect(subject).to_not receive(:update)
+                expect(subject).to_not receive(:monitor)
 
                 subject.perform( scan )
                 wait
+            end
+        end
+    end
+
+    describe '#finish' do
+        it 'sets Revision#stopped_at' do
+            subject.finish( revision ) {}
+
+            expect(revision.reload.stopped_at).to be_kind_of Time
+        end
+
+        context 'when the scan is recurring' do
+            before do
+                scan.schedule.day_frequency = 1
+                scan.schedule.month_frequency = 2
+                scan.schedule.save
+            end
+
+            context 'when the scan has not been suspended' do
+                it 'schedules the next run' do
+                    expect(scan).to receive(:schedule_next)
+
+                    subject.finish( revision ) {}
+
+                    expect(scan.schedule.reload).to be_scheduled
+                end
+            end
+
+            context 'when the scan has been suspended' do
+                before do
+                    scan.suspended!
+                end
+
+                it 'leaves it unscheduled' do
+                    expect(scan).to_not receive(:schedule_next)
+
+                    subject.finish( revision ) {}
+                end
+            end
+        end
+
+        context 'when the scan is not recurring' do
+            before do
+                scan.schedule.day_frequency = nil
+                scan.schedule.month_frequency = nil
+                scan.schedule.save
+            end
+
+            it 'leaves it unscheduled' do
+                expect(scan).to_not receive(:schedule_next)
+
+                subject.finish( revision ) {}
             end
         end
     end
@@ -276,7 +342,7 @@ describe ScanScheduler::Helpers::Scan do
                 end
                 subject.update( revision ) {}
 
-                expect(revision.reload.state).to eq 'stuff'
+                expect(scan.reload.status).to eq 'stuff'
             end
 
             context 'and has :issues' do
@@ -299,55 +365,46 @@ describe ScanScheduler::Helpers::Scan do
 
         context 'when not :busy' do
             before do
-                expect(instance.service).to receive(:native_progress) do |_, &block|
-                    block.call( busy: false )
-                end
-                expect(subject).to receive(:download_report_and_shutdown).with( revision )
+                expect(subject).to receive(:stop_monitor).with( revision )
             end
 
-            it 'calls #download_report_and_shutdown' do
-                subject.update( revision ) {}
-            end
-
-            it 'sets Revision#state to nil' do
-                subject.update( revision ) {}
-
-                expect(revision.reload.state).to be_nil
-            end
-
-            it 'sets Revision#stopped_at' do
-                subject.update( revision ) {}
-
-                expect(revision.reload.stopped_at).to be_kind_of Time
-            end
-
-            context 'when the scan is recurring' do
+            context 'when the scan has not been suspended' do
                 before do
-                    scan.schedule.day_frequency = 1
-                    scan.schedule.month_frequency = 2
-                    scan.schedule.save
+                    expect(instance.service).to receive(:native_progress) do |_, &block|
+                        block.call( busy: false )
+                    end
+                    expect(subject).to receive(:download_report_and_shutdown).with(
+                                           revision,  status: 'completed' )
                 end
 
-                it 'schedules the next run' do
-                    expect(scan.schedule).to receive(:schedule_next)
+                it 'calls #download_report_and_shutdown' do
+                    subject.update( revision ) {}
+                end
 
+                it 'sets Scan#status to nil' do
                     subject.update( revision ) {}
 
-                    expect(scan.schedule.reload).to be_scheduled
+                    expect(scan.reload.status).to be_nil
                 end
             end
 
-            context 'when the scan is not recurring' do
+            context 'when the scan has been suspended' do
                 before do
-                    scan.schedule.day_frequency = nil
-                    scan.schedule.month_frequency = nil
-                    scan.schedule.save
+                    expect(instance.service).to receive(:native_progress) do |_, &block|
+                        block.call( busy: false, status: :suspended )
+                    end
                 end
 
-                it 'leaves it unscheduled' do
-                    expect(scan.schedule).to_not receive(:schedule_next)
+                it 'sets scan status to suspended' do
+                    subject.update( revision )
 
-                    subject.update( revision ) {}
+                    expect(scan.reload).to be_suspended
+                end
+
+                it 'sets #snapshot_path' do
+                    subject.update( revision )
+
+                    expect(scan.reload.snapshot_path).to eq '/my/path'
                 end
             end
         end
@@ -366,6 +423,13 @@ describe ScanScheduler::Helpers::Scan do
             subject.download_report_and_shutdown(revision)
         end
 
+        it 'calls #finish' do
+            expect(subject).to receive(:finish).with( revision )
+
+            subject.download_report_and_shutdown(revision)
+        end
+
+
         it "stores the report under #{described_class}::REPORT_DIR" do
             subject.download_report_and_shutdown(revision)
 
@@ -379,16 +443,49 @@ describe ScanScheduler::Helpers::Scan do
             subject.download_report_and_shutdown(revision)
         end
 
-        it 'passes the report issue digests to #mark_other_issues_fixed' do
-            expect(subject).to receive(:mark_other_issues_fixed).
-                                   with( revision, report.issues.map(&:digest) )
-
-            subject.download_report_and_shutdown(revision)
-        end
-
         it 'calls #kill_instance_for' do
             expect(subject).to receive(:kill_instance_for).with(revision)
             subject.download_report_and_shutdown(revision)
+        end
+
+        it 'sets the given :status' do
+            subject.download_report_and_shutdown( revision, status: 'completed' )
+            expect(scan).to be_completed
+        end
+
+        context 'when :mark_issues_fixed is' do
+            context 'true' do
+                context 'and the scan has more than 1 revision' do
+                    before do
+                        new_revision
+                    end
+
+                    it 'passes the report issue digests to #mark_other_issues_fixed' do
+                        expect(subject).to receive(:mark_other_issues_fixed).
+                                               with( revision, report.issues.map(&:digest) )
+
+                        subject.download_report_and_shutdown( revision, mark_issues_fixed: true )
+                    end
+                end
+
+                context 'and has 1 revision' do
+                    it 'does not call #mark_other_issues_fixed' do
+                        expect(subject).to_not receive(:mark_other_issues_fixed)
+
+                        subject.download_report_and_shutdown(revision)
+                    end
+                end
+            end
+
+            context 'false' do
+                context 'and has 1 revision' do
+                    it 'does not call #mark_other_issues_fixed' do
+                        expect(subject).to_not receive(:mark_other_issues_fixed)
+
+                        subject.download_report_and_shutdown( revision, mark_issues_fixed: true )
+                    end
+                end
+            end
         end
     end
 end

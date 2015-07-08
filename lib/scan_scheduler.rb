@@ -27,7 +27,7 @@ class ScanScheduler
         reactor.run_in_thread
 
         reactor.on_error do |_, e|
-            ap "#{e.class}#{e}"
+            ap "[#{e.class}] #{e}"
             ap e.backtrace
             log_exception( e )
         end
