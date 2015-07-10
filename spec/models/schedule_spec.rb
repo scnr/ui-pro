@@ -181,20 +181,20 @@ describe Schedule do
         end
     end
 
-    describe '#frozen?' do
+    describe '#suspended?' do
         context 'when the scan is suspended' do
             before do
                 subject.scan.suspended!
             end
 
             it 'returns true' do
-                expect(subject).to be_frozen
+                expect(subject).to be_suspended
             end
         end
 
         context 'when the scan is not suspended' do
             it 'returns false' do
-                expect(subject).to_not be_frozen
+                expect(subject).to_not be_suspended
             end
         end
     end

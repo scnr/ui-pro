@@ -50,7 +50,7 @@ class Schedule < ActiveRecord::Base
         start_at && start_at < Time.zone.now
     end
 
-    def frozen?
+    def suspended?
         scan.suspended?
     end
 
