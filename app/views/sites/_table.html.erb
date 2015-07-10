@@ -19,30 +19,14 @@
 
             <td class="state">
                 <% if site.scanned_or_being_scanned? %>
-                    <% if (sz = site.issues.high_severity.size) > 0 %>
-                        <span class="label-severity label-lg label-severity-high">
-                            <%= issue_severity_to_site_status( :high ).capitalize %>
+                    <% if (max_severity = site.issues.max_severity) %>
+                        <span class="label-severity label-lg label-severity-<%= max_severity %>">
+                            <%= issue_severity_to_site_status( max_severity ).capitalize %>
                         </span>
 
-                        &mdash; <%= sz %> <a href="#">high</a> severity issues
-                    <% elsif (sz = site.issues.medium_severity.size) > 0 %>
-                        <span class="label-severity label-severity-medium">
-                            <%= issue_severity_to_site_status( :medium ).capitalize %>
-                        </span>
-
-                        &mdash; <%= sz %> <a href="#">medium</a> severity issues
-                    <% elsif (sz = site.issues.low_severity.size) > 0 %>
-                        <span class="label-severity label-severity-low">
-                            <%= issue_severity_to_site_status( :low ).capitalize %>
-                        </span>
-
-                        &mdash; <%= sz %> <a href="#">low</a> severity issues
-                    <% elsif site.issues.informational_severity.any? %>
-                        <span class="label-severity label-severity-informational">
-                            <%= issue_severity_to_site_status( :informational ).capitalize %>
-                        </span>
-
-                        &mdash; only has <a href="#">informational</a> findings
+                        &mdash; <%= site.issues.send( "#{max_severity}_severity" ).size %>
+                        <a href="<%= site_path site %>#issue-summary-severity-<%= max_severity %>"><%= max_severity %></a>
+                        severity issues
                     <% else %>
                         <span class="label-severity label-severity-none">Good</span>
 

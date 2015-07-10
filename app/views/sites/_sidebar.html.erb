@@ -54,38 +54,9 @@
     </li>
 
     <li class="sidebar-info" id="site-sidebar-scan-id-<%= scan.id %>-info">
-        <small>
-            <span class="text-muted">
-                <% if revision_count > 0 %>
-                    <%= pluralize scan.revisions.size, 'revision' %>,
-                    <%= pluralize scan.sitemap_entries.size, 'page' %>
-                    using <%= link_to scan.profile, profile_path( scan.profile ) %>.
-                <% elsif scan.scheduled? %>
-                    Running <%= link_to scan.schedule, '#' %>.
-                <% else %>
-                    Has not run.
-                <% end %>
-            </span>
+        <small class="text-muted">
+            <%= render partial: '/shared/scan_info', locals: { scan: scan } %>
         </small>
-
-        <% if scan.in_progress? %>
-            <br/>
-
-            <small>
-                <span class="text-muted">
-                    <i class="fa fa-spin fa-circle-o-notch"></i>
-                    Started on <%= l scan.last_revision.started_at %>.
-                </span>
-            </small>
-        <% elsif (last_performed_at = scan.last_performed_at) %>
-            <br/>
-
-            <small>
-                <span class="text-muted">
-                    Last performed on <%= l last_performed_at %>.
-                </span>
-            </small>
-        <% end %>
     </li>
     <% end %>
 </ul>

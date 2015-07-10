@@ -1,5 +1,5 @@
 <%
-   title "Revision ##{@revision.index}"
+   title @revision.index.ordinalize
    breadcrumb_add 'Sites', sites_path
    breadcrumb_add @scan.url, site_path( @site )
    breadcrumb_add @scan.name, site_scan_path( @site, @scan )
@@ -13,27 +13,30 @@
             <%= md @scan.description %>
         </div>
 
-        <p class="text-muted">
-            <% if @scan.recurring? %>
-                Running <%= link_to @scan.schedule, '#' %>.
-            <% end %>
-        </p>
+        <div class="text-muted">
+            Using <%= link_to @scan.profile, profile_path( @scan.profile ) %>
+            from <%= link_to @scan.user_agent, user_agent_path( @scan.user_agent ) %>
+            as <%= link_to @scan.site_role, site_role_path_js( @site, @scan.site_role ) %>.
 
-        <% if @revision.stopped? %>
-            <p class="text-muted" id="revision-info-time">
-                Started on <%= l @revision.started_at %>,
+            <br/>
+
+            <% if @revision.stopped? %>
+                Started on <%= l @revision.started_at %>;
                 stopped on <%= l @revision.stopped_at %>
                 &mdash;
-                <%= seconds_to_hms @revision.stopped_at - @revision.started_at %>.
-            </p>
-        <% elsif @revision.in_progress? %>
-            <p class="text-muted" id="revision-info-time">
+                <%= seconds_to_hms @revision.duration %>.
+            <% elsif @revision.in_progress? %>
                 <i class="fa fa-spin fa-circle-o-notch"></i>
                 Started on <%= l @revision.started_at %>
                 &mdash;
                 <%= seconds_to_hms @revision.duration %>.
-            </p>
-        <% end %>
+            <% end %>
+
+            <% if @scan.recurring? %>
+                <br/>
+                Running <%= @scan.schedule %>.
+            <% end %>
+        </div>
     </div>
 </div>
 

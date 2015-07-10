@@ -12,7 +12,7 @@
     <% @site_roles.each do |site_role| %>
         <tr>
             <td>
-                <a href="#!/roles/<%= site_role.id %>"
+                <a href="<%= site_role_fragment site_role %>"
                    data-js="<%= site_role_path( site_role.site, site_role ) %>">
                     <%= site_role.name %>
                 </a>

@@ -1,0 +1,43 @@
+<%
+   extended = !!local_assigns[:extended]
+%>
+
+Using <%= link_to scan.profile, profile_path( scan.profile ) %>
+from <%= link_to scan.user_agent, user_agent_path( scan.user_agent ) %>
+as <%= link_to scan.site_role, site_role_path_js( scan.site, scan.site_role ) %>.
+
+<% if (last_revision = scan.last_revision) %>
+    <br/>
+
+    <% if scan.in_progress? %>
+        <i class="fa fa-spin fa-circle-o-notch"></i>
+        <%= link_to last_revision.index.ordinalize,
+                    site_scan_revision_path( scan.site, scan, last_revision ) %>
+
+        <% if extended %>
+            started on <%= l last_revision.started_at %>
+            &mdash;
+            <%= seconds_to_hms last_revision.duration %>.
+        <% else %>
+            started on <%= l last_revision.started_at %>.
+        <% end %>
+    <% elsif last_revision.stopped_at %>
+        <%= link_to last_revision.index.ordinalize,
+                    site_scan_revision_path( scan.site, scan, last_revision ) %>
+
+        <% if extended %>
+            started on <%= l last_revision.started_at %>;
+            stopped on <%= l last_revision.stopped_at %>
+            &mdash;
+            <%= seconds_to_hms last_revision.duration %>.
+        <% else %>
+            performed on <%= l scan.last_performed_at %>.
+        <% end %>
+
+    <% end %>
+<% end %>
+
+<% if scan.scheduled? %>
+    <br/>
+    Running <%= scan.schedule %>.
+<% end %>

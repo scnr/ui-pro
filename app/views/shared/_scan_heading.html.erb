@@ -1,8 +1,7 @@
 <h1>
 
     <% if @revision %>
-        <%= link_to "Revision ##{@revision.index}", [@site, @scan, @revision] %>
-        of
+        <%= link_to @revision.index.ordinalize, [@site, @scan, @revision] %>
     <% end %>
 
     <% if @scan && @scan.id %>
@@ -23,8 +22,6 @@
                     } do %>
             <i class="fa fa-trash"></i>
         <% end %>
-
-        (<%= link_to @scan.profile, @scan.profile %>)
         for
     <% end %>
 

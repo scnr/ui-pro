@@ -12,4 +12,8 @@ class UserAgent < ActiveRecord::Base
     validates :http_user_agent, presence: true
     validates :browser_cluster_screen_width, numericality: true, presence: true
     validates :browser_cluster_screen_height, numericality: true, presence: true
+
+    def to_s
+        name
+    end
 end

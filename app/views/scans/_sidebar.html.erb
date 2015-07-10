@@ -68,26 +68,16 @@
         <% end %>
     </li>
 
-        <% if (performed_at = revision.performed_at) %>
-        <li class="sidebar-info">
-            <small>
-                <span class="text-muted">
-                    Performed on <%= l performed_at %>.
-                </span>
-            </small>
-        </li>
-        <% end %>
-
-        <% if revision.in_progress? %>
-        <li class="sidebar-info">
-            <small>
-                <span class="text-muted">
-                    <i class="fa fa-spin fa-circle-o-notch"></i>
-                    Started on <%= l revision.started_at %>.
-                </span>
-            </small>
-        </li>
-        <% end %>
+    <li class="sidebar-info">
+        <small class="text-muted">
+            <% if (performed_at = revision.performed_at) %>
+                Performed on <%= l performed_at %>.
+            <% elsif revision.in_progress? %>
+                <i class="fa fa-spin fa-circle-o-notch"></i>
+                Started on <%= l revision.started_at %>.
+            <% end %>
+        </small>
+    </li>
 
     <%
        last_revision = revision

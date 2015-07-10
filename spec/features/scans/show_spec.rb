@@ -6,6 +6,7 @@ Warden.test_mode!
 #   I want to visit a scan
 #   So I can see the scan revisions
 feature 'Scan page' do
+    include SiteRolesHelper
 
     let(:user) { FactoryGirl.create :user, sites: [site] }
     let(:other_user) { FactoryGirl.create :user, email: 'dd@ss.cc', shared_sites: [site] }
@@ -18,9 +19,13 @@ feature 'Scan page' do
         Warden.test_reset!
     end
 
+    def refresh
+        visit site_scan_path( site, scan )
+    end
+
     before do
         login_as user, scope: :user
-        visit site_scan_path( site, scan )
+        refresh
     end
 
     let(:info) { find '#scan-info' }
@@ -56,71 +61,97 @@ feature 'Scan page' do
             expect(breadcrumbs.find('li:nth-of-type(4) a').native['href']).to eq site_scan_path( site, scan )
         end
 
-        scenario 'user sees scan name in heading' do
-            expect(find('h1').text).to include scan.name
-        end
+        feature 'scan info' do
+            scenario 'user sees scan name in heading' do
+                expect(info.find('h1').text).to include scan.name
+            end
 
-        scenario 'user sees scan url in heading' do
-            expect(find('h1').text).to match scan.url
-        end
+            scenario 'user sees scan url in heading' do
+                expect(info.find('h1').text).to match scan.url
+            end
 
-        feature 'when page filtering is enabled' do
-            scenario 'user sees the page URL in the heading'
-        end
+            feature 'when page filtering is enabled' do
+                scenario 'user sees the page URL in the heading'
+            end
 
-        scenario 'sees rendered Markdown description' do
-            scan.description = '**Stuff**'
-            scan.save
-
-            visit site_scan_path( site, scan )
-
-            expect(find('.description strong')).to have_content 'Stuff'
-        end
-
-        scenario 'user sees a link to the profile' do
-            expect(page).to have_xpath "//a[@href='#{profile_path(scan.profile)}']"
-        end
-
-        scenario 'user can see edit link' do
-            expect(page).to have_xpath "//a[@href='#{edit_site_scan_path(site, scan)}']"
-        end
-
-        feature 'when the scan is scheduled' do
-            scenario 'user sees schedule'
-        end
-
-        scenario 'user sees last revision start datetime' do
-            expect(info).to have_content 'Last started on'
-            expect(info).to have_content I18n.l( revision.started_at )
-        end
-
-        scenario 'user sees scan duration' do
-            expect(info).to have_content Arachni::Utilities.seconds_to_hms( revision.stopped_at - revision.started_at )
-        end
-
-        feature 'which are in progress' do
-            before do
-                revision.stopped_at = nil
-                revision.save
-
-                scan.revisions = [revision]
+            scenario 'sees rendered Markdown description' do
+                scan.description = '**Stuff**'
                 scan.save
 
-                site.scans << scan
-                site.save
-
                 visit site_scan_path( site, scan )
+
+                expect(info.find('.description strong')).to have_content 'Stuff'
             end
 
-            scenario 'user does not see last revision stop datetime' do
-                expect(info).to_not have_content 'stopped on'
+            scenario 'user sees a link to the profile' do
+                expect(info).to have_xpath "//a[@href='#{profile_path(scan.profile)}']"
             end
-        end
 
-        feature 'which are not in progress' do
-            scenario 'user sees last revision stop datetime' do
-                expect(info).to have_content 'stopped on'
-                expect(info).to have_content I18n.l( revision.stopped_at )
+            scenario 'user sees a link to the user agent' do
+                expect(info).to have_xpath "//a[@href='#{user_agent_path(scan.user_agent)}']"
+            end
+
+            scenario 'user sees a link to the site role' do
+                expect(info).to have_xpath "//a[@href='#{site_role_path_js(site, scan.site_role)}']"
+            end
+
+            scenario 'user can see edit link' do
+                expect(info).to have_xpath "//a[@href='#{edit_site_scan_path(site, scan)}']"
+            end
+
+            scenario 'user sees last revision start datetime' do
+                expect(info).to have_content "#{revision.index.ordinalize} started on"
+                expect(info).to have_content I18n.l( revision.started_at )
+            end
+
+            scenario 'user sees scan duration' do
+                expect(info).to have_content Arachni::Utilities.seconds_to_hms( revision.stopped_at - revision.started_at )
+            end
+
+            feature 'when the scan is scheduled' do
+                before do
+                    scan.schedule.start_at = Time.now + 1000
+                    scan.schedule.save
+                    refresh
+                end
+
+                scenario 'user sees schedule' do
+                    expect(info).to have_content scan.schedule.to_s
+                end
+            end
+
+            feature 'which are in progress' do
+                before do
+                    revision.stopped_at = nil
+                    revision.save
+
+                    scan.revisions = [revision]
+                    scan.save
+
+                    site.scans << scan
+                    site.save
+
+                    visit site_scan_path( site, scan )
+                end
+
+                scenario 'user sees progress animation' do
+                    expect(info).to have_css 'i.fa.fa-circle-o-notch'
+                end
+
+                scenario 'user sees start date' do
+                    expect(info).to have_content I18n.l( revision.started_at )
+                end
+
+                scenario 'user does not see last revision stop datetime' do
+                    expect(info).to_not have_content 'stopped on'
+                end
+            end
+
+            feature 'which are not in progress' do
+                scenario 'user sees last revision stop datetime' do
+                    expect(info).to have_content 'stopped on'
+                    expect(info).to have_content I18n.l( revision.stopped_at )
+                end
             end
         end
 

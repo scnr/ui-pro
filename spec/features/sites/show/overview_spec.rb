@@ -1,4 +1,5 @@
 feature 'Site page Overview tab' do
+    include SiteRolesHelper
 
     let(:user) { FactoryGirl.create :user }
     let(:other_user) { FactoryGirl.create(:user, email: 'other@example.com') }
@@ -92,14 +93,6 @@ feature 'Site page Overview tab' do
                     expect(scans).to have_content scan.name
                 end
 
-                scenario 'user sees amount of revisions' do
-                    expect(scans).to have_content "#{scan.revisions.size} revision"
-                end
-
-                scenario 'user sees amount of pages' do
-                    expect(scans).to have_content "#{scan.sitemap_entries.size} pages"
-                end
-
                 scenario 'user sees amount of issues' do
                     expect(scans.find('.badge')).to have_content scan.issues.size
                 end
@@ -107,6 +100,16 @@ feature 'Site page Overview tab' do
                 scenario 'user sees profile' do
                     expect(scans).to have_content scan.profile
                     expect(scans).to have_xpath "//a[@href='#{profile_path( scan.profile )}']"
+                end
+
+                scenario 'user sees user agent' do
+                    expect(scans).to have_content scan.user_agent
+                    expect(scans).to have_xpath "//a[@href='#{user_agent_path( scan.user_agent )}']"
+                end
+
+                scenario 'user sees site role' do
+                    expect(scans).to have_content scan.site_role
+                    expect(scans).to have_xpath "//a[@href='#{site_role_path_js( site, scan.site_role )}']"
                 end
 
                 scenario 'user sees scan link with filtering options' do
@@ -122,7 +125,7 @@ feature 'Site page Overview tab' do
                     end
 
                     scenario 'user sees start datetime' do
-                        expect(scans).to have_content 'Started on'
+                        expect(scans).to have_content "#{revision.index.ordinalize} started on"
                         expect(scans).to have_content I18n.l( revision.started_at )
                     end
 
@@ -132,8 +135,9 @@ feature 'Site page Overview tab' do
                 end
 
                 feature 'when the scan has been performed' do
-                    scenario 'user sees stop datetime' do
-                        expect(scans).to have_content 'Last performed on'
+                    scenario 'user sees stop datetime of last revision' do
+                        expect(scans).to have_content scan.last_revision.index.ordinalize
+                        expect(scans).to have_xpath "//a[@href='#{site_scan_revision_path( site, scan, scan.last_revision )}']"
                         expect(scans).to have_content I18n.l( revision.performed_at )
                     end
                 end
@@ -617,12 +621,6 @@ feature 'Site page Overview tab' do
 
                 feature 'scan list' do
                     let(:scans) { find '#site-sidebar' }
-
-                    scenario 'user sees amount of pages' do
-                        site.scans.each do |scan|
-                            expect(scans.find("#site-sidebar-scan-id-#{scan.id}-info")).to have_content "#{scan.reload.sitemap_entries.size} pages"
-                        end
-                    end
 
                     scenario 'user sees amount of issues' do
                         site.scans.each do |scan|

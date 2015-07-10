@@ -30,14 +30,20 @@ feature 'Site page Scans tab' do
     end
 
     let(:active) do
-        new_scan.tap { |s| s.revisions.create; s.scanning! }
+        new_scan.tap { |s| s.revisions.create( started_at: Time.now ); s.scanning! }
     end
 
     let(:suspended) do
-        new_scan.tap { |s| s.revisions.create; s.suspended! }
+        new_scan.tap { |s| s.revisions.create( started_at: Time.now ); s.suspended! }
     end
     let(:finished) do
-        new_scan.tap { |s| s.revisions.create; s.completed! }
+        new_scan.tap do |s|
+            s.revisions.create(
+                started_at: Time.now,
+                stopped_at: Time.now
+            )
+            s.completed!
+        end
     end
 
     before do
