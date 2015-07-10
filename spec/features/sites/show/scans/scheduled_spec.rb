@@ -57,6 +57,20 @@ feature 'Schedules index page', js: true do
             end
         end
 
+        feature 'when the scan is suspended' do
+            before do
+                subject.start_at = nil
+                subject.scan.suspended!
+                subject.scan.revisions.create!
+                subject.save
+                refresh
+            end
+
+            scenario 'shows that the scan is suspended' do
+                expect(schedule).to have_content 'Suspended'
+            end
+        end
+
         feature 'when the scan is in progress' do
             before do
                 subject.start_at = nil

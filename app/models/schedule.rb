@@ -50,6 +50,10 @@ class Schedule < ActiveRecord::Base
         start_at && start_at < Time.zone.now
     end
 
+    def frozen?
+        scan.suspended?
+    end
+
     def in_progress?
         !start_at
     end

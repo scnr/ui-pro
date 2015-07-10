@@ -1,7 +1,12 @@
 require 'spec_helper'
 
 describe Schedule do
-    subject { FactoryGirl.create :schedule }
+    subject do
+        FactoryGirl.create(
+            :scan,
+            site: site
+        ).schedule
+    end
     let(:site) { FactoryGirl.create :site }
 
     expect_it { to belong_to :scan }
@@ -176,7 +181,25 @@ describe Schedule do
         end
     end
 
-    describe 'due?' do
+    describe '#frozen?' do
+        context 'when the scan is suspended' do
+            before do
+                subject.scan.suspended!
+            end
+
+            it 'returns true' do
+                expect(subject).to be_frozen
+            end
+        end
+
+        context 'when the scan is not suspended' do
+            it 'returns false' do
+                expect(subject).to_not be_frozen
+            end
+        end
+    end
+
+    describe '#due?' do
         context 'when there is #start_at' do
             context 'in the past' do
                 before do

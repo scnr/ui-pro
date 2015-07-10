@@ -21,7 +21,11 @@
             </td>
 
             <td>
-                <% if schedule.due? %>
+                <% if schedule.frozen? %>
+                <span
+                title="The schedule has been frozen, will resume once the scan is restored."
+                class="label label-info">Suspended</span>
+                <% elsif schedule.due? %>
                     <span
                     title="Parallel scan limit has been reached, the scan will run as soon as there's an available slot."
                     class="label label-info">ASAP</span>
