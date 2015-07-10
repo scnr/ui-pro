@@ -2,6 +2,10 @@ module ApplicationHelper
 
     SCOPED_FIND_EACH_BATCH_SIZE = 1000
 
+    def seconds_to_hms( seconds )
+        Arachni::Utilities.seconds_to_hms seconds
+    end
+
     def refreshable_partial( resource, options = {} )
         options[:path]    = refreshable_partial_channel_path( resource )
         options[:partial] = refreshable_partial_path( resource, options )

@@ -24,14 +24,14 @@
                 Started on <%= l @revision.started_at %>,
                 stopped on <%= l @revision.stopped_at %>
                 &mdash;
-                <%= Arachni::Utilities.seconds_to_hms @revision.stopped_at - @revision.started_at %>.
+                <%= seconds_to_hms @revision.stopped_at - @revision.started_at %>.
             </p>
         <% elsif @revision.in_progress? %>
             <p class="text-muted" id="revision-info-time">
                 <i class="fa fa-spin fa-circle-o-notch"></i>
                 Started on <%= l @revision.started_at %>
                 &mdash;
-                <%= Arachni::Utilities.seconds_to_hms @revision.duration %>.
+                <%= seconds_to_hms @revision.duration %>.
             </p>
         <% end %>
     </div>

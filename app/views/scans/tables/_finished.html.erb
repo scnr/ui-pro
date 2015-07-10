@@ -2,10 +2,13 @@
     <thead>
     <tr>
         <th>Name</th>
+        <th>Revision</th>
+        <th>Status</th>
         <th>Profile</th>
-        <th>Pages</th>
-        <th>Issues</th>
-        <th>Revisions</th>
+        <th>Duration</th>
+        <th>Pages (current/overall)</th>
+        <th>Issues (current/overall)</th>
+        <th>Max severity (current/overall)</th>
         <th></th>
     </tr>
     </thead>
@@ -13,27 +16,32 @@
     <tbody>
     <% scans.each do |scan| %>
         <tr>
-            <td><%= link_to scan.name, [@site, scan] %></td>
-            <td><%= link_to scan.profile.name, scan.profile %></td>
-            <td><%= scan.sitemap_entries.size %></td>
-            <td>
-                <%= scan.issues.size %>
-            </td>
-            <td><%= scan.revisions.size %></td>
+            <%= render partial: '/scans/tables/row_fields', locals: { scan: scan } %>
 
             <td>
-                <a class="btn btn-sm btn-success" title="Repeat scan" href="#">
+                <%= link_to repeat_site_scan_path( @site, scan ),
+                            method: :post,
+                            title: 'Repeat scan',
+                            data: {
+                                    confirm: 'Are you sure you want to repeat this scan?'
+                            },
+                            class: 'btn btn-sm btn-success' do %>
                     <i class="fa fa-repeat"></i>
-                </a>
+                <% end %>
 
                 <%= link_to edit_site_scan_path( @site, scan ),
+                            title: 'Edit scan',
                             class: 'btn btn-sm btn-warning' do %>
                     <i class="fa fa-pencil"></i>
                 <% end %>
 
-                <%= link_to [@site, scan], method: :delete,
+                <%= link_to [@site, scan],
+                            title: 'Delete scan',
+                            method: :delete,
                             class: 'btn btn-sm btn-danger',
-                            data: { confirm: 'Are you sure?' } do %>
+                            data: {
+                                    confirm: 'Are you sure you want to delete this scan?'
+                            } do %>
                     <i class="fa fa-trash"></i>
                 <% end %>
             </td>

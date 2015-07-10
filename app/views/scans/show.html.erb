@@ -24,12 +24,12 @@
                 <i class="fa fa-spin fa-circle-o-notch"></i>
                 Started on <%= l last_revision.started_at %>
                 &mdash;
-                <%= Arachni::Utilities.seconds_to_hms last_revision.duration %>.
+                <%= seconds_to_hms last_revision.duration %>.
             <% elsif last_revision.stopped_at %>
                 Last started on <%= l last_revision.started_at %>,
                 stopped on <%= l last_revision.stopped_at %>
                 &mdash;
-                <%= Arachni::Utilities.seconds_to_hms last_revision.duration %>.
+                <%= seconds_to_hms last_revision.duration %>.
             <% end %>
             </p>
         <% end %>

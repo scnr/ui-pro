@@ -1,0 +1,64 @@
+<%
+   revision              = scan.last_revision
+   scan_max_severity     = scan.issues.max_severity || 'none'
+   revision_max_severity = revision.issues.max_severity  || 'none'
+%>
+
+<td>
+    <%= link_to scan.name, [@site, scan] %>
+</td>
+
+<td>
+    <%= link_to revision.index.ordinalize,
+                site_scan_revision_path( @site, scan, revision ) %>
+</td>
+
+<% if !scan.suspended? %>
+    <td>
+        <%= scan.status.capitalize %>
+    </td>
+<% end %>
+
+<td>
+    <%= link_to scan.profile.name, scan.profile %>
+</td>
+
+<td>
+    <%= seconds_to_hms revision.duration %>
+</td>
+
+<td>
+    <span class="revision-sitemap-count">
+        <%= revision.sitemap_entries.size %>
+    </span>
+
+    /
+
+    <span class="scan-sitemap-count">
+        <%= scan.sitemap_entries.size %>
+    </span>
+</td>
+
+<td>
+    <span class="revision-issue-count">
+        <%= revision.issues.size %>
+    </span>
+
+    /
+
+    <span class="scan-issue-count">
+        <%= scan.issues.size %>
+    </span>
+</td>
+
+<td>
+    <span class="revision-max-severity label-lg label-severity label-severity-<%= revision_max_severity %>">
+        <%= revision_max_severity.capitalize %>
+    </span>
+
+    /
+
+    <span class="scan-max-severity label-lg label-severity label-severity-<%= scan_max_severity %>">
+        <%= scan_max_severity.capitalize %>
+    </span>
+</td>

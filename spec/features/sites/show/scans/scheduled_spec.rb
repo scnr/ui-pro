@@ -17,7 +17,7 @@ feature 'Schedules index page', js: true do
     end
 
     def refresh
-        visit "#{site_path( site )}#!/schedule"
+        visit "#{site_path( site )}#!/scans"
     end
 
     before do
@@ -27,15 +27,10 @@ feature 'Schedules index page', js: true do
         login_as( user, scope: :user )
         visit site_path( site )
 
-        click_link 'Schedule'
+        click_link 'Scans'
     end
 
-    let(:schedule) { find( 'table#site-scan-schedule tbody tr' ) }
-
-    scenario 'can be visited by URL fragment' do
-        visit "#{site_path( site )}#!/schedule"
-        expect(find('h2')).to have_content 'Schedule'
-    end
+    let(:schedule) { find( 'table#scans-schedule tbody tr' ) }
 
     feature 'when there are scheduled scans' do
         scenario 'shows name' do
@@ -132,7 +127,7 @@ feature 'Schedules index page', js: true do
         end
 
         scenario 'shows message' do
-            expect(find(:css, 'p.alert.alert-info')).to have_content 'No scheduled scans.'
+            expect(find(:css, '#site-scans-schedule').find(:css, 'p.alert.alert-info')).to have_content 'No scheduled scans.'
         end
     end
 

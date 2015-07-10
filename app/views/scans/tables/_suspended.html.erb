@@ -2,10 +2,12 @@
     <thead>
     <tr>
         <th>Name</th>
+        <th>Revision</th>
         <th>Profile</th>
-        <th>Pages</th>
-        <th>Issues</th>
-        <th>Revisions</th>
+        <th>Duration</th>
+        <th>Pages (current/overall)</th>
+        <th>Issues (current/overall)</th>
+        <th>Max severity (current/overall)</th>
         <th></th>
     </tr>
     </thead>
@@ -13,30 +15,21 @@
     <tbody>
     <% scans.each do |scan| %>
         <tr>
-            <td><%= link_to scan.name, [@site, scan] %></td>
-            <td><%= link_to scan.profile.name, scan.profile %></td>
-            <td><%= scan.sitemap_entries.size %></td>
-            <td>
-                <%= scan.issues.size %>
-            </td>
-            <td><%= scan.revisions.size %></td>
+            <%= render partial: '/scans/tables/row_fields', locals: { scan: scan } %>
 
             <td>
-                <a class="btn btn-sm btn-success" title="Restore scan"
-                   href="#"  data-confirm="Are you sure you want to restore the scan?">
+                <%= link_to restore_site_scan_path( @site, scan ),
+                            method: :patch,
+                            title: 'Restore scan',
+                            class: 'btn btn-sm btn-success',
+                            data: {
+                                    confirm: 'Are you sure you want to restore the scan?'
+                            } do %>
                     <i class="fa fa-play-circle"></i>
-                </a>
-
-                <a class="btn btn-sm btn-success" title="Repeat scan" href="#">
-                    <i class="fa fa-repeat"></i>
-                </a>
-
-                <%= link_to edit_site_scan_path( @site, scan ),
-                            class: 'btn btn-sm btn-warning' do %>
-                    <i class="fa fa-pencil"></i>
                 <% end %>
 
                 <%= link_to [@site, scan], method: :delete,
+                            title: 'Delete scan',
                             class: 'btn btn-sm btn-danger',
                             data: { confirm: 'Are you sure?' } do %>
                     <i class="fa fa-trash"></i>

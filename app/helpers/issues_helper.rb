@@ -14,6 +14,22 @@ module IssuesHelper
         )
     end
 
+    def issue_severity_to_site_status( severity )
+        case severity.to_sym
+            when :high
+                'critical'
+
+            when :medium
+                'serious'
+
+            when :low
+                'fair'
+
+            when :informational
+                'good'
+        end
+    end
+
     def fa_icon_to_unicode( icon )
         case icon
             when 'circle'

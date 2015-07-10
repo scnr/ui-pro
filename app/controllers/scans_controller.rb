@@ -1,10 +1,12 @@
 class ScansController < ApplicationController
     include IssuesHelper
 
+    STATES = [ :pause, :resume, :suspend, :restore, :abort ]
+
     before_filter :authenticate_user!
 
     before_action :set_site
-    before_action :set_scan, only: [:show, :edit, :update, :destroy]
+    before_action :set_scan, only: [:show, :repeat, :edit, :update, :destroy] + STATES
 
     # GET /scans
     # GET /scans.json
@@ -51,6 +53,21 @@ class ScansController < ApplicationController
         end
     end
 
+    def repeat
+        @scan.build_schedule if !@scan.schedule
+        @scan.schedule.start_at = Time.zone.now
+
+        respond_to do |format|
+            if @scan.save
+                format.html { redirect_to [@site, @scan], notice: 'Scan was successfully scheduled.' }
+                format.json { render :show, status: :created, location: @scan }
+            else
+                format.html { render :new }
+                format.json { render json: @scan.errors, status: :unprocessable_entity }
+            end
+        end
+    end
+
     # PATCH/PUT /scans/1
     # PATCH/PUT /scans/1.json
     def update
@@ -62,6 +79,13 @@ class ScansController < ApplicationController
                 format.html { render :edit }
                 format.json { render json: @scan.errors, status: :unprocessable_entity }
             end
+        end
+    end
+
+    STATES.each do |state|
+        define_method state do
+            ScanScheduler.instance.send( state, @scan.last_revision )
+            redirect_to :back
         end
     end
 

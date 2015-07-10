@@ -20,19 +20,27 @@
             <td class="state">
                 <% if site.scanned_or_being_scanned? %>
                     <% if (sz = site.issues.high_severity.size) > 0 %>
-                        <span class="label-severity label-lg label-severity-high">Critical</span>
+                        <span class="label-severity label-lg label-severity-high">
+                            <%= issue_severity_to_site_status( :high ).capitalize %>
+                        </span>
 
                         &mdash; <%= sz %> <a href="#">high</a> severity issues
                     <% elsif (sz = site.issues.medium_severity.size) > 0 %>
-                        <span class="label-severity label-severity-medium">Serious</span>
+                        <span class="label-severity label-severity-medium">
+                            <%= issue_severity_to_site_status( :medium ).capitalize %>
+                        </span>
 
                         &mdash; <%= sz %> <a href="#">medium</a> severity issues
                     <% elsif (sz = site.issues.low_severity.size) > 0 %>
-                        <span class="label-severity label-severity-low">Fair</span>
+                        <span class="label-severity label-severity-low">
+                            <%= issue_severity_to_site_status( :low ).capitalize %>
+                        </span>
 
                         &mdash; <%= sz %> <a href="#">low</a> severity issues
                     <% elsif site.issues.informational_severity.any? %>
-                        <span class="label-severity label-severity-informational">Good</span>
+                        <span class="label-severity label-severity-informational">
+                            <%= issue_severity_to_site_status( :informational ).capitalize %>
+                        </span>
 
                         &mdash; only has <a href="#">informational</a> findings
                     <% else %>

@@ -59,7 +59,7 @@
                 <% if revision_count > 0 %>
                     <%= pluralize scan.revisions.size, 'revision' %>,
                     <%= pluralize scan.sitemap_entries.size, 'page' %>
-                    using <%= link_to scan.profile %>.
+                    using <%= link_to scan.profile, profile_path( scan.profile ) %>.
                 <% elsif scan.scheduled? %>
                     Running <%= link_to scan.schedule, '#' %>.
                 <% else %>

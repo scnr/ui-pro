@@ -1,0 +1,57 @@
+shared_examples_for 'Site scan tables row' do
+    scenario 'user sees scan name' do
+        expect(scans).to have_content scan.name
+    end
+
+    scenario 'user sees revision' do
+        expect(scans).to have_content scan.last_revision.index.ordinalize
+    end
+
+    scenario 'user sees scan profile' do
+        expect(scans).to have_content scan.profile
+    end
+
+    scenario 'user sees duration' do
+        expect(scans).to have_content ApplicationHelper.seconds_to_hms( scan.last_revision.duration )
+    end
+
+    scenario 'user sees amount of pages for this revision' do
+        expect(scans.find('.revision-sitemap-count')).to have_content revision.sitemap_entries.size
+    end
+
+    scenario 'user sees amount of pages for the scan' do
+        expect(scans.find('.scan-sitemap-count')).to have_content scan.sitemap_entries.size
+    end
+
+    scenario 'user sees amount of issues for this revision' do
+        expect(scans.find('.revision-issue-count')).to have_content revision.issues.size
+    end
+
+    scenario 'user sees amount of issues for this scan' do
+        expect(scans.find('.scan-issue-count')).to have_content scan.issues.size
+    end
+
+    feature 'when the scan has no issues' do
+        let(:max_severity) { scans.find('.scan-max-severity') }
+
+        scenario 'user sees max severity of none' do
+            expect(max_severity).to have_content 'None'
+        end
+    end
+
+    feature 'when the scan has no issues' do
+        scenario 'user sees maximum severity of issues for this scan'
+    end
+
+    feature 'when the revision has no issues' do
+        let(:max_severity) { scans.find('.revision-max-severity') }
+
+        scenario 'user sees max severity of none' do
+            expect(scans).to have_content 'None'
+        end
+    end
+
+    feature 'when the revision has no revision' do
+        scenario 'user sees maximum severity of issues for this revision'
+    end
+end

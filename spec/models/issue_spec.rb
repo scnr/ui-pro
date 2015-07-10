@@ -186,6 +186,28 @@ describe Issue do
         end
     end
 
+    describe '.max_severity' do
+        context 'when there is an issue with a severity of high' do
+            it 'returns high'
+        end
+
+        context 'when there is an issue with a severity of medium' do
+            it 'returns medium'
+        end
+
+        context 'when there is an issue with a severity of low' do
+            it 'returns low'
+        end
+
+        context 'when there is an issue with a severity of informational' do
+            it 'returns informational'
+        end
+
+        context 'when there are no issues' do
+            it 'returns nil'
+        end
+    end
+
     describe '#update_state' do
         let(:digest) { rand(9999999) }
         let(:state) { 'fixed' }
