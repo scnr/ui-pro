@@ -80,7 +80,7 @@ class SitesController < ApplicationController
     end
 
     def set_sites
-        @sites = current_user.sites
+        @sites = current_user.sites.order( id: :desc )
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
