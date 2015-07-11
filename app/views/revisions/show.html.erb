@@ -1,5 +1,5 @@
 <%
-   title @revision.index.ordinalize
+   title @revision.to_s
    breadcrumb_add 'Sites', sites_path
    breadcrumb_add @scan.url, site_path( @site )
    breadcrumb_add @scan.name, site_scan_path( @site, @scan )

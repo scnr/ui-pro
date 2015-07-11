@@ -59,7 +59,7 @@ feature 'Site page Scans tab' do
         let(:scan) { active }
         let(:scans) { find '#site-scans-active' }
 
-        it_behaves_like 'Site scan tables row'
+        it_behaves_like 'Site scan tables row fields'
 
         scenario 'user sees scan status' do
             expect(scans).to have_content scan.status.capitalize
@@ -116,7 +116,7 @@ feature 'Site page Scans tab' do
         let(:scan) { suspended }
         let(:scans) { find '#site-scans-suspended' }
 
-        it_behaves_like 'Site scan tables row'
+        it_behaves_like 'Site scan tables row fields'
 
         scenario 'user sees scan name' do
             expect(scans).to have_content scan.name
@@ -162,7 +162,7 @@ feature 'Site page Scans tab' do
         let(:scan) { finished }
         let(:scans) { find '#site-scans-finished' }
 
-        it_behaves_like 'Site scan tables row'
+        it_behaves_like 'Site scan tables row fields'
 
         scenario 'user sees scan status' do
             expect(scans).to have_content scan.status.capitalize

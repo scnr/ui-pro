@@ -2,6 +2,7 @@
    revision              = scan.last_revision
    scan_max_severity     = scan.issues.max_severity || 'none'
    revision_max_severity = revision.issues.max_severity  || 'none'
+   with_status           = !!local_assigns[:with_status]
 %>
 
 <td>
@@ -13,14 +14,22 @@
                 site_scan_revision_path( @site, scan, revision ) %>
 </td>
 
-<% if !scan.suspended? %>
+<% if with_status %>
     <td>
         <%= scan.status.capitalize %>
     </td>
 <% end %>
 
 <td>
-    <%= link_to scan.profile.name, scan.profile %>
+    <%= link_to scan.profile, scan.profile %>
+</td>
+
+<td>
+    <%= link_to scan.user_agent, scan.user_agent %>
+</td>
+
+<td>
+    <%= link_to scan.site_role, site_role_path_js( scan.site, scan.site_role ) %>
 </td>
 
 <td>

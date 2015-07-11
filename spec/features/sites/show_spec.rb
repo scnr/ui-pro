@@ -71,7 +71,7 @@ feature 'Site page' do
         end
 
         scenario 'user sees the time of the last performed' do
-            expect(site_info).to have_content "#{revision.index.ordinalize} #{scan} started on"
+            expect(site_info).to have_content "#{revision} of #{scan} scan started on"
             expect(site_info).to have_content I18n.l( site.last_scanned_at )
         end
 
@@ -96,7 +96,7 @@ feature 'Site page' do
         end
 
         scenario 'user sees the start time' do
-            expect(site_info).to have_content "#{revision.index.ordinalize} #{scan} started on"
+            expect(site_info).to have_content "#{revision} of #{scan} scan started on"
             expect(site_info).to have_content I18n.l( revision.started_at )
         end
 

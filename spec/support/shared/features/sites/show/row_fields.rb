@@ -1,4 +1,6 @@
-shared_examples_for 'Site scan tables row' do
+shared_examples_for 'Site scan tables row fields' do
+    include SiteRolesHelper
+
     scenario 'user sees scan name' do
         expect(scans).to have_content scan.name
     end
@@ -9,6 +11,17 @@ shared_examples_for 'Site scan tables row' do
 
     scenario 'user sees scan profile' do
         expect(scans).to have_content scan.profile
+        expect(scans).to have_xpath "//a[@href='#{profile_path( scan.profile )}']"
+    end
+
+    scenario 'user sees user agent' do
+        expect(scans).to have_content scan.user_agent
+        expect(scans).to have_xpath "//a[@href='#{user_agent_path( scan.user_agent )}']"
+    end
+
+    scenario 'user sees site role' do
+        expect(scans).to have_content scan.site_role
+        expect(scans).to have_xpath "//a[@href='#{site_role_path_js( scan.site, scan.site_role )}']"
     end
 
     scenario 'user sees duration' do

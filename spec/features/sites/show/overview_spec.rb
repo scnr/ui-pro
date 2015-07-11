@@ -125,7 +125,7 @@ feature 'Site page Overview tab' do
                     end
 
                     scenario 'user sees start datetime' do
-                        expect(scans).to have_content "#{revision.index.ordinalize} started on"
+                        expect(scans).to have_content "#{revision} started on"
                         expect(scans).to have_content I18n.l( revision.started_at )
                     end
 

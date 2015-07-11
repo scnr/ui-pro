@@ -100,7 +100,7 @@ feature 'Scan page' do
             end
 
             scenario 'user sees last revision start datetime' do
-                expect(info).to have_content "#{revision.index.ordinalize} started on"
+                expect(info).to have_content "#{revision} started on"
                 expect(info).to have_content I18n.l( revision.started_at )
             end
 
@@ -141,15 +141,11 @@ feature 'Scan page' do
                 scenario 'user sees start date' do
                     expect(info).to have_content I18n.l( revision.started_at )
                 end
-
-                scenario 'user does not see last revision stop datetime' do
-                    expect(info).to_not have_content 'stopped on'
-                end
             end
 
             feature 'which are not in progress' do
                 scenario 'user sees last revision stop datetime' do
-                    expect(info).to have_content 'stopped on'
+                    expect(info).to have_content "#{scan.status} on"
                     expect(info).to have_content I18n.l( revision.stopped_at )
                 end
             end

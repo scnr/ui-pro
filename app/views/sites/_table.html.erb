@@ -4,8 +4,8 @@
             <th>URL</th>
             <th>State</th>
             <th>Issues</th>
-            <th>Revisions</th>
             <th>Scans</th>
+            <th>Revisions</th>
             <th>Last scanned</th>
             <th></th>
         </tr>
@@ -24,9 +24,11 @@
                             <%= issue_severity_to_site_status( max_severity ).capitalize %>
                         </span>
 
-                        &mdash; <%= site.issues.send( "#{max_severity}_severity" ).size %>
+                        <% count = site.issues.send( "#{max_severity}_severity" ).size %>
+
+                        &mdash; <%= count %>
                         <a href="<%= site_path site %>#issue-summary-severity-<%= max_severity %>"><%= max_severity %></a>
-                        severity issues
+                        severity <%= 'issue'.pluralize count %>
                     <% else %>
                         <span class="label-severity label-severity-none">Good</span>
 
@@ -42,11 +44,11 @@
             </td>
 
             <td>
-                <%= site.revisions.count %>
+                <%= site.scans.size %>
             </td>
 
             <td>
-                <%= site.scans.size %>
+                <%= site.revisions.count %>
             </td>
 
             <td class="last-scanned">

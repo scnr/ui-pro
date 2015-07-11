@@ -11,7 +11,7 @@ as <%= link_to scan.site_role, site_role_path_js( scan.site, scan.site_role ) %>
 
     <% if scan.in_progress? %>
         <i class="fa fa-spin fa-circle-o-notch"></i>
-        <%= link_to last_revision.index.ordinalize,
+        <%= link_to last_revision,
                     site_scan_revision_path( scan.site, scan, last_revision ) %>
 
         <% if extended %>
@@ -22,12 +22,12 @@ as <%= link_to scan.site_role, site_role_path_js( scan.site, scan.site_role ) %>
             started on <%= l last_revision.started_at %>.
         <% end %>
     <% elsif last_revision.stopped_at %>
-        <%= link_to last_revision.index.ordinalize,
+        <%= link_to last_revision,
                     site_scan_revision_path( scan.site, scan, last_revision ) %>
 
         <% if extended %>
             started on <%= l last_revision.started_at %>;
-            stopped on <%= l last_revision.stopped_at %>
+            <%= last_revision.scan.status %> on <%= l last_revision.stopped_at %>
             &mdash;
             <%= seconds_to_hms last_revision.duration %>.
         <% else %>

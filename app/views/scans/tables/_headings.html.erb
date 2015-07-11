@@ -1,0 +1,34 @@
+<%
+   with_status = !!local_assigns[:with_status]
+%>
+
+<th>Name</th>
+
+<th>Revision</th>
+
+<% if with_status %>
+<th>Status</th>
+<% end %>
+
+<th>Profile</th>
+
+<th>User agent</th>
+
+<th>Role</th>
+
+<th>Duration</th>
+
+<th>
+    Pages
+    (<abbr title="Revision">R</abbr>/<abbr title="Scan">S</abbr>)
+</th>
+
+<th>
+    Issues
+    (<abbr title="Revision">R</abbr>/<abbr title="Scan">S</abbr>)
+</th>
+
+<th>
+    Max severity
+    (<abbr title="Revision">R</abbr>/<abbr title="Scan">S</abbr>)
+</th>

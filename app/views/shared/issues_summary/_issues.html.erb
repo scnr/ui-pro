@@ -106,7 +106,7 @@
                 <% if !@scan || !@revision %>
                     <td>
                         <% if @scan %>
-                            <%= link_to "#{issue.revision.index.ordinalize} revision",
+                            <%= link_to issue.revision,
                                         site_scan_revision_path(
                                                 site,
                                                 issue.scan,
@@ -114,7 +114,7 @@
                                                 filter_params
                                         ) %>
                         <% else %>
-                            <%= link_to issue.revision.index.ordinalize,
+                            <%= link_to "#{issue.revision.index.ordinalize} revision of #{issue.scan} scan",
                                         site_scan_revision_path(
                                                 site,
                                                 issue.scan,
@@ -122,12 +122,6 @@
                                                 filter_params
                                         ) %>
 
-                            <%= link_to issue.scan.name,
-                                        site_scan_path(
-                                                site,
-                                                issue.scan,
-                                                filter_params
-                                        ) %>
 
                             <%
                                issue.siblings.each do |sibling|
@@ -137,22 +131,14 @@
                                    next if sibling.id == issue.id
                             %>
                                 ,
-                                    <%= link_to sibling.revision.index.ordinalize,
+                                <%= link_to "#{sibling.revision.index.ordinalize} revision of #{sibling.scan} scan",
                                                 site_scan_revision_path(
                                                         site,
                                                         sibling.revision.scan,
                                                         sibling.revision,
                                                         filter_params
                                                 ) %>
-
-                                    <%= link_to sibling.revision.scan.name,
-                                                site_scan_path(
-                                                        site,
-                                                        sibling.revision.scan,
-                                                        filter_params
-                                                ) %>
                             <% end %>
-
                         <% end %>
                     </td>
                 <% end %>

@@ -46,7 +46,7 @@ class Revision < ActiveRecord::Base
     end
 
     def to_s
-        "Revision ##{index}"
+        "#{index.ordinalize} revision"
     end
 
     def set_index

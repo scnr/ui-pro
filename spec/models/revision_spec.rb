@@ -385,7 +385,7 @@ describe Revision do
 
     describe '#to_s' do
         it 'returns the index' do
-            expect(subject.to_s).to eq "Revision ##{subject.index}"
+            expect(subject.to_s).to eq "#{subject.index.ordinalize} revision"
         end
     end
 end
