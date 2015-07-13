@@ -34,4 +34,16 @@ module ScanStates
         end
     end
 
+    def active?
+        ACTIVE_STATES.include? status
+    end
+
+    def inactive?
+        INACTIVE_STATES.include? status
+    end
+
+    def finished?
+        FINISHED_STATES.include? status
+    end
+
 end
