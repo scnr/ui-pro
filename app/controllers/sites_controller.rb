@@ -74,7 +74,7 @@ class SitesController < ApplicationController
 
     # Use callbacks to share common setup or constraints between actions.
     def set_site
-        @site = current_user.sites.includes(:profile).find_by_id( params[:id] )
+        @site = current_user.sites.find_by_id( params[:id] )
 
         raise ActionController::RoutingError.new( 'Site not found.' ) if !@site
     end
@@ -123,8 +123,14 @@ class SitesController < ApplicationController
             @scan.build_schedule
             @active_tab = 'scan-form'
         else
-            @schedules = @site.schedules
-            @scans = @site.scans.includes(:profile).order( id: :desc )
+            @scheduled_scans   = @site.scans.scheduled.includes(:site_role).
+                includes(:user_agent).includes(:profile)
+            @unscheduled_scans = @site.scans.unscheduled.includes(:site_role).
+                includes(:user_agent).includes(:profile)
+
+            @scans = @site.scans.includes(:revisions).includes(:site_role).
+                includes(:user_agent).includes(:profile).order( id: :desc )
+
             @issues_summary = issues_summary_data(
                 site:      @site,
                 sitemap:   @site.sitemap_entries,

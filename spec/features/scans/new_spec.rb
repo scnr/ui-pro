@@ -152,19 +152,42 @@ feature 'New scan page' do
         end
     end
 
-    feature 'when start_at is missing' do
-        scenario 'the scan is scheduled to run asap' do
-            fill_in 'scan_name', with: name
-            select site_role.name, from: 'scan_site_role_id'
-            select profile.name, from: 'scan_profile_id'
-            select user_agent.name, from: 'scan_user_agent_id'
+    feature 'when start_at is' do
+        feature 'is set to empty' do
+            scenario 'the scan is unscheduled' do
+                fill_in 'scan_name', with: name
+                select site_role.name, from: 'scan_site_role_id'
+                select profile.name, from: 'scan_profile_id'
+                select user_agent.name, from: 'scan_user_agent_id'
 
-            click_button 'Create'
+                select '', from: 'scan_schedule_attributes_start_at_1i'
+                select '', from: 'scan_schedule_attributes_start_at_2i'
+                select '', from: 'scan_schedule_attributes_start_at_3i'
+                select '', from: 'scan_schedule_attributes_start_at_4i'
+                select '', from: 'scan_schedule_attributes_start_at_5i'
 
-            scan = site.scans.last.reload
+                click_button 'Create'
 
-            expect(scan).to be_scheduled
-            expect(scan.schedule).to be_due
+                scan = site.scans.last.reload
+
+                expect(scan).to_not be_scheduled
+            end
+        end
+
+        feature 'is not specified' do
+            scenario 'the scan is scheduled for now' do
+                fill_in 'scan_name', with: name
+                select site_role.name, from: 'scan_site_role_id'
+                select profile.name, from: 'scan_profile_id'
+                select user_agent.name, from: 'scan_user_agent_id'
+
+                click_button 'Create'
+
+                scan = site.scans.last.reload
+
+                expect(scan).to be_scheduled
+                expect(scan).to be_due
+            end
         end
     end
 end

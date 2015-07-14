@@ -296,7 +296,8 @@ module IssuesSummary
             includes(:type).includes(:severity).
             includes(:vector).includes( vector: :sitemap_entry ).
             includes( page: :sitemap_entry ).
-            includes( siblings: { revision: :scan } )
+            includes( siblings: :revision ).
+            includes( siblings: :scan )
     end
 
     def prepare_issue_filters

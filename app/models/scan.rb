@@ -31,10 +31,11 @@ class Scan < ActiveRecord::Base
     before_create :ensure_schedule
 
     scope :scheduled,   -> do
-        includes(:schedule).where.not( schedules: { scan_id: nil } )
+        includes(:schedule).where.not( schedules: { start_at: nil } ).
+            order( 'schedules.start_at asc' )
     end
     scope :unscheduled, -> do
-        includes(:schedule).where( schedules: { scan_id: nil } )
+        includes(:schedule).where( schedules: { start_at: nil } ).order( id: :desc )
     end
 
     scope :with_revisions, -> { joins(:revisions).where.not( revisions: { id: nil } ) }
@@ -54,7 +55,7 @@ class Scan < ActiveRecord::Base
     end
 
     def recurring?
-        scheduled? && schedule.recurring?
+        schedule.recurring?
     end
 
     def schedule_next
@@ -62,7 +63,7 @@ class Scan < ActiveRecord::Base
     end
 
     def scheduled?
-        !!schedule
+        !!schedule.start_at || recurring?
     end
 
     def to_s

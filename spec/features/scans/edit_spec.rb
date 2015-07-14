@@ -27,11 +27,15 @@ feature 'Edit scan page' do
         Warden.test_reset!
     end
 
+    def refresh
+        visit edit_site_scan_path( site, scan )
+    end
+
     before do
         site_role
         user_agent
         login_as user, scope: :user
-        visit edit_site_scan_path( site, scan )
+        refresh
     end
 
     scenario 'has title' do
@@ -136,8 +140,7 @@ feature 'Edit scan page' do
         before do
             scan.revisions << FactoryGirl.create(:revision, scan: scan)
 
-            login_as user, scope: :user
-            visit edit_site_scan_path( site, scan )
+            refresh
         end
 
         scenario 'user cannot change the path' do
@@ -154,6 +157,21 @@ feature 'Edit scan page' do
 
         scenario 'user cannot change the user agent' do
             expect(page).to have_css '#scan_user_agent_id.disabled'
+        end
+    end
+
+    feature 'when the scan is active' do
+        before do
+            scan.scanning!
+            refresh
+        end
+
+        scenario 'the start_at field is missing' do
+            expect(page).to_not have_css '.scan_schedule_start_at'
+        end
+
+        scenario 'the stop_after field is missing' do
+            expect(page).to_not have_css '.scan_schedule_stop_after'
         end
     end
 

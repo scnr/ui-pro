@@ -233,28 +233,6 @@ describe Schedule do
         end
     end
 
-    describe 'in_progress?' do
-        context 'when there is #start_at' do
-            before do
-                subject.start_at = Time.now
-            end
-
-            it 'returns false' do
-                expect(subject).to_not be_in_progress
-            end
-        end
-
-        context 'when there is no #start_at' do
-            before do
-                subject.start_at = nil
-            end
-
-            it 'returns true' do
-                expect(subject).to be_in_progress
-            end
-        end
-    end
-
     describe '#recurring?' do
         context 'when #day_frequency has been specified' do
             before do

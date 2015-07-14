@@ -1,0 +1,52 @@
+<table id="scans-schedule-frozen" class="table table-condensed table-striped table-hover">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Reason</th>
+        <th></th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <% @unscheduled_scans.each do |scan| %>
+        <% schedule = scan.schedule %>
+
+        <tr>
+            <td>
+                <%= link_to scan, site_scan_path( scan.site, scan )%>
+            </td>
+
+            <td>
+                <% if schedule.suspended? %>
+                    <i class="fa fa-eject"></i>
+                    Suspended
+
+                    <% if schedule.recurring? %>
+                        &mdash; Restore to re-activate recurring scans.
+                    <% end %>
+                <% elsif scan.active? %>
+                    <i class="fa fa-spin fa-circle-o-notch"></i>
+                    In progress
+
+                    <% if schedule.recurring? %>
+                        &mdash; Recurring scheduling will be re-activated once the scan finishes.
+                    <% end %>
+
+                <% elsif schedule.recurring? %>
+                    Configured to be recurring but missing the start date-time.
+                <% else %>
+                    Missing start date-time.
+                <% end %>
+            </td>
+
+            <td>
+                <%= link_to edit_site_scan_path( @site, scan ),
+                            title: 'Edit scan settings.',
+                            class: 'btn btn-sm btn-warning' do %>
+                    <i class="fa fa-pencil"></i>
+                <% end %>
+            </td>
+        </tr>
+    <% end %>
+    </tbody>
+</table>

@@ -36,25 +36,28 @@
 
     <%= f.simple_fields_for :schedule do |sf| %>
     <div class="row">
-        <div class="col-md-6">
-            <h2>Schedule</h2>
+        <% if !@scan.active? %>
+            <div class="col-md-6">
+                <h2>Schedule</h2>
 
-            <div class="row">
-                <div class="col-md-9">
-                    <%= sf.input :start_at,
-                                 include_blank: true,
-                                 start_year: Date.today.year,
-                                 end_year: Date.today.year + 1,
-                                 hint: 'If no date is specified the scan will start ASAP.'
-                    %>
-                </div>
+                <div class="row">
+                    <div class="col-md-9">
+                        <%= sf.input :start_at,
+                                     include_blank: true,
+                                     start_year: Date.today.year,
+                                     end_year: Date.today.year + 2,
+                                     default: Time.now,
+                                     hint: 'The scan will remain unscheduled without a start date-time.'
+                        %>
+                    </div>
 
-                <div class="col-md-3">
-                    <%= sf.input :stop_after_hours, label: 'Stop after' %> hours
-                    <%= sf.input :stop_suspend, label: 'Suspend instead of aborting' %>
+                    <div class="col-md-3">
+                        <%= sf.input :stop_after_hours, label: 'Stop after' %> hours
+                        <%= sf.input :stop_suspend, label: 'Suspend instead of aborting' %>
+                    </div>
                 </div>
             </div>
-        </div>
+        <% end %>
 
         <div class="col-md-3">
             <h2>Frequency</h2>

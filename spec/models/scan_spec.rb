@@ -50,7 +50,7 @@ describe Scan do
             [
                 FactoryGirl.create( :scan, site: site, name: 'stuff3' ),
                 FactoryGirl.create( :scan, site: site, name: 'stuff4' )
-            ].each { |s| s.schedule = nil; s.save; }
+            ]
         end
 
         let(:with_revisions) do
@@ -91,11 +91,11 @@ describe Scan do
         describe 'unscheduled' do
             before { described_class.delete_all }
 
-            it "returns scans without #{Scan}#start_at" do
+            it 'returns scans without Schedule#start_at' do
                 scheduled
                 unscheduled
 
-                expect(described_class.unscheduled).to eq unscheduled
+                expect(described_class.unscheduled.map(&:id).sort).to eq unscheduled.map(&:id).sort
             end
         end
 
@@ -182,9 +182,9 @@ describe Scan do
     end
 
     describe '#scheduled?' do
-        context 'when there is a #schedule' do
+        context 'when there is a Schedule#start_at' do
             before do
-                subject.build_schedule
+                subject.schedule.start_at = Time.now
             end
 
             it 'returns true' do
@@ -192,9 +192,9 @@ describe Scan do
             end
         end
 
-        context 'when there is no #schedule' do
+        context 'when there is no Schedule#start_at' do
             before do
-                subject.schedule = nil
+                subject.schedule.start_at = nil
             end
 
             it 'returns false' do
@@ -204,31 +204,19 @@ describe Scan do
     end
 
     describe '#recurring?' do
-        context 'when there is a #schedule' do
-            context 'and it is recurring' do
-                before do
-                    allow(subject.schedule).to receive(:recurring?) { true }
-                end
-
-                it 'returns true' do
-                    expect(subject).to be_recurring
-                end
+        context 'and the Schedule is recurring' do
+            before do
+                allow(subject.schedule).to receive(:recurring?) { true }
             end
 
-            context 'and is not recurring' do
-                before do
-                    allow(subject.schedule).to receive(:recurring?) { false }
-                end
-
-                it 'returns false' do
-                    expect(subject).to_not be_recurring
-                end
+            it 'returns true' do
+                expect(subject).to be_recurring
             end
         end
 
-        context 'when there is no #schedule' do
+        context 'and the Schedule is not recurring' do
             before do
-                subject.schedule = nil
+                allow(subject.schedule).to receive(:recurring?) { false }
             end
 
             it 'returns false' do
@@ -447,24 +435,6 @@ describe Scan do
             }
 
             expect(options).to eq rpc_options
-        end
-    end
-
-    describe '#scheduled?' do
-        context 'when the scan does not have an associated schedule' do
-            it 'returns false' do
-                subject.schedule = nil
-
-                expect(subject.schedule).to be_falsey
-                expect(subject).to_not be_scheduled
-            end
-        end
-
-        context 'when the scan has an associated schedule' do
-            it 'returns true' do
-                subject.schedule.start_at = Time.now
-                expect(subject).to be_scheduled
-            end
         end
     end
 end

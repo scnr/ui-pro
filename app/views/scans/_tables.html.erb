@@ -49,12 +49,6 @@
     <div id="site-scans-schedule" class="col-md-4">
         <h2>Schedule</h2>
 
-        <% if @schedules.any? %>
-            <%= render partial: 'scans/tables/schedule' %>
-        <% else %>
-            <p class="alert alert-info">
-                No scheduled scans.
-            </p>
-        <% end %>
+        <%= render partial: 'scans/tables/schedule' %>
     </div>
 </div>

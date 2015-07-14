@@ -40,7 +40,6 @@ class ScansController < ApplicationController
     # POST /scans.json
     def create
         @scan = @site.scans.new(scan_params)
-        @scan.schedule.start_at ||= Time.zone.now
 
         respond_to do |format|
             if @scan.save
@@ -54,8 +53,7 @@ class ScansController < ApplicationController
     end
 
     def repeat
-        @scan.build_schedule if !@scan.schedule
-        @scan.schedule.start_at = Time.zone.now
+        @scan.schedule.start_at = Time.now
 
         respond_to do |format|
             if @scan.save

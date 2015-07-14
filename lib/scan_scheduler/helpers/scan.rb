@@ -109,14 +109,8 @@ module Scan
     def perform( scan )
         log_info "Performing: #{scan}"
 
-        if scan.schedule.recurring?
-            # Remove this scan from the schedule list.
-            scan.schedule.unschedule
-        else
-            # Completely remove scheduling for this scan, it was an one-off.
-            scan.schedule.destroy
-            scan.save
-        end
+        # Remove this scan from the schedule list.
+        scan.schedule.unschedule
 
         scan.initializing!
 
