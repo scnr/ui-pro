@@ -13,6 +13,9 @@ end
 class Schedule < ActiveRecord::Base
     belongs_to :scan
 
+    FREQUENCY_BASES = %w(start stop)
+    validates_inclusion_of :frequency_base, in: FREQUENCY_BASES, allow_nil: true
+
     validates :day_frequency,
               numericality: true,
               inclusion:    {
@@ -31,6 +34,8 @@ class Schedule < ActiveRecord::Base
 
     validates :start_at, datetime: true
     validates :stop_after_hours, numericality: { greater_than: 0 }, allow_nil: true
+
+    before_save :set_default_values
 
     # Will not return nil #start_at.
     scope :due, -> { where( 'start_at <= ?', Time.now ) }
@@ -68,10 +73,10 @@ class Schedule < ActiveRecord::Base
     end
 
     def recurring?
-        interval > 0
+        frequency > 0
     end
 
-    def interval
+    def frequency
         day_frequency.to_i.days + month_frequency.to_i.months
     end
 
@@ -84,11 +89,29 @@ class Schedule < ActiveRecord::Base
         save
     end
 
+    def frequency_based_on_start_time?
+        frequency_base == 'start'
+    end
+
+    def frequency_based_on_stop_time?
+        frequency_base == 'finish'
+    end
+
     def schedule_next
         return if !recurring?
 
-        self.start_at = Time.now + interval
+        lr   = scan.last_revision
+        base = (frequency_based_on_start_time? ? lr.started_at : lr.stopped_at)
+
+        self.start_at = base + frequency
+
         save
+    end
+
+    private
+
+    def set_default_values
+        self.frequency_base ||= 'start'
     end
 
 end

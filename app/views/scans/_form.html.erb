@@ -53,7 +53,12 @@
 
                     <div class="col-md-3">
                         <%= sf.input :stop_after_hours, label: 'Stop after' %> hours
-                        <%= sf.input :stop_suspend, label: 'Suspend instead of aborting' %>
+                        <%= sf.input :stop_suspend,
+                                     label: 'Suspend instead of aborting',
+                                     hint: 'Should the scan be suspended, the' +
+                                           ' frequency settings will take place' +
+                                           ' after it has been restored.'
+                        %>
                     </div>
                 </div>
             </div>
@@ -68,15 +73,22 @@
                               as: :select,
                               label: false,
                               placeholder: 'Days (1-29)'
-            %> days and
-
+            %>
+            days and
             <%= sf.input :month_frequency,
                               collection: (1..12),
                               as: :select,
                               label: false,
                               placeholder: 'Months (1-12)'
             %>
-            months.
+            months, from the
+            <%= sf.input :frequency_base,
+                         collection: Schedule::FREQUENCY_BASES,
+                         as: :select,
+                         default: 'start',
+                         label: false
+            %>
+            time.
         </div>
     </div>
     <% end %>

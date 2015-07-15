@@ -85,6 +85,8 @@ feature 'Edit scan page' do
         select 11, from: 'scan_schedule_attributes_month_frequency'
         check 'Suspend instead of aborting'
 
+        select 'stop', from: 'scan_schedule_attributes_frequency_base'
+
         click_button 'Update'
 
         expect(page).to have_content 'Scan was successfully updated.'
@@ -104,6 +106,7 @@ feature 'Edit scan page' do
         expect(schedule.day_frequency).to eq 10
         expect(schedule.month_frequency).to eq 11
         expect(schedule.stop_suspend).to be_truthy
+        expect(schedule.frequency_base).to eq 'stop'
 
         expect(scan).to be_scheduled
     end

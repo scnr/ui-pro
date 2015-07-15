@@ -109,13 +109,17 @@ module Scan
     def perform( scan )
         log_info "Performing: #{scan}"
 
+        start_at = scan.schedule.start_at
+
         # Remove this scan from the schedule list.
         scan.schedule.unschedule
 
         scan.initializing!
 
         revision = scan.revisions.create(
-            started_at: Time.now
+            # We don't use Time.now because it will lead to small time-slips
+            # over time.
+            started_at: start_at
         )
 
         log_info_for revision, 'Created revision.'

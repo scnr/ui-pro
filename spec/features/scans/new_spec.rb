@@ -97,6 +97,8 @@ feature 'New scan page' do
         select 10, from: 'scan_schedule_attributes_day_frequency'
         select 11, from: 'scan_schedule_attributes_month_frequency'
 
+        select 'stop', from: 'scan_schedule_attributes_frequency_base'
+
         check 'Suspend instead of aborting'
 
         click_button 'Create'
@@ -117,6 +119,7 @@ feature 'New scan page' do
         expect(schedule.stop_after_hours).to eq 1.5
         expect(schedule.day_frequency).to eq 10
         expect(schedule.month_frequency).to eq 11
+        expect(schedule.frequency_base).to eq 'stop'
         expect(schedule.stop_suspend).to be_truthy
 
         expect(scan).to be_scheduled

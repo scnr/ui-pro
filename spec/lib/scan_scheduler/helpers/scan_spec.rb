@@ -119,6 +119,17 @@ describe ScanScheduler::Helpers::Scan do
             settings
         end
 
+        it 'sets the Revision#started_at to Schedule#start_at' do
+            start_at = Time.now - 1199
+
+            scan.schedule.start_at = start_at
+            scan.save
+
+            subject.perform( scan ) rescue Arachni::Reactor::Error::NotRunning
+
+            expect(scan.last_revision.started_at.to_i).to eq start_at.to_i
+        end
+
         it 'sets status to initializing' do
             subject.perform( scan ) rescue Arachni::Reactor::Error::NotRunning
 

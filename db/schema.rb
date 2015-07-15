@@ -332,6 +332,7 @@ ActiveRecord::Schema.define(version: 20150406191208) do
   create_table "schedules", force: :cascade do |t|
     t.integer  "month_frequency"
     t.integer  "day_frequency"
+    t.string   "frequency_base"
     t.datetime "start_at"
     t.float    "stop_after_hours"
     t.boolean  "stop_suspend"

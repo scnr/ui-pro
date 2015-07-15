@@ -11,6 +11,10 @@ describe Schedule do
 
     expect_it { to belong_to :scan }
 
+    it 'sets #frequency_base to start' do
+        expect(Schedule.create.frequency_base).to eq 'start'
+    end
+
     describe 'scopes' do
         let(:due) do
             [
@@ -65,6 +69,27 @@ describe Schedule do
     end
 
     describe 'validations' do
+        describe '#frequency_base' do
+            it 'allows start' do
+                subject.frequency_base = 'start'
+
+                expect(subject.save).to be_truthy
+            end
+
+            it 'allows stop' do
+                subject.frequency_base = 'stop'
+
+                expect(subject.save).to be_truthy
+            end
+
+            it 'does not allow other values' do
+                subject.frequency_base = 'stuff'
+
+                expect(subject.save).to be_falsey
+                expect(subject.errors).to include :frequency_base
+            end
+        end
+
         describe '#day_frequency' do
             it 'is numeric' do
                 subject.day_frequency = 'stuff'
@@ -262,13 +287,13 @@ describe Schedule do
         end
     end
 
-    describe '#interval' do
+    describe '#frequency' do
         it 'returns the seconds till next occurrence' do
             subject.day_frequency   = 2
             subject.month_frequency = 3
 
             now = Time.now
-            expect((now + subject.interval).to_s).to eq(
+            expect((now + subject.frequency).to_s).to eq(
                 (now + subject.day_frequency.days +
                     subject.month_frequency.months
                 ).to_s)
@@ -276,24 +301,46 @@ describe Schedule do
     end
 
     describe '#schedule_next' do
-        context 'if #recurring?' do
+        context 'when the scan is recurring' do
+            let(:started_at) { Time.now }
+            let(:stopped_at) { started_at + 1000 }
+
             before do
                 subject.day_frequency   = 3
                 subject.month_frequency = 2
+
+                subject.scan.revisions.create(
+                    started_at: started_at,
+                    stopped_at: stopped_at
+                )
             end
 
-            it 'sets the next #start_at' do
-                subject.start_at = Time.now - 1000
-                subject.schedule_next
+            context 'and the frequency is based on start time' do
+                before do
+                    subject.frequency_base = 'start'
+                end
 
-                expect(subject.start_at.to_s).to eq Time.zone.now.advance(
-                    months: subject.month_frequency,
-                    days:   subject.day_frequency
-                ).to_s
+                it 'adds the frequency to the Revision#started_at' do
+                    subject.schedule_next
+
+                    expect(subject.start_at.to_i).to eq (started_at + subject.frequency).to_i
+                end
+            end
+
+            context 'and the frequency is based on finish time' do
+                before do
+                    subject.frequency_base = 'finish'
+                end
+
+                it 'adds the frequency to the Revision#stopped_at' do
+                    subject.schedule_next
+
+                    expect(subject.start_at.to_i).to eq (stopped_at + subject.frequency).to_i
+                end
             end
         end
 
-        context 'if not #recurring?' do
+        context 'when the scan is not recurring' do
             before do
                 subject.day_frequency   = nil
                 subject.month_frequency = nil
