@@ -58,138 +58,176 @@ feature 'New scan page' do
         expect(find('h1').text).to match site.url
     end
 
-    scenario 'user can set the path' do
-        fill_in 'scan_name', with: name
-        fill_in 'scan_description', with: description
-        fill_in 'scan_path', with: path
-        select site_role.name, from: 'scan_site_role_id'
-        select profile.name, from: 'scan_profile_id'
-        select user_agent.name, from: 'scan_user_agent_id'
-
-        click_button 'Create'
-
-        expect(page).to have_content 'Scan was successfully created.'
-
-        scan = site.scans.last
-
-        expect(scan.name).to eq name
-        expect(scan.description).to eq description
-        expect(scan.path).to eq "/#{path}"
-        expect(scan.user_agent).to eq user_agent
-        expect(scan.site_role).to eq site_role
-        expect(scan.profile).to eq profile
-    end
-
-    scenario 'user can set the schedule' do
-        fill_in 'scan_name', with: name
-        fill_in 'scan_description', with: description
-        select site_role.name, from: 'scan_site_role_id'
-        select profile.name, from: 'scan_profile_id'
-        select user_agent.name, from: 'scan_user_agent_id'
-
-        select '2016', from: 'scan_schedule_attributes_start_at_1i'
-        select 'November', from: 'scan_schedule_attributes_start_at_2i'
-        select '15', from: 'scan_schedule_attributes_start_at_3i'
-        select '21', from: 'scan_schedule_attributes_start_at_4i'
-        select '50', from: 'scan_schedule_attributes_start_at_5i'
-
-        fill_in 'scan_schedule_attributes_stop_after_hours', with: 1.5
-        select 10, from: 'scan_schedule_attributes_day_frequency'
-        select 11, from: 'scan_schedule_attributes_month_frequency'
-
-        select 'stop', from: 'scan_schedule_attributes_frequency_base'
-
-        check 'Suspend instead of aborting'
-
-        click_button 'Create'
-
-        expect(page).to have_content 'Scan was successfully created.'
-
-        scan = site.scans.last
-
-        expect(scan.name).to eq name
-        expect(scan.description).to eq description
-        expect(scan.user_agent).to eq user_agent
-        expect(scan.site_role).to eq site_role
-        expect(scan.profile).to eq profile
-
-        schedule = scan.schedule
-
-        expect(schedule.start_at.to_s).to eq '2016-11-15 21:50:00 UTC'
-        expect(schedule.stop_after_hours).to eq 1.5
-        expect(schedule.day_frequency).to eq 10
-        expect(schedule.month_frequency).to eq 11
-        expect(schedule.frequency_base).to eq 'stop'
-        expect(schedule.stop_suspend).to be_truthy
-
-        expect(scan).to be_scheduled
-    end
-
-    scenario 'user sees own profiles in select box' do
-        FactoryGirl.create :profile, name: 'Other user profile'
-        visit new_site_scan_path( site )
-
-        expect(page).to have_select 'scan_profile_id', [profile.name, other_profile.name]
-    end
-
-    scenario 'user sees user-agents in select box' do
-        expect(page).to have_select 'scan_user_agent_id', [user_agent.name, other_user_agent.name]
-    end
-
-    feature 'when the name is missing' do
-        scenario 'user sees an error' do
-            click_button 'Create'
-
-            expect(find(:div, '.scan_name.has-error')).to be_truthy
-        end
-    end
-
-    feature 'when stop_after_hours is not numeric' do
-        scenario 'user sees an error' do
+    feature 'form', js: true do
+        scenario 'user can set the path' do
             fill_in 'scan_name', with: name
-            fill_in 'scan_schedule_attributes_stop_after_hours', with: 'stuff'
+            fill_in 'scan_description', with: description
+            fill_in 'scan_path', with: path
+            select site_role.name, from: 'scan_site_role_id'
+            select profile.name, from: 'scan_profile_id'
+            select user_agent.name, from: 'scan_user_agent_id'
 
             click_button 'Create'
 
-            expect(find(:div, '.scan_schedule_stop_after_hours.has-error')).to be_truthy
+            expect(page).to have_content 'Scan was successfully created.'
+
+            scan = site.scans.last
+
+            expect(scan.name).to eq name
+            expect(scan.description).to eq description
+            expect(scan.path).to eq "/#{path}"
+            expect(scan.user_agent).to eq user_agent
+            expect(scan.site_role).to eq site_role
+            expect(scan.profile).to eq profile
         end
-    end
 
-    feature 'when start_at is' do
-        feature 'is set to empty' do
-            scenario 'the scan is unscheduled' do
-                fill_in 'scan_name', with: name
-                select site_role.name, from: 'scan_site_role_id'
-                select profile.name, from: 'scan_profile_id'
-                select user_agent.name, from: 'scan_user_agent_id'
+        scenario 'user can set the simple frequency' do
+            fill_in 'scan_name', with: name
 
-                select '', from: 'scan_schedule_attributes_start_at_1i'
-                select '', from: 'scan_schedule_attributes_start_at_2i'
-                select '', from: 'scan_schedule_attributes_start_at_3i'
-                select '', from: 'scan_schedule_attributes_start_at_4i'
-                select '', from: 'scan_schedule_attributes_start_at_5i'
+            click_link 'Simple'
+            select 10, from: 'scan_schedule_attributes_day_frequency'
+            select 11, from: 'scan_schedule_attributes_month_frequency'
 
+            click_button 'Create'
+
+            expect(page).to have_content 'Scan was successfully created.'
+
+            schedule = site.scans.last.schedule
+
+            expect(schedule.day_frequency).to eq 10
+            expect(schedule.month_frequency).to eq 11
+            expect(schedule.frequency_format).to eq 'simple'
+        end
+
+        scenario 'user can set the simple frequency' do
+            fill_in 'scan_name', with: name
+
+            click_link 'Cronline'
+            fill_in 'scan_schedule_attributes_frequency_cron', with: '@monthly'
+
+            click_button 'Create'
+
+            expect(page).to have_content 'Scan was successfully created.'
+
+            schedule = site.scans.last.schedule
+
+            expect(schedule.frequency_cron).to eq '@monthly'
+            expect(schedule.frequency_format).to eq 'cron'
+        end
+
+        scenario 'user can set the schedule' do
+            fill_in 'scan_name', with: name
+            fill_in 'scan_description', with: description
+            select site_role.name, from: 'scan_site_role_id'
+            select profile.name, from: 'scan_profile_id'
+            select user_agent.name, from: 'scan_user_agent_id'
+
+            select '2016', from: 'scan_schedule_attributes_start_at_1i'
+            select 'November', from: 'scan_schedule_attributes_start_at_2i'
+            select '15', from: 'scan_schedule_attributes_start_at_3i'
+            select '21', from: 'scan_schedule_attributes_start_at_4i'
+            select '50', from: 'scan_schedule_attributes_start_at_5i'
+
+            fill_in 'scan_schedule_attributes_stop_after_hours', with: 1.5
+            select 10, from: 'scan_schedule_attributes_day_frequency'
+            select 11, from: 'scan_schedule_attributes_month_frequency'
+
+            select 'stop', from: 'scan_schedule_attributes_frequency_base'
+
+            check 'Suspend instead of aborting'
+
+            click_button 'Create'
+
+            expect(page).to have_content 'Scan was successfully created.'
+
+            scan = site.scans.last
+
+            expect(scan.name).to eq name
+            expect(scan.description).to eq description
+            expect(scan.user_agent).to eq user_agent
+            expect(scan.site_role).to eq site_role
+            expect(scan.profile).to eq profile
+
+            schedule = scan.schedule
+
+            expect(schedule.start_at.to_s).to eq '2016-11-15 21:50:00 UTC'
+            expect(schedule.stop_after_hours).to eq 1.5
+            expect(schedule.day_frequency).to eq 10
+            expect(schedule.month_frequency).to eq 11
+            expect(schedule.frequency_base).to eq 'stop'
+            expect(schedule.stop_suspend).to be_truthy
+
+            expect(scan).to be_scheduled
+        end
+
+        scenario 'user sees own profiles in select box' do
+            FactoryGirl.create :profile, name: 'Other user profile'
+            visit new_site_scan_path( site )
+
+            expect(page).to have_select 'scan_profile_id', [profile.name, other_profile.name]
+        end
+
+        scenario 'user sees user-agents in select box' do
+            expect(page).to have_select 'scan_user_agent_id', [user_agent.name, other_user_agent.name]
+        end
+
+        feature 'when the name is missing' do
+            scenario 'user sees an error' do
                 click_button 'Create'
 
-                scan = site.scans.last.reload
-
-                expect(scan).to_not be_scheduled
+                expect(find(:div, '.scan_name.has-error')).to be_truthy
             end
         end
 
-        feature 'is not specified' do
-            scenario 'the scan is scheduled for now' do
+        feature 'when stop_after_hours is < 0' do
+            scenario 'user sees an error' do
                 fill_in 'scan_name', with: name
-                select site_role.name, from: 'scan_site_role_id'
-                select profile.name, from: 'scan_profile_id'
-                select user_agent.name, from: 'scan_user_agent_id'
+                fill_in 'scan_schedule_attributes_stop_after_hours', with: -1
 
                 click_button 'Create'
 
-                scan = site.scans.last.reload
+                expect(find(:div, '.scan_schedule_stop_after_hours.has-error')).to be_truthy
+            end
+        end
 
-                expect(scan).to be_scheduled
-                expect(scan).to be_due
+        feature 'when start_at is' do
+            feature 'is set to empty' do
+                scenario 'the scan is unscheduled' do
+                    fill_in 'scan_name', with: name
+                    select site_role.name, from: 'scan_site_role_id'
+                    select profile.name, from: 'scan_profile_id'
+                    select user_agent.name, from: 'scan_user_agent_id'
+
+                    select '', from: 'scan_schedule_attributes_start_at_1i'
+                    select '', from: 'scan_schedule_attributes_start_at_2i'
+                    select '', from: 'scan_schedule_attributes_start_at_3i'
+                    select '', from: 'scan_schedule_attributes_start_at_4i'
+                    select '', from: 'scan_schedule_attributes_start_at_5i'
+
+                    click_button 'Create'
+                    sleep 1
+
+                    scan = site.scans.last
+
+                    expect(scan).to_not be_scheduled
+                end
+            end
+
+            feature 'is not specified' do
+                scenario 'the scan is scheduled for now' do
+                    fill_in 'scan_name', with: name
+                    select site_role.name, from: 'scan_site_role_id'
+                    select profile.name, from: 'scan_profile_id'
+                    select user_agent.name, from: 'scan_user_agent_id'
+
+                    click_button 'Create'
+                    sleep 1
+
+                    scan = site.scans.last
+
+                    expect(scan).to be_scheduled
+                    expect(scan).to be_due
+                end
             end
         end
     end

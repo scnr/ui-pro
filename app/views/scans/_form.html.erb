@@ -1,4 +1,9 @@
-<%= simple_form_for( [@site, @scan], html: { class: 'form-inline new_scan edit_scan' } ) do |f| %>
+<%= simple_form_for( [@site, @scan],
+                     html: {
+                         class: 'form-inline new_scan edit_scan',
+                         onsubmit: 'on_submit()'
+                     }
+    ) do |f| %>
     <%= f.error_notification %>
 
     <div class="row">
@@ -34,6 +39,8 @@
         </div>
     </div>
 
+    <hr/>
+
     <%= f.simple_fields_for :schedule do |sf| %>
     <div class="row">
         <% if !@scan.active? %>
@@ -41,17 +48,20 @@
                 <h2>Schedule</h2>
 
                 <div class="row">
-                    <div class="col-md-9">
+                    <div class="col-md-8">
                         <%= sf.input :start_at,
                                      include_blank: true,
                                      start_year: Date.today.year,
                                      end_year: Date.today.year + 2,
                                      default: Time.now,
-                                     hint: 'The scan will remain unscheduled without a start date-time.'
+                                     hint: 'The scan will remain unscheduled ' +
+                                            'without a start date-time and a ' +
+                                            'time in the past will be replaced ' +
+                                            'with now.'
                         %>
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <%= sf.input :stop_after_hours, label: 'Stop after' %> hours
                         <%= sf.input :stop_suspend,
                                      label: 'Suspend instead of aborting',
@@ -64,31 +74,72 @@
             </div>
         <% end %>
 
-        <div class="col-md-3">
+        <div class="col-md-6">
             <h2>Frequency</h2>
 
-            Every
-            <%= sf.input :day_frequency,
-                              collection: (1..29),
-                              as: :select,
-                              label: false,
-                              placeholder: 'Days (1-29)'
-            %>
-            days and
-            <%= sf.input :month_frequency,
-                              collection: (1..12),
-                              as: :select,
-                              label: false,
-                              placeholder: 'Months (1-12)'
-            %>
-            months, from the
-            <%= sf.input :frequency_base,
-                         collection: Schedule::FREQUENCY_BASES,
-                         as: :select,
-                         default: 'start',
-                         label: false
-            %>
-            time.
+            <%= sf.input :frequency_format, label: false, wrapper_html: { class: 'hide' } %>
+
+            <div class="format-tabs">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation"
+                        class="<%= 'active' if !@scan.schedule.frequency_format ||
+                                @scan.schedule.frequency_format == 'simple' %>"
+                    >
+                        <a href="#simple" aria-controls="simple"
+                           role="tab" data-toggle="tab">
+                            Simple
+                        </a>
+                    </li>
+                    <li role="presentation"
+                        class="<%= 'active' if @scan.schedule.frequency_format == 'cron' %>"
+                    >
+                        <a href="#cron" aria-controls="cron"
+                           role="tab" data-toggle="tab">
+                            Cronline
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    <div role="tabpanel"
+                         class="tab-pane <%= 'active' if !@scan.schedule.frequency_format ||
+                            @scan.schedule.frequency_format == 'simple' %>"
+                         id="simple">
+                        Every
+                        <%= sf.input :day_frequency,
+                                          collection: (1..29),
+                                          as: :select,
+                                          label: false,
+                                          placeholder: 'Days (1-29)'
+                        %>
+                        days and
+                        <%= sf.input :month_frequency,
+                                          collection: (1..12),
+                                          as: :select,
+                                          label: false,
+                                          placeholder: 'Months (1-12)'
+                        %>
+                        months.
+                    </div>
+
+                    <div role="tabpanel"
+                         class="tab-pane <%= 'active' if @scan.schedule.frequency_format == 'cron' %>"
+                         id="cron">
+                        <%= sf.input :frequency_cron, label: false, as: :string %>
+                    </div>
+                </div>
+
+                <div>
+                    Calculate the next occurrence from the scan's
+                    <%= sf.input :frequency_base,
+                                 collection: Schedule::FREQUENCY_BASES,
+                                 as: :select,
+                                 default: 'start',
+                                 label: false
+                    %>
+                    time.
+                </div>
+            </div>
         </div>
     </div>
     <% end %>
@@ -99,3 +150,9 @@
         </div>
     </div>
 <% end %>
+
+<script>
+    function on_submit() {
+        $('#scan_schedule_attributes_frequency_format').val( $('div.format-tabs div.tab-pane.active').attr('id') );
+    }
+</script>

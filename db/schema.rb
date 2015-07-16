@@ -333,6 +333,8 @@ ActiveRecord::Schema.define(version: 20150406191208) do
     t.integer  "month_frequency"
     t.integer  "day_frequency"
     t.string   "frequency_base"
+    t.text     "frequency_cron"
+    t.string   "frequency_format"
     t.datetime "start_at"
     t.float    "stop_after_hours"
     t.boolean  "stop_suspend"

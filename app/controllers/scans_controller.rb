@@ -144,7 +144,9 @@ class ScansController < ApplicationController
                     :start_at,
                     :stop_after_hours,
                     :stop_suspend,
-                    :frequency_base
+                    :frequency_base,
+                    :frequency_cron,
+                    :frequency_format
                 ]
             }
         ]

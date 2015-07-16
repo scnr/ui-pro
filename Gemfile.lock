@@ -176,6 +176,7 @@ GEM
     oj (2.12.9)
     oj_mimic_json (1.0.1)
     orm_adapter (0.5.0)
+    parse-cron (0.1.4)
     pg (0.18.2)
     pony (1.8)
       mail (>= 2.0)
@@ -355,6 +356,7 @@ DEPENDENCIES
   kramdown
   launchy
   loofah
+  parse-cron
   pg
   puma
   quiet_assets

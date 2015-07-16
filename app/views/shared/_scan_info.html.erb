@@ -37,7 +37,4 @@ as <%= link_to scan.site_role, site_role_path_js( scan.site, scan.site_role ) %>
     <% end %>
 <% end %>
 
-<% if scan.scheduled? %>
-    <br/>
-    Running <%= scan.schedule %>.
-<% end %>
+<%= render_schedule scan.schedule %>

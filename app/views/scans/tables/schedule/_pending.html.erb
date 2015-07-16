@@ -4,7 +4,7 @@
         <th>Name</th>
         <th>Starts at</th>
         <th>Stops after</th>
-        <th>Every</th>
+        <th>Frequency</th>
         <th></th>
     </tr>
     </thead>
@@ -18,7 +18,7 @@
                 <%= link_to scan, site_scan_path( scan.site, scan )%>
             </td>
 
-            <td>
+            <td class="scans-schedule-pending-start_at">
                 <% if schedule.due? %>
                     <span class="label label-info"
                         title="Parallel scan limit has been reached, the scan will run as soon as there's an available slot."
@@ -30,22 +30,18 @@
                 <% end %>
             </td>
 
-            <td>
-                <%= if schedule.stop_after_hours
-                        schedule.stop_after_hours.to_i.to_s + ' hours'
-                    end %>
+            <td class="scans-schedule-pending-stop_after_hours">
+                <% if schedule.stop_after_hours %>
+                    <%= schedule.stop_after_hours.to_i %> hours
+                <% else %>
+                    <span class="label label-info">
+                        Unrestricted
+                    </span>
+                <% end %>
             </td>
 
-            <td>
-                <%= if schedule.day_frequency
-                        pluralize( schedule.day_frequency, 'day' )
-                    end %>
-
-                <%= 'and' if schedule.day_frequency && schedule.month_frequency %>
-
-                <%= if schedule.month_frequency
-                        pluralize( schedule.month_frequency, 'month' )
-                    end %>
+            <td class="scans-schedule-pending-frequency">
+                <%= render_frequency schedule %>
             </td>
 
             <td>

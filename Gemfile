@@ -30,6 +30,8 @@ gem 'diffy'
 
 gem 'pg'
 
+gem 'parse-cron'
+
 group :doc do
     gem 'sdoc', '~> 0.4.0'
 end

@@ -15,6 +15,8 @@ describe Schedule do
         expect(Schedule.create.frequency_base).to eq 'start'
     end
 
+    it 'ensures #start_at is not in the past'
+
     describe 'scopes' do
         let(:due) do
             [
@@ -87,6 +89,68 @@ describe Schedule do
 
                 expect(subject.save).to be_falsey
                 expect(subject.errors).to include :frequency_base
+            end
+        end
+
+        describe '#frequency_format' do
+            it 'allows simple' do
+                subject.frequency_format = 'simple'
+
+                expect(subject.save).to be_truthy
+            end
+
+            it 'allows cron' do
+                subject.frequency_format = 'cron'
+
+                expect(subject.save).to be_truthy
+            end
+
+            it 'does not allow other values' do
+                subject.frequency_format = 'stuff'
+
+                expect(subject.save).to be_falsey
+                expect(subject.errors).to include :frequency_format
+            end
+        end
+
+        describe '#frequency_cron' do
+            context 'when frequency_format is' do
+                context 'cron' do
+                    before do
+                        subject.frequency_format = 'cron'
+                    end
+
+                    it 'accepts valid cronlines' do
+                        subject.frequency_cron = '* * * * *'
+
+                        expect(subject.save).to be_truthy
+                    end
+
+                    it 'does not allow invalid cronlines' do
+                        subject.frequency_cron = 'stuff'
+
+                        expect(subject.save).to be_falsey
+                        expect(subject.errors).to include :frequency_cron
+                    end
+                end
+
+                context 'simple' do
+                    before do
+                        subject.frequency_format = 'simple'
+                    end
+
+                    it 'accepts valid cronlines' do
+                        subject.frequency_cron = '* * * * *'
+
+                        expect(subject.save).to be_truthy
+                    end
+
+                    it 'accepts invalid cronlines' do
+                        subject.frequency_cron = 'stuff'
+
+                        expect(subject.save).to be_truthy
+                    end
+                end
             end
         end
 
@@ -259,99 +323,226 @@ describe Schedule do
     end
 
     describe '#recurring?' do
-        context 'when #day_frequency has been specified' do
+        context 'when #frequency_simple? is true' do
             before do
-                subject.day_frequency   = 2
-                subject.month_frequency = nil
+                allow(subject). to receive(:frequency_simple?) { true }
             end
 
             expect_it { to be_recurring }
         end
 
-        context 'when #month_frequency has been specified' do
+        context 'when #frequency_cron? is true' do
             before do
-                subject.day_frequency   = nil
-                subject.month_frequency = 1
+                allow(subject). to receive(:frequency_cron?) { true }
             end
 
             expect_it { to be_recurring }
         end
 
-        context 'when no #day_frequency nor #month_frequency have been specified' do
+        context 'when no #frequency_simple? nor #frequency_cron? are true' do
             before do
-                subject.day_frequency   = nil
-                subject.month_frequency = nil
+                allow(subject). to receive(:frequency_simple?) { false }
+                allow(subject). to receive(:frequency_cron?) { false }
             end
 
             expect_it { to_not be_recurring }
         end
     end
 
-    describe '#frequency' do
-        it 'returns the seconds till next occurrence' do
-            subject.day_frequency   = 2
-            subject.month_frequency = 3
+    describe '#frequency_simple?' do
+        context 'when #frequency_format is' do
+            context 'cron' do
+                before do
+                    subject.frequency_format = 'cron'
+                end
 
-            now = Time.now
-            expect((now + subject.frequency).to_s).to eq(
-                (now + subject.day_frequency.days +
-                    subject.month_frequency.months
-                ).to_s)
+                expect_it { to_not be_frequency_simple }
+            end
+
+            context 'simple' do
+                before do
+                    subject.frequency_base = 'simple'
+                end
+
+                context 'with #day_frequency' do
+                    before do
+                        subject.day_frequency = 1
+                    end
+
+                    expect_it { to be_frequency_simple }
+                end
+
+                context 'with #month_frequency' do
+                    before do
+                        subject.month_frequency = 1
+                    end
+
+                    expect_it { to be_frequency_simple }
+                end
+            end
         end
     end
 
-    describe '#schedule_next' do
-        context 'when the scan is recurring' do
-            let(:started_at) { Time.now }
-            let(:stopped_at) { started_at + 1000 }
+    describe '#frequency_cron?' do
+        context 'when #frequency_format is' do
+            context 'simple' do
+                before do
+                    subject.frequency_format = 'simple'
+                end
 
-            before do
-                subject.day_frequency   = 3
-                subject.month_frequency = 2
-
-                subject.scan.revisions.create(
-                    started_at: started_at,
-                    stopped_at: stopped_at
-                )
+                expect_it { to_not be_frequency_cron }
             end
 
-            context 'and the frequency is based on start time' do
+            context 'cron' do
+                before do
+                    subject.frequency_format = 'cron'
+                end
+
+                context 'without #frequency_cron' do
+                    before do
+                        subject.frequency_cron = nil
+                    end
+
+                    expect_it { to_not be_frequency_cron }
+                end
+
+                context 'with #frequency_cron' do
+                    before do
+                        subject.frequency_cron = '@monthly'
+                    end
+
+                    expect_it { to be_frequency_cron }
+                end
+            end
+        end
+    end
+
+    describe '#frequency_based_on_start_time?' do
+        context 'when #frequency_base is' do
+            context 'start' do
                 before do
                     subject.frequency_base = 'start'
                 end
 
-                it 'adds the frequency to the Revision#started_at' do
-                    subject.schedule_next
-
-                    expect(subject.start_at.to_i).to eq (started_at + subject.frequency).to_i
-                end
+                expect_it { to be_frequency_based_on_start_time }
             end
 
-            context 'and the frequency is based on finish time' do
+            context 'stop' do
                 before do
-                    subject.frequency_base = 'finish'
+                    subject.frequency_base = 'stop'
                 end
 
-                it 'adds the frequency to the Revision#stopped_at' do
-                    subject.schedule_next
+                expect_it { to_not be_frequency_based_on_start_time }
+            end
+        end
+    end
 
-                    expect(subject.start_at.to_i).to eq (stopped_at + subject.frequency).to_i
+    describe '#frequency_based_on_stop_time?' do
+        context 'when #frequency_base is' do
+            context 'start' do
+                before do
+                    subject.frequency_base = 'start'
                 end
+
+                expect_it { to_not be_frequency_based_on_stop_time }
+            end
+
+            context 'stop' do
+                before do
+                    subject.frequency_base = 'stop'
+                end
+
+                expect_it { to be_frequency_based_on_stop_time }
+            end
+        end
+    end
+
+    describe '#next' do
+        let(:time) { Time.now + 3.days }
+
+        context 'when not #recurring?' do
+            before do
+                allow(subject).to receive(:recurring?) { false }
+            end
+
+            it 'returns nil' do
+                expect(subject.next( time )).to be_nil
             end
         end
 
-        context 'when the scan is not recurring' do
+        context 'when #frequency_cron?' do
             before do
-                subject.day_frequency   = nil
-                subject.month_frequency = nil
+                subject.frequency_cron   = '@monthly'
+                subject.frequency_format = 'cron'
             end
 
-            it 'does nothing' do
-                start_at = Time.zone.now
-                subject.start_at = start_at
-                subject.schedule_next
+            it 'returns the next occurrence from on #frequency_cron' do
+                expect(subject.next( time ).to_s).to eq (time + 1.month).at_beginning_of_month.to_s
+            end
+        end
 
-                expect(subject.start_at.to_s).to eq start_at.to_s
+        context 'when #frequency_simple?' do
+            before do
+                subject.day_frequency   = 1
+                subject.month_frequency = 2
+
+                subject.frequency_format = 'simple'
+            end
+
+            it 'returns the next occurrence from on the simple frequency' do
+                expect(subject.next( time ).to_s).to eq (time + 1.days + 2.months).to_s
+            end
+        end
+    end
+
+    describe '#schedule_next' do
+        let(:started_at) { Time.now - 1000 }
+        let(:stopped_at) { started_at + 3500 }
+
+        before do
+            subject.scan.revisions.create(
+                started_at: started_at,
+                stopped_at: stopped_at
+            )
+        end
+
+        context 'when not #recurring?' do
+            before do
+                allow(subject).to receive(:recurring?) { false }
+            end
+
+            it 'returns nil' do
+                expect(subject.schedule_next).to be_nil
+            end
+        end
+
+        context 'when #frequency_based_on_start_time? is' do
+            before do
+                allow(subject).to receive(:recurring?) { true }
+            end
+
+            context 'true' do
+                before do
+                    allow(subject).to receive(:frequency_based_on_start_time?) { true }
+                end
+
+                it "calculates #start_at based on the last revision's #started_at" do
+                    expect(subject).to receive(:next).with(started_at)
+
+                    subject.schedule_next
+                end
+            end
+
+            context 'false' do
+                before do
+                    allow(subject).to receive(:frequency_based_on_start_time?) { false }
+                end
+
+                it "calculates #start_at based on the last revision's #stoppedd_at" do
+                    expect(subject).to receive(:next).with(stopped_at)
+
+                    subject.schedule_next
+                end
             end
         end
     end

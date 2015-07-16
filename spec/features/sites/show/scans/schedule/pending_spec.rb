@@ -28,6 +28,9 @@ feature 'Schedules index page', js: true do
     end
 
     let(:schedule) { find( 'table#scans-schedule-pending tbody tr' ) }
+    let(:start_at) { schedule.find( '.scans-schedule-pending-start_at' ) }
+    let(:stop_after_hours) { schedule.find( '.scans-schedule-pending-stop_after_hours' ) }
+    let(:frequency) { schedule.find( '.scans-schedule-pending-frequency' ) }
 
     feature 'when there are scheduled scans' do
         before do
@@ -60,7 +63,19 @@ feature 'Schedules index page', js: true do
             end
 
             scenario 'shows that the scan is to be run ASAP' do
-                expect(schedule).to have_content 'ASAP'
+                expect(start_at.find('span.label.label-info')).to have_content 'ASAP'
+            end
+        end
+
+        feature 'when the scan is not configured to stop after some time' do
+            before do
+                subject.stop_after_hours = nil
+                subject.save
+                refresh
+            end
+
+            scenario 'shows it as unrestricted' do
+                expect(stop_after_hours.find('span.label.label-info')).to have_content 'Unrestricted'
             end
         end
 
@@ -72,31 +87,50 @@ feature 'Schedules index page', js: true do
             end
 
             scenario 'shows it' do
-                expect(schedule).to have_content subject.stop_after_hours.to_i.to_s
+                expect(stop_after_hours).to have_content subject.stop_after_hours.to_i.to_s
             end
         end
 
-        feature 'when the scan has a day frequency' do
+        feature 'when the scan has a simple frequency based on' do
             before do
-                subject.day_frequency = 10
+                subject.frequency_format = 'simple'
+            end
+
+            feature 'day' do
+                before do
+                    subject.day_frequency = 10
+                    subject.save
+                    refresh
+                end
+
+                scenario 'shows it' do
+                    expect(frequency).to have_content "#{subject.day_frequency} days"
+                end
+            end
+
+            feature 'month' do
+                before do
+                    subject.month_frequency = 10
+                    subject.save
+                    refresh
+                end
+
+                scenario 'shows it' do
+                    expect(frequency).to have_content "#{subject.month_frequency} months"
+                end
+            end
+        end
+
+        feature 'when the scan has a cron frequency' do
+            before do
+                subject.frequency_format = 'cron'
+                subject.frequency_cron   = '@monthly'
                 subject.save
                 refresh
             end
 
             scenario 'shows it' do
-                expect(schedule).to have_content "#{subject.day_frequency} days"
-            end
-        end
-
-        feature 'when the scan has a month frequency' do
-            before do
-                subject.month_frequency = 10
-                subject.save
-                refresh
-            end
-
-            scenario 'shows it' do
-                expect(schedule).to have_content "#{subject.month_frequency} months"
+                expect(frequency.find('kbd')).to have_content subject.frequency_cron
             end
         end
     end
@@ -109,7 +143,7 @@ feature 'Schedules index page', js: true do
         end
 
         scenario 'shows message' do
-            expect(find(:css, '#site-scans-schedule-pending').find(:css, 'p.alert.alert-info')).to have_content 'No pending scans.'
+            expect(schedule.find('p.alert.alert-info')).to have_content 'No pending scans.'
         end
     end
 

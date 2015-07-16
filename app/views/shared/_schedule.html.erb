@@ -1,0 +1,15 @@
+<% if schedule.start_at || schedule.recurring? %>
+    <br/>
+
+    <% if schedule.start_at %>
+        Running <%= schedule.start_at %>
+    <% end %>
+
+    <% if schedule.start_at && schedule.recurring? %>
+        &mdash;
+    <% end %>
+
+    <% if schedule.recurring? %>
+        <%= render_frequency schedule %>
+    <% end %>
+<% end %>
