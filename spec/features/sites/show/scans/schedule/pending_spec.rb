@@ -143,7 +143,7 @@ feature 'Schedules index page', js: true do
         end
 
         scenario 'shows message' do
-            expect(schedule.find('p.alert.alert-info')).to have_content 'No pending scans.'
+            expect(find('#site-scans-schedule-pending p.alert.alert-info')).to have_content 'No pending scans.'
         end
     end
 
