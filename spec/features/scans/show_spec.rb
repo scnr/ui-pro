@@ -116,7 +116,7 @@ feature 'Scan page' do
                 end
 
                 scenario 'user sees schedule' do
-                    expect(info).to have_content scan.schedule.start_at
+                    expect(info).to have_content I18n.l( scan.schedule.start_at )
                 end
             end
 

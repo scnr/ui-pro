@@ -73,7 +73,7 @@ feature 'Site index page' do
             end
 
             scenario 'user sees time passed since last revision' do
-                expect(page).to have_content '17 minutes ago'
+                expect(page).to have_content '1 hour and 16 minutes ago'
                 expect(page).to have_xpath "//a[@href='#{site_scan_revision_path( site, site.revisions.last.scan, site.revisions.last )}']"
             end
 
