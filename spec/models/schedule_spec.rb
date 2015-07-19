@@ -15,7 +15,15 @@ describe Schedule do
         expect(Schedule.create.frequency_base).to eq 'start'
     end
 
-    it 'ensures #start_at is not in the past'
+    it 'ensures #start_at is not in the past' do
+        t = Time.now
+
+        subject.start_at = Time.now - 1000
+        subject.save
+
+        expect(subject.start_at).to be > t
+        expect(subject.start_at).to be < Time.now
+    end
 
     describe 'scopes' do
         let(:due) do
