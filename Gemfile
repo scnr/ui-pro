@@ -32,6 +32,8 @@ gem 'pg'
 
 gem 'parse-cron'
 
+gem 'dotiw'
+
 group :doc do
     gem 'sdoc', '~> 0.4.0'
 end
