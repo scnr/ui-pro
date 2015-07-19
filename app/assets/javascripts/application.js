@@ -210,6 +210,7 @@ $(document).on( 'page:load', function( $ ) {
 
 $(document).ajaxStop( function() {
     loaded();
+    setup();
 });
 
 $(window).bind( "page:restore", function () {
