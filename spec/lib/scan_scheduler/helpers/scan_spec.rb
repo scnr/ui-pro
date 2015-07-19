@@ -120,7 +120,7 @@ describe ScanScheduler::Helpers::Scan do
         end
 
         it 'sets the Revision#started_at to Schedule#start_at' do
-            start_at = Time.now - 1199
+            start_at = Time.now + 1199
 
             scan.schedule.start_at = start_at
             scan.save
@@ -459,9 +459,19 @@ describe ScanScheduler::Helpers::Scan do
             subject.download_report_and_shutdown(revision)
         end
 
-        it 'sets the given :status' do
-            subject.download_report_and_shutdown( revision, status: 'completed' )
-            expect(scan).to be_completed
+        context 'when :status is given' do
+            it 'sets it' do
+                subject.download_report_and_shutdown( revision, status: 'completed' )
+                expect(scan).to be_completed
+            end
+        end
+
+        context 'when :status is not given' do
+            it 'does not affect the status' do
+                scan.paused!
+                subject.download_report_and_shutdown( revision )
+                expect(scan).to be_paused
+            end
         end
 
         context 'when :mark_issues_fixed is' do

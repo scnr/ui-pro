@@ -86,17 +86,11 @@ module Scan
 
         revision.scan.aborting!
 
-        instance_for( revision ).service.abort do |r|
-            handle_if_rpc_error( revision, r )
-
-            log_info_for revision, 'Aborted'
-
-            download_report_and_shutdown(
-                revision,
-                mark_issues_fixed: false,
-                status:            'aborted'
-            )
-        end
+        download_report_and_shutdown(
+            revision,
+            mark_issues_fixed: false,
+            status:            'aborted'
+        )
     end
 
     # Performs the scan.
@@ -261,8 +255,12 @@ module Scan
 
             finish( revision )
 
-            revision.scan.status = status
-            revision.scan.save
+            if status
+                revision.scan.status = status
+                revision.scan.save
+
+                log_info_for revision, status.capitalize
+            end
         end
     end
 
