@@ -437,6 +437,14 @@ describe Schedule do
         end
     end
 
+    describe '#static?' do
+        it 'is aliased to #frequency_based_on_start_time?' do
+            ret = 'stuff'
+            allow(subject).to receive(:frequency_based_on_start_time?).and_return( ret )
+            expect(subject.static?).to be ret
+        end
+    end
+
     describe '#frequency_based_on_stop_time?' do
         context 'when #frequency_base is' do
             context 'start' do
@@ -453,6 +461,149 @@ describe Schedule do
                 end
 
                 expect_it { to be_frequency_based_on_stop_time }
+            end
+        end
+    end
+
+    describe '#dynamic?' do
+        it 'is aliased to #frequency_based_on_stop_time?' do
+            ret = 'stuff'
+            allow(subject).to receive(:frequency_based_on_stop_time?).and_return( ret )
+            expect(subject.dynamic?).to be ret
+        end
+    end
+
+    describe '#step_through' do
+        context 'when no block is given' do
+            it 'raises an exception' do
+                expect do
+                    subject.step_through
+                end.to raise_error 'Missing block.'
+            end
+        end
+
+        context 'when the scan is not scheduled' do
+            before do
+                subject.start_at = nil
+            end
+
+            it 'raises an exception' do
+                expect do
+                    subject.step_through {}
+                end.to raise_error 'Not scheduled.'
+            end
+        end
+
+        context 'when the scan is scheduled' do
+            before do
+                subject.start_at = Time.now + 1000
+            end
+
+            context 'and recurring' do
+                before do
+                    subject.frequency_format = 'simple'
+                    subject.day_frequency    = 1
+                end
+
+                context 'and static' do
+                    before do
+                        subject.frequency_base = 'start'
+                    end
+
+                    it 'projects 12 next occurrences of the scan' do
+                        cnt = 0
+
+                        subject.step_through do |occurrence, time|
+                            cnt += 1
+
+                            if cnt == 1
+                                expect(time.to_s).to eq subject.start_at.to_s
+                            else
+                                expect(time.to_s).to eq (subject.start_at + (cnt - 1).days).to_s
+                            end
+
+                            expect(occurrence).to eq cnt
+                        end
+
+                        expect(cnt).to eq 12
+                    end
+
+                    context 'when the amount of steps has been specified' do
+                        it 'projects the given amount of occurrences' do
+                            steps = 100
+                            cnt   = 0
+
+                            subject.step_through steps do |occurrence, time|
+                                cnt += 1
+
+                                if cnt == 1
+                                    expect(time.to_s).to eq subject.start_at.to_s
+                                else
+                                    expect(time.to_s).to eq (subject.start_at + (cnt - 1).days).to_s
+                                end
+
+                                expect(occurrence).to eq cnt
+                            end
+
+                            expect(cnt).to eq steps
+                        end
+                    end
+
+                    context 'when the scan has revisions' do
+                        it 'accounts for them in the occurrence index' do
+                            steps = 100
+                            cnt   = 0
+
+                            subject.scan.revisions.create
+                            subject.scan.revisions.create
+
+                            subject.step_through steps do |occurrence, time|
+                                cnt += 1
+                                expect(occurrence).to eq cnt + 2
+                            end
+
+                            expect(cnt).to eq steps
+                        end
+                    end
+                end
+
+                context 'and dynamic' do
+                    before do
+                        subject.frequency_base = 'stop'
+                    end
+
+                    it 'only yields the first occurrence' do
+                        cnt = 0
+
+                        subject.step_through do |occurrence, time|
+                            cnt += 1
+
+                            expect(time.to_s).to eq subject.start_at.to_s
+                            expect(occurrence).to eq cnt
+                        end
+
+                        expect(cnt).to eq 1
+                    end
+                end
+            end
+
+            context 'and not recurring' do
+                before do
+                    subject.frequency_format = nil
+                end
+
+                it 'only yields the first occurrence' do
+                    cnt = 0
+
+                    subject.step_through do |occurrence, time|
+                        cnt += 1
+
+                        expect(time.to_s).to eq subject.start_at.to_s
+                        expect(occurrence).to eq cnt
+                    end
+
+                    expect(cnt).to eq 1
+                end
             end
         end
     end

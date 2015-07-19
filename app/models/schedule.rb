@@ -72,8 +72,16 @@ class Schedule < ActiveRecord::Base
         frequency_base == 'start'
     end
 
+    def static?
+        frequency_based_on_start_time?
+    end
+
     def frequency_based_on_stop_time?
         frequency_base == 'stop'
+    end
+
+    def dynamic?
+        frequency_based_on_stop_time?
     end
 
     def frequency_simple?
@@ -82,6 +90,28 @@ class Schedule < ActiveRecord::Base
 
     def frequency_cron?
         frequency_format == 'cron' && !frequency_cron.to_s.empty?
+    end
+
+    # @param    [Integer]   steps
+    #   Amount of occurrences to yield.
+    def step_through( steps = 12 )
+        fail 'Missing block.' if !block_given?
+        fail 'Not scheduled.' if !self.start_at
+
+        time = self.start_at
+
+        current_occurrence = self.scan ? self.scan.revisions.size + 1 : 1
+
+        yield current_occurrence, time
+
+        current_occurrence += 1
+
+        return if !recurring? || dynamic?
+
+        (steps-1).times do |i|
+            time = self.next( time )
+            yield current_occurrence + i, time
+        end
     end
 
     def next( base )
