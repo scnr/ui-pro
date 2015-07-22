@@ -3,11 +3,19 @@
            'dynamic (based on stop time) and thus cannot be calculated beforehand.'
 %>
 
-<% if schedule.dynamic? %>
-    <div class="alert alert-info">
+<div class="alert alert-info">
+    <% if schedule.dynamic? %>
         <%= dynamic_warning %>
-    </div>
-<% end %>
+    <% else %>
+        This is a best effort preview of the selected schedule and may not
+        accurately reflect future occurrences.
+
+        <br/>
+
+        Occurrences which overlap due to their duration will be skipped and the
+        closest future date will be used instead.
+    <% end %>
+</div>
 
 <table class="table table-condensed table-hover">
     <thead>
