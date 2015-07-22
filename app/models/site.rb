@@ -12,8 +12,8 @@ class Site < ActiveRecord::Base
 
     has_many :scans, dependent: :destroy
     has_many :schedules, through: :scans
-    has_many :revisions
-    has_many :issues
+    has_many :revisions, dependent: :destroy
+    has_many :issues, dependent: :destroy
 
     has_many :roles, dependent: :destroy, foreign_key: 'site_id',
              class_name: 'SiteRole'

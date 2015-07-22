@@ -8,8 +8,8 @@ describe Site, type: :model do
     expect_it { to have_one  :profile }
     expect_it { to have_and_belong_to_many :users }
     expect_it { to have_many(:scans).dependent(:destroy) }
-    expect_it { to have_many :revisions }
-    expect_it { to have_many :issues }
+    expect_it { to have_many(:revisions).dependent(:destroy) }
+    expect_it { to have_many(:issues).dependent(:destroy) }
     expect_it { to have_many :schedules }
     expect_it { to have_many(:roles).dependent(:destroy) }
     expect_it { to have_many(:sitemap_entries).dependent(:destroy) }
