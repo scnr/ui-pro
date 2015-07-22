@@ -91,46 +91,60 @@ feature 'Schedules index page', js: true do
             end
         end
 
-        feature 'when the scan has a simple frequency based on' do
-            before do
-                subject.frequency_format = 'simple'
+        feature 'when the scan is recurring' do
+            feature 'with a simple frequency based on' do
+                before do
+                    subject.frequency_format = 'simple'
+                end
+
+                feature 'day' do
+                    before do
+                        subject.day_frequency = 10
+                        subject.save
+                        refresh
+                    end
+
+                    scenario 'shows it' do
+                        expect(frequency).to have_content "#{subject.day_frequency} days"
+                    end
+                end
+
+                feature 'month' do
+                    before do
+                        subject.month_frequency = 10
+                        subject.save
+                        refresh
+                    end
+
+                    scenario 'shows it' do
+                        expect(frequency).to have_content "#{subject.month_frequency} months"
+                    end
+                end
             end
 
-            feature 'day' do
+            feature 'when a cron frequency' do
                 before do
-                    subject.day_frequency = 10
+                    subject.frequency_format = 'cron'
+                    subject.frequency_cron   = '@monthly'
                     subject.save
                     refresh
                 end
 
                 scenario 'shows it' do
-                    expect(frequency).to have_content "#{subject.day_frequency} days"
-                end
-            end
-
-            feature 'month' do
-                before do
-                    subject.month_frequency = 10
-                    subject.save
-                    refresh
-                end
-
-                scenario 'shows it' do
-                    expect(frequency).to have_content "#{subject.month_frequency} months"
+                    expect(frequency.find('kbd')).to have_content subject.frequency_cron
                 end
             end
         end
 
-        feature 'when the scan has a cron frequency' do
+        feature 'when the scan is not recurring' do
             before do
-                subject.frequency_format = 'cron'
-                subject.frequency_cron   = '@monthly'
+                subject.frequency_format = nil
                 subject.save
                 refresh
             end
 
-            scenario 'shows it' do
-                expect(frequency.find('kbd')).to have_content subject.frequency_cron
+            scenario 'it shows an info label' do
+                expect(frequency.find('.label-info')).to have_content 'Unspecified'
             end
         end
     end

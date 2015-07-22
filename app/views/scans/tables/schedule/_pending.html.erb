@@ -41,7 +41,13 @@
             </td>
 
             <td class="scans-schedule-pending-frequency">
-                <%= render_frequency schedule %>
+                <% if schedule.recurring? %>
+                    <%= render_frequency schedule %>
+                <% else %>
+                    <span class="label label-info">
+                        Unspecified
+                    </span>
+                <% end %>
             </td>
 
             <td>
