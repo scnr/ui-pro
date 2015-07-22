@@ -652,6 +652,19 @@ describe Schedule do
                 expect(subject.next( time ).to_s).to eq (time + 1.days + 2.months).to_s
             end
         end
+
+        context 'when the next immediate occurrence is in the past' do
+            before do
+                subject.day_frequency = 1
+                subject.frequency_format = 'simple'
+            end
+
+            let(:time) { Time.now - 3.months }
+
+            it 'returns the future occurrence closest to now' do
+                expect(subject.next( time ).to_s).to eq (time  + 1.day + 3.months).to_s
+            end
+        end
     end
 
     describe '#schedule_next' do

@@ -117,8 +117,17 @@ class Schedule < ActiveRecord::Base
     def next( base )
         return if !recurring?
 
-        frequency_cron? ?
-            frequency_cron_next( base ) : frequency_simple_next( base )
+        # We can't always use the next immediate calculated occurrence because
+        # in cases of long-running, statically scheduled scans it may be in the
+        # past and thus result in the scan to be constantly running.
+        #
+        # So, we keep trying until we get one that's in the future.
+        loop do
+            base = frequency_cron? ?
+                frequency_cron_next( base ) : frequency_simple_next( base )
+
+            return base if base > Time.now
+        end
     end
 
     def schedule_next
