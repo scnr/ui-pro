@@ -17,6 +17,9 @@ Rails.application.routes.draw do
             patch :restore,    on: :member
             post  :repeat,     on: :member
 
+            get :preview_schedule, on: :collection
+            get :preview_schedule, on: :member
+
             resources :revisions, only: [:show, :destroy] do
                 resources :issues, only: [:show, :update]
             end

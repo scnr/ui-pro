@@ -98,6 +98,25 @@ class ScansController < ApplicationController
         end
     end
 
+    def preview_schedule
+        if params[:id]
+            @scan = @site.scans.find( params[:id] )
+        end
+
+        permitted_params = params.permit( permitted_schedule_attributes )
+        schedule = Schedule.new( permitted_params )
+
+        # If we have a scan pass it, we need to know how many revisions it has
+        # in order to properly index the following occurrences.
+        schedule.scan = @scan
+
+        render partial: '/scans/schedule_preview',
+               locals: {
+                   scan:     @scan,
+                   schedule: schedule
+               }
+    end
+
     private
 
     def set_site
@@ -138,17 +157,21 @@ class ScansController < ApplicationController
             :user_agent_id,
             :mark_missing_issues_fixed,
             {
-                schedule_attributes: [
-                    :month_frequency,
-                    :day_frequency,
-                    :start_at,
-                    :stop_after_hours,
-                    :stop_suspend,
-                    :frequency_base,
-                    :frequency_cron,
-                    :frequency_format
-                ]
+                schedule_attributes: permitted_schedule_attributes
             }
+        ]
+    end
+
+    def permitted_schedule_attributes
+        [
+            :month_frequency,
+            :day_frequency,
+            :start_at,
+            :stop_after_hours,
+            :stop_suspend,
+            :frequency_base,
+            :frequency_cron,
+            :frequency_format
         ]
     end
 

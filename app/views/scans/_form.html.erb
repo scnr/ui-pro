@@ -1,6 +1,6 @@
 <%= simple_form_for( [@site, @scan],
                      html: {
-                         class: 'form-inline new_scan edit_scan',
+                         class: 'form-inline scan-form',
                          onsubmit: 'on_submit()'
                      }
     ) do |f| %>
@@ -48,15 +48,13 @@
                 <h2>Schedule</h2>
 
                 <div class="row">
-                    <div class="col-md-8">
+                    <div class="col-md-8 update_schedule_preview">
                         <%= sf.input :start_at,
                                      include_blank: true,
                                      start_year: Date.today.year,
                                      end_year: Date.today.year + 2,
                                      default: Time.now,
-                                     hint: 'The scan will remain unscheduled ' +
-                                            'without a start date-time and a ' +
-                                            'time in the past will be replaced ' +
+                                     hint: 'A time in the past will be replaced ' +
                                             'with now.'
                         %>
                     </div>
@@ -102,7 +100,8 @@
 
                 <div class="tab-content">
                     <div role="tabpanel"
-                         class="tab-pane <%= 'active' if !@scan.schedule.frequency_format ||
+                         class="tab-pane update_schedule_preview
+                         <%= 'active' if !@scan.schedule.frequency_format ||
                             @scan.schedule.frequency_format == 'simple' %>"
                          id="simple">
                         Every
@@ -123,13 +122,14 @@
                     </div>
 
                     <div role="tabpanel"
-                         class="tab-pane <%= 'active' if @scan.schedule.frequency_format == 'cron' %>"
+                         class="tab-pane update_schedule_preview
+                         <%= 'active' if @scan.schedule.frequency_format == 'cron' %>"
                          id="cron">
                         <%= sf.input :frequency_cron, label: false, as: :string %>
                     </div>
                 </div>
 
-                <div>
+                <div class="update_schedule_preview">
                     Calculate the next occurrence from the scan's
                     <%= sf.input :frequency_base,
                                  collection: Schedule::FREQUENCY_BASES,
@@ -145,14 +145,20 @@
     <% end %>
 
     <div class="row">
+        <%
+           path = @scan.id ?
+                   site_scan_path( @site, @scan ) : site_scans_path( @site )
+        %>
+
+        <div class="col-md-12">
+            <div id="scan-form-schedule-preview" data-path="<%= path %>">
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
         <div class="form-actions col-md-12">
             <%= f.button :submit %>
         </div>
     </div>
 <% end %>
-
-<script>
-    function on_submit() {
-        $('#scan_schedule_attributes_frequency_format').val( $('div.format-tabs div.tab-pane.active').attr('id') );
-    }
-</script>

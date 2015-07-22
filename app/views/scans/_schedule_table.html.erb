@@ -1,0 +1,124 @@
+<%
+   dynamic_warning = 'Showing only the next occurrence as the schedule is ' +
+           'dynamic (based on stop time) and thus cannot be calculated beforehand.'
+%>
+
+<% if schedule.dynamic? %>
+    <div class="alert alert-info">
+        <%= dynamic_warning %>
+    </div>
+<% end %>
+
+<table class="table table-condensed table-hover">
+    <thead>
+    <tr>
+        <th>
+            Revision
+        </th>
+
+        <th>
+            Distance
+        </th>
+
+        <th>
+            Hour
+        </th>
+
+        <th>
+            Minute
+        </th>
+
+        <th>
+            Day
+        </th>
+
+        <th>
+            Day #
+        </th>
+
+        <th>
+            Month
+        </th>
+
+        <th>
+            Year
+        </th>
+
+        <th>
+            Nearby scans
+        </th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+    <%
+       last_time = Time.now
+       schedule.step_through do |i, time|
+           nearby = nearby_scans( time )
+    %>
+    <tr
+        id="revision-<%= i %>"
+        class="<%= 'info' if time.saturday? || time.sunday? %> <%= 'warning' if nearby.any? %>"
+    >
+        <td>
+            <%= i.ordinalize %>
+        </td>
+
+        <td>
+            <%= distance_of_time_in_words last_time, time %>
+        </td>
+
+        <td>
+            <%= time.strftime( '%H' ) %>
+        </td>
+
+        <td>
+            <%= time.strftime( '%M' ) %>
+        </td>
+
+        <td>
+            <%= time.strftime( '%A' ) %>
+        </td>
+
+        <td>
+            <%= time.day %>
+        </td>
+
+        <td>
+            <%= time.strftime( '%B' ) %>
+        </td>
+
+        <td>
+            <%= time.year %>
+        </td>
+
+        <td class="nearby-scans">
+            <% if nearby.any? %>
+            <ul class="list-unstyled">
+                <% nearby.each do |data| %>
+                    <li>
+                        <% if data[:dynamic] %>
+                            <i class="fa fa-info" data-toggle="tooltip"
+                               title="<%= dynamic_warning %>">
+                            </i>
+                        <% end %>
+
+                        <%= data[:occurrence].ordinalize %> occurrence of
+                        <%= link_to data[:scan], edit_site_scan_path( @site, data[:scan] ) %>
+                        within <%= distance_of_time_in_words time, data[:time] %>.
+                    </li>
+                <% end %>
+            </ul>
+            <% else %>
+                <span class="label label-success">
+                    None
+                </span>
+            <% end %>
+        </td>
+    </tr>
+    <%
+       last_time = time
+       end %>
+    </tbody>
+</table>

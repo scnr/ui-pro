@@ -5,9 +5,11 @@ Warden.test_mode!
 #   As a user
 #   I want to create a scan
 feature 'New scan page' do
+    include ActionView::Helpers::DateHelper
 
     let(:user) { FactoryGirl.create :user, sites: [site], profiles: [other_profile, profile] }
     let(:other_user) { FactoryGirl.create :user, email: 'dd@ss.cc', shared_sites: [site] }
+    let(:scan) { FactoryGirl.create :scan, site: site }
     let(:site) { FactoryGirl.create :site }
     let(:site_role) { FactoryGirl.create :site_role, name: 'Stuff', site: site }
     let(:other_site_role) { FactoryGirl.create :site_role, name: 'Other stuff', site: site }
@@ -59,6 +61,8 @@ feature 'New scan page' do
     end
 
     feature 'form', js: true do
+        let(:schedule_preview) { find '#scan-form-schedule-preview' }
+
         scenario 'user can set the path' do
             fill_in 'scan_name', with: name
             fill_in 'scan_description', with: description
@@ -99,7 +103,7 @@ feature 'New scan page' do
             expect(schedule.frequency_format).to eq 'simple'
         end
 
-        scenario 'user can set the simple frequency' do
+        scenario 'user can set the cron frequency' do
             fill_in 'scan_name', with: name
 
             click_link 'Cronline'
@@ -211,6 +215,18 @@ feature 'New scan page' do
 
                     expect(scan).to_not be_scheduled
                 end
+
+                scenario 'shows alert about the scan being unscheduled' do
+                    select '', from: 'scan_schedule_attributes_start_at_1i'
+                    select '', from: 'scan_schedule_attributes_start_at_2i'
+                    select '', from: 'scan_schedule_attributes_start_at_3i'
+                    select '', from: 'scan_schedule_attributes_start_at_4i'
+                    select '', from: 'scan_schedule_attributes_start_at_5i'
+
+                    sleep 1
+
+                    expect(schedule_preview.find('.alert-warning')).to have_content 'The scan has not been scheduled to run'
+                end
             end
 
             feature 'is not specified' do
@@ -227,6 +243,127 @@ feature 'New scan page' do
 
                     expect(scan).to be_scheduled
                     expect(scan).to be_due
+                end
+            end
+
+            feature 'is specified' do
+                before do
+                    select start_at.year,             from: 'scan_schedule_attributes_start_at_1i'
+                    select start_at.strftime( '%B' ), from: 'scan_schedule_attributes_start_at_2i'
+                    select start_at.day,              from: 'scan_schedule_attributes_start_at_3i'
+                    select start_at.strftime( '%H' ), from: 'scan_schedule_attributes_start_at_4i'
+                    select start_at.strftime( '%M' ), from: 'scan_schedule_attributes_start_at_5i'
+
+                    sleep 1
+                end
+
+                let(:start_at) { (Time.now + 1000).utc }
+                let(:revision) { schedule_preview.find('#revision-1') }
+                let(:nearby_scans) { revision.find '.nearby-scans' }
+
+                scenario 'shows the index of the first revision' do
+                    expect(revision).to have_content '1st'
+                end
+
+                scenario 'shows the Time distance of the first revision' do
+                    expect(revision).to have_content distance_of_time_in_words( Time.now, start_at )
+                end
+
+                scenario 'shows the start-at hour' do
+                    expect(revision).to have_content start_at.strftime( '%H' )
+                end
+
+                scenario 'shows the start-at minute' do
+                    expect(revision).to have_content start_at.strftime( '%M' )
+                end
+
+                scenario 'shows the start-at day' do
+                    expect(revision).to have_content start_at.strftime( '%A' )
+                end
+
+                scenario 'shows the start-at day number' do
+                    expect(revision).to have_content start_at.day
+                end
+
+                scenario 'shows the start-at day month' do
+                    expect(revision).to have_content start_at.strftime( '%B' )
+                end
+
+                scenario 'shows the start-at day month' do
+                    expect(revision).to have_content start_at.year
+                end
+
+                context 'when there are other scans with 24 hours' do
+                    let(:nearby_scan) do
+                        scan.name = 'Nearby scan'
+                        scan.schedule.start_at = start_at + 5.hours
+                        scan.save
+                        scan
+                    end
+
+                    before do
+                        nearby_scan
+
+                        # Refreshes the schedule preview table.
+                        select '01', from: 'scan_schedule_attributes_start_at_5i'
+                        select start_at.strftime( '%M' ), from: 'scan_schedule_attributes_start_at_5i'
+
+                        sleep 1
+                    end
+
+                    scenario 'lists them' do
+                        expect(nearby_scans).to have_content nearby_scan.name
+                        expect(nearby_scans).to have_xpath "//a[@href='#{edit_site_scan_path( site, nearby_scan )}']"
+                    end
+
+                    scenario 'includes the occurrence of the scan' do
+                        expect(nearby_scans).to have_content '1st'
+                    end
+
+                    scenario 'includes the time distance' do
+                        expect(nearby_scans).to have_content distance_of_time_in_words( start_at, scan.schedule.start_at )
+                    end
+
+                    feature 'when the nearby scan has a static schedule' do
+                        scenario 'does not show an info tooltip' do
+                            expect(nearby_scans).to_not have_xpath "//i[@class='fa fa-info' and @data-toggle='tooltip']"
+                        end
+                    end
+
+                    feature 'when the nearby scan has a dynamic schedule' do
+                        let(:nearby_scan) do
+                            s = super()
+                            s.schedule.frequency_base = 'stop'
+                            s.save
+                            s
+                        end
+
+                        scenario 'shows an info tooltip' do
+                            expect(nearby_scans).to have_xpath "//i[@class='fa fa-info' and @data-toggle='tooltip']"
+                        end
+                    end
+                end
+
+                context 'when there are no scans with 24 hours' do
+                    scenario 'shows label' do
+                        expect(nearby_scans.find('.label-success')).to have_content 'None'
+                    end
+                end
+
+                context 'when the cronline is invalid' do
+                    before do
+                        click_link 'Cronline'
+                        fill_in 'scan_schedule_attributes_frequency_cron', with: 'blah'
+
+                        # fill_in doesn't trigger jQuery's onchange.
+                        click_link 'Cronline'
+
+                        sleep 1
+                    end
+
+                    scenario 'shows error' do
+                        expect(schedule_preview.find('.alert-danger')).to have_content 'The cronline is invalid'
+                    end
                 end
             end
         end

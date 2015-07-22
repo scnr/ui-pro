@@ -1,0 +1,18 @@
+<% if schedule.scheduled? %>
+    <% if schedule.valid? %>
+        <%= render partial: '/scans/schedule_table',
+                   locals: { schedule: schedule } %>
+    <% else %>
+        <div class="alert alert-danger">
+
+            <% if schedule.errors.messages[:frequency_cron] %>
+                The cronline is invalid.
+            <% end %>
+
+        </div>
+    <% end %>
+<% else %>
+    <div class="alert alert-warning">
+        The scan has not been scheduled to run.
+    </div>
+<% end %>
