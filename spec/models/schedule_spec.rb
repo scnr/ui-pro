@@ -668,7 +668,7 @@ describe Schedule do
     end
 
     describe '#schedule_next' do
-        let(:started_at) { Time.now - 1000 }
+        let(:started_at) { Time.now.utc - 1000 }
         let(:stopped_at) { started_at + 3500 }
 
         before do
@@ -699,7 +699,7 @@ describe Schedule do
                 end
 
                 it "calculates #start_at based on the last revision's #started_at" do
-                    expect(subject).to receive(:next).with(started_at)
+                    expect(subject).to receive(:next) { |time| expect(time.to_s).to eq started_at.to_s }
 
                     subject.schedule_next
                 end
@@ -711,7 +711,7 @@ describe Schedule do
                 end
 
                 it "calculates #start_at based on the last revision's #stoppedd_at" do
-                    expect(subject).to receive(:next).with(stopped_at)
+                    expect(subject).to receive(:next) { |time| expect(time.to_s).to eq stopped_at.to_s }
 
                     subject.schedule_next
                 end
