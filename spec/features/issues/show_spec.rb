@@ -110,36 +110,36 @@ feature 'Issue page' do
             expect(header.find("p.label-severity-#{issue.type.severity}")).to have_content "#{issue.type.severity.capitalize} severity"
         end
 
-        feature 'when fixed by a revision' do
+        feature 'when reviewed by a revision' do
             before do
                 issue.state = 'fixed'
-                issue.fixed_by_revision = revision
+                issue.reviewed_by_revision = revision
                 issue.save
 
                 refresh
             end
 
             scenario 'shows a link to the revision' do
-                expect(header.find('p.label-success')).to have_xpath "a[@href='#{site_scan_revision_path( site, scan, revision )}']"
+                expect(header.find('p.label-info')).to have_xpath "a[@href='#{site_scan_revision_path( site, scan, revision )}']"
             end
 
             feature 'when the revision is from the same scan' do
                 scenario 'does not show the scan' do
-                    expect(header.find('p.label-success')).to_not have_xpath "a[@href='#{site_scan_path( site, scan )}']"
+                    expect(header.find('p.label-info')).to_not have_xpath "a[@href='#{site_scan_path( site, scan )}']"
                 end
             end
 
             feature 'when the revision is from a different scan' do
                 before do
                     issue.state = 'fixed'
-                    issue.fixed_by_revision = other_revision
+                    issue.reviewed_by_revision = other_revision
                     issue.save
 
                     refresh
                 end
 
                 scenario 'shows a link the scan' do
-                    expect(header.find('p.label-success')).to have_xpath "//a[@href='#{site_scan_path( site, other_scan )}']"
+                    expect(header.find('p.label-info')).to have_xpath "//a[@href='#{site_scan_path( site, other_scan )}']"
                 end
             end
         end

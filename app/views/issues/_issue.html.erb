@@ -34,21 +34,22 @@
         <%= @issue.severity.to_s.capitalize %> severity
     </p>
 
-    <% if @issue.fixed_by_revision? %>
-    <p class="pull-left label label-success label-emphasis">
-        Fixed by <%= link_to @issue.fixed_by_revision,
+    <% if @issue.reviewed_by_revision? %>
+    <p class="pull-left label label-info label-emphasis">
+        Automatically reviewed as <%= @issue.state %> by
+        <%= link_to @issue.reviewed_by_revision,
                     site_scan_revision_path(
                             @site,
                             @scan,
-                            @issue.fixed_by_revision
+                            @issue.reviewed_by_revision
                     ) %>
 
-        <% if @issue.fixed_by_revision.scan != @scan %>
+        <% if @issue.reviewed_by_revision.scan != @scan %>
             of
-            <%= link_to @issue.fixed_by_revision.scan.name,
+            <%= link_to @issue.reviewed_by_revision.scan.name,
                         site_scan_path(
                                 @site,
-                                @issue.fixed_by_revision.scan
+                                @issue.reviewed_by_revision.scan
                         ) %>
         <% end %>
 

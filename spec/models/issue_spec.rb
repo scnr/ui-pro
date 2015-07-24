@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Issue do
     expect_it { to belong_to :revision }
-    expect_it { to belong_to :fixed_by_revision }
+    expect_it { to belong_to :reviewed_by_revision }
     expect_it { to belong_to(:page).dependent(:destroy) }
     expect_it { to belong_to(:referring_page).dependent(:destroy) }
     expect_it { to belong_to(:sitemap_entry).counter_cache(true)}
@@ -26,6 +26,10 @@ describe Issue do
         let("#{severity}_severity_issue") do
             send( "#{severity}_severity_type" ).issues.create( state: 'trusted', revision: revision )
         end
+    end
+
+    let(:arachni_issue) do
+        Factory[:issue]
     end
 
     let(:site) do
@@ -182,7 +186,7 @@ describe Issue do
                 digest: 2
             )
 
-            expect(type.issues.digests).to eq [1,2]
+            expect(type.issues.digests.sort).to eq [1,2].sort
         end
     end
 
@@ -248,9 +252,34 @@ describe Issue do
             expect(subject.reload.state).to eq state
             expect(sibling.reload.state).to eq state
         end
+
+        context 'when a revision is given' do
+            it 'sets it as the #reviewed_by_revision' do
+                sibling
+                subject.update_state state, revision
+
+                expect(subject.reload.reviewed_by_revision).to eq revision
+                expect(sibling.reload.reviewed_by_revision).to eq revision
+            end
+        end
+
+        context 'when a revision is not given' do
+            it 'removes the #reviewed_by_revision' do
+                sibling
+                subject.update_state state, revision
+
+                expect(subject.reload.reviewed_by_revision).to eq revision
+                expect(sibling.reload.reviewed_by_revision).to eq revision
+
+                subject.update_state state
+
+                expect(subject.reload).to_not be_reviewed_by_revision
+                expect(sibling.reload).to_not be_reviewed_by_revision
+            end
+        end
     end
 
-    describe '#fixed_by_revision?' do
+    describe '#reviewed_by_revision?' do
         let(:fixer_revision) do
             FactoryGirl.create( :revision, scan: scan )
         end
@@ -265,35 +294,21 @@ describe Issue do
             )
         end
 
-        context 'when state is fixed' do
+        context 'there is an associated #reviewed_by_revision' do
             subject do
                 s = super()
-                s.state = 'fixed'
+                s.reviewed_by_revision = fixer_revision
                 s
             end
 
-            context 'and has #fixed_by_revision' do
-                subject do
-                    s = super()
-                    s.fixed_by_revision = fixer_revision
-                    s
-                end
-
-                it 'returns true' do
-                    expect(subject).to be_fixed_by_revision
-                end
-            end
-
-            context 'and has no #fixed_by_revision' do
-                it 'returns false' do
-                    expect(subject).to_not be_fixed_by_revision
-                end
+            it 'returns true' do
+                expect(subject).to be_reviewed_by_revision
             end
         end
 
-        context 'when state is not fixed' do
+        context 'there is no associated #reviewed_by_revision' do
             it 'returns false' do
-                expect(subject).to_not be_fixed_by_revision
+                expect(subject).to_not be_reviewed_by_revision
             end
         end
     end
@@ -345,20 +360,22 @@ describe Issue do
     end
 
     describe '.create_from_arachni' do
-        let(:arachni_issue) do
-            Factory[:issue]
-        end
-
-        it "creates a #{described_class} from #{Arachni::Issue}" do
-            platform = IssuePlatform.create(
+        let(:platform) do
+            IssuePlatform.create(
                 shortname: arachni_issue.platform_name,
                 name:      arachni_issue.platform_name.to_s.upcase
             )
+        end
 
+        before do
+            platform
+        end
+
+        it "creates a #{described_class} from #{Arachni::Issue}" do
             issue = described_class.create_from_arachni(
                 arachni_issue,
                 revision: revision
-            ).reload
+            )
             expect(issue).to be_valid
 
             expect(issue.page).to be_kind_of IssuePage
@@ -376,6 +393,41 @@ describe Issue do
             issue.remarks.each do |remark|
                 expect(remark).to be_kind_of IssueRemark
                 expect(remark).to be_valid
+            end
+        end
+
+        context 'when :state is given' do
+            it 'sets it' do
+                issue = described_class.create_from_arachni(
+                    arachni_issue,
+                    revision: revision,
+                    state: 'fixed'
+                )
+                expect(issue).to be_fixed
+            end
+        end
+    end
+
+    describe '.state_from_native_issue' do
+        context 'when the issue is trusted' do
+            let(:issue) do
+                arachni_issue.trusted = true
+                arachni_issue
+            end
+
+            it 'returns trusted' do
+                expect(described_class.state_from_native_issue( issue )).to eq 'trusted'
+            end
+        end
+
+        context 'when the issue is untrusted' do
+            let(:issue) do
+                arachni_issue.trusted = false
+                arachni_issue
+            end
+
+            it 'returns trusted' do
+                expect(described_class.state_from_native_issue( issue )).to eq 'untrusted'
             end
         end
     end

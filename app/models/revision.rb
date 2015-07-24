@@ -2,7 +2,7 @@ class Revision < ActiveRecord::Base
     belongs_to :scan, counter_cache: true
     belongs_to :site, counter_cache: true
     has_many :issues,  dependent: :destroy
-    has_many :fixed_issues,  class_name: 'Issue', foreign_key: 'fixed_by_revision_id'
+    has_many :reviewed_issues,  class_name: 'Issue', foreign_key: 'reviewed_by_revision_id'
     has_many :sitemap_entries
 
     validates_presence_of :scan

@@ -9,7 +9,7 @@ class CreateIssues < ActiveRecord::Migration
             t.text :signature
 
             t.integer :referring_issue_page_id
-            t.integer :fixed_by_revision_id
+            t.integer :reviewed_by_revision_id
             t.belongs_to :revision, index: true
             t.belongs_to :scan, index: true
             t.belongs_to :site, index: true

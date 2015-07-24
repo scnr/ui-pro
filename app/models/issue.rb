@@ -3,8 +3,8 @@ class Issue < ActiveRecord::Base
     STATES         = %w(trusted untrusted false_positive fixed)
 
     belongs_to :revision, counter_cache: true
-    belongs_to :fixed_by_revision, class_name: 'Revision',
-               foreign_key: 'fixed_by_revision_id'
+    belongs_to :reviewed_by_revision, class_name: 'Revision',
+               foreign_key: 'reviewed_by_revision_id'
 
     belongs_to :site, counter_cache: true
     belongs_to :scan, counter_cache: true
@@ -37,6 +37,10 @@ class Issue < ActiveRecord::Base
         scope state, -> do
             where( state: state )
         end
+
+        define_method "#{state}?" do
+            self.state == state
+        end
     end
 
     IssueTypeSeverity::SEVERITIES.each do |severity|
@@ -52,8 +56,8 @@ class Issue < ActiveRecord::Base
             order('issue_types.name asc').order( state_order_sql )
     end
 
-    def fixed_by_revision?
-        state == 'fixed' && fixed_by_revision
+    def reviewed_by_revision?
+        !!reviewed_by_revision
     end
 
     def to_s
@@ -133,7 +137,7 @@ class Issue < ActiveRecord::Base
             digest:         issue.digest,
             signature:      issue.signature,
             proof:          issue.proof,
-            state:          (issue.trusted? ? 'trusted' : 'untrusted'),
+            state:          options[:state] || state_from_native_issue( issue ),
             active:         issue.active?,
             page:           IssuePage.create_from_arachni( issue.page ),
             referring_page: IssuePage.create_from_arachni( issue.referring_page ),
@@ -166,8 +170,17 @@ class Issue < ActiveRecord::Base
         issue
     end
 
-    def update_state( state )
-        Issue.reorder('').where( digest: digest ).update_all( state: state )
+    def self.state_from_native_issue( issue )
+        issue.trusted? ? 'trusted' : 'untrusted'
+    end
+
+    def update_state( state, reviewed_by_revision = nil )
+        Issue.reorder('').where( digest: digest ).
+            update_all(
+            state:                   state,
+            reviewed_by_revision_id: reviewed_by_revision ?
+                       reviewed_by_revision.id : nil
+        )
     end
 
     def get_sitemap_entry( options = {} )

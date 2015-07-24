@@ -17,7 +17,34 @@ module Issue
 
         update_updatable_data_for( revision, native )
 
-        ::Issue.create_from_arachni( native, revision: revision )
+        options = {
+            revision: revision
+        }
+
+        # Are there any other identical issues logged for this site that we
+        # can use to determine regressions or ensure that their state persists?
+        issue = revision.site.issues.where(
+            digest: native.digest,
+            state:  %w(fixed false_positive)
+        ).first
+        if issue
+
+            # We found a regression, obviously the issue isn't fixed as it just
+            # reappeared, revert its state.
+            #
+            # TODO: Grep issues don't include the matched data in the digest,
+            # there can be a logged e-mail address which is then removed and the
+            # issue will be reverted just because another address was found.
+            if issue.fixed?
+                issue.update_state ::Issue.state_from_native_issue( native ), revision
+
+            # User has already said that it's a false-positive, keep that state.
+            else
+                options[:state] = issue.state
+            end
+        end
+
+        ::Issue.create_from_arachni( native, options )
     end
 
     # Updates the `revision`'s DB {Issue} with `native` {Arachni::Issue}'s data.
@@ -98,8 +125,8 @@ module Issue
             revision: revision,
             digest:   issue_digests,
         ).update_all(
-            state:                'fixed',
-            fixed_by_revision_id: revision.id
+            state:                   'fixed',
+            reviewed_by_revision_id: revision
         )
     end
 

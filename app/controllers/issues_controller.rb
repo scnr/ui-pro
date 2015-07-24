@@ -70,7 +70,7 @@ class IssuesController < ApplicationController
         ]
 
         @issue = @revision.issues.includes(:sitemap_entry).
-            includes( fixed_by_revision: :scan ).
+            includes( reviewed_by_revision: :scan ).
             includes( vector: :sitemap_entry ).
             includes(:platform).includes(:remarks).
             includes( page: page_preloads ).

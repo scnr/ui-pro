@@ -1,8 +1,11 @@
 describe ScanScheduler::Helpers::Issue do
     subject { ScanScheduler.instance }
 
-    let(:revision) { new_revision }
+    let(:other_scan_revision) { FactoryGirl.create :revision, scan: other_scan }
+    let(:other_scan) { FactoryGirl.create :scan, site: site }
+
     let(:other_revision) { FactoryGirl.create :revision, scan: scan }
+    let(:revision) { new_revision }
     let(:scan) { FactoryGirl.create :scan, site: site }
     let(:site) { FactoryGirl.create :site }
     let(:native_issue) { Factory[:issue] }
@@ -21,6 +24,41 @@ describe ScanScheduler::Helpers::Issue do
                                  with( native_issue, revision: revision )
 
             subject.create_issue( revision, native_issue )
+        end
+
+        context 'when an identical issue has been logged for the same site with a state of' do
+            let(:other_issue) do
+                subject.create_issue( other_scan_revision, native_issue )
+            end
+
+            context 'fixed' do
+                before do
+                    other_issue.state = 'fixed'
+                    other_issue.save
+                end
+
+                it 'reverts its state' do
+                    subject.create_issue( revision, native_issue )
+                    expect(other_issue.reload).to be_trusted
+                end
+
+                it 'sets its #reviewed_by_revision to this revision' do
+                    subject.create_issue( revision, native_issue )
+                    expect(other_issue.reload.reviewed_by_revision).to eq revision
+                end
+            end
+
+            context 'false_positive' do
+                before do
+                    other_issue.state = 'false_positive'
+                    other_issue.save
+                end
+
+                it 'uses its state' do
+                    subject.create_issue( revision, native_issue )
+                    expect(other_issue.reload).to be_false_positive
+                end
+            end
         end
     end
 
