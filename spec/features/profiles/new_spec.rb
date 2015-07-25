@@ -50,7 +50,7 @@ feature 'Profile new page' do
             fill_in 'profile_name', with: 'My name'
             fill_in 'profile_description', with: 'My description'
 
-            find('#sidebar-container button').click
+            find('#sidebar button').click
             sleep 1
 
             expect(Profile.last.name).to eq 'My name'

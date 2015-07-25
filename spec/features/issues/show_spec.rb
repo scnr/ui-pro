@@ -109,8 +109,20 @@ feature 'Issue page' do
         scenario 'has severity label' do
             expect(header.find("p.label-severity-#{issue.type.severity}")).to have_content "#{issue.type.severity.capitalize} severity"
         end
+    end
+
+    feature 'sidebar' do
+        let(:sidebar) { find '#sidebar' }
 
         feature 'when reviewed by a revision' do
+            scenario 'it does not show the relevant info' do
+                expect(sidebar).to_not have_css '#reviewed-by-revision'
+            end
+        end
+
+        feature 'when reviewed by a revision' do
+            let(:reviewed_by_revision) { sidebar.find '#reviewed-by-revision' }
+
             before do
                 issue.state = 'fixed'
                 issue.reviewed_by_revision = revision
@@ -120,12 +132,12 @@ feature 'Issue page' do
             end
 
             scenario 'shows a link to the revision' do
-                expect(header.find('p.label-info')).to have_xpath "a[@href='#{site_scan_revision_path( site, scan, revision )}']"
+                expect(reviewed_by_revision.find('p.label-info')).to have_xpath "a[@href='#{site_scan_revision_path( site, scan, revision )}']"
             end
 
             feature 'when the revision is from the same scan' do
                 scenario 'does not show the scan' do
-                    expect(header.find('p.label-info')).to_not have_xpath "a[@href='#{site_scan_path( site, scan )}']"
+                    expect(reviewed_by_revision.find('p.label-info')).to_not have_xpath "a[@href='#{site_scan_path( site, scan )}']"
                 end
             end
 
@@ -139,21 +151,17 @@ feature 'Issue page' do
                 end
 
                 scenario 'shows a link the scan' do
-                    expect(header.find('p.label-info')).to have_xpath "//a[@href='#{site_scan_path( site, other_scan )}']"
+                    expect(reviewed_by_revision.find('p.label-info')).to have_xpath "//a[@href='#{site_scan_path( site, other_scan )}']"
                 end
             end
         end
-    end
-
-    feature 'sidebar' do
-        let(:sidebar) { find '#sidebar' }
-
-        before do
-            sibling
-            refresh
-        end
 
         feature 'form', js: true do
+            before do
+                sibling
+                refresh
+            end
+
             scenario 'can set the state' do
                 select 'Fixed', from: 'issue_state'
                 sleep 1

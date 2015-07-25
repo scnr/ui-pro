@@ -34,37 +34,15 @@
         <%= @issue.severity.to_s.capitalize %> severity
     </p>
 
-    <% if @issue.reviewed_by_revision? %>
-    <p class="pull-left label label-info label-emphasis">
-        Automatically reviewed as <%= @issue.state %> by
-        <%= link_to @issue.reviewed_by_revision,
-                    site_scan_revision_path(
-                            @site,
-                            @scan,
-                            @issue.reviewed_by_revision
-                    ) %>
-
-        <% if @issue.reviewed_by_revision.scan != @scan %>
-            of
-            <%= link_to @issue.reviewed_by_revision.scan.name,
-                        site_scan_path(
-                                @site,
-                                @issue.reviewed_by_revision.scan
-                        ) %>
-        <% end %>
-
-    </p>
-    <% end %>
-
 </div>
 
 <%
-   has_references = @issue.type.references.any? || @issue.type.cwe
-   has_siblings   = @issue.siblings.size > 1
+   has_references = (@issue.type.references.any? || @issue.type.cwe) ? true : nil
+   has_siblings   = (@issue.siblings.size > 1) ? true : nil
 %>
 
 <div class="row" id="info">
-    <div class="col-md-<%= 12 - [has_siblings, has_references].compact.size * 2 %>">
+    <div class="col-md-<%= 12 - ([has_siblings, has_references].compact.size * 2) %>">
         <div class="description">
             <%= md @issue.type.description %>
         </div>

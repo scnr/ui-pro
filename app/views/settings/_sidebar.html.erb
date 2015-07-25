@@ -5,26 +5,28 @@
 }
 %>
 
-<div id="sidebar-container">
-    <ul id="sidebar" class="affix nav nav-pills nav-stacked sidenav">
-        <li>
-            <button class="btn btn-default btn-primary" onclick="$('.profile-form').submit()">
-                Save
-            </button>
-        </li>
-
-        <li>
-            <a href="#top" class="scroll">
-                <i class="fa fa-chevron-up"></i>
-                Top
-            </a>
-        </li>
-        <% sections.each do |id, title| %>
+<div id="sidebar" class="affix">
+    <div id="scrollspy-container">
+        <ul class="nav nav-pills nav-stacked sidenav">
             <li>
-                <a href="#<%= id.to_s %>" class="scroll">
-                    <%= title.to_s.html_safe %>
+                <button class="btn btn-default btn-primary" onclick="$('.profile-form').submit()">
+                    Save
+                </button>
+            </li>
+
+            <li>
+                <a href="#top" class="scroll">
+                    <i class="fa fa-chevron-up"></i>
+                    Top
                 </a>
             </li>
-        <% end %>
-    </ul>
+            <% sections.each do |id, title| %>
+                <li>
+                    <a href="#<%= id.to_s %>" class="scroll">
+                        <%= title.to_s.html_safe %>
+                    </a>
+                </li>
+            <% end %>
+        </ul>
+    </div>
 </div>

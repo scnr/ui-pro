@@ -161,8 +161,8 @@ function getRemote( element ) {
 }
 
 function setupScroll(){
-    if( $('#sidebar-container').is(':visible' ) ) {
-        $('body').scrollspy({ target: '#sidebar-container', offset: window.topOffset + 10 });
+    if( $('#scrollspy-container').is(':visible' ) ) {
+        $('body').scrollspy({ target: '#scrollspy-container', offset: window.topOffset + 10 });
         $('body').scrollspy('refresh');
     } else {
         $('body').removeData( 'bs.scrollspy' );

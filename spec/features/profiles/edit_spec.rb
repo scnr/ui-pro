@@ -50,7 +50,7 @@ feature 'Profile edit page', :devise do
             scenario 'can submit form using sidebar button', js: true do
                 fill_in 'profile_name', with: 'My name'
 
-                find('#sidebar-container button').click
+                find('#sidebar button').click
                 sleep 1
 
                 expect(Profile.last.name).to eq 'My name'

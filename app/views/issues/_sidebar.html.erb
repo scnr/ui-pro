@@ -80,10 +80,34 @@
 
 %>
 
-<div id="sidebar-container" class="affix">
-    <div id="sidebar">
-        <%= render 'form' %>
+<div id="scrollspy-container" class="affix">
+    <% if @issue.reviewed_by_revision? %>
+        <div id="reviewed-by-revision">
+            <p class="label label-info">
+            Reviewed by
+            <%= link_to @issue.reviewed_by_revision,
+                        site_scan_revision_path(
+                                @site,
+                                @scan,
+                                @issue.reviewed_by_revision
+                        ) %>
 
+            <% if @issue.reviewed_by_revision.scan != @scan %>
+                of
+                <%= link_to @issue.reviewed_by_revision.scan.name,
+                            site_scan_path(
+                                    @site,
+                                    @issue.reviewed_by_revision.scan
+                            ) %>
+            <% end %>
+            as:
+        </p>
+        </div>
+    <% end %>
+
+    <%= render 'form' %>
+
+    <div>
         <ul class="nav nav-pills nav-stacked sidenav">
             <li>
                 <a href="#top" class="scroll">
