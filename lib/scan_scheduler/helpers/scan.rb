@@ -93,6 +93,36 @@ module Scan
         )
     end
 
+    def each_due_scan( &block )
+        # Don't use #limit here to only grab the amount of scans for available
+        # global slots, because we may introduce a bottleneck.
+        #
+        # If we have a global limit of 5 and a site with a limit of 1 and
+        # the site has 10 consecutive scans scheduled, then we'll be grabbing
+        # the first 5 scans and just skipping them due to the site limit.
+        #
+        # This will block scans for other sites which could be run, until the
+        # previous site's scans are performed, one at a time.
+        Schedule.includes( scan: :site ).due.each do |schedule|
+            scan = schedule.scan
+            site = scan.site
+
+            log_info "Scan due: #{scan} (#{scan.id})"
+
+            if Setting.get.max_parallel_scans <= active_instance_count
+                log_info ' -- Global limit has been reached.'
+                next
+            end
+
+            if site.max_parallel_scans <= active_instance_count_for_site( site )
+                log_info ' -- Site limit has been reached.'
+                next
+            end
+
+            block.call scan
+        end
+    end
+
     # Performs the scan.
     #
     # Will remove the `scan` from the {Schedule.due schedule}, create a new

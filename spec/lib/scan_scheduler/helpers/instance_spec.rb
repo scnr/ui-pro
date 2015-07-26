@@ -50,6 +50,27 @@ describe ScanScheduler::Helpers::Instance do
         end
     end
 
+    describe '#active_instance_count_for_site' do
+        it 'returns the amount of live instances for the given site' do
+            revisions = []
+
+            # Increase on spawn
+            10.times do |i|
+                revision = new_revision
+                revisions << revision
+
+                subject.spawn_instance_for( revision ){}
+                expect(subject.active_instance_count_for_site(site)).to be i + 1
+            end
+
+            # Decrease on kill
+            while (revision = revisions.pop)
+                subject.kill_instance_for( revision )
+                expect(subject.active_instance_count_for_site(site)).to be revisions.size
+            end
+        end
+    end
+
     describe '#spawn_instance_for' do
         it 'spawns an instance' do
             expect(instance).to be_kind_of MockInstanceClient

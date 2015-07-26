@@ -1,6 +1,20 @@
 describe ScanScheduler::Helpers::Scan do
     subject { ScanScheduler.instance }
 
+    let(:other_site) { FactoryGirl.create :site, user: user }
+    let(:other_scan) do
+        FactoryGirl.create(
+            :scan,
+            site: other_site,
+            profile: profile,
+            site_role: site_role,
+            schedule: FactoryGirl.create(
+                      :schedule,
+                      start_at: Time.now
+                  )
+        )
+    end
+
     let(:revision) { new_revision }
     let(:scan) do
         FactoryGirl.create(
@@ -15,7 +29,7 @@ describe ScanScheduler::Helpers::Scan do
         )
     end
     let(:user) { FactoryGirl.create :user }
-    let(:settings){ FactoryGirl.create :setting }
+    let(:settings){ Setting.get }
     let(:profile) { FactoryGirl.create :profile }
     let(:site_role) { FactoryGirl.create :site_role, site: site }
     let(:site) { FactoryGirl.create :site, user: user }
@@ -111,6 +125,96 @@ describe ScanScheduler::Helpers::Scan do
         it 'calls #download_report_and_shutdown' do
             instance
             subject.abort( revision )
+        end
+    end
+
+    describe '#each_due_scan' do
+        context 'when there are due scans' do
+            before do
+                FactoryGirl.create(
+                    :scan,
+                    site: site,
+                    schedule_attributes: {
+                        start_at: Time.now + 1000
+                    }
+                )
+            end
+
+            let(:due) do
+                FactoryGirl.create(
+                    :scan,
+                    site: site,
+                    schedule_attributes: {
+                        start_at: Time.now
+                    }
+                )
+            end
+
+            let(:other_site_due) do
+                FactoryGirl.create(
+                    :scan,
+                    site: other_site,
+                    schedule_attributes: {
+                        start_at: Time.now
+                    }
+                )
+            end
+
+            context 'and there are available slots' do
+                it 'yields them' do
+                    other_site_due
+                    due
+
+                    s = []
+                    subject.each_due_scan do |scan|
+                        s << scan
+                    end
+
+                    expect(s).to eq [other_site_due, due]
+                end
+            end
+
+            context 'and the global max parallel scans limit has been reached' do
+                before do
+                    settings.max_parallel_scans = 1
+                    settings.save
+
+                    allow(subject).to receive(:active_instance_count).and_return(1)
+                end
+
+                it 'yields nothing' do
+                    other_site_due
+                    due
+
+                    s = nil
+                    subject.each_due_scan do |scan|
+                        s = scan
+                    end
+
+                    expect(s).to be_nil
+                end
+            end
+
+            context 'and the site max parallel scans limit has been reached' do
+                before do
+                    due.site.max_parallel_scans = 1
+                    due.site.save
+
+                    allow(subject).to receive(:active_instance_count_for_site) { |s| s == site ? 1 : 0 }
+                end
+
+                it 'does not yield the scans for that site' do
+                    other_site_due
+                    due
+
+                    s = []
+                    subject.each_due_scan do |scan|
+                        s << scan
+                    end
+
+                    expect(s).to eq [other_site_due]
+                end
+            end
         end
     end
 

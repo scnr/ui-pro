@@ -3,6 +3,7 @@ describe Site, type: :model do
     let(:scan) { FactoryGirl.create :scan, site: subject }
     let(:other_scan) { FactoryGirl.create :scan, site: subject }
     let(:user) { FactoryGirl.create :user }
+    let(:settings) { Setting.get }
 
     expect_it { to belong_to :user }
     expect_it { to have_one  :profile }
@@ -27,6 +28,40 @@ describe Site, type: :model do
     end
 
     describe :validations do
+        describe '#max_parallel_scans' do
+            context 'when its value is greater than the global setting' do
+                before do
+                    settings.max_parallel_scans = 2
+                    settings.save
+                end
+
+                it 'is invalid' do
+                    subject.max_parallel_scans = 3
+
+                    expect(subject).to be_invalid
+                    expect(subject.errors).to include :max_parallel_scans
+                end
+            end
+
+            context 'when the value is 0' do
+                it 'is invalid' do
+                    subject.max_parallel_scans = 0
+
+                    expect(subject).to be_invalid
+                    expect(subject.errors).to include :max_parallel_scans
+                end
+            end
+
+            context 'when the value is less than 0' do
+                it 'is invalid' do
+                    subject.max_parallel_scans = -1
+
+                    expect(subject).to be_invalid
+                    expect(subject.errors).to include :max_parallel_scans
+                end
+            end
+        end
+
         describe '#protocol' do
             context :http do
                 it 'is accepted' do

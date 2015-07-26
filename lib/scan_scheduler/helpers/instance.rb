@@ -19,6 +19,10 @@ module Instance
         @revision_id_to_instance_url.size
     end
 
+    def active_instance_count_for_site( site )
+        @site_instance_count[site.id] ||= 0
+    end
+
     # Spawns a new instance and assigns it to the `revision`.
     #
     # @param    [Revision]  revision
@@ -30,6 +34,8 @@ module Instance
         # Don't fork, we don't want the entire Rails env.
         instances.spawn fork: false do |instance|
             log_info_for revision, "Spawned instance at #{instance.url}"
+
+            increment_active_instance_count_for_site revision.site
 
             @revision_id_to_instance_url[revision.id] = instance.url
             block.call instance
@@ -56,6 +62,7 @@ module Instance
 
         log_info_for revision, 'Removing from active list.'
         @revision_id_to_instance_url.delete revision.id
+        decrement_active_instance_count_for_site revision.site
 
         nil
     end
@@ -91,7 +98,22 @@ module Instance
 
     # @private
     def reset_instance_state
+        @site_instance_count         = {}
         @revision_id_to_instance_url = {}
+    end
+
+    private
+
+    def increment_active_instance_count_for_site( site )
+        active_instance_count_for_site( site )
+
+        @site_instance_count[site.id] += 1
+    end
+
+    def decrement_active_instance_count_for_site( site )
+        active_instance_count_for_site( site )
+
+        @site_instance_count[site.id] -= 1
     end
 
 end

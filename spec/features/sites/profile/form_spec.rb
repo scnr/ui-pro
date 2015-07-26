@@ -11,6 +11,8 @@ feature 'Site profile form' do
     let(:https_scan) { FactoryGirl.create :scan, site: https_site, profile: FactoryGirl.create( :profile ) }
     let(:https_revision) { FactoryGirl.create :revision, scan: https_scan }
 
+    let(:settings) { Setting.get }
+
     before do
         revision
         user.sites << site
@@ -65,8 +67,51 @@ feature 'Site profile form' do
     end
 
     feature 'option' do
-        feature 'Scope' do
 
+        feature 'Scans' do
+            feature 'Maximum parallel scans' do
+                before do
+                    settings.max_parallel_scans = 5
+                    settings.save
+                end
+
+                scenario 'can be set' do
+                    fill_in 'Maximum parallel scans', with: 1
+                    submit
+
+                    expect(site.reload.max_parallel_scans).to eq 1
+                end
+
+                feature 'when its value is greater than the global setting' do
+                    scenario 'shows error' do
+                        fill_in 'Maximum parallel scans', with: 10
+                        submit
+
+                        expect(find('div.site_max_parallel_scans.has-error')).to have_content "cannot be greater than the global setting of #{settings.max_parallel_scans}"
+                    end
+                end
+
+                feature 'when its value is 0' do
+                    scenario 'shows error' do
+                        fill_in 'Maximum parallel scans', with: 0
+                        submit
+
+                        expect(find('div.site_max_parallel_scans.has-error')).to have_content 'must be greater than 0'
+                    end
+                end
+
+                feature 'when its value is less than 0' do
+                    scenario 'shows error' do
+                        fill_in 'Maximum parallel scans', with: -1
+                        submit
+
+                        expect(find('div.site_max_parallel_scans.has-error')).to have_content 'must be greater than 0'
+                    end
+                end
+            end
+        end
+
+        feature 'Scope' do
             feature 'when the site uses HTTPS' do
                 before do
                     https_revision

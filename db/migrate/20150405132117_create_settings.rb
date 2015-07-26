@@ -14,6 +14,8 @@ class CreateSettings < ActiveRecord::Migration
             t.integer  :browser_cluster_job_timeout
             t.integer  :browser_cluster_worker_time_to_live
 
+            t.integer  :max_parallel_scans
+
             t.timestamps
         end
     end

@@ -26,7 +26,33 @@
         </div>
     <% end %>
 
-<%= pf.simple_fields_for :profile do |f| %>
+    <div id="scans">
+        <fieldset>
+            <h2 id="scans-h">
+                Scans
+            </h2>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <%= pf.input :max_parallel_scans,
+                                label: 'Maximum parallel scans'
+                    %>
+
+                    <%= messages_for( :max_parallel_scans ) %>
+
+                    <p class="help-block alert alert-warning">
+                        It is recommended that the value be set to <kbd>1</kbd>,
+                        in order to keep server stress low and prevent sessions
+                        of authenticated scans from interfering with each other.
+                    </p>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
+    <hr/>
+
+    <%= pf.simple_fields_for :profile do |f| %>
     <div id="platforms">
         <fieldset>
             <h2 id="platforms-h">

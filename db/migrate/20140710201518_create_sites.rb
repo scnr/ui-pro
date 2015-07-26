@@ -9,6 +9,8 @@ class CreateSites < ActiveRecord::Migration
             t.integer :issues_count, :integer, default: 0
             t.integer :sitemap_entries_count, :integer, default: 0
 
+            t.integer  :max_parallel_scans, default: 1
+
             t.belongs_to :user, index: true
 
             t.timestamps

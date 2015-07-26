@@ -357,6 +357,7 @@ ActiveRecord::Schema.define(version: 20150406191208) do
     t.integer  "browser_cluster_pool_size"
     t.integer  "browser_cluster_job_timeout"
     t.integer  "browser_cluster_worker_time_to_live"
+    t.integer  "max_parallel_scans"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -431,6 +432,7 @@ ActiveRecord::Schema.define(version: 20150406191208) do
     t.integer  "revisions_count",       default: 0
     t.integer  "issues_count",          default: 0
     t.integer  "sitemap_entries_count", default: 0
+    t.integer  "max_parallel_scans",    default: 1
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"

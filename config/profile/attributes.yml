@@ -90,3 +90,5 @@ browser_cluster_ignore_images:
     less bandwidth usage.
 browser_cluster_screen_width: ''
 browser_cluster_screen_height: ''
+
+max_parallel_scans: 'Maximum number of active scans at any given time.'

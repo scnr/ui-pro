@@ -17,12 +17,10 @@ class SettingsController < ApplicationController
     def update
         respond_to do |format|
             if @settings.update( settings_params )
-                format.html do
-                    redirect_to @settings, notice: 'Settings were successfully updated.'
-                end
+                format.html { render :edit }
                 format.json { render :show, status: :ok, location: @settings }
             else
-                format.html { render :show }
+                format.html { render :edit }
                 format.json { render json: @settings.errors, status: :unprocessable_entity }
             end
         end
@@ -32,7 +30,7 @@ class SettingsController < ApplicationController
     private
 
     def set_settings
-        @settings = Setting.first
+        @settings = Setting.get
     end
 
     def settings_params
@@ -49,6 +47,8 @@ class SettingsController < ApplicationController
             :browser_cluster_pool_size,
             :browser_cluster_job_timeout,
             :browser_cluster_worker_time_to_live,
+
+            :max_parallel_scans
         ])
     end
 end

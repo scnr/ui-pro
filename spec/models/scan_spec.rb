@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Scan do
     subject { FactoryGirl.create :scan, site: site }
-    let(:settings){ FactoryGirl.create :setting }
+    let(:settings){ Setting.get }
     let(:other_scan) { FactoryGirl.create :scan, site: site }
 
     let(:user) { FactoryGirl.create :user }

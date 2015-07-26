@@ -15,30 +15,12 @@ describe ScanScheduler do
     end
 
     describe '#start' do
-        context 'when there are due scans' do
-            let(:due) do
-                FactoryGirl.create(
-                    :scan,
-                    site: site,
-                    name: 'stuff',
-                    schedule_attributes: {
-                        start_at: Time.now
-                    }
-                )
-            end
+        it 'starts processing due scans' do
+            allow(subject).to receive(:each_due_scan) { |&b| b.call 'stuff' }
+            expect(subject).to receive(:perform).with('stuff')
 
-            context 'and there is an available slot' do
-                it 'performs them' do
-                    expect(subject).to receive( :perform ).with( due )
-                    subject.start
-
-                    wait
-                end
-            end
-
-            context 'and there is no available slot' do
-                it 'waits for one before performing them'
-            end
+            subject.start
+            wait
         end
     end
 

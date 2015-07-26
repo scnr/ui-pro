@@ -55,11 +55,8 @@ class ScanScheduler
 
             log_info 'Tick'
 
-            # limit( active_scans - Settings.max_parallel_scans )
-            Schedule.includes( :scan ).due.each do |schedule|
-                log_info "Scan due: #{schedule.scan} (#{schedule.scan.id})"
-
-                perform schedule.scan
+            each_due_scan do |scan|
+                perform scan
             end
 
             @after_next_tick_blocks.each { |b| b.call @ticks }

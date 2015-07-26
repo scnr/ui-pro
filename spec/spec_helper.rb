@@ -78,6 +78,21 @@ RSpec.configure do |config|
         # a real object. This is generally recommended.
         # mocks.verify_partial_doubles = true
     end
+
+    config.before :each do
+        Setting.create(
+            http_request_timeout:                10_000,
+            http_request_queue_size:             50,
+            http_request_redirect_limit:         5,
+            http_response_max_size:              200_000,
+
+            browser_cluster_pool_size:           6,
+            browser_cluster_job_timeout:         10,
+            browser_cluster_worker_time_to_live: 100,
+
+            max_parallel_scans:                  5
+        ) if !Setting.get
+    end
 end
 
 RSpec::Core::MemoizedHelpers.module_eval do

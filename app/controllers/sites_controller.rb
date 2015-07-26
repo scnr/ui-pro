@@ -89,31 +89,35 @@ class SitesController < ApplicationController
     end
 
     def site_profile_params
-        params.require(:site).permit(*[profile_attributes: [
-            { platforms: [] },
-            :no_fingerprinting,
+        params.require(:site).permit(*[
+            :max_parallel_scans,
 
-            :input_values,
+            profile_attributes: [
+                { platforms: [] },
+                :no_fingerprinting,
 
-            :http_cookies,
-            :http_request_headers,
-            :http_request_concurrency,
-            :http_authentication_username,
-            :http_authentication_password,
+                :input_values,
 
-            :scope_exclude_path_patterns,
-            :scope_exclude_content_patterns,
-            :scope_extend_paths,
-            :scope_template_path_patterns,
-            :scope_auto_redundant_paths,
-            :scope_url_rewrites,
-            :scope_https_only,
+                :http_cookies,
+                :http_request_headers,
+                :http_request_concurrency,
+                :http_authentication_username,
+                :http_authentication_password,
 
-            :audit_link_templates,
+                :scope_exclude_path_patterns,
+                :scope_exclude_content_patterns,
+                :scope_extend_paths,
+                :scope_template_path_patterns,
+                :scope_auto_redundant_paths,
+                :scope_url_rewrites,
+                :scope_https_only,
 
-            :browser_cluster_ignore_images,
-            :browser_cluster_wait_for_elements
-        ]])
+                :audit_link_templates,
+
+                :browser_cluster_ignore_images,
+                :browser_cluster_wait_for_elements
+            ]
+        ])
 
     end
 
