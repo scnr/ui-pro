@@ -8,6 +8,9 @@ Bundler.require(*Rails.groups)
 
 module ArachniPro
     class Application < Rails::Application
+        config.autoload_once_paths << "#{Rails.root.join('lib')}/system.rb"
+        config.autoload_once_paths << "#{Rails.root.join('lib')}/system/"
+
         config.autoload_once_paths << "#{Rails.root.join('lib')}/scan_scheduler.rb"
         config.autoload_once_paths << "#{Rails.root.join('lib')}/scan_scheduler/"
 

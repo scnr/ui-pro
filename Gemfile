@@ -34,6 +34,8 @@ gem 'parse-cron'
 
 gem 'dotiw'
 
+gem 'vmstat'
+
 group :doc do
     gem 'sdoc', '~> 0.4.0'
 end

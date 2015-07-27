@@ -174,12 +174,27 @@ describe ScanScheduler::Helpers::Scan do
                 end
             end
 
-            context 'and the global max parallel scans limit has been reached' do
+            context 'and there are not enough slots left' do
                 before do
-                    settings.max_parallel_scans = 1
-                    settings.save
+                    allow(subject).to receive(:slots_free).and_return(1)
+                end
 
-                    allow(subject).to receive(:active_instance_count).and_return(1)
+                it 'yields as many as possible' do
+                    other_site_due
+                    due
+
+                    s = []
+                    subject.each_due_scan do |scan|
+                        s << scan
+                    end
+
+                    expect(s).to eq [other_site_due]
+                end
+            end
+
+            context 'and there are no slots left' do
+                before do
+                    allow(subject).to receive(:slots_free).and_return(0)
                 end
 
                 it 'yields nothing' do

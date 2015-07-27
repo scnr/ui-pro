@@ -20,6 +20,7 @@ class ScanScheduler
     include Helpers::Issue
     include Helpers::Logging
     include Helpers::Scan
+    include Helpers::Slots
 
     def initialize
         super

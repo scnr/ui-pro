@@ -16,7 +16,7 @@ module Instance
     # @return   [Integer]
     #   Amount of active scans.
     def active_instance_count
-        @revision_id_to_instance_url.size
+        @site_instance_count.values.inject(:+).to_i
     end
 
     def active_instance_count_for_site( site )
@@ -31,11 +31,13 @@ module Instance
     def spawn_instance_for( revision, &block )
         log_info_for revision, 'Spawning instance.'
 
+        # Don't place this inside the spawn call, we need it ASAP to enforce
+        # slot quotas.
+        increment_active_instance_count_for_site revision.site
+
         # Don't fork, we don't want the entire Rails env.
         instances.spawn fork: false do |instance|
             log_info_for revision, "Spawned instance at #{instance.url}"
-
-            increment_active_instance_count_for_site revision.site
 
             @revision_id_to_instance_url[revision.id] = instance.url
             block.call instance

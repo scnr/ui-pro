@@ -2,7 +2,8 @@ class Setting < ActiveRecord::Base
     include ProfileRpcHelpers
     include ProfileAttributes
 
-    validates :max_parallel_scans, numericality: { greater_than: 0 }
+    validates :max_parallel_scans, numericality: { greater_than: 0 },
+              allow_nil: true
     validate  :validate_max_parallel_scans
 
     def self.get
@@ -12,6 +13,8 @@ class Setting < ActiveRecord::Base
     private
 
     def validate_max_parallel_scans
+        return if !max_parallel_scans
+
         msgs = []
 
         Site.all.each do |site|

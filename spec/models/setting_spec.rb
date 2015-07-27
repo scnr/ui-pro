@@ -6,6 +6,22 @@ describe Setting, type: :model do
 
     describe :validations do
         describe '#max_parallel_scans' do
+            context 'when its value is nil' do
+                it 'is valid' do
+                    subject.max_parallel_scans = nil
+
+                    expect(subject).to be_valid
+                end
+            end
+
+            context 'when its value is greater than 0' do
+                it 'is valid' do
+                    subject.max_parallel_scans = 1
+
+                    expect(subject).to be_valid
+                end
+            end
+
             context 'when its value is less than an equivalent site setting' do
                 before do
                     site.max_parallel_scans = 2
