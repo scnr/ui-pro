@@ -29,35 +29,50 @@ describe Site, type: :model do
 
     describe :validations do
         describe '#max_parallel_scans' do
-            context 'when its value is greater than the global setting' do
+            context 'when there is a global setting' do
+                context 'when its value is greater than the global setting' do
+                    before do
+                        settings.max_parallel_scans = 2
+                        settings.save
+                    end
+
+                    it 'is invalid' do
+                        subject.max_parallel_scans = 3
+
+                        expect(subject).to be_invalid
+                        expect(subject.errors).to include :max_parallel_scans
+                    end
+                end
+
+                context 'when the value is 0' do
+                    it 'is invalid' do
+                        subject.max_parallel_scans = 0
+
+                        expect(subject).to be_invalid
+                        expect(subject.errors).to include :max_parallel_scans
+                    end
+                end
+
+                context 'when the value is less than 0' do
+                    it 'is invalid' do
+                        subject.max_parallel_scans = -1
+
+                        expect(subject).to be_invalid
+                        expect(subject.errors).to include :max_parallel_scans
+                    end
+                end
+            end
+
+            context 'when there is no global setting' do
                 before do
-                    settings.max_parallel_scans = 2
+                    settings.max_parallel_scans = nil
                     settings.save
                 end
 
-                it 'is invalid' do
-                    subject.max_parallel_scans = 3
+                it 'is valid' do
+                    subject.max_parallel_scans = 3000000
 
-                    expect(subject).to be_invalid
-                    expect(subject.errors).to include :max_parallel_scans
-                end
-            end
-
-            context 'when the value is 0' do
-                it 'is invalid' do
-                    subject.max_parallel_scans = 0
-
-                    expect(subject).to be_invalid
-                    expect(subject.errors).to include :max_parallel_scans
-                end
-            end
-
-            context 'when the value is less than 0' do
-                it 'is invalid' do
-                    subject.max_parallel_scans = -1
-
-                    expect(subject).to be_invalid
-                    expect(subject.errors).to include :max_parallel_scans
+                    expect(subject).to be_valid
                 end
             end
         end
