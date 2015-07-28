@@ -17,17 +17,7 @@ module Slots
 
         # Auto-mode, pick the safest restriction, RAM vs CPU.
         else
-            free = [
-                # See how many scans we can fit into the available memory.
-                System.memory_free / slot_memory_size,
-
-                # See how many CPU cores are free.
-                #
-                # Well, they may not be really free, other stuff on the machine
-                # could be using them to a considerable extent, but we can only
-                # do so much.
-                System.cpu_count - slots_used
-            ].min.to_i
+            free = [ slots_memory_free, slots_cpu_free ].min.to_i
         end
 
         free > 0 ? free : 0
@@ -46,7 +36,59 @@ module Slots
     end
 
     # @return   [Integer]
-    #   Amount of memory (in bytes) each scan requires.
+    #   Amount of scans we can fit into the available memory.
+    #
+    #   Works based on slots, available memory isn't currently free memory but
+    #   memory that is unallocated.
+    def slots_memory_free
+        slot_unallocated_memory / slot_memory_size
+    end
+
+    # See how many CPU cores are free.
+    #
+    # Well, they may not be really free, other stuff on the machine could be
+    # using them to a considerable extent, but we can only do so much.
+    #
+    # @return   [Integer]
+    def slots_cpu_free
+        System.cpu_count - slots_used
+    end
+
+    # @param    [Integer]   pid
+    #
+    # @return   [Integer]
+    #   Remaining memory for the scan, in bytes.
+    #
+    #   If memory use exceeds {#slot_memory_size} it will return a negative number.
+    def slot_remaining_memory_for( pid )
+        slot_memory_size - System.memory_for_process_group( pid )
+    end
+
+    # @return   [Integer]
+    #   Amount of memory (in bytes) available for future scans.
+    def slot_unallocated_memory
+        # Free memory right now.
+        free_mem = System.memory_free
+
+        # Remove allocated memory to figure out how much we can really spare.
+        #
+        # TODO: Better keep track of PIDs from the Scheduler, other PIDs may creep
+        # in to the generalized Manager.
+        Arachni::Processes::Manager.pids.each do |pid|
+            remaining = slot_remaining_memory_for( pid )
+
+            # Scan matched or exceeded its allocation, no adjustment necessary.
+            next if remaining <= 0
+
+            # Mark the remaining allocated memory as unavailable.
+            free_mem -= remaining
+        end
+
+        free_mem
+    end
+
+    # @return   [Integer]
+    #   Amount of memory (in bytes) to allocate to each scan.
     def slot_memory_size
         (Setting.get.browser_cluster_pool_size * SLOT_BROWSER_SIZE) +
             SLOT_INSTANCE_SIZE

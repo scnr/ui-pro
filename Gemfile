@@ -36,6 +36,8 @@ gem 'dotiw'
 
 gem 'vmstat'
 
+gem 'sys-proctable'
+
 group :doc do
     gem 'sdoc', '~> 0.4.0'
 end

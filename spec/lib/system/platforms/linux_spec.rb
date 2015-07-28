@@ -340,6 +340,10 @@ EOTXT
         end
     end
 
+    describe '#memory_for_process_group' do
+        it 'returns bytes of memory used by the group'
+    end
+
     describe '.current?' do
         context 'when running on Linux' do
             it 'returns true' do

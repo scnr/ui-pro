@@ -1,6 +1,9 @@
 class System
     include Singleton
 
+    # Is there a better way to get this?
+    PAGESIZE = 4096
+
     # @return   [Array<Platforms::Base>]
     attr_reader :platforms
 
@@ -12,6 +15,15 @@ class System
     #   Amount of free RAM in bytes.
     def memory_free
         platform.memory_free
+    end
+
+    # @param    [Integer]   pgid
+    #   Process group ID.
+    #
+    # @return   [Integer]
+    #   Amount of RAM in bytes used by the given GPID.
+    def memory_for_process_group( pgid )
+        platform.memory_for_process_group( pgid )
     end
 
     # @return   [Integer]

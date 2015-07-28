@@ -34,33 +34,32 @@ describe ScanScheduler::Helpers::Slots do
 
         context 'when Setting#max_parallel_scans is not set' do
             before do
-                settings.browser_cluster_pool_size = 6
-                settings.max_parallel_scans        = nil
+                settings.max_parallel_scans = nil
                 settings.save
             end
 
             it 'calculates slots based on available resources' do
-                expect(System.instance).to receive(:memory_free).and_return( 50 * 1024 * 1024 * 1024 )
-                expect(System.instance).to receive(:cpu_count).and_return( 25 )
+                expect(subject).to receive(:slots_memory_free).and_return( 25 )
+                expect(subject).to receive(:slots_cpu_free).and_return( 25 )
 
                 expect(subject.slots_free).to eq 25
             end
 
-            context 'when restricted by RAM' do
-                it 'uses it to calculate the slots' do
-                    expect(System.instance).to receive(:memory_free).and_return( 5 * 1024 * 1024 * 1024 )
-                    expect(System.instance).to receive(:cpu_count).and_return( 100 )
+            context 'when restricted by memory' do
+                it 'bases the calculation on memory slots' do
+                    expect(subject).to receive(:slots_memory_free).and_return( 10 )
+                    expect(subject).to receive(:slots_cpu_free).and_return( 25 )
 
-                    expect(subject.slots_free).to eq 2
+                    expect(subject.slots_free).to eq 10
                 end
             end
 
             context 'when restricted by CPUs' do
-                it 'uses it to calculate the slots' do
-                    expect(System.instance).to receive(:memory_free).and_return( 4000 * 1024 * 1024 * 1024 )
-                    expect(System.instance).to receive(:cpu_count).and_return( 2 )
+                it 'bases the calculation on CPU slots' do
+                    expect(subject).to receive(:slots_memory_free).and_return( 10 )
+                    expect(subject).to receive(:slots_cpu_free).and_return( 5 )
 
-                    expect(subject.slots_free).to eq 2
+                    expect(subject.slots_free).to eq 5
                 end
             end
         end
@@ -79,6 +78,67 @@ describe ScanScheduler::Helpers::Slots do
             expect(subject).to receive(:slots_used).and_return( 5 )
 
             expect(subject.slots_total).to eq 8
+        end
+    end
+
+    describe '#slots_memory_free' do
+        before do
+            settings.browser_cluster_pool_size = 6
+            settings.save
+        end
+
+        it 'returns amount of free memory slots' do
+            expect(subject).to receive(:slot_unallocated_memory).and_return( subject.slot_memory_size * 2 )
+
+            expect(subject.slots_memory_free).to eq 2
+        end
+    end
+
+    describe '#slots_cpu_free' do
+        it 'returns amount of free CPUs splots' do
+            expect(System).to receive(:cpu_count).and_return( 12 )
+            expect(subject).to receive(:slots_used).and_return( 5 )
+
+            expect(subject.slots_cpu_free).to eq 7
+        end
+    end
+
+    describe '#slot_unallocated_memory' do
+        before do
+            settings.browser_cluster_pool_size = 6
+            settings.save
+        end
+
+        context 'when there are no scans running' do
+            it 'returns the amount of free memory' do
+                free = subject.slot_memory_size * 2
+
+                expect(System.instance).to receive(:memory_free).and_return( free )
+
+                expect(subject.slot_unallocated_memory).to eq free
+            end
+        end
+
+        context 'when there are scans running' do
+            context 'using part of their allocation' do
+                it 'removes their allocated slots' do
+                    used_allocation = subject.slot_memory_size / 3
+
+                    expect(System.instance).to receive(:memory_free).and_return( subject.slot_memory_size * 2 - used_allocation )
+
+                    expect(Arachni::Processes::Manager.instance).to receive(:pids).and_return([123])
+                    expect(subject).to receive(:slot_remaining_memory_for).with(123).and_return( subject.slot_memory_size - used_allocation )
+
+                    expect(subject.slot_unallocated_memory).to eq subject.slot_memory_size
+                end
+            end
+        end
+    end
+
+    describe '#slot_remaining_memory_for' do
+        it 'returns the amount of allocated memory available to the scan' do
+            expect(System.instance).to receive(:memory_for_process_group).with(123).and_return( subject.slot_memory_size / 3 )
+            expect(subject.slot_remaining_memory_for(123)).to eq( subject.slot_memory_size - subject.slot_memory_size / 3 )
         end
     end
 

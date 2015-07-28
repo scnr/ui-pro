@@ -14,9 +14,20 @@ class Linux < Base
         IO.read( '/proc/cpuinfo' ).split( "\n\n" ).size
     end
 
-    # @private
-    def _exec( cmd )
-        %x(#{cmd})
+    # @param    [Integer]   pgid
+    #   Process group ID.
+    #
+    # @return   [Integer]
+    #   Amount of RAM in bytes used by the given PGID.
+    def memory_for_process_group( pgid )
+        rss = 0
+
+        Sys::ProcTable.ps do |p|
+            next if p.pgrp != pgid
+            rss += p.rss
+        end
+
+        rss * System::PAGESIZE
     end
 
     class <<self

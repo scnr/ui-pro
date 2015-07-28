@@ -20,6 +20,21 @@ class OSX < Base
         Vmstat.memory
     end
 
+    # @param    [Integer]   pgid
+    #   Process group ID.
+    #
+    # @return   [Integer]
+    #   Amount of RAM in bytes used by the given GPID.
+    def memory_for_process_group( pgid )
+        rss = 0
+
+        _exec( "ps -g #{pgid}" ).split("\n")[1..-1].each do |rss_string|
+            rss += rss_string.to_i
+        end
+
+        rss * System::PAGESIZE
+    end
+
     class <<self
         def current?
             ruby_platform =~ /darwin|mac os/i

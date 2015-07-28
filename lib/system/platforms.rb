@@ -29,12 +29,28 @@ module Platforms
             raise 'Missing implementation'
         end
 
+        # @param    [Integer]   pgid
+        #   Process group ID.
+        #
+        # @return   [Integer]
+        #   Amount of RAM in bytes used by the given GPID.
+        #
+        # @abstract
+        def memory_for_process_group( pgid )
+            raise 'Missing implementation'
+        end
+
         # @return   [Integer]
         #   Amount of CPU cores.
         #
         # @abstract
         def cpu_count
             raise 'Missing implementation'
+        end
+
+        # @private
+        def _exec( cmd )
+            %x(#{cmd})
         end
     end
 end

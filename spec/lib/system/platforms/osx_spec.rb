@@ -19,6 +19,26 @@ describe System::Platforms::OSX do
         end
     end
 
+    describe '#memory_for_process_group' do
+        let(:ps) do
+            <<EOTXT
+   RSS
+109744
+ 63732
+ 62236
+ 63876
+ 62772
+ 62856
+ 64504
+EOTXT
+        end
+
+        it 'returns bytes of memory used by the group' do
+            expect(subject).to receive(:_exec).with('ps -g 123').and_return(ps)
+            expect(subject.memory_for_process_group( 123 )).to eq 2005893120
+        end
+    end
+
     describe '.current?' do
         context 'when running on OSX' do
             it 'returns true' do
