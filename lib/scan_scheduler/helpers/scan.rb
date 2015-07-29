@@ -51,9 +51,11 @@ module Scan
             stopped_at: nil
         )
 
-        spawn_instance_for( revision ) do |instance |
+        spawn_instance_for( revision ) do |instance|
             instance.service.restore( revision.scan.snapshot_path ) do |r|
                 log_info_for revision, 'Restoring'
+
+                FileUtils.rm( revision.scan.snapshot_path )
 
                 next if handle_if_rpc_error( revision, r )
 

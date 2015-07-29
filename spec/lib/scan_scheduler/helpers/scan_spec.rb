@@ -76,6 +76,70 @@ describe ScanScheduler::Helpers::Scan do
         end
     end
 
+    describe '#restore' do
+        let(:snapshot_path) { '/my/dir.afs' }
+
+        before do
+            scan.suspended!
+            scan.snapshot_path = snapshot_path
+            scan.save
+
+            revision.update(
+                started_at: Time.now - 1000,
+                stopped_at: Time.now + 1000
+            )
+
+            allow(FileUtils).to receive(:rm).with(snapshot_path)
+        end
+
+        it 'spawns an instance' do
+            expect(subject.active_instance_count).to be 0
+
+            subject.restore( revision ) rescue Arachni::Reactor::Error::NotRunning
+
+            expect(subject.active_instance_count).to be 1
+        end
+
+        it 'restores the scan' do
+            expect_any_instance_of(MockInstanceClientService).to receive(:restore).with( scan.snapshot_path )
+            subject.restore( revision )
+        end
+
+        it 'sets up progress monitoring' do
+            subject.start
+
+            expect(subject).to receive(:monitor) do |revision|
+                expect(revision).to eq scan.revisions.reload.first
+            end
+            subject.restore( revision )
+            wait
+            wait
+        end
+
+        it 'sets status to restoring' do
+            expect(revision.scan).to receive(:restoring!)
+            subject.restore( revision )
+        end
+
+        it 'deletes the snapshot' do
+            expect(FileUtils).to receive(:rm).with(snapshot_path)
+            subject.restore( revision )
+        end
+
+        it 'sets #started_at to now' do
+            t = Time.now
+            subject.restore( revision )
+
+            expect(revision.started_at).to be > t
+            expect(revision.started_at).to be < Time.now
+        end
+
+        it 'sets #stopped_at to nil' do
+            subject.restore( revision )
+            expect(revision.stopped_at).to be_nil
+        end
+    end
+
     describe '#pause' do
         it 'pauses the scan' do
             expect(instance.service).to receive(:pause)

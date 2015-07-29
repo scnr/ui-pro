@@ -7,6 +7,10 @@ class MockInstanceClientService
         block.call
     end
 
+    def restore( snapshot, &block )
+        block.call
+    end
+
     def suspend( &block )
         block.call
     end

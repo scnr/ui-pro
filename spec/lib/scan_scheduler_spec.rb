@@ -2,6 +2,12 @@ describe ScanScheduler do
     subject { described_class.instance }
     let(:site) { FactoryGirl.create :site }
     let(:tick) { described_class::TICK }
+    let(:instance_manager) { MockInstanceManager.new }
+
+    before do
+        subject.reset
+        allow(subject).to receive(:instances) { instance_manager }
+    end
 
     after :each do
         subject.stop
