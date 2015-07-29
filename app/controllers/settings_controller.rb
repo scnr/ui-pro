@@ -24,16 +24,22 @@ class SettingsController < ApplicationController
                 format.json { render json: @settings.errors, status: :unprocessable_entity }
             end
         end
-
     end
 
     private
 
     def set_settings
         @settings = Setting.get
+
+        # TODO: Quite slow when a few scans are running.
+        @slots_total_auto = ScanScheduler.slots_total_auto
     end
 
     def settings_params
+        if params[:setting].delete( :max_parallel_scans_auto )
+            params[:setting][:max_parallel_scans] = nil
+        end
+
         params.require( :setting ).permit(*[
             :http_request_timeout,
             :http_request_queue_size,

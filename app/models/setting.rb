@@ -6,6 +6,10 @@ class Setting < ActiveRecord::Base
               allow_nil: true
     validate  :validate_max_parallel_scans
 
+    def max_parallel_scans_auto?
+        max_parallel_scans.nil?
+    end
+
     def self.get
         first
     end

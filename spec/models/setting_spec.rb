@@ -55,4 +55,28 @@ describe Setting, type: :model do
             end
         end
     end
+
+    describe '#max_parallel_scans_auto?' do
+        context 'when #max_parallel_scans is nil' do
+            before do
+                subject.max_parallel_scans = nil
+                subject.save
+            end
+
+            it 'returns true' do
+                expect(subject).to be_max_parallel_scans_auto
+            end
+        end
+
+        context 'when #max_parallel_scans is not nil' do
+            before do
+                subject.max_parallel_scans = 1
+                subject.save
+            end
+
+            it 'returns false' do
+                expect(subject).to_not be_max_parallel_scans_auto
+            end
+        end
+    end
 end

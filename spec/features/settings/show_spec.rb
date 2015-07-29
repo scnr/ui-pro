@@ -14,6 +14,11 @@ feature 'Edit global settings' do
         find( :xpath, "//input[@type='submit']" ).click
     end
 
+    def sidebar_submit
+        find('#sidebar button').click
+        sleep 1
+    end
+
     feature 'authenticated user' do
         before do
             user.sites << site
@@ -29,8 +34,7 @@ feature 'Edit global settings' do
         scenario 'can submit form using sidebar button', js: true do
             fill_in 'Proxy host', with: 'stuff.com'
 
-            find('#sidebar button').click
-            sleep 1
+            sidebar_submit
 
             expect(subject.http_proxy_host).to eq 'stuff.com'
         end
@@ -38,11 +42,65 @@ feature 'Edit global settings' do
         feature 'option' do
             feature 'Scans' do
                 feature 'Maximum parallel scans' do
-                    scenario 'can be set' do
-                        fill_in 'Maximum parallel scans', with: 10
-                        submit
+                    feature 'when set manually', js: true do
+                        before do
+                            fill_in 'Maximum parallel scans', with: 10
+                            sidebar_submit
+                        end
 
-                        expect(subject.max_parallel_scans).to eq 10
+                        scenario 'can be set to a number' do
+                            expect(subject.max_parallel_scans).to eq 10
+                        end
+
+                        scenario 'shows manual setting alert' do
+                            expect(page).to have_css '#max_parallel_scans-help-block'
+                        end
+
+                        scenario 'does not show auto alert' do
+                            expect(page).to_not have_css '#max_parallel_scans_auto-help-block'
+                        end
+                    end
+
+                    feature 'when Auto is checked', js: true do
+                        before do
+                            check 'Auto'
+                        end
+
+                        scenario 'can be set to auto' do
+                            sidebar_submit
+
+                            expect(subject).to be_max_parallel_scans_auto
+                        end
+
+                        scenario 'disables input' do
+                            expect(page).to have_field 'Maximum parallel scans', disabled: true
+                        end
+
+                        scenario 'shows auto alert' do
+                            expect(page).to have_css '#max_parallel_scans_auto-help-block'
+                        end
+
+                        scenario 'does not show manual setting alert' do
+                            expect(page).to_not have_css '#max_parallel_scans-help-block'
+                        end
+
+                        feature 'and unchecked' do
+                            before do
+                                uncheck 'Auto'
+                            end
+
+                            scenario 'enables input' do
+                                expect(page).to have_field 'Maximum parallel scans', disabled: false
+                            end
+
+                            scenario 'does not show auto alert' do
+                                expect(page).to_not have_css '#max_parallel_scans_auto-help-block'
+                            end
+
+                            scenario 'shows manual setting alert' do
+                                expect(page).to have_css '#max_parallel_scans-help-block'
+                            end
+                        end
                     end
 
                     feature 'when the value is less than an equivalent site setting' do

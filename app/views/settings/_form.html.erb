@@ -49,17 +49,50 @@
             <div class="row">
                 <div class="col-md-6">
                     <%= f.input :max_parallel_scans,
+                                disabled: @settings.max_parallel_scans_auto?,
+                                input_html: {
+                                    value: @settings.max_parallel_scans || @slots_total_auto
+                                },
                                 label: 'Maximum parallel scans'
                     %>
 
+                    <div class="form-group boolean optional setting_max_parallel_scans_auto">
+                        <label class="boolean optional control-label"
+                               for="setting_max_parallel_scans_auto">
+                            Auto
+                        </label>
+
+                        <input class="boolean optional"
+                               name="setting[max_parallel_scans_auto]"
+                               id="setting_max_parallel_scans_auto"
+                               data-slots-total="<%= @slots_total_auto %>"
+                               type="checkbox"
+                               <%= 'checked=checked' if @settings.max_parallel_scans_auto? %>/>
+                    </div>
+
                     <%= messages_for( :max_parallel_scans ) %>
 
-                    <p class="help-block alert alert-warning">
+                    <p id="max_parallel_scans_auto-help-block"
+                       class="help-block alert alert-info
+                       <%= 'hide' if !@settings.max_parallel_scans_auto? %>">
+
+                        The system will determine the amount of scans that can
+                        be safely run in parallel automatically, based on available
+                        resources.
+                        <br/>
+                        <i>The shown number is an estimation and may fluctuate depending
+                        on workload.</i>
+                    </p>
+
+                    <p id="max_parallel_scans-help-block"
+                       class="help-block alert alert-warning
+                       <%= 'hide' if @settings.max_parallel_scans_auto? %>">
+
                         Please make sure that the machine has enough available
                         resources to accommodate the workload.
                         <br/>
-                        A high number may cause resource exhaustion for low-end
-                        machines which can lead to instability and/or crashes.
+                        A large number of scans may cause resource exhaustion for
+                        low-end machines which can lead to instability and/or crashes.
                     </p>
                 </div>
             </div>
