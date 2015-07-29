@@ -3,7 +3,7 @@ describe Site, type: :model do
     let(:scan) { FactoryGirl.create :scan, site: subject }
     let(:other_scan) { FactoryGirl.create :scan, site: subject }
     let(:user) { FactoryGirl.create :user }
-    let(:settings) { Setting.get }
+    let(:settings) { Settings }
 
     expect_it { to belong_to :user }
     expect_it { to have_one  :profile }

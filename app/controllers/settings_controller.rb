@@ -29,7 +29,7 @@ class SettingsController < ApplicationController
     private
 
     def set_settings
-        @settings = Setting.get
+        @settings = Settings.record
 
         # TODO: Quite slow when a few scans are running.
         @slots_total_auto = ScanScheduler.slots_total_auto

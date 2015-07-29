@@ -91,7 +91,7 @@ class Site < ActiveRecord::Base
     end
 
     def validate_max_parallel_scans
-        global = Setting.get.max_parallel_scans
+        global = Settings.max_parallel_scans
         return if !global || max_parallel_scans <= global
 
         errors.add :max_parallel_scans, "cannot be greater than the global setting of #{global}"

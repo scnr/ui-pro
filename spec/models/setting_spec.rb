@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe Setting, type: :model do
-    subject { Setting.get }
+    subject { Setting.first }
     let(:site) { FactoryGirl.create :site }
 
     describe :validations do

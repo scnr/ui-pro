@@ -29,7 +29,7 @@ describe ScanScheduler::Helpers::Scan do
         )
     end
     let(:user) { FactoryGirl.create :user }
-    let(:settings){ Setting.get }
+    let(:settings){ Settings }
     let(:profile) { FactoryGirl.create :profile }
     let(:site_role) { FactoryGirl.create :site_role, site: site }
     let(:site) { FactoryGirl.create :site, user: user }

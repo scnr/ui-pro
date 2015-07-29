@@ -11,7 +11,7 @@ feature 'Site profile form' do
     let(:https_scan) { FactoryGirl.create :scan, site: https_site, profile: FactoryGirl.create( :profile ) }
     let(:https_revision) { FactoryGirl.create :revision, scan: https_scan }
 
-    let(:settings) { Setting.get }
+    let(:settings) { Settings }
 
     before do
         revision

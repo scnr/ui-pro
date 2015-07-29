@@ -1,6 +1,6 @@
 describe ScanScheduler::Helpers::Slots do
     subject { ScanScheduler.instance }
-    let(:settings) { Setting.get }
+    let(:settings) { Settings }
     let(:instance_manager) { MockInstanceManager.new }
 
     before do

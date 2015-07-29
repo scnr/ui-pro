@@ -92,7 +92,7 @@ class Scan < ActiveRecord::Base
 
         options.deep_merge!( profile_rpc_options )
         options.deep_merge!( user_agent.to_rpc_options )
-        options.deep_merge!( Setting.get.to_rpc_options )
+        options.deep_merge!( Settings.to_rpc_options )
 
         site_role_rpc_options = site_role.to_rpc_options
 

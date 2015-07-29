@@ -2,7 +2,7 @@ include Warden::Test::Helpers
 Warden.test_mode!
 
 feature 'Edit global settings' do
-    subject { Setting.get }
+    subject { Settings }
     let(:site) { FactoryGirl.create :site }
     let(:user) { FactoryGirl.create :user }
 

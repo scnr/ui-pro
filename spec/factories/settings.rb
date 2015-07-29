@@ -1,5 +1,5 @@
 FactoryGirl.define do
     factory :setting do
-        Setting.get
+        Setting.first
     end
 end

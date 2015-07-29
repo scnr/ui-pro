@@ -91,7 +91,8 @@ RSpec.configure do |config|
             browser_cluster_worker_time_to_live: 100,
 
             max_parallel_scans:                  5
-        ) if !Setting.get
+        )
+        Settings.reset
     end
 end
 

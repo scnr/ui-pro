@@ -14,6 +14,8 @@ module ArachniPro
         config.autoload_once_paths << "#{Rails.root.join('lib')}/scan_scheduler.rb"
         config.autoload_once_paths << "#{Rails.root.join('lib')}/scan_scheduler/"
 
+        config.autoload_once_paths << "#{Rails.root.join('lib')}/settings.rb"
+
         config.autoload_paths << Rails.root.join('lib')
 
         config.generators do |g|

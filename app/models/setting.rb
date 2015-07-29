@@ -10,10 +10,6 @@ class Setting < ActiveRecord::Base
         max_parallel_scans.nil?
     end
 
-    def self.get
-        first
-    end
-
     private
 
     def validate_max_parallel_scans

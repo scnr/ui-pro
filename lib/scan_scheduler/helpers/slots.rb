@@ -12,7 +12,7 @@ module Slots
     #   Amount of new scans that can be safely run in parallel, currently.
     def slots_free
         # Manual mode, user gave us a value.
-        if (max_parallel_scans = Setting.get.max_parallel_scans)
+        if (max_parallel_scans = Settings.max_parallel_scans)
             free = max_parallel_scans - slots_used
 
         # Auto-mode, pick the safest restriction, RAM vs CPU.
@@ -108,7 +108,7 @@ module Slots
     # @return   [Integer]
     #   Amount of memory (in bytes) to allocate to each scan.
     def slot_memory_size
-        (Setting.get.browser_cluster_pool_size * SLOT_BROWSER_SIZE) +
+        (Settings.browser_cluster_pool_size * SLOT_BROWSER_SIZE) +
             SLOT_INSTANCE_SIZE
     end
 
