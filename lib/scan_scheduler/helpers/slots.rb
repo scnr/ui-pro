@@ -17,10 +17,28 @@ module Slots
 
         # Auto-mode, pick the safest restriction, RAM vs CPU.
         else
-            free = [ slots_memory_free, slots_cpu_free ].min.to_i
+            free = slots_free_auto
         end
 
         free > 0 ? free : 0
+    end
+
+    # @return   [Integer]
+    #   Amount of new scans that can be safely run in parallel, currently.
+    #
+    #   The decision is based on the available resources alone, user options
+    #   from {Setting#max_parallel_scans} is ignored.
+    def slots_free_auto
+        [ slots_memory_free, slots_cpu_free ].min.to_i
+    end
+
+    # @return   [Integer]
+    #   Amount of scans that can be safely run in parallel, in total.
+    #
+    #   The decision is based on the available resources alone, user options
+    #   from {Setting#max_parallel_scans} is ignored.
+    def slots_total_auto
+        slots_used + slots_free_auto
     end
 
     # @return   [Integer]

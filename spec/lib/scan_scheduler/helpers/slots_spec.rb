@@ -38,29 +38,41 @@ describe ScanScheduler::Helpers::Slots do
                 settings.save
             end
 
-            it 'calculates slots based on available resources' do
-                expect(subject).to receive(:slots_memory_free).and_return( 25 )
-                expect(subject).to receive(:slots_cpu_free).and_return( 25 )
-
+            it 'uses #slots_free_auto' do
+                expect(subject).to receive(:slots_free_auto).and_return( 25 )
                 expect(subject.slots_free).to eq 25
             end
+        end
+    end
 
-            context 'when restricted by memory' do
-                it 'bases the calculation on memory slots' do
-                    expect(subject).to receive(:slots_memory_free).and_return( 10 )
-                    expect(subject).to receive(:slots_cpu_free).and_return( 25 )
+    describe '#slots_free_auto' do
+        before do
+            settings.max_parallel_scans = nil
+            settings.save
+        end
 
-                    expect(subject.slots_free).to eq 10
-                end
+        it 'calculates slots based on available resources' do
+            expect(subject).to receive(:slots_memory_free).and_return( 25 )
+            expect(subject).to receive(:slots_cpu_free).and_return( 25 )
+
+            expect(subject.slots_free).to eq 25
+        end
+
+        context 'when restricted by memory' do
+            it 'bases the calculation on memory slots' do
+                expect(subject).to receive(:slots_memory_free).and_return( 10 )
+                expect(subject).to receive(:slots_cpu_free).and_return( 25 )
+
+                expect(subject.slots_free).to eq 10
             end
+        end
 
-            context 'when restricted by CPUs' do
-                it 'bases the calculation on CPU slots' do
-                    expect(subject).to receive(:slots_memory_free).and_return( 10 )
-                    expect(subject).to receive(:slots_cpu_free).and_return( 5 )
+        context 'when restricted by CPUs' do
+            it 'bases the calculation on CPU slots' do
+                expect(subject).to receive(:slots_memory_free).and_return( 10 )
+                expect(subject).to receive(:slots_cpu_free).and_return( 5 )
 
-                    expect(subject.slots_free).to eq 5
-                end
+                expect(subject.slots_free).to eq 5
             end
         end
     end
@@ -78,6 +90,15 @@ describe ScanScheduler::Helpers::Slots do
             expect(subject).to receive(:slots_used).and_return( 5 )
 
             expect(subject.slots_total).to eq 8
+        end
+    end
+
+    describe '#slots_total_auto' do
+        it 'sums up free (calculated automatically) and used slots' do
+            expect(subject).to receive(:slots_free_auto).and_return( 7 )
+            expect(subject).to receive(:slots_used).and_return( 5 )
+
+            expect(subject.slots_total_auto).to eq 12
         end
     end
 
