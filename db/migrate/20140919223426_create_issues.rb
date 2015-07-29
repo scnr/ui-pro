@@ -5,8 +5,8 @@ class CreateIssues < ActiveRecord::Migration
             t.string :state
 
             t.boolean :active
-            t.text :proof
-            t.text :signature
+            t.binary :proof
+            t.binary :signature
 
             t.integer :referring_issue_page_id
             t.integer :reviewed_by_revision_id

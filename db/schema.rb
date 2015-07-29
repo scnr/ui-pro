@@ -16,28 +16,13 @@ ActiveRecord::Schema.define(version: 20150406191208) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "active_admin_comments", force: :cascade do |t|
-    t.string   "namespace"
-    t.text     "body"
-    t.string   "resource_id",   null: false
-    t.string   "resource_type", null: false
-    t.integer  "author_id"
-    t.string   "author_type"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "active_admin_comments", ["author_type", "author_id"], name: "index_active_admin_comments_on_author_type_and_author_id", using: :btree
-  add_index "active_admin_comments", ["namespace"], name: "index_active_admin_comments_on_namespace", using: :btree
-  add_index "active_admin_comments", ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id", using: :btree
-
   create_table "http_requests", force: :cascade do |t|
     t.text     "url"
     t.string   "http_method"
-    t.text     "parameters"
-    t.text     "headers"
-    t.text     "body"
-    t.text     "raw"
+    t.binary   "parameters"
+    t.binary   "headers"
+    t.binary   "body"
+    t.binary   "raw"
     t.integer  "requestable_id"
     t.string   "requestable_type"
     t.datetime "created_at"
@@ -51,12 +36,12 @@ ActiveRecord::Schema.define(version: 20150406191208) do
     t.text     "url"
     t.integer  "code"
     t.string   "ip_address"
-    t.text     "headers"
-    t.text     "body"
+    t.binary   "headers"
+    t.binary   "body"
     t.float    "time"
     t.string   "return_code"
     t.text     "return_message"
-    t.text     "raw_headers"
+    t.binary   "raw_headers"
     t.integer  "responsable_id"
     t.string   "responsable_type"
     t.datetime "created_at"
@@ -69,8 +54,8 @@ ActiveRecord::Schema.define(version: 20150406191208) do
   create_table "issue_page_dom_data_flow_sinks", force: :cascade do |t|
     t.text     "object"
     t.integer  "tainted_argument_index"
-    t.text     "tainted_value"
-    t.text     "taint_value"
+    t.binary   "tainted_value"
+    t.binary   "taint_value"
     t.integer  "issue_page_dom_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -80,7 +65,7 @@ ActiveRecord::Schema.define(version: 20150406191208) do
   add_index "issue_page_dom_data_flow_sinks", ["object"], name: "index_issue_page_dom_data_flow_sinks_on_object", using: :btree
 
   create_table "issue_page_dom_execution_flow_sinks", force: :cascade do |t|
-    t.text     "data"
+    t.binary   "data"
     t.integer  "issue_page_dom_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -89,8 +74,8 @@ ActiveRecord::Schema.define(version: 20150406191208) do
   add_index "issue_page_dom_execution_flow_sinks", ["issue_page_dom_id"], name: "index_issue_page_dom_execution_flow_sinks_on_issue_page_dom_id", using: :btree
 
   create_table "issue_page_dom_functions", force: :cascade do |t|
-    t.text     "source"
-    t.text     "arguments"
+    t.binary   "source"
+    t.binary   "arguments"
     t.text     "name"
     t.integer  "with_dom_function_id"
     t.string   "with_dom_function_type"
@@ -113,9 +98,9 @@ ActiveRecord::Schema.define(version: 20150406191208) do
   add_index "issue_page_dom_stack_frames", ["with_dom_stack_frame_type", "with_dom_stack_frame_id"], name: "issue_page_dom_stack_frames_poly_index", using: :btree
 
   create_table "issue_page_dom_transitions", force: :cascade do |t|
-    t.text     "element"
+    t.binary   "element"
     t.text     "event"
-    t.text     "options"
+    t.binary   "options"
     t.float    "time"
     t.integer  "issue_page_dom_id"
     t.datetime "created_at"
@@ -126,7 +111,7 @@ ActiveRecord::Schema.define(version: 20150406191208) do
 
   create_table "issue_page_doms", force: :cascade do |t|
     t.text     "url"
-    t.text     "body"
+    t.binary   "body"
     t.integer  "issue_page_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -225,8 +210,8 @@ ActiveRecord::Schema.define(version: 20150406191208) do
     t.integer  "digest",                  limit: 8
     t.string   "state"
     t.boolean  "active"
-    t.text     "proof"
-    t.text     "signature"
+    t.binary   "proof"
+    t.binary   "signature"
     t.integer  "referring_issue_page_id"
     t.integer  "reviewed_by_revision_id"
     t.integer  "revision_id"

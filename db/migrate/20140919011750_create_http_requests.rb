@@ -3,10 +3,10 @@ class CreateHttpRequests < ActiveRecord::Migration
         create_table :http_requests do |t|
             t.text :url
             t.string :http_method
-            t.text :parameters
-            t.text :headers
-            t.text :body
-            t.text :raw
+            t.binary :parameters
+            t.binary :headers
+            t.binary :body
+            t.binary :raw
             t.belongs_to :requestable, polymorphic: true, index: true
 
             t.timestamps
