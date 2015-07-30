@@ -32,7 +32,8 @@
         margin-left: 10px;
     }
 
-    #browser_body_container, #http_response_container {
+    #browser_body_container,
+    #http_response_container {
         overflow: scroll;
         height: 400px;
         position: relative;
@@ -165,7 +166,8 @@ ul.sitemap > li .badge {
     float: right
 }
 
-ul.sitemap > li:hover, ul.sitemap > li:focus {
+ul.sitemap > li:hover,
+ul.sitemap > li:focus {
     background-color: #eeeeee;
     text-decoration: none;
 }
@@ -179,3 +181,14 @@ ul.sitemap > li.active {
     }
 }
 
+#reviewed-by-revision span.label {
+    display: block;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.without-top-radius input,
+.without-top-radius select {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}

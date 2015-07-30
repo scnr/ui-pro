@@ -1,7 +1,7 @@
 include Warden::Test::Helpers
 Warden.test_mode!
 
-feature 'Show site role page', js: true do
+feature 'Show site role page' do
 
     subject { FactoryGirl.create :site_role, site: site }
     let(:new_role) { site.reload.roles.last }
@@ -18,19 +18,14 @@ feature 'Show site role page', js: true do
         user.sites << site
 
         login_as( user, scope: :user )
-        visit site_path( site )
-
-        click_link 'Roles'
-        find( :xpath, "//a[@href='#!/roles/#{subject.id}']" ).click
+        refresh
     end
 
     def refresh
-        visit "#{site_path( site )}#!/roles/#{subject.id}"
+        visit site_role_path( site, subject )
     end
 
-    scenario 'can be visited by URL fragment' do
-        visit "#{site_path( site )}#!/roles/#{subject.id}"
-    end
+    it_behaves_like 'Site sidebar'
 
     scenario 'sees name in heading' do
         expect(find('h2')).to have_content subject.name
@@ -40,7 +35,7 @@ feature 'Show site role page', js: true do
         subject.description = '**Stuff**'
         subject.save
 
-        visit "#{site_path( site )}#!/roles/#{subject.id}"
+        refresh
 
         expect(find('.description strong')).to have_content 'Stuff'
     end
@@ -55,7 +50,7 @@ feature 'Show site role page', js: true do
         end
 
         scenario 'does not have edit link' do
-            expect(page).to_not have_xpath "//a[@href='#!/roles/#{subject.id}/edit']"
+            expect(page).to_not have_xpath "//a[@href='#{edit_site_role_path( site, subject )}']"
         end
 
         scenario 'does not have delete link' do
@@ -65,8 +60,7 @@ feature 'Show site role page', js: true do
 
     feature 'when role is not Guest' do
         scenario 'has edit link' do
-            find( :xpath, "//a[@href='#!/roles/#{subject.id}/edit']" ).click
-            expect(page).to have_css "form#edit_site_role_#{subject.id}"
+            expect(page).to have_xpath "//a[@href='#{edit_site_role_path( site, subject )}']"
         end
 
         feature 'when there are no associated scans' do
@@ -74,12 +68,11 @@ feature 'Show site role page', js: true do
                 subject.scans = []
                 subject.save
 
-                visit "#{site_path( site )}#!/roles/#{subject.id}"
+                refresh
             end
 
             scenario 'has delete button' do
-                find(:xpath, "//a[@href='#{site_role_path( site, subject )}' and @data-method='delete']" ).click
-                expect(find('#roles table')).to_not have_content subject.name
+                expect(page).to have_xpath "//a[@href='#{site_role_path( site, subject )}' and @data-method='delete']"
             end
 
             scenario 'does not list associated scans' do
@@ -92,7 +85,7 @@ feature 'Show site role page', js: true do
                 subject.scans << scan
                 subject.scans << FactoryGirl.create( :scan, name: 'Fff', site: site )
 
-                visit "#{site_path( site )}#!/roles/#{subject.id}"
+                refresh
             end
 
             scenario 'does not have delete button' do
@@ -128,7 +121,7 @@ feature 'Show site role page', js: true do
                     before do
                         subject.login_type = 'form'
                         subject.save
-                        visit "#{site_path( site )}#!/roles/#{subject.id}"
+                        refresh
                     end
 
                     scenario 'sees form URL' do
@@ -147,7 +140,7 @@ feature 'Show site role page', js: true do
                     before do
                         subject.login_type = 'script'
                         subject.save
-                        visit "#{site_path( site )}#!/roles/#{subject.id}"
+                        refresh
                     end
 
                     scenario 'sees script code' do
@@ -176,7 +169,7 @@ feature 'Show site role page', js: true do
             subject.scans << scan
             subject.scans << FactoryGirl.create( :scan, name: 'Fff', site: site )
 
-            visit "#{site_path( site )}#!/roles/#{subject.id}"
+            refresh
         end
 
         let(:scans) { find( '#site-role-scans' ) }

@@ -1,0 +1,9 @@
+<%= link_to restore_site_scan_path( scan.site, scan ),
+            method: :patch,
+            title: 'Restore scan',
+            class: 'btn btn-sm btn-success',
+            data: {
+                    confirm: 'Are you sure you want to restore the scan?'
+            } do %>
+    <i class="fa fa-play-circle"></i>
+<% end %>

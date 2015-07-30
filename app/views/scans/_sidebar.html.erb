@@ -3,83 +3,76 @@
    revision_data = @issues_summary[:revision_data]
 %>
 
-<ul id="scan-sidebar" class="nav nav-pills nav-stacked">
+<%= render 'shared/sidebar_scan' %>
 
-    <li>
-        <%= link_to site_path( @site, filter_params ) do %>
-            <i class="fa fa-arrow-left"></i>
-            Site overview
-        <% end %>
+<% if revisions.any? %>
+    <hr/>
 
-        <hr/>
-    </li>
+    <div id="sidebar-revisions">
+        <ul class="nav nav-pills nav-stacked">
+            <li class="nav-header">
+                <a>
+                    Revisions
+                </a>
+            </li>
 
-    <li class="<%= 'active' if request.path == site_scan_path( @site, @scan ) %>">
-        <%= link_to site_scan_path( @scan.site, @scan, filter_params ) do %>
-            Scan overview
-        <% end %>
+            <%
+               revisions.each do |revision|
+                   active = (@revision && @revision.id == revision.id)
 
-        <hr/>
-    </li>
+                   max_severity   = revision_data[revision.id] ?
+                           revision_data[revision.id][:max_severity] : nil
 
-    <%
-       last_revision = nil
-       revisions.each do |revision|
-           active = (@revision && @revision.id == revision.id)
+                   issue_count    = revision_data[revision.id] ?
+                           revision_data[revision.id][:issue_count] : 0
 
-           max_severity   = revision_data[revision.id] ?
-                   revision_data[revision.id][:max_severity] : nil
+                   if issue_count == 0
+                       max_severity = 'none'
+                   end
+            %>
 
-           issue_count    = revision_data[revision.id] ?
-                   revision_data[revision.id][:issue_count] : 0
+                <li
+                    <% if issue_count > 0 %>
+                        title="<%= pluralize issue_count, 'new issue' %> with a maximum severity of <%= max_severity %>."
+                    <% else %>
+                        title="<%= pluralize issue_count, 'new issue' %>."
+                    <% end %>
 
-           if issue_count == 0
-               max_severity = 'none'
-           end
-    %>
+                    class="<%= 'active' if active %>"
+                >
 
-    <li
-        <% if issue_count > 0 %>
-            title="<%= pluralize issue_count, 'new issue' %> with a maximum severity of <%= max_severity %>."
-        <% else %>
-            title="<%= pluralize issue_count, 'new issue' %>."
-        <% end %>
+                    <%= link_to site_scan_revision_path( revision.scan.site, revision.scan, revision, filter_params ) do %>
+                        #<%= revision.index %>
 
-        class="<%= 'active' if active %>"
-    >
+                        <span class="text-muted">
+                            &ndash;
+                            <%= pluralize revision.sitemap_entries.size, 'new page' %>
 
-        <%= link_to site_scan_revision_path( revision.scan.site, revision.scan, revision, filter_params ) do %>
-            #<%= revision.index %>
+                            <% if (reviewed_issues = revision.reviewed_issues.size) > 0 %>
+                                , <%= reviewed_issues %> auto-reviewed
+                                <%= 'issue'.pluralize reviewed_issues %>
+                            <% end %>
+                        </span>
 
-            <span class="text-muted">
-                &ndash;
-                <%= pluralize revision.sitemap_entries.size, 'new page' %>
+                        <span>
+                            <span class="badge badge-severity-<%= max_severity %>">
+                                <%= issue_count %>
+                            </span>
+                        </span>
+                    <% end %>
+                </li>
 
-                <% if last_revision %>
-                    , <%= last_revision.issues.fixed.size %> fixed issues.
-                <% end %>
-            </span>
-
-            <span>
-                <span class="badge badge-severity-<%= max_severity %>">
-                    <%= issue_count %>
-                </span>
-            </span>
-        <% end %>
-    </li>
-
-    <li class="sidebar-info">
-        <small class="text-muted">
-            <% if (performed_at = revision.performed_at) %>
-                Performed on <%= l performed_at %>.
-            <% elsif revision.in_progress? %>
-                <i class="fa fa-spin fa-circle-o-notch"></i>
-                Started on <%= l revision.started_at %>.
+                <li class="sidebar-info">
+                    <small class="text-muted">
+                        <% if (performed_at = revision.performed_at) %>
+                            Performed on <%= l performed_at %>.
+                        <% elsif revision.in_progress? %>
+                            <i class="fa fa-spin fa-circle-o-notch"></i>
+                            Started on <%= l revision.started_at %>.
+                        <% end %>
+                    </small>
+                </li>
             <% end %>
-        </small>
-    </li>
-
-    <%
-       last_revision = revision
-       end %>
-</ul>
+        </ul>
+    </div>
+<% end %>

@@ -26,6 +26,8 @@ feature 'Revision page' do
         refresh
     end
 
+    it_behaves_like 'Scan sidebar'
+
     let(:info) { find '#revision-info' }
 
     scenario 'has title' do
@@ -54,16 +56,12 @@ feature 'Revision page' do
     end
 
     feature 'revision info' do
-        scenario 'user sees the revision index in heading' do
-            expect(info.find('h1').text).to match revision.index.ordinalize
+        scenario 'user sees the revision in heading' do
+            expect(info.find('h1').text).to match revision.to_s
         end
 
         scenario 'user sees the scan name in heading' do
             expect(info.find('h1').text).to match scan.name
-        end
-
-        scenario 'user sees scan url in heading' do
-            expect(info.find('h1').text).to match scan.url
         end
 
         feature 'when page filtering is enabled' do
@@ -88,7 +86,7 @@ feature 'Revision page' do
         end
 
         scenario 'user sees a link to the site role' do
-            expect(info).to have_xpath "//a[@href='#{site_role_path_js(site, scan.site_role)}']"
+            expect(info).to have_xpath "//a[@href='#{site_role_path(site, scan.site_role)}']"
         end
 
         scenario 'user sees last revision start datetime' do

@@ -4,11 +4,10 @@
 
 <% return if site_role.guest? %>
 
-<a href="#!/roles/<%= site_role.id %>/edit"
-   class="btn btn-<%= button_size %> btn-warning"
-   data-js="<%= edit_site_role_path( site_role.site, site_role ) %>">
+<%= link_to edit_site_role_path( site_role.site, site_role ),
+            class: "btn btn-#{button_size} btn-warning" do %>
     <i class="fa fa-pencil"></i>
-</a>
+<% end %>
 
 <% if site_role.scans.empty? %>
     <%= link_to site_role_path( site_role.site, site_role ),

@@ -1,0 +1,9 @@
+<%= link_to suspend_site_scan_path( scan.site, scan ),
+            title: 'Suspend scan',
+            method: :patch,
+            data: {
+                    confirm: 'Are you sure you want to suspend the scan?'
+            },
+            class: 'btn btn-sm btn-default' do %>
+    <i class="fa fa-eject"></i>
+<% end %>

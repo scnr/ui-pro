@@ -2,7 +2,7 @@ Rails.application.routes.draw do
 
     root to: 'dashboard#index'
 
-    resources :sites, except: [:edit] do
+    resources :sites do
         resources :site_roles, as: 'roles', path: 'roles' do
             post  :import, on: :collection
             get   :copy,   on: :member

@@ -87,7 +87,7 @@ feature 'Site page Overview tab' do
             let(:sidebar) { find '#sidebar' }
 
             feature 'scan list' do
-                let(:scans) { find '#site-sidebar' }
+                let(:scans) { sidebar.find '#sidebar-scans' }
 
                 scenario 'user sees name' do
                     expect(scans).to have_content scan.name
@@ -109,7 +109,7 @@ feature 'Site page Overview tab' do
 
                 scenario 'user sees site role' do
                     expect(scans).to have_content scan.site_role
-                    expect(scans).to have_xpath "//a[@href='#{site_role_path_js( site, scan.site_role )}']"
+                    expect(scans).to have_xpath "//a[@href='#{site_role_path( site, scan.site_role )}']"
                 end
 
                 scenario 'user sees scan link with filtering options' do
@@ -229,7 +229,7 @@ feature 'Site page Overview tab' do
                         end
 
                         feature 'sidebar' do
-                            let(:sidebar) { find '#site-sidebar' }
+                            let(:sidebar) { find '#sidebar-scans' }
 
                             scenario 'only shows scans that have logged issues for that page' do
                                 all_scans  = site.scans.pluck(:name)
@@ -620,7 +620,7 @@ feature 'Site page Overview tab' do
                 let(:sidebar) { find '#sidebar' }
 
                 feature 'scan list' do
-                    let(:scans) { find '#site-sidebar' }
+                    let(:scans) { sidebar.find '#sidebar-scans' }
 
                     scenario 'user sees amount of issues' do
                         site.scans.each do |scan|

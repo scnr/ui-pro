@@ -77,13 +77,15 @@
            advanced_referring_page_data_flow: '&mdash; Data-flow',
        )
    end
-
 %>
 
-<div id="scrollspy-container" class="affix">
-    <% if @issue.reviewed_by_revision? %>
-        <div id="reviewed-by-revision">
-            <p class="label label-info">
+<%= render partial: 'shared/sidebar_scan', locals: { hide_site_buttons: true } %>
+
+<hr/>
+
+<% if @issue.reviewed_by_revision? %>
+    <div id="reviewed-by-revision">
+        <span class="label label-info label-emphasis">
             Reviewed by
             <%= link_to @issue.reviewed_by_revision,
                         site_scan_revision_path(
@@ -101,14 +103,22 @@
                             ) %>
             <% end %>
             as:
-        </p>
-        </div>
-    <% end %>
+        </span>
+    </div>
+<% end %>
 
-    <%= render 'form' %>
+<%= render 'form' %>
 
+
+<% if @issue.siblings.count > 1 %>
+    <%= render 'issues/siblings' %>
+<% end %>
+
+<hr/>
+
+<div id="scrollspy-container">
     <div>
-        <ul class="nav nav-pills nav-stacked sidenav">
+        <ul class="nav nav-stacked">
             <li>
                 <a href="#top" class="scroll">
                     <i class="fa fa-chevron-up"></i>

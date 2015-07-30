@@ -1,3 +1,16 @@
-<h1>New role</h1>
+<%
+   title 'New'
+   breadcrumb_add 'Sites', sites_path
+   breadcrumb_add @site.url, site_path( @site )
+   breadcrumb_add 'User roles', site_roles_path( @site )
+%>
+
+<% add_to_sidebar do %>
+    <%= render partial: 'sidebar' %>
+<% end %>
+
+<h1>
+    New user role
+</h1>
 
 <%= render 'form' %>

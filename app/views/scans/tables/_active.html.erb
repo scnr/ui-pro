@@ -15,55 +15,6 @@
                                scan: scan,
                                with_status: true
                        } %>
-
-            <td>
-                <% if scan.paused? %>
-                    <%= link_to resume_site_scan_path( @site, scan ),
-                                title: 'Resume scan',
-                                method: :patch,
-                                data: {
-                                        confirm: 'Are you sure you want to resume the scan?'
-                                },
-                                class: 'btn btn-sm btn-success' do %>
-                        <i class="fa fa-play"></i>
-                    <% end %>
-                <% else %>
-                    <%= link_to pause_site_scan_path( @site, scan ),
-                                title: 'Pause scan',
-                                method: :patch,
-                                data: {
-                                        confirm: 'Are you sure you want to pause the scan?'
-                                },
-                                class: 'btn btn-sm btn-warning' do %>
-                        <i class="fa fa-pause"></i>
-                    <% end %>
-
-                    <%= link_to suspend_site_scan_path( @site, scan ),
-                                title: 'Suspend scan',
-                                method: :patch,
-                                data: {
-                                        confirm: 'Are you sure you want to suspend the scan?'
-                                },
-                                class: 'btn btn-sm btn-default' do %>
-                        <i class="fa fa-eject"></i>
-                    <% end %>
-                <% end %>
-
-                <%= link_to abort_site_scan_path( @site, scan ),
-                            title: 'Abort scan',
-                            method: :patch,
-                            data: {
-                                    confirm: 'Are you sure you want to stop the scan?'
-                            },
-                            class: 'btn btn-sm btn-danger' do %>
-                    <i class="fa fa-stop"></i>
-                <% end %>
-
-                <%= link_to edit_site_scan_path( @site, scan ),
-                            class: 'btn btn-sm btn-warning' do %>
-                    <i class="fa fa-pencil"></i>
-                <% end %>
-            </td>
         </tr>
     <% end %>
     </tbody>

@@ -63,7 +63,7 @@ class Scan < ActiveRecord::Base
     end
 
     def scheduled?
-        !!schedule.start_at || recurring?
+        schedule.scheduled?
     end
 
     def to_s

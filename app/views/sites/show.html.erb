@@ -34,106 +34,27 @@
 </div>
 
 <div id="site-tabs">
-<% if @issues_summary %>
     <ul class="nav nav-tabs">
-        <li class="<%= 'active' if @active_tab == 'overview' %>">
-            <a href="#!/overview">
-                Overview
+        <li class="active">
+            <a href="#!/issues">
+                Issues
             </a>
         </li>
 
-        <li class="<%= 'active' if @active_tab == 'scans' %>">
+        <li>
             <a href="#!/scans">
                 Scans
             </a>
         </li>
-
-        <li class="<%= 'active' if @active_tab == 'roles' %>">
-            <a href="#!/roles">
-                Roles
-            </a>
-        </li>
-
-        <li class="<%= 'active' if @active_tab == 'settings' %>">
-            <a href="#!/settings">
-                Settings
-            </a>
-        </li>
     </ul>
 
     <div class="tab-content">
-        <div class="tab-pane <%= 'active' if @active_tab == 'overview' %>" id="overview">
+        <div class="tab-pane active" id="issues">
             <%= render partial: 'shared/scans_with_issue_summary' %>
         </div>
 
-        <div class="tab-pane <%= 'active' if @active_tab == 'scans' %>" id="scans">
+        <div class="tab-pane" id="scans">
             <%= render partial: 'scans/tables' %>
         </div>
-
-        <div data-js="<%= site_roles_path( @site ) %>"
-            class="tab-pane <%= 'active' if @active_tab == 'roles' %>"
-            id="roles">
-            Roles.
-        </div>
-
-        <div class="tab-pane <%= 'active' if @active_tab == 'settings' %>" id="settings">
-            <div class="row">
-                <div class="col-md-2">
-                    <%= render partial: 'sites/profile/sidebar' %>
-                </div>
-                <div class="col-md-10">
-                    <%= render partial: 'sites/profile/form' %>
-                </div>
-            </div>
-        </div>
     </div>
-<% else %>
-    <ul class="nav nav-tabs">
-        <li class="<%= 'active' if @active_tab == 'scan-form' %>">
-            <a href="#!/scan-form">
-                New scan
-            </a>
-        </li>
-
-        <li class="<%= 'active' if @active_tab == 'roles' %>">
-            <a href="#!/roles">
-                Roles
-            </a>
-        </li>
-
-        <li class="<%= 'active' if @active_tab == 'settings' %>">
-            <a href="#!/settings">
-                Settings
-            </a>
-        </li>
-    </ul>
-
-    <div class="tab-content">
-        <div class="tab-pane <%= 'active' if @active_tab == 'scan-form' %>" id="scan-form">
-            <div class="row">
-                <div class="col-md-12">
-                    <%= render 'scans/form' %>
-                </div>
-            </div>
-        </div>
-
-        <div data-js="<%= site_roles_path( @site ) %>"
-             class="tab-pane <%= 'active' if @active_tab == 'roles' %>"
-             id="roles">
-            Roles.
-        </div>
-
-        <div class="tab-pane <%= 'active' if @active_tab == 'settings' %>" id="settings">
-            <div class="row">
-                <div class="col-md-2">
-                    <%= render partial: 'sites/profile/sidebar' %>
-                </div>
-                <div class="col-md-10">
-                    <%= render partial: 'sites/profile/form' %>
-                </div>
-            </div>
-        </div>
-    </div>
-
-<% end %>
 </div>

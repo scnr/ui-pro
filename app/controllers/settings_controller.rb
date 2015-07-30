@@ -17,6 +17,8 @@ class SettingsController < ApplicationController
     def update
         respond_to do |format|
             if @settings.update( settings_params )
+                @@slots_total_auto = nil
+
                 format.html { render :edit }
                 format.json { render :show, status: :ok, location: @settings }
             else
@@ -32,7 +34,7 @@ class SettingsController < ApplicationController
         @settings = Settings.record
 
         # TODO: Quite slow when a few scans are running.
-        @slots_total_auto = ScanScheduler.slots_total_auto
+        @slots_total_auto = (@@slots_total_auto ||= ScanScheduler.slots_total_auto)
     end
 
     def settings_params

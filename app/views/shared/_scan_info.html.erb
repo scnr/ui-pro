@@ -4,7 +4,7 @@
 
 Using <%= link_to scan.profile, profile_path( scan.profile ) %>
 from <%= link_to scan.user_agent, user_agent_path( scan.user_agent ) %>
-as <%= link_to scan.site_role, site_role_path_js( scan.site, scan.site_role ) %>.
+as <%= link_to scan.site_role, site_role_path( scan.site, scan.site_role ) %>.
 
 <% if (last_revision = scan.last_revision) %>
     <br/>

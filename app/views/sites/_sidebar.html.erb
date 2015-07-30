@@ -3,60 +3,65 @@
    scan_data = @issues_summary[:scan_data]
 %>
 
-<ul id="site-sidebar" class="nav nav-pills nav-stacked">
-    <li>&nbsp;</li>
+<%= render 'shared/sidebar_site' %>
 
-    <li class="<%= 'active' if request.path == site_path( @site ) %>">
-        <%= link_to site_path( @site, filter_params ) do %>
-            Site overview
-        <% end %>
+<% if scans.any? %>
 
-        <hr/>
+<hr/>
+
+<ul id="sidebar-scans" class="nav nav-pills nav-stacked">
+    <li class="nav-header">
+        <a>
+            Scans
+        </a>
     </li>
 
-    <% scans.each do |scan|
-        max_severity   = scan_data[scan.id] ?
-                scan_data[scan.id][:max_severity] : nil
+    <%
+       scans.each do |scan|
+            max_severity   = scan_data[scan.id] ?
+                    scan_data[scan.id][:max_severity] : nil
 
-        issue_count    = scan_data[scan.id] ?
-                scan_data[scan.id][:issue_count] : 0
+            issue_count    = scan_data[scan.id] ?
+                    scan_data[scan.id][:issue_count] : 0
 
-        revision_count = scan.revisions.size
+            revision_count = scan.revisions.size
 
-        if revision_count > 0 && issue_count == 0
-            max_severity = 'none'
-        end
+            if revision_count > 0 && issue_count == 0
+                max_severity = 'none'
+            end
     %>
 
-    <li
-        id="site-sidebar-scan-id-<%= scan.id %>"
-        <% if revision_count > 0 %>
-            <% if issue_count > 0 %>
-                title="<%= pluralize issue_count, 'issue' %> with a maximum severity of <%= max_severity %>."
-            <% else %>
-                title="<%= pluralize issue_count, 'issue' %>."
-            <% end %>
-        <% else %>
-            title="Has not run yet."
-        <% end %>
-    >
-        <%= link_to site_scan_path( @site, scan, filter_params ) do %>
-            <%= scan.name %>
+        <li
+            id="site-sidebar-scan-id-<%= scan.id %>"
 
-            <i class="fa fa-arrow-right">
-                <% if revision_count > 0 %>
-                    <span class="badge badge-severity-<%= max_severity %>">
-                        <%= issue_count %>
-                    </span>
+            <% if revision_count > 0 %>
+                <% if issue_count > 0 %>
+                    title="<%= pluralize issue_count, 'issue' %> with a maximum severity of <%= max_severity %>."
+                <% else %>
+                    title="<%= pluralize issue_count, 'issue' %>."
                 <% end %>
-            </i>
-        <% end %>
-    </li>
+            <% else %>
+                title="Has not run yet."
+            <% end %>
+        >
+            <%= link_to site_scan_path( @site, scan, filter_params ) do %>
+                <%= scan.name %>
 
-    <li class="sidebar-info" id="site-sidebar-scan-id-<%= scan.id %>-info">
-        <small class="text-muted">
-            <%= render partial: '/shared/scan_info', locals: { scan: scan } %>
-        </small>
-    </li>
+                <i class="fa fa-arrow-right">
+                    <% if revision_count > 0 %>
+                        <span class="badge badge-severity-<%= max_severity %>">
+                            <%= issue_count %>
+                        </span>
+                    <% end %>
+                </i>
+            <% end %>
+        </li>
+
+        <li class="sidebar-info" id="site-sidebar-scan-id-<%= scan.id %>-info">
+            <small class="text-muted">
+                <%= render partial: '/shared/scan_info', locals: { scan: scan } %>
+            </small>
+        </li>
     <% end %>
 </ul>
+<% end %>

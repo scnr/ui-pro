@@ -14,25 +14,6 @@
                                scan: scan,
                                with_status: false
                        } %>
-
-            <td>
-                <%= link_to restore_site_scan_path( @site, scan ),
-                            method: :patch,
-                            title: 'Restore scan',
-                            class: 'btn btn-sm btn-success',
-                            data: {
-                                    confirm: 'Are you sure you want to restore the scan?'
-                            } do %>
-                    <i class="fa fa-play-circle"></i>
-                <% end %>
-
-                <%= link_to [@site, scan], method: :delete,
-                            title: 'Delete scan',
-                            class: 'btn btn-sm btn-danger',
-                            data: { confirm: 'Are you sure you want to delete this scan?' } do %>
-                    <i class="fa fa-trash"></i>
-                <% end %>
-            </td>
         </tr>
     <% end %>
     </tbody>

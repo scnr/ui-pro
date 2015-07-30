@@ -18,7 +18,7 @@ feature 'Site profile form' do
         user.sites << site
 
         login_as user, scope: :user
-        visit site_path( site )
+        visit edit_site_path( site )
     end
 
     after(:each) do
@@ -33,20 +33,15 @@ feature 'Site profile form' do
         find('#sidebar button').click
     end
 
-    def open_settings_tab
-        within '#site-tabs' do
-            click_link 'Settings'
-        end
-    end
-
     let(:profile) { site.reload.profile }
+
+    it_behaves_like 'Site sidebar'
 
     scenario 'sees profile form' do
         expect(find('.profile-form')).to be_truthy
     end
 
     scenario 'can submit form using sidebar button', js: true do
-        open_settings_tab
         fill_in 'Parameter redundancy limit', with: 10
 
         submit_via_sidebar
@@ -56,13 +51,11 @@ feature 'Site profile form' do
     end
 
     feature 'when the form is submitted' do
-        scenario 'it shows the form', js: true do
-            open_settings_tab
-
+        scenario 'redirects to site', js: true do
             submit_via_sidebar
             sleep 1
 
-            expect(find('.profile-form')).to be_truthy
+            expect(current_url).to end_with site_path( site )
         end
     end
 
@@ -116,7 +109,7 @@ feature 'Site profile form' do
                 before do
                     https_revision
                     user.sites << https_site
-                    visit site_path( https_site )
+                    visit edit_site_path( https_site )
                 end
 
                 scenario 'can set Only follow HTTPS URLs' do
@@ -402,7 +395,6 @@ feature 'Site profile form' do
 
             feature 'preset', js: true do
                 before do
-                    open_settings_tab
                     click_button button
                     submit_via_sidebar
 

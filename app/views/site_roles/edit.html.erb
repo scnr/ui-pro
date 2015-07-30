@@ -1,3 +1,17 @@
-<h1>Editing role</h1>
+<%
+   title 'Editing'
+   breadcrumb_add 'Sites', sites_path
+   breadcrumb_add @site.url, site_path( @site )
+   breadcrumb_add 'User roles', site_roles_path( @site )
+   breadcrumb_add @site_role, site_roles_path( @site, @site_role )
+%>
+
+<% add_to_sidebar do %>
+    <%= render partial: 'sidebar' %>
+<% end %>
+
+<h1>
+    Editing <%= link_to @site_role, site_roles_path( @site, @site_role ) %>
+</h1>
 
 <%= render 'form' %>

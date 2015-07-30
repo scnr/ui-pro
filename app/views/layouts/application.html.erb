@@ -24,8 +24,29 @@
 </header>
 
 <main role="main">
-    <%= render 'layouts/messages' %>
-    <%= yield %>
+    <div class="row">
+
+        <%
+           offset = nil
+           size   = 12
+        %>
+
+        <% if sidebar %>
+            <div id="sidebar" class="affix col-md-2">
+                <%= sidebar %>
+            </div>
+
+            <%
+               offset = 'col-md-offset-2'
+               size = 10
+            %>
+        <% end %>
+
+        <div class="col-md-<%= size %> <%= offset %>">
+            <%= render 'layouts/messages' %>
+            <%= yield %>
+        </div>
+    </div>
 </main>
 </body>
 </html>

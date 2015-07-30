@@ -33,26 +33,18 @@
     <p class="pull-left label label-emphasis label-severity-<%= @issue.severity.to_s.downcase %>">
         <%= @issue.severity.to_s.capitalize %> severity
     </p>
-
 </div>
 
 <%
    has_references = (@issue.type.references.any? || @issue.type.cwe) ? true : nil
-   has_siblings   = (@issue.siblings.size > 1) ? true : nil
 %>
 
 <div class="row" id="info">
-    <div class="col-md-<%= 12 - ([has_siblings, has_references].compact.size * 2) %>">
+    <div class="col-md-<%= has_references ? 10 : 12 %>">
         <div class="description">
             <%= md @issue.type.description %>
         </div>
     </div>
-
-    <% if has_siblings %>
-        <div class="col-md-2" id="siblings">
-            <%= render 'issues/siblings' %>
-        </div>
-    <% end %>
 
     <% if has_references %>
     <div class="col-md-2 references">

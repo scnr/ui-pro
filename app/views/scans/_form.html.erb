@@ -44,7 +44,7 @@
     <%= f.simple_fields_for :schedule do |sf| %>
     <div class="row">
         <% if !@scan.active? %>
-            <div class="col-md-6">
+            <div class="col-md-8">
                 <h2>Schedule</h2>
 
                 <div class="row">
@@ -72,7 +72,7 @@
             </div>
         <% end %>
 
-        <div class="col-md-6">
+        <div class="col-md-4">
             <h2>Frequency</h2>
 
             <%= sf.input :frequency_format, label: false, wrapper_html: { class: 'hide' } %>

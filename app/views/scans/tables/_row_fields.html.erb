@@ -29,7 +29,7 @@
 </td>
 
 <td>
-    <%= link_to scan.site_role, site_role_path_js( scan.site, scan.site_role ) %>
+    <%= link_to scan.site_role, site_role_path( scan.site, scan.site_role ) %>
 </td>
 
 <td>
@@ -70,4 +70,9 @@
     <span class="scan-max-severity label-lg label-severity label-severity-<%= scan_max_severity %>">
         <%= scan_max_severity.capitalize %>
     </span>
+</td>
+
+<td>
+    <%= render partial: '/scans/buttons',
+               locals: { scan: scan } %>
 </td>

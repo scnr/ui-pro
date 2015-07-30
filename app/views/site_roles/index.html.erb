@@ -1,16 +1,27 @@
-<h2>
-    User roles
+<%
+   title 'User roles'
+   breadcrumb_add 'Sites', sites_path
+   breadcrumb_add @site.url, site_path( @site )
+%>
 
-    <a href="#!/roles/new"
-       title="New scan"
-       class="btn btn-xs btn-primary"
-       data-js="<%= new_site_role_path(@site) %>">
-        <i class="fa fa-plus"></i>
-    </a>
-</h2>
+<% add_to_sidebar do %>
+    <%= render partial: 'sidebar' %>
+<% end %>
 
-<div class="lead">
-    Use web application roles to perform scans as users with different levels of access.
+<div class="page-header">
+    <h1>
+        User roles
+
+        <a title="New scan"
+           class="btn btn-xs btn-primary"
+           href="<%= new_site_role_path(@site) %>">
+            <i class="fa fa-plus"></i>
+        </a>
+    </h1>
+
+    <div class="lead">
+        Use web application roles to perform scans as users with different privilege levels.
+    </div>
 </div>
 
 <%= render partial: 'table' %>

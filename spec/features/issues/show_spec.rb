@@ -48,6 +48,8 @@ feature 'Issue page' do
         refresh
     end
 
+    it_behaves_like 'Scan sidebar', without_site_buttons: true
+
     scenario 'has title' do
         expect(page).to have_title issue.to_s
         expect(page).to have_title revision.to_s
@@ -114,6 +116,27 @@ feature 'Issue page' do
     feature 'sidebar' do
         let(:sidebar) { find '#sidebar' }
 
+        feature 'when there are siblings' do
+            let(:siblings) { find '#sidebar-issue-siblings' }
+
+            before do
+                sibling
+                refresh
+            end
+
+            scenario 'links to them' do
+                path = site_scan_revision_issue_path(
+                    site,
+                    sibling.revision.scan,
+                    sibling.revision,
+                    sibling
+                )
+
+                expect(siblings).to have_content "#{sibling.revision} of #{sibling.revision.scan}"
+                expect(siblings).to have_xpath "//a[@href='#{path}']"
+            end
+        end
+
         feature 'when reviewed by a revision' do
             scenario 'it does not show the relevant info' do
                 expect(sidebar).to_not have_css '#reviewed-by-revision'
@@ -132,12 +155,12 @@ feature 'Issue page' do
             end
 
             scenario 'shows a link to the revision' do
-                expect(reviewed_by_revision.find('p.label-info')).to have_xpath "a[@href='#{site_scan_revision_path( site, scan, revision )}']"
+                expect(reviewed_by_revision.find('.label-info')).to have_xpath "a[@href='#{site_scan_revision_path( site, scan, revision )}']"
             end
 
             feature 'when the revision is from the same scan' do
                 scenario 'does not show the scan' do
-                    expect(reviewed_by_revision.find('p.label-info')).to_not have_xpath "a[@href='#{site_scan_path( site, scan )}']"
+                    expect(reviewed_by_revision.find('.label-info')).to_not have_xpath "a[@href='#{site_scan_path( site, scan )}']"
                 end
             end
 
@@ -151,7 +174,7 @@ feature 'Issue page' do
                 end
 
                 scenario 'shows a link the scan' do
-                    expect(reviewed_by_revision.find('p.label-info')).to have_xpath "//a[@href='#{site_scan_path( site, other_scan )}']"
+                    expect(reviewed_by_revision.find('.label-info')).to have_xpath "//a[@href='#{site_scan_path( site, other_scan )}']"
                 end
             end
         end
@@ -188,25 +211,6 @@ feature 'Issue page' do
             refresh
 
             expect(info.find('.description strong')).to have_content 'Stuff'
-        end
-
-        feature 'when there are siblings' do
-            before do
-                sibling
-                refresh
-            end
-
-            scenario 'links to them' do
-                path = site_scan_revision_issue_path(
-                    site,
-                    sibling.revision.scan,
-                    sibling.revision,
-                    sibling
-                )
-
-                expect(info.find('#siblings')).to have_content "#{sibling.revision} of #{sibling.revision.scan}"
-                expect(info.find('#siblings')).to have_xpath "//a[@href='#{path}']"
-            end
         end
 
         feature 'when there are no siblings' do

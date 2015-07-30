@@ -1,7 +1,7 @@
 include Warden::Test::Helpers
 Warden.test_mode!
 
-feature 'Site roles index page', js: true do
+feature 'Site roles index page' do
 
     subject { FactoryGirl.create :site_role, name: 'Stuff', site: site }
     let(:user) { FactoryGirl.create :user }
@@ -17,27 +17,21 @@ feature 'Site roles index page', js: true do
         user.sites << site
 
         login_as( user, scope: :user )
-        visit site_path( site )
-
-        click_link 'Roles'
+        visit site_roles_path( site )
     end
 
-    scenario 'can be visited by URL fragment' do
-        visit "#{site_path( site )}#!/roles"
-        expect(find('h2')).to have_content 'User roles'
-    end
+    it_behaves_like 'Site sidebar'
 
     scenario 'user sees heading' do
-        expect(find('h2')).to have_content 'User roles'
+        expect(find('h1')).to have_content 'User roles'
     end
 
     scenario 'user sees New button in heading' do
-        find('h2').find( :xpath, "//a[@href='#!/roles/new']" ).click
-        expect(page).to have_css 'form#new_site_role'
+        expect(find('h1')).to have_xpath "//a[@href='#{new_site_role_path( site )}']"
     end
 
     feature 'table' do
-        let(:table) { find '#roles table' }
+        let(:table) { find '#roles-table' }
 
         scenario 'has show link' do
             click_link subject.name
@@ -57,14 +51,12 @@ feature 'Site roles index page', js: true do
         end
 
         scenario 'has edit link' do
-            find( :xpath, "//a[@href='#!/roles/#{subject.id}/edit']" ).click
-            expect(page).to have_css "form#edit_site_role_#{subject.id}"
+            expect(table).to have_xpath "//a[@href='#{edit_site_role_path( site, subject )}']"
         end
 
         feature 'when there are no associated scans' do
             scenario 'has delete button' do
-                find(:xpath, "//a[@href='#{site_role_path( site, subject )}' and @data-method='delete']" ).click
-                expect(table).to_not have_content subject.name
+                expect(table).to have_xpath "//a[@href='#{site_role_path( site, subject )}' and @data-method='delete']"
             end
         end
 
@@ -73,7 +65,7 @@ feature 'Site roles index page', js: true do
                 subject.scans << scan
                 subject.scans << FactoryGirl.create( :scan, name: 'Fff', site: site )
 
-                visit "#{site_path( site )}#!/roles"
+                visit current_url
 
                 expect(page).to_not have_xpath "//a[@href='#{site_role_path( site, subject )}' and @data-method='delete']"
             end

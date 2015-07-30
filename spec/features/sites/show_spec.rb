@@ -27,6 +27,8 @@ feature 'Site page' do
 
     let(:site_info) { find '#site-info' }
 
+    include_examples 'Site sidebar'
+
     scenario 'has title' do
         expect(page).to have_title site.url
         expect(page).to have_title 'Sites'
@@ -57,8 +59,8 @@ feature 'Site page' do
         end
     end
 
-    scenario 'user sees the site URL as a heading' do
-        expect(site_info.find('h1').text).to match site.url
+    scenario 'user sees Overview as heading' do
+        expect(site_info.find('h1').text).to have_content 'Overview'
     end
 
     feature 'when the site has been scanned' do

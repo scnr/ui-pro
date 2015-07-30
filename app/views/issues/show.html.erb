@@ -6,11 +6,12 @@
    breadcrumb_add @revision, site_scan_revision_path( @site, @scan, @revision )
 %>
 
+<% add_to_sidebar do %>
+    <%= render partial: 'sidebar' %>
+<% end %>
+
 <div id="issues">
-    <div id="sidebar" class="col-md-2">
-        <%= render partial: 'sidebar' %>
-    </div>
-    <div class="col-md-10">
+    <div class="col-md-12">
         <%= render @issue %>
     </div>
 </div>

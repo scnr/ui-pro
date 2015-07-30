@@ -28,12 +28,26 @@ class ScansController < ApplicationController
 
     # GET /scans/new
     def new
+        @issues_summary = issues_summary_data(
+            site:    @site,
+            sitemap: @site.sitemap_entries,
+            scans:   @site.scans.order( id: :desc ),
+            issues:  @site.issues
+        )
+
         @scan = @site.scans.new
         @scan.build_schedule
     end
 
     # GET /scans/1/edit
     def edit
+        @issues_summary = issues_summary_data(
+            site:      @site,
+            sitemap:   @scan.sitemap_entries,
+            scans:     [@scan],
+            revisions: @scan.revisions.order( id: :desc ),
+            issues:    @scan.issues
+        )
     end
 
     # POST /scans

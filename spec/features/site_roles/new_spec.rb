@@ -17,10 +17,7 @@ feature 'New site role page', js: true do
         user.sites << site
 
         login_as( user, scope: :user )
-        visit site_path( site )
-
-        click_link 'Roles'
-        find( :xpath, "//a[@href='#!/roles/new']" ).click
+        visit new_site_role_path( site )
     end
 
     def submit
@@ -58,10 +55,7 @@ EOJS
 )
     end
 
-    scenario 'can be visited by URL fragment' do
-        visit "#{site_path( site )}#!/roles/new"
-        expect(page).to have_css 'form#new_site_role'
-    end
+    it_behaves_like 'Site sidebar'
 
     scenario 'can create new role' do
         fill_in_form

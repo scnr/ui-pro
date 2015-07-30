@@ -14,47 +14,6 @@
                                scan: scan,
                                with_status: true
                        } %>
-
-            <td>
-                <%
-                    msg = 'Are you sure you want to repeat this scan'
-
-                    if scan.scheduled?
-                        msg << " ahead of schedule?\n"
-
-                        if scan.schedule.recurring?
-                            msg << 'The time of subsequent occurrences will be adjusted based on this run.'
-                        else
-                            msg << 'The next scheduled occurrence will be cancelled.'
-                        end
-                    else
-                        msg << '?'
-                    end
-                %>
-                <%= link_to repeat_site_scan_path( @site, scan ),
-                            method: :post,
-                            title: 'Repeat scan',
-                            data: { confirm: msg },
-                            class: 'btn btn-sm btn-success' do %>
-                    <i class="fa fa-repeat"></i>
-                <% end %>
-
-                <%= link_to edit_site_scan_path( @site, scan ),
-                            title: 'Edit scan',
-                            class: 'btn btn-sm btn-warning' do %>
-                    <i class="fa fa-pencil"></i>
-                <% end %>
-
-                <%= link_to [@site, scan],
-                            title: 'Delete scan',
-                            method: :delete,
-                            class: 'btn btn-sm btn-danger',
-                            data: {
-                                    confirm: 'Are you sure you want to delete this scan?'
-                            } do %>
-                    <i class="fa fa-trash"></i>
-                <% end %>
-            </td>
         </tr>
     <% end %>
     </tbody>

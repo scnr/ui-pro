@@ -28,6 +28,8 @@ feature 'Scan page' do
         refresh
     end
 
+    it_behaves_like 'Scan sidebar'
+
     let(:info) { find '#scan-info' }
 
     feature 'when the scan has revisions' do
@@ -66,10 +68,6 @@ feature 'Scan page' do
                 expect(info.find('h1').text).to include scan.name
             end
 
-            scenario 'user sees scan url in heading' do
-                expect(info.find('h1').text).to match scan.url
-            end
-
             feature 'when page filtering is enabled' do
                 scenario 'user sees the page URL in the heading'
             end
@@ -92,7 +90,7 @@ feature 'Scan page' do
             end
 
             scenario 'user sees a link to the site role' do
-                expect(info).to have_xpath "//a[@href='#{site_role_path_js(site, scan.site_role)}']"
+                expect(info).to have_xpath "//a[@href='#{site_role_path(site, scan.site_role)}']"
             end
 
             scenario 'user can see edit link' do
@@ -155,7 +153,7 @@ feature 'Scan page' do
             let(:sidebar) { find '#sidebar' }
 
             feature 'revision list' do
-                let(:revisions) { find '#scan-sidebar' }
+                let(:revisions) { sidebar.find '#sidebar-revisions' }
 
                 scenario 'user sees index' do
                     expect(revisions).to have_content "##{revision.index}"

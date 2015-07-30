@@ -8,30 +8,30 @@
     }
 %>
 
-<div id="sidebar" class="affix">
-    <div id="scrollspy-container">
-        <% if submit %>
-            <button class="btn btn-default btn-primary" onclick="$('.profile-form').submit()">
-                <%= @profile.id ? 'Update' : 'Create' %>
-            </button>
-        <% else %>
-            <%= render 'actions', profile: @profile %>
-        <% end %>
+<% if submit %>
+    <button class="btn btn-default btn-primary" onclick="$('.profile-form').submit()">
+        <%= @profile.id ? 'Update' : 'Create' %>
+    </button>
+<% else %>
+    <%= render 'actions', profile: @profile %>
+<% end %>
 
-        <ul class="nav nav-pills nav-stacked sidenav">
+<hr/>
+
+<div id="scrollspy-container">
+    <ul class="nav nav-pills nav-stacked sidenav">
+        <li>
+            <a href="#top" class="scroll">
+                <i class="fa fa-chevron-up"></i>
+                Top
+            </a>
+        </li>
+        <% sections.each do |id, title| %>
             <li>
-                <a href="#top" class="scroll">
-                    <i class="fa fa-chevron-up"></i>
-                    Top
+                <a href="#<%= id.to_s %>" class="scroll">
+                    <%= title.to_s.html_safe %>
                 </a>
             </li>
-            <% sections.each do |id, title| %>
-                <li>
-                    <a href="#<%= id.to_s %>" class="scroll">
-                        <%= title.to_s.html_safe %>
-                    </a>
-                </li>
-            <% end %>
-        </ul>
-    </div>
+        <% end %>
+    </ul>
 </div>

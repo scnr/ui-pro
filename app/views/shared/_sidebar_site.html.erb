@@ -1,0 +1,15 @@
+<%
+   hide_site_buttons = !!local_assigns[:hide_site_buttons]
+%>
+
+<div id="sidebar-site">
+    <h4>
+        <%= link_to_url_with_external display: @site.url,
+                                      external: @site.url,
+                                      internal: @site %>
+    </h4>
+
+    <% if !hide_site_buttons %>
+        <%= render 'shared/sidebar_site_buttons' %>
+    <% end %>
+</div>

@@ -38,8 +38,11 @@ feature 'Edit scan page' do
         refresh
     end
 
+    it_behaves_like 'Scan sidebar'
+
     scenario 'has title' do
-        expect(page).to have_title "Editing #{scan.name}"
+        expect(page).to have_title 'Edit'
+        expect(page).to have_title scan.name
         expect(page).to have_title site.url
         expect(page).to have_title 'Sites'
     end
@@ -55,16 +58,15 @@ feature 'Edit scan page' do
         expect(breadcrumbs.find('li:nth-of-type(3)')).to have_content site.url
         expect(breadcrumbs.find('li:nth-of-type(3) a').native['href']).to eq site_path( site )
 
-        expect(breadcrumbs.find('li:nth-of-type(4)')).to have_content "Editing #{scan.name}"
-        expect(breadcrumbs.find('li:nth-of-type(4) a').native['href']).to eq edit_site_scan_path( site, scan )
+        expect(breadcrumbs.find('li:nth-of-type(4)')).to have_content scan.name
+        expect(breadcrumbs.find('li:nth-of-type(4) a').native['href']).to eq site_scan_path( site, scan )
+
+        expect(breadcrumbs.find('li:nth-of-type(5)')).to have_content 'Edit'
+        expect(breadcrumbs.find('li:nth-of-type(5) a').native['href']).to eq edit_site_scan_path( site, scan )
     end
 
     scenario 'user sees scan name in heading' do
         expect(find('h1').text).to match scan.name
-    end
-
-    scenario 'user sees site url in heading' do
-        expect(find('h1').text).to match site.url
     end
 
     scenario 'user can change the schedule' do

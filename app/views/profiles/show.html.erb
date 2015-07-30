@@ -3,11 +3,12 @@
     breadcrumb_add 'Profiles', profiles_path
 %>
 
+<% add_to_sidebar do %>
+    <%= render partial: 'sidebar', locals: { submit: false } %>
+<% end %>
+
 <div class="row">
-    <div class="col-md-2">
-        <%= render partial: 'sidebar', locals: { submit: false } %>
-    </div>
-    <div class="col-md-10">
+    <div class="col-md-12">
         <%= render @profile %>
     </div>
 </div>

@@ -1,47 +1,16 @@
 <h1>
 
+    <% if @site && !@scan %>
+        Overview
+    <% end %>
+
     <% if @revision %>
         <%= link_to @revision.index.ordinalize, [@site, @scan, @revision] %>
+        revision of
     <% end %>
 
     <% if @scan && @scan.id %>
-        <%= link_to @scan.name, [@site, @scan] %>
-
-        <%= link_to edit_site_scan_path( @site, @scan ),
-                    title: 'Edit scan settings.',
-                    class: 'btn btn-xs btn-warning' do %>
-            <i class="fa fa-pencil"></i>
-        <% end %>
-
-        <%= link_to [@site, @scan], method: :delete,
-                    title: 'Delete scan.',
-                    class: 'btn btn-xs btn-danger',
-                    data: {
-                            confirm: 'Deleting this scan will destroy all ' +
-                                             'associated data, are you sure?'
-                    } do %>
-            <i class="fa fa-trash"></i>
-        <% end %>
-        scan of
-    <% end %>
-
-    <%= link_to_url_with_external display: (@scan && @scan.id) ? @scan.url : @site.url,
-                                  external: @site.url,
-                                  internal: @site %>
-
-    <%= link_to new_site_scan_path( @site ), title: 'Start a new scan.',
-                class: 'btn btn-xs btn-primary' do %>
-        <i class="fa fa-search"></i>
-    <% end %>
-
-    <%= link_to @site, method: :delete,
-                title: 'Delete site.',
-                class: 'btn btn-xs btn-danger',
-                data: {
-                        confirm: 'Deleting this site will destroy all ' +
-                                    'associated data, are you sure?'
-                } do %>
-        <i class="fa fa-trash"></i>
+        <%= link_to @scan.name, [@site, @scan] %> scan
     <% end %>
 
     <% if @sitemap_entry %>

@@ -1,0 +1,22 @@
+<%
+   msg = 'Are you sure you want to repeat this scan'
+
+   if scan.scheduled?
+       msg << " ahead of schedule?\n"
+
+       if scan.schedule.recurring?
+           msg << 'The time of subsequent occurrences will be adjusted based on this run.'
+       else
+           msg << 'The next scheduled occurrence will be cancelled.'
+       end
+   else
+       msg << '?'
+   end
+%>
+<%= link_to repeat_site_scan_path( scan.site, scan ),
+            method: :post,
+            title: 'Repeat scan',
+            data: { confirm: msg },
+            class: 'btn btn-sm btn-success' do %>
+    <i class="fa fa-repeat"></i>
+<% end %>

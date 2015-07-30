@@ -3,7 +3,7 @@ class SitesController < ApplicationController
 
     before_filter :authenticate_user!
 
-    before_action :set_site, only: [:show, :update, :destroy]
+    before_action :set_site, only: [:show, :edit, :update, :destroy]
 
     # GET /sites
     # GET /sites.json
@@ -12,9 +12,17 @@ class SitesController < ApplicationController
         @site = Site.new
     end
 
+    def edit
+    end
+
     # GET /sites/1
     # GET /sites/1.json
     def show
+        if @site.scans.size == 0
+            redirect_to new_site_scan_path( @site )
+            return
+        end
+
         prepare_show_data
     end
 
@@ -29,7 +37,6 @@ class SitesController < ApplicationController
                 format.html { redirect_to site_url(@site), notice: 'Site was successfully created.' }
                 format.json { render :show, status: :created, location: @site }
             else
-                prepare_show_data
                 set_sites
 
                 format.html { render :index }
@@ -43,17 +50,10 @@ class SitesController < ApplicationController
     def update
         respond_to do |format|
             if @site.update( site_profile_params )
-                session[:active_tab] = 'settings'
-
-                format.html do
-                    redirect_to @site, notice: 'Site was successfully updated.'
-                end
+                format.html { redirect_to site_url(@site), notice: 'Site was successfully updated.' }
                 format.json { render :show, status: :ok, location: @site }
             else
-                prepare_show_data
-                @active_tab = 'settings'
-
-                format.html { render :show }
+                format.html { render :edit }
                 format.json { render json: @site.errors, status: :unprocessable_entity }
             end
         end
@@ -122,32 +122,21 @@ class SitesController < ApplicationController
     end
 
     def prepare_show_data
-        if @site.scans.size == 0
-            @scan = @site.scans.new
-            @scan.build_schedule
-            @active_tab = 'scan-form'
-        else
-            @scheduled_scans   = @site.scans.scheduled.includes(:site_role).
-                includes(:user_agent).includes(:profile)
-            @unscheduled_scans = @site.scans.unscheduled.includes(:site_role).
-                includes(:user_agent).includes(:profile)
+        @scheduled_scans   = @site.scans.scheduled.includes(:site_role).
+            includes(:user_agent).includes(:profile)
+        @unscheduled_scans = @site.scans.unscheduled.includes(:site_role).
+            includes(:user_agent).includes(:profile)
 
-            @scans = @site.scans.includes(:revisions).includes(:site_role).
-                includes(:user_agent).includes(:profile).order( id: :desc )
+        @scans = @site.scans.includes(:revisions).includes(:site_role).
+            includes(:user_agent).includes(:profile).order( id: :desc )
 
-            @issues_summary = issues_summary_data(
-                site:      @site,
-                sitemap:   @site.sitemap_entries,
-                scans:     @scans,
-                revisions: @site.revisions,
-                issues:    @site.issues
-            )
-            @active_tab = 'overview'
-        end
-
-        if session[:active_tab]
-            @active_tab = session.delete(:active_tab)
-        end
+        @issues_summary = issues_summary_data(
+            site:      @site,
+            sitemap:   @site.sitemap_entries,
+            scans:     @scans,
+            revisions: @site.revisions,
+            issues:    @site.issues
+        )
     end
 
 end

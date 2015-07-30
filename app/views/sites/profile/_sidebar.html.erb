@@ -9,14 +9,19 @@
 }
 %>
 
-<div id="scrollspy-container">
-    <ul id="sidebar" class="affix nav nav-pills nav-stacked sidenav">
-        <li>
-            <button class="btn btn-default btn-primary" onclick="$('.profile-form').submit()">
-                Save
-            </button>
-        </li>
+<%= render 'shared/sidebar_site' %>
 
+<hr/>
+
+<button class="btn btn-default btn-primary"
+        onclick="$('.profile-form').submit()">
+    Save
+</button>
+
+<hr/>
+
+<div id="scrollspy-container">
+    <ul class="nav nav-pills nav-stacked">
         <li>
             <a href="#top" class="scroll">
                 <i class="fa fa-chevron-up"></i>

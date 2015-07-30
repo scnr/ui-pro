@@ -35,6 +35,8 @@ feature 'New scan page' do
         visit new_site_scan_path( site )
     end
 
+    it_behaves_like 'Site sidebar'
+
     scenario 'has title' do
         expect(page).to have_title 'New scan'
         expect(page).to have_title site.url
@@ -54,10 +56,6 @@ feature 'New scan page' do
 
         expect(breadcrumbs.find('li:nth-of-type(4)')).to have_content 'New scan'
         expect(breadcrumbs.find('li:nth-of-type(4) a').native['href']).to eq new_site_scan_path( site )
-    end
-
-    scenario 'user sees site url in heading' do
-        expect(find('h1').text).to match site.url
     end
 
     feature 'form', js: true do

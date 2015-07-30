@@ -1,0 +1,34 @@
+<%
+   hide_site_buttons = !!local_assigns[:hide_site_buttons]
+%>
+
+<%= render partial: 'shared/sidebar_site',
+           locals: { hide_site_buttons: hide_site_buttons } %>
+
+<hr/>
+
+<div id="sidebar-scan">
+    <ul class="nav nav-stacked">
+        <li class="<%= 'active' if request.path == site_scan_path( @site, @scan ) %>">
+            <%= link_to site_scan_path( @scan.site, @scan, filter_params ) do %>
+                <% if @issue %>
+                    <i class="fa fa-arrow-left"></i>
+                <% end %>
+
+                <%= @scan %> scan
+            <% end %>
+        </li>
+    </ul>
+
+    <% if !@scan.status %>
+        <span class="scan-status label label-emphasis label-default" >
+            <%= @scan.scheduled? ? 'Pending' : 'Unscheduled' %>
+        </span>
+    <% else %>
+        <span class="scan-status label label-emphasis label-<%= status_to_label( @scan.status ) %>" >
+            <%= @scan.status.to_s.capitalize %>
+        </span>
+    <% end %>
+
+    <%= render partial: '/scans/buttons', locals: { scan: @scan } %>
+</div>

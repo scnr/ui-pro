@@ -21,7 +21,7 @@ shared_examples_for 'Site scan tables row fields' do
 
     scenario 'user sees site role' do
         expect(scans).to have_content scan.site_role
-        expect(scans).to have_xpath "//a[@href='#{site_role_path_js( scan.site, scan.site_role )}']"
+        expect(scans).to have_xpath "//a[@href='#{site_role_path( scan.site, scan.site_role )}']"
     end
 
     scenario 'user sees duration' do

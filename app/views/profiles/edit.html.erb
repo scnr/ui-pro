@@ -5,11 +5,12 @@
 
 <h1>Editing profile</h1>
 
+<% add_to_sidebar do %>
+    <%= render partial: 'sidebar' %>
+<% end %>
+
 <div class="row">
-    <div class="col-md-2">
-        <%= render partial: 'sidebar' %>
-    </div>
-    <div class="col-md-10">
+    <div class="col-md-12">
         <%= render 'form' %>
     </div>
 </div>

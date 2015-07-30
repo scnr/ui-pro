@@ -4,8 +4,12 @@
    breadcrumb_add @site.url, site_path( @site )
 %>
 
+<% add_to_sidebar do %>
+    <%= render 'shared/sidebar_site' %>
+<% end %>
+
 <h1>
-    New scan for <%= link_to @scan.site, @scan.site %>
+    New scan
 </h1>
 
 <div class="row">
