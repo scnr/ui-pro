@@ -1,7 +1,7 @@
 include Warden::Test::Helpers
 Warden.test_mode!
 
-feature 'Schedules index page', js: true do
+feature 'Frozen scan schedules table' do
 
     subject { scan.schedule }
     let(:scan) { FactoryGirl.create :scan, name: 'Stuff', site: site }
@@ -14,15 +14,16 @@ feature 'Schedules index page', js: true do
     end
 
     def refresh
-        visit "#{site_path( site )}#!/scans"
+        visit site_scans_path( site )
     end
 
     before do
         scan.revisions.create!
-
         user.sites << site
 
         login_as( user, scope: :user )
+
+        refresh
     end
 
     let(:schedule) { find( 'table#scans-schedule-frozen tbody tr' ) }

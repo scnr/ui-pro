@@ -38,13 +38,19 @@ feature 'New scan page' do
     it_behaves_like 'Site sidebar'
     it_behaves_like 'Scans sidebar', without_filtering: true
 
-    scenario 'selects sidebar button' do
-        btn = find( "#sidebar-site a[@href='#{current_path}']" )
-        expect(btn[:class]).to include 'disabled btn btn-lg'
+    scenario 'selects new scan sidebar button' do
+        btn = find( "#sidebar-site a[@href='#{new_site_scan_path(site)}']" )
+        expect(btn[:class]).to include 'btn-lg'
+    end
+
+    scenario 'selects scans sidebar button' do
+        btn = find( "#sidebar-site a[@href='#{site_scans_path(site)}']" )
+        expect(btn[:class]).to include 'btn-lg'
     end
 
     scenario 'has title' do
-        expect(page).to have_title 'New scan'
+        expect(page).to have_title 'New'
+        expect(page).to have_title 'Scans'
         expect(page).to have_title site.url
         expect(page).to have_title 'Sites'
     end
@@ -60,8 +66,11 @@ feature 'New scan page' do
         expect(breadcrumbs.find('li:nth-of-type(3)')).to have_content site.url
         expect(breadcrumbs.find('li:nth-of-type(3) a').native['href']).to eq site_path( site )
 
-        expect(breadcrumbs.find('li:nth-of-type(4)')).to have_content 'New scan'
-        expect(breadcrumbs.find('li:nth-of-type(4) a').native['href']).to eq new_site_scan_path( site )
+        expect(breadcrumbs.find('li:nth-of-type(4)')).to have_content 'Scans'
+        expect(breadcrumbs.find('li:nth-of-type(4) a').native['href']).to eq site_scans_path( site )
+
+        expect(breadcrumbs.find('li:nth-of-type(5)')).to have_content 'New'
+        expect(breadcrumbs.find('li:nth-of-type(5) a').native['href']).to eq new_site_scan_path( site )
     end
 
     feature 'form', js: true do

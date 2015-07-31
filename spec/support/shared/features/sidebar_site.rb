@@ -19,6 +19,13 @@ shared_examples_for 'Site sidebar' do |options = {}|
                 expect(btn).to have_css 'i.fa.fa-plus'
             end
 
+            scenario 'includes scans button' do
+                expect(site_sidebar).to have_xpath "a[@href='#{site_scans_path(site)}']"
+
+                btn = site_sidebar.find( "a[@href='#{site_scans_path(site)}']" )
+                expect(btn).to have_css 'i.fa.fa-tasks'
+            end
+
             scenario 'includes link to user roles' do
                 expect(site_sidebar).to have_xpath "a[@href='#{site_roles_path(site)}']"
 

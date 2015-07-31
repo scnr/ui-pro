@@ -11,7 +11,11 @@ class ScansController < ApplicationController
     # GET /scans
     # GET /scans.json
     def index
-        redirect_to @site
+        @scans = @site.scans.includes(:revisions).includes(:site_role).
+            includes(:user_agent).includes(:profile)
+
+        @scheduled_scans   = @scans.scheduled
+        @unscheduled_scans = @scans.unscheduled
     end
 
     # GET /scans/1

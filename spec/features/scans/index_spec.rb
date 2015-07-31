@@ -1,4 +1,4 @@
-feature 'Site page Scans tab' do
+feature 'Scans index' do
 
     let(:user) { FactoryGirl.create :user }
     let(:other_user) { FactoryGirl.create(:user, email: 'other@example.com') }
@@ -6,6 +6,7 @@ feature 'Site page Scans tab' do
     let(:profile) { FactoryGirl.create :profile }
     let(:other_site) { FactoryGirl.create :site, host: 'fff.com' }
     let(:revision) { FactoryGirl.create :revision, scan: scan }
+    let(:scan) { new_scan }
     let(:other_scan) { new_scan }
 
     def new_scan
@@ -17,8 +18,7 @@ feature 'Site page Scans tab' do
         user.sites << site
 
         login_as user, scope: :user
-        visit site_path( site )
-        click_link 'Scans'
+        visit site_scans_path( site )
     end
 
     after(:each) do
@@ -53,6 +53,32 @@ feature 'Site page Scans tab' do
         site.scans << finished
 
         refresh
+    end
+
+    scenario 'selects sidebar button' do
+        btn = find( "#sidebar-site a[@href='#{current_path}']" )
+        expect(btn[:class]).to include 'btn-lg'
+    end
+
+    scenario 'has title' do
+        expect(page).to have_title 'Scans'
+        expect(page).to have_title site.url
+        expect(page).to have_title 'Sites'
+    end
+
+    scenario 'has breadcrumbs' do
+        breadcrumbs = find('ul.bread')
+
+        expect(breadcrumbs.find('li:nth-of-type(1) a').native['href']).to eq root_path
+
+        expect(breadcrumbs.find('li:nth-of-type(2)')).to have_content 'Sites'
+        expect(breadcrumbs.find('li:nth-of-type(2) a').native['href']).to eq sites_path
+
+        expect(breadcrumbs.find('li:nth-of-type(3)')).to have_content site.url
+        expect(breadcrumbs.find('li:nth-of-type(3) a').native['href']).to eq site_path( site )
+
+        expect(breadcrumbs.find('li:nth-of-type(4)')).to have_content 'Scans'
+        expect(breadcrumbs.find('li:nth-of-type(4) a').native['href']).to eq site_scans_path( site )
     end
 
     feature 'that are active' do

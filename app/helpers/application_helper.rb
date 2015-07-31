@@ -4,7 +4,7 @@ module ApplicationHelper
 
     def select_button_class( path )
         default  = 'btn btn-sm'
-        selected = 'disabled btn btn-lg'
+        selected = 'btn btn-lg'
 
         request.env['PATH_INFO'].starts_with?( path ) ? selected : default
     end

@@ -1,0 +1,27 @@
+<%
+   title 'Scans'
+   breadcrumb_add 'Sites', sites_path
+   breadcrumb_add @site.url, site_path( @site )
+%>
+
+<% add_to_sidebar do %>
+    <%= render partial: 'shared/sidebar_site' %>
+<% end %>
+
+<div class="page-header">
+    <h1>
+        Scans
+
+        <a title="New scan"
+           class="btn btn-xs btn-primary"
+           href="<%= new_site_scan_path(@site) %>">
+            <i class="fa fa-plus"></i>
+        </a>
+    </h1>
+
+    <div class="lead">
+        Manage and monitor the state of all site scans.
+    </div>
+</div>
+
+<%= render partial: 'scans/tables' %>

@@ -1,7 +1,8 @@
 <%
-   title 'New scan'
+   title 'New'
    breadcrumb_add 'Sites', sites_path
    breadcrumb_add @site.url, site_path( @site )
+   breadcrumb_add 'Scans', site_scans_path( @site )
 %>
 
 <% add_to_sidebar do %>

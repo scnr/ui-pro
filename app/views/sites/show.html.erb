@@ -33,28 +33,6 @@
     </div>
 </div>
 
-<div id="site-tabs">
-    <ul class="nav nav-tabs">
-        <li class="active">
-            <a href="#!/issues">
-                Issues
-            </a>
-        </li>
+<hr/>
 
-        <li>
-            <a href="#!/scans">
-                Scans
-            </a>
-        </li>
-    </ul>
-
-    <div class="tab-content">
-        <div class="tab-pane active" id="issues">
-            <%= render partial: 'shared/scans_with_issue_summary' %>
-        </div>
-
-        <div class="tab-pane" id="scans">
-            <%= render partial: 'scans/tables' %>
-        </div>
-    </div>
-</div>
+<%= render partial: 'shared/scans_with_issue_summary' %>

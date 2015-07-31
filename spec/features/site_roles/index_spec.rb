@@ -24,7 +24,7 @@ feature 'Site roles index page' do
 
     scenario 'selects sidebar button' do
         btn = find( "#sidebar-site a[@href='#{current_path}']" )
-        expect(btn[:class]).to include 'disabled btn btn-lg'
+        expect(btn[:class]).to include 'btn-lg'
     end
 
     scenario 'user sees heading' do

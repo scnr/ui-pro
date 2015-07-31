@@ -2,6 +2,7 @@
    title 'Edit'
    breadcrumb_add 'Sites', sites_path
    breadcrumb_add @site.url, site_path( @site )
+   breadcrumb_add 'Scans', site_scans_path( @site )
    breadcrumb_add @scan, site_scan_path( @site, @scan )
 %>
 

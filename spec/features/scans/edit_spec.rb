@@ -43,7 +43,7 @@ feature 'Edit scan page' do
 
     scenario 'selects sidebar button' do
         btn = find( "#sidebar-scan a[@href='#{current_path}']" )
-        expect(btn[:class]).to include 'disabled btn btn-lg'
+        expect(btn[:class]).to include 'btn-lg'
     end
 
     scenario 'has title' do
@@ -64,11 +64,14 @@ feature 'Edit scan page' do
         expect(breadcrumbs.find('li:nth-of-type(3)')).to have_content site.url
         expect(breadcrumbs.find('li:nth-of-type(3) a').native['href']).to eq site_path( site )
 
-        expect(breadcrumbs.find('li:nth-of-type(4)')).to have_content scan.name
-        expect(breadcrumbs.find('li:nth-of-type(4) a').native['href']).to eq site_scan_path( site, scan )
+        expect(breadcrumbs.find('li:nth-of-type(4)')).to have_content 'Scans'
+        expect(breadcrumbs.find('li:nth-of-type(4) a').native['href']).to eq site_scans_path( site )
 
-        expect(breadcrumbs.find('li:nth-of-type(5)')).to have_content 'Edit'
-        expect(breadcrumbs.find('li:nth-of-type(5) a').native['href']).to eq edit_site_scan_path( site, scan )
+        expect(breadcrumbs.find('li:nth-of-type(5)')).to have_content scan.name
+        expect(breadcrumbs.find('li:nth-of-type(5) a').native['href']).to eq site_scan_path( site, scan )
+
+        expect(breadcrumbs.find('li:nth-of-type(6)')).to have_content 'Edit'
+        expect(breadcrumbs.find('li:nth-of-type(6) a').native['href']).to eq edit_site_scan_path( site, scan )
     end
 
     scenario 'user sees scan name in heading' do

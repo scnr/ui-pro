@@ -122,11 +122,6 @@ class SitesController < ApplicationController
     end
 
     def prepare_show_data
-        @scheduled_scans   = @site.scans.scheduled.includes(:site_role).
-            includes(:user_agent).includes(:profile)
-        @unscheduled_scans = @site.scans.unscheduled.includes(:site_role).
-            includes(:user_agent).includes(:profile)
-
         @scans = @site.scans.includes(:revisions).includes(:site_role).
             includes(:user_agent).includes(:profile)
 

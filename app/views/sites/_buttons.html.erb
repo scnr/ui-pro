@@ -3,6 +3,11 @@
     <i class="fa fa-plus"></i>
 <% end %>
 
+<%= link_to site_scans_path( site ), title: 'Scans',
+            class: select_button_class( site_scans_path( site ) ) + ' btn-default' do %>
+    <i class="fa fa-tasks"></i>
+<% end %>
+
 <%= link_to site_roles_path( site ), title: 'User roles',
             class: select_button_class( site_roles_path( site ) ) + ' btn-default' do %>
     <i class="fa fa-users"></i>

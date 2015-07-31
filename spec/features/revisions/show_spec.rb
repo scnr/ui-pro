@@ -49,11 +49,14 @@ feature 'Revision page' do
         expect(breadcrumbs.find('li:nth-of-type(3)')).to have_content site.url
         expect(breadcrumbs.find('li:nth-of-type(3) a').native['href']).to eq site_path( site )
 
-        expect(breadcrumbs.find('li:nth-of-type(4)')).to have_content scan.name
-        expect(breadcrumbs.find('li:nth-of-type(4) a').native['href']).to eq site_scan_path( site, scan )
+        expect(breadcrumbs.find('li:nth-of-type(4)')).to have_content 'Scans'
+        expect(breadcrumbs.find('li:nth-of-type(4) a').native['href']).to eq site_scans_path( site )
 
-        expect(breadcrumbs.find('li:nth-of-type(5)')).to have_content revision.index.ordinalize
-        expect(breadcrumbs.find('li:nth-of-type(5) a').native['href']).to eq site_scan_revision_path( site, scan, revision )
+        expect(breadcrumbs.find('li:nth-of-type(5)')).to have_content scan.name
+        expect(breadcrumbs.find('li:nth-of-type(5) a').native['href']).to eq site_scan_path( site, scan )
+
+        expect(breadcrumbs.find('li:nth-of-type(6)')).to have_content revision.index.ordinalize
+        expect(breadcrumbs.find('li:nth-of-type(6) a').native['href']).to eq site_scan_revision_path( site, scan, revision )
     end
 
     feature 'revision info' do

@@ -26,7 +26,7 @@ feature 'Edit site role page' do
 
     scenario 'selects sidebar button' do
         btn = find( "#sidebar-site a[@href='#{site_roles_path(site)}']" )
-        expect(btn[:class]).to include 'disabled btn btn-lg'
+        expect(btn[:class]).to include 'btn-lg'
     end
 
     scenario 'can update the role' do

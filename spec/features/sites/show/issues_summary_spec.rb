@@ -1,4 +1,4 @@
-feature 'Site page Overview tab' do
+feature 'Site issues summary' do
     include SiteRolesHelper
 
     let(:user) { FactoryGirl.create :user }

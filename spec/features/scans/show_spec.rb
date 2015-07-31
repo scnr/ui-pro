@@ -33,6 +33,11 @@ feature 'Scan page' do
 
     let(:info) { find '#scan-info' }
 
+    scenario 'selects sidebar button' do
+        btn = find( "#sidebar-site a[@href='#{site_scans_path(site)}']" )
+        expect(btn[:class]).to include 'btn-lg'
+    end
+
     feature 'when the scan has revisions' do
         before do
             other_revision
@@ -45,6 +50,7 @@ feature 'Scan page' do
 
         scenario 'has title' do
             expect(page).to have_title scan.name
+            expect(page).to have_title 'Scans'
             expect(page).to have_title site.url
             expect(page).to have_title 'Sites'
         end
@@ -60,8 +66,11 @@ feature 'Scan page' do
             expect(breadcrumbs.find('li:nth-of-type(3)')).to have_content site.url
             expect(breadcrumbs.find('li:nth-of-type(3) a').native['href']).to eq site_path( site )
 
-            expect(breadcrumbs.find('li:nth-of-type(4)')).to have_content scan.name
-            expect(breadcrumbs.find('li:nth-of-type(4) a').native['href']).to eq site_scan_path( site, scan )
+            expect(breadcrumbs.find('li:nth-of-type(4)')).to have_content 'Scans'
+            expect(breadcrumbs.find('li:nth-of-type(4) a').native['href']).to eq site_scans_path( site )
+
+            expect(breadcrumbs.find('li:nth-of-type(5)')).to have_content scan.name
+            expect(breadcrumbs.find('li:nth-of-type(5) a').native['href']).to eq site_scan_path( site, scan )
         end
 
         feature 'scan info' do
