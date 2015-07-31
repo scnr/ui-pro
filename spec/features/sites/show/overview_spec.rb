@@ -25,41 +25,6 @@ feature 'Site page Overview tab' do
 
     let(:site_info) { find '#site-info' }
 
-    def set_sitemap_entries( issue )
-        page_sitemap_entry   = site.sitemap_entries.find_by_url( issue.page.dom.url )
-        page_sitemap_entry ||= site.sitemap_entries.create(
-            url:      issue.page.dom.url,
-            code:     issue.page.response.code,
-            revision: revision
-        )
-
-        issue.page.sitemap_entry = page_sitemap_entry
-        issue.page.save
-
-        page_sitemap_entry   = site.sitemap_entries.find_by_url( issue.referring_page.dom.url )
-        page_sitemap_entry ||= site.sitemap_entries.create(
-            url:      issue.referring_page.dom.url,
-            code:     issue.referring_page.response.code,
-            revision: revision
-        )
-
-        issue.referring_page.sitemap_entry = page_sitemap_entry
-        issue.referring_page.save
-
-        vector_sitemap_entry   = site.sitemap_entries.find_by_url( issue.vector.action )
-        vector_sitemap_entry ||= site.sitemap_entries.create(
-            url:      issue.vector.action,
-            code:     issue.page.response.code,
-            revision: revision
-        )
-        issue.vector.sitemap_entry = vector_sitemap_entry
-        issue.vector.save
-
-        issue.sitemap_entry = vector_sitemap_entry
-        issue.save
-        issue
-    end
-
     feature 'without revisions' do
         before do
             FactoryGirl.create( :scan, site: other_site, profile: profile )
@@ -81,67 +46,6 @@ feature 'Site page Overview tab' do
             scan.reload
 
             visit site_path( site )
-        end
-
-        feature 'sidebar' do
-            let(:sidebar) { find '#sidebar' }
-
-            feature 'scan list' do
-                let(:scans) { sidebar.find '#sidebar-scans' }
-
-                scenario 'user sees name' do
-                    expect(scans).to have_content scan.name
-                end
-
-                scenario 'user sees amount of issues' do
-                    expect(scans.find('.badge')).to have_content scan.issues.size
-                end
-
-                scenario 'user sees profile' do
-                    expect(scans).to have_content scan.profile
-                    expect(scans).to have_xpath "//a[@href='#{profile_path( scan.profile )}']"
-                end
-
-                scenario 'user sees user agent' do
-                    expect(scans).to have_content scan.user_agent
-                    expect(scans).to have_xpath "//a[@href='#{user_agent_path( scan.user_agent )}']"
-                end
-
-                scenario 'user sees site role' do
-                    expect(scans).to have_content scan.site_role
-                    expect(scans).to have_xpath "//a[@href='#{site_role_path( site, scan.site_role )}']"
-                end
-
-                scenario 'user sees scan link with filtering options' do
-                    expect(scans).to have_xpath "//a[starts-with(@href, '#{site_scan_path( site, scan )}?filter') and not(@data-method)]"
-                end
-
-                feature 'when the scan is in progress' do
-                    before do
-                        revision.stopped_at = nil
-                        revision.save
-
-                        visit site_path( site )
-                    end
-
-                    scenario 'user sees start datetime' do
-                        expect(scans).to have_content "#{revision} started on"
-                        expect(scans).to have_content I18n.l( revision.started_at )
-                    end
-
-                    scenario 'user does not sees stop datetime' do
-                        expect(scans).to_not have_content 'Performed on'
-                    end
-                end
-
-                feature 'when the scan has been performed' do
-                    scenario 'user sees stop datetime of last revision' do
-                        expect(scans).to have_content scan.last_revision.index.ordinalize
-                        expect(scans).to have_xpath "//a[@href='#{site_scan_revision_path( site, scan, scan.last_revision )}']"
-                        expect(scans).to have_content I18n.l( revision.performed_at )
-                    end
-                end
-            end
         end
 
         feature 'with issues' do
@@ -225,25 +129,6 @@ feature 'Site page Overview tab' do
 
                             (all_digests - sitemap_digests).each do |digest|
                                 expect(issues).to_not have_css "#summary-issue-#{digest}"
-                            end
-                        end
-
-                        feature 'sidebar' do
-                            let(:sidebar) { find '#sidebar-scans' }
-
-                            scenario 'only shows scans that have logged issues for that page' do
-                                all_scans  = site.scans.pluck(:name)
-                                page_scans = sitemap_entry.issues.map { |i| i.scan }.map(&:name)
-
-                                page_scans.each do |name|
-                                    expect(sidebar).to have_content name
-                                end
-
-                                expect(all_scans - page_scans).to be_any
-
-                                (all_scans - page_scans).each do |name|
-                                    expect(sidebar).to_not have_content name
-                                end
                             end
                         end
 
@@ -611,20 +496,6 @@ feature 'Site page Overview tab' do
                                     expect(issues.find("#summary-issue-#{issue.digest}")).to_not have_content 'input'
                                 end
                             end
-                        end
-                    end
-                end
-            end
-
-            feature 'sidebar' do
-                let(:sidebar) { find '#sidebar' }
-
-                feature 'scan list' do
-                    let(:scans) { sidebar.find '#sidebar-scans' }
-
-                    scenario 'user sees amount of issues' do
-                        site.scans.each do |scan|
-                            expect(scans.find("#site-sidebar-scan-id-#{scan.id} .badge")).to have_content scan.issues.size
                         end
                     end
                 end

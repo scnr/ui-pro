@@ -39,6 +39,7 @@ feature 'Edit scan page' do
     end
 
     it_behaves_like 'Scan sidebar'
+    it_behaves_like 'Revisions sidebar'
 
     scenario 'has title' do
         expect(page).to have_title 'Edit'

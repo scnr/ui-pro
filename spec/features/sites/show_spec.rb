@@ -27,7 +27,8 @@ feature 'Site page' do
 
     let(:site_info) { find '#site-info' }
 
-    include_examples 'Site sidebar'
+    it_behaves_like 'Site sidebar'
+    it_behaves_like 'Scans sidebar'
 
     scenario 'has title' do
         expect(page).to have_title site.url

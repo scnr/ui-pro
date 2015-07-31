@@ -1,19 +1,24 @@
 shared_examples_for 'Scan sidebar' do |options = {}|
     it_behaves_like 'Site sidebar', without_buttons: options[:without_site_buttons]
 
-    let(:scan_sidebar) { find '#sidebar #sidebar-scan' }
-    let(:scan_status) { scan_sidebar.find '.scan-status' }
+    let(:site) { FactoryGirl.create :site }
+    let(:scan) { FactoryGirl.create :scan, site: site, profile: profile }
+
+    let(:profile) { FactoryGirl.create :profile }
+
+    let(:sidebar) { find '#sidebar #sidebar-scan' }
+    let(:status) { sidebar.find '.scan-status' }
 
     def scan_sidebar_refresh
         visit current_url
     end
 
     scenario 'shows scan name' do
-        expect(scan_sidebar).to have_content scan.name
+        expect(sidebar).to have_content scan.name
     end
 
     scenario 'shows scan link' do
-        expect(scan_sidebar).to have_xpath "//a[@href='#{site_scan_path( site, scan )}']"
+        expect(sidebar).to have_xpath "//a[@href='#{site_scan_path( site, scan )}']"
     end
 
     feature 'when the scan has no status' do
@@ -31,8 +36,8 @@ shared_examples_for 'Scan sidebar' do |options = {}|
             end
 
             scenario 'it shows it as pending' do
-                expect(scan_status).to have_content 'Pending'
-                expect(scan_status[:class]).to include 'label-default'
+                expect(status).to have_content 'Pending'
+                expect(status[:class]).to include 'label-default'
             end
         end
 
@@ -45,8 +50,8 @@ shared_examples_for 'Scan sidebar' do |options = {}|
             end
 
             scenario 'it shows it as unscheduled' do
-                expect(scan_status).to have_content 'Unscheduled'
-                expect(scan_status[:class]).to include 'label-default'
+                expect(status).to have_content 'Unscheduled'
+                expect(status[:class]).to include 'label-default'
             end
         end
     end
@@ -63,25 +68,25 @@ shared_examples_for 'Scan sidebar' do |options = {}|
             end
 
             scenario 'user sees pause button' do
-                expect(scan_sidebar).to have_xpath "//a[@href='#{pause_site_scan_path( site, scan )}' and @data-method='patch']"
+                expect(sidebar).to have_xpath "//a[@href='#{pause_site_scan_path( site, scan )}' and @data-method='patch']"
             end
 
             scenario 'user sees suspend button' do
-                expect(scan_sidebar).to have_xpath "//a[@href='#{suspend_site_scan_path( site, scan )}' and @data-method='patch']"
+                expect(sidebar).to have_xpath "//a[@href='#{suspend_site_scan_path( site, scan )}' and @data-method='patch']"
             end
 
             scenario 'user sees abort button' do
-                expect(scan_sidebar).to have_xpath "//a[@href='#{abort_site_scan_path( site, scan )}' and @data-method='patch']"
+                expect(sidebar).to have_xpath "//a[@href='#{abort_site_scan_path( site, scan )}' and @data-method='patch']"
             end
 
             scenario 'user sees edit button' do
-                expect(scan_sidebar).to have_xpath "//a[@href='#{edit_site_scan_path( site, scan )}']"
+                expect(sidebar).to have_xpath "//a[@href='#{edit_site_scan_path( site, scan )}']"
             end
 
             feature 'and scanning' do
                 scenario 'user sees scan status' do
-                    expect(scan_status).to have_content 'Scanning'
-                    expect(scan_status[:class]).to include 'label-primary'
+                    expect(status).to have_content 'Scanning'
+                    expect(status[:class]).to include 'label-primary'
                 end
             end
 
@@ -92,20 +97,20 @@ shared_examples_for 'Scan sidebar' do |options = {}|
                 end
 
                 scenario 'user sees scan status' do
-                    expect(scan_status).to have_content 'Paused'
-                    expect(scan_status[:class]).to include 'label-warning'
+                    expect(status).to have_content 'Paused'
+                    expect(status[:class]).to include 'label-warning'
                 end
 
                 scenario 'user does not see pause button' do
-                    expect(scan_sidebar).to_not have_xpath "//a[@href='#{pause_site_scan_path( site, scan )}']"
+                    expect(sidebar).to_not have_xpath "//a[@href='#{pause_site_scan_path( site, scan )}']"
                 end
 
                 scenario 'user does not sees suspend button' do
-                    expect(scan_sidebar).to_not have_xpath "//a[@href='#{suspend_site_scan_path( site, scan )}']"
+                    expect(sidebar).to_not have_xpath "//a[@href='#{suspend_site_scan_path( site, scan )}']"
                 end
 
                 scenario 'user sees resume button' do
-                    expect(scan_sidebar).to have_xpath "//a[@href='#{resume_site_scan_path( site, scan )}' and @data-method='patch']"
+                    expect(sidebar).to have_xpath "//a[@href='#{resume_site_scan_path( site, scan )}' and @data-method='patch']"
                 end
             end
         end
@@ -116,16 +121,16 @@ shared_examples_for 'Scan sidebar' do |options = {}|
             end
 
             scenario 'user sees scan status' do
-                expect(scan_status).to have_content 'Suspended'
-                expect(scan_status[:class]).to include 'label-default'
+                expect(status).to have_content 'Suspended'
+                expect(status[:class]).to include 'label-default'
             end
 
             scenario 'user sees restore button' do
-                expect(scan_sidebar).to have_xpath "//a[@href='#{restore_site_scan_path( site, scan )}' and @data-method='patch']"
+                expect(sidebar).to have_xpath "//a[@href='#{restore_site_scan_path( site, scan )}' and @data-method='patch']"
             end
 
             scenario 'user sees delete button' do
-                expect(scan_sidebar).to have_xpath "//a[@href='#{site_scan_path( site, scan )}' and @data-method='delete']"
+                expect(sidebar).to have_xpath "//a[@href='#{site_scan_path( site, scan )}' and @data-method='delete']"
             end
         end
 
@@ -147,8 +152,8 @@ shared_examples_for 'Scan sidebar' do |options = {}|
                 end
 
                 scenario 'user sees scan status' do
-                    expect(scan_status).to have_content 'Completed'
-                    expect(scan_status[:class]).to include 'label-success'
+                    expect(status).to have_content 'Completed'
+                    expect(status[:class]).to include 'label-success'
                 end
             end
 
@@ -159,8 +164,8 @@ shared_examples_for 'Scan sidebar' do |options = {}|
                 end
 
                 scenario 'user sees scan status' do
-                    expect(scan_status).to have_content 'Aborted'
-                    expect(scan_status[:class]).to include 'label-warning'
+                    expect(status).to have_content 'Aborted'
+                    expect(status[:class]).to include 'label-warning'
                 end
             end
 
@@ -171,21 +176,21 @@ shared_examples_for 'Scan sidebar' do |options = {}|
                 end
 
                 scenario 'user sees scan status' do
-                    expect(scan_status).to have_content 'Failed'
-                    expect(scan_status[:class]).to include 'label-danger'
+                    expect(status).to have_content 'Failed'
+                    expect(status[:class]).to include 'label-danger'
                 end
             end
 
             scenario 'user sees repeat button' do
-                expect(scan_sidebar).to have_xpath "//a[@href='#{repeat_site_scan_path( site, scan )}' and @data-method='post']"
+                expect(sidebar).to have_xpath "//a[@href='#{repeat_site_scan_path( site, scan )}' and @data-method='post']"
             end
 
             scenario 'user sees edit button' do
-                expect(scan_sidebar).to have_xpath "//a[@href='#{edit_site_scan_path( site, scan )}']"
+                expect(sidebar).to have_xpath "//a[@href='#{edit_site_scan_path( site, scan )}']"
             end
 
             scenario 'user sees delete button' do
-                expect(scan_sidebar).to have_xpath "//a[@href='#{site_scan_path( site, scan )}' and @data-method='delete']"
+                expect(sidebar).to have_xpath "//a[@href='#{site_scan_path( site, scan )}' and @data-method='delete']"
             end
         end
     end

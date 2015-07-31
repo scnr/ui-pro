@@ -1,5 +1,5 @@
 class ScansController < ApplicationController
-    include IssuesHelper
+    include ScansHelper
 
     STATES = [ :pause, :resume, :suspend, :restore, :abort ]
 
@@ -17,23 +17,12 @@ class ScansController < ApplicationController
     # GET /scans/1
     # GET /scans/1.json
     def show
-        @issues_summary = issues_summary_data(
-            site:      @site,
-            sitemap:   @scan.sitemap_entries,
-            scans:     [@scan],
-            revisions: @scan.revisions.order( id: :desc ),
-            issues:    @scan.issues
-        )
+        prepare_scan_issue_summary_data
     end
 
     # GET /scans/new
     def new
-        @issues_summary = issues_summary_data(
-            site:    @site,
-            sitemap: @site.sitemap_entries,
-            scans:   @site.scans.order( id: :desc ),
-            issues:  @site.issues
-        )
+        prepare_site_issue_summary_data
 
         @scan = @site.scans.new
         @scan.build_schedule
@@ -41,13 +30,7 @@ class ScansController < ApplicationController
 
     # GET /scans/1/edit
     def edit
-        @issues_summary = issues_summary_data(
-            site:      @site,
-            sitemap:   @scan.sitemap_entries,
-            scans:     [@scan],
-            revisions: @scan.revisions.order( id: :desc ),
-            issues:    @scan.issues
-        )
+        prepare_scan_issue_summary_data
     end
 
     # POST /scans
@@ -60,6 +43,8 @@ class ScansController < ApplicationController
                 format.html { redirect_to [@site, @scan], notice: 'Scan was successfully created.' }
                 format.json { render :show, status: :created, location: @scan }
             else
+                prepare_site_issue_summary_data
+
                 format.html { render :new }
                 format.json { render json: @scan.errors, status: :unprocessable_entity }
             end

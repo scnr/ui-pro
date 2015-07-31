@@ -29,6 +29,7 @@ feature 'Scan page' do
     end
 
     it_behaves_like 'Scan sidebar'
+    it_behaves_like 'Revisions sidebar'
 
     let(:info) { find '#scan-info' }
 
@@ -145,58 +146,6 @@ feature 'Scan page' do
                 scenario 'user sees last revision stop datetime' do
                     expect(info).to have_content "#{scan.status} on"
                     expect(info).to have_content I18n.l( revision.stopped_at )
-                end
-            end
-        end
-
-        feature 'sidebar' do
-            let(:sidebar) { find '#sidebar' }
-
-            feature 'revision list' do
-                let(:revisions) { sidebar.find '#sidebar-revisions' }
-
-                scenario 'user sees index' do
-                    expect(revisions).to have_content "##{revision.index}"
-                end
-
-                scenario 'user sees amount of new pages' do
-                    expect(revisions).to have_content "#{revision.sitemap_entries.size} new pages"
-                end
-
-                scenario 'user sees amount of fixed issues'
-
-                scenario 'user sees amount of new issues'
-
-                scenario 'user sees revision link with filtering options' do
-                    expect(revisions).to have_xpath "//a[starts-with(@href, '#{site_scan_revision_path( site, scan, revision )}?filter') and not(@data-method)]"
-                end
-
-                feature 'when the revision is in progress' do
-                    before do
-                        other_revision.stopped_at = nil
-                        other_revision.save
-
-                        revision.stopped_at = nil
-                        revision.save
-
-                        visit site_scan_path( site, scan )
-                    end
-
-                    scenario 'user sees start datetime' do
-                        expect(revisions).to have_content 'Started on'
-                        expect(revisions).to have_content I18n.l( revision.started_at )
-                    end
-
-                    scenario 'user does not sees stop datetime' do
-                        expect(revisions).to_not have_content 'Performed on'
-                    end
-                end
-
-                feature 'when the revision has been performed' do
-                    scenario 'user sees stop datetime' do
-                        expect(revisions).to have_content 'Performed on'
-                        expect(revisions).to have_content I18n.l( revision.performed_at )
-                    end
                 end
             end
         end

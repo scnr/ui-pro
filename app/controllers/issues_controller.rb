@@ -61,7 +61,7 @@ class IssuesController < ApplicationController
                              data_flow_sinks: [
                                  :function,
                                  stackframes: :function
-                            ]
+                             ]
                          },
                          :transitions
                      ]
@@ -69,6 +69,8 @@ class IssuesController < ApplicationController
             :response, :request, :sitemap_entry
         ]
 
+        # TODO: Can fall into some sort of loop sometimes with a lot of
+        # data_flow_sinks.
         @issue = @revision.issues.includes(:sitemap_entry).
             includes( reviewed_by_revision: :scan ).
             includes( vector: :sitemap_entry ).

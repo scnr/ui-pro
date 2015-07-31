@@ -48,12 +48,13 @@
                 <%= scan.name %>
 
                 <i class="fa fa-arrow-right">
-                    <% if revision_count > 0 %>
-                        <span class="badge badge-severity-<%= max_severity %>">
-                            <%= issue_count %>
-                        </span>
-                    <% end %>
                 </i>
+
+                <% if revision_count > 0 %>
+                    <span class="badge badge-severity-<%= max_severity %>">
+                        <%= issue_count %>
+                    </span>
+                <% end %>
             <% end %>
         </li>
 

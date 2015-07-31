@@ -1,5 +1,5 @@
 class SitesController < ApplicationController
-    include IssuesHelper
+    include SitesHelper
 
     before_filter :authenticate_user!
 
@@ -128,15 +128,8 @@ class SitesController < ApplicationController
             includes(:user_agent).includes(:profile)
 
         @scans = @site.scans.includes(:revisions).includes(:site_role).
-            includes(:user_agent).includes(:profile).order( id: :desc )
+            includes(:user_agent).includes(:profile)
 
-        @issues_summary = issues_summary_data(
-            site:      @site,
-            sitemap:   @site.sitemap_entries,
-            scans:     @scans,
-            revisions: @site.revisions,
-            issues:    @site.issues
-        )
+        prepare_site_issue_summary_data
     end
-
 end

@@ -36,6 +36,7 @@ feature 'New scan page' do
     end
 
     it_behaves_like 'Site sidebar'
+    it_behaves_like 'Scans sidebar', without_filtering: true
 
     scenario 'has title' do
         expect(page).to have_title 'New scan'

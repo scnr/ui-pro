@@ -27,6 +27,7 @@ feature 'Revision page' do
     end
 
     it_behaves_like 'Scan sidebar'
+    it_behaves_like 'Revisions sidebar'
 
     let(:info) { find '#revision-info' }
 
