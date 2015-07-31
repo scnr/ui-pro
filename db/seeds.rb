@@ -62,26 +62,70 @@ arachni_defaults.merge!(
 #                         checks:      :all
 #                     )
 # p.default!
-# puts 'Default profile created: ' << p.name
+# puts 'Default settings created: ' << p.name
 
 Setting.create!(
-    http_request_timeout: Arachni::Options.http.request_timeout
+    http_request_timeout:      Arachni::Options.http.request_timeout,
+    browser_cluster_pool_size: Arachni::Options.browser_cluster.pool_size
 )
 
+all_checks_profile = Profile.create! arachni_defaults.merge(
+    name:        'All checks',
+    description: 'Scans for all available security issues.',
+    checks:      FrameworkHelper.checks.keys
+)
+puts 'All checks profile created: ' << all_checks_profile.name
+
 p = Profile.create! arachni_defaults.merge(
-    name:        'Cross-Site Scripting (XSS)',
-    description: 'Scans for Cross-Site Scripting (XSS) vulnerabilities.',
-    checks:      %w(xss xss_path xss_tag xss_script_context xss_event
-                    xss_dom xss_dom_inputs xss_dom_script_context)
+    name:        'DB checks',
+    description: 'Scans for database injection vulnerabilities.',
+    checks:      %w(no_sql_injection no_sql_injection_differential sql_injection
+        sql_injection_differential sql_injection_timing)
+)
+puts 'SQLi profile created: ' << p.name
+
+p = Profile.create! arachni_defaults.merge(
+    name:        'XSS checks',
+    description: 'Scans for XSS issues.',
+    checks:      %w(xss xss_dom xss_dom_inputs xss_dom_script_context xss_event
+        xss_path xss_script_context xss_tag)
 )
 puts 'XSS profile created: ' << p.name
 
 p = Profile.create! arachni_defaults.merge(
-    name:        'SQL injection',
-    description: 'Scans for SQL injection vulnerabilities.',
-    checks:      %w(sql_injection sql_injection_differential sql_injection_timing)
+    name:        'Client-side checks',
+    description: 'Scans for DOM issues like DOM XSS, unvalidated redirects etc.',
+    checks:      %w(xss_dom xss_dom_inputs xss_dom_script_context unvalidated_redirect_dom)
+    )
+puts 'Client-side profile created: ' << p.name
+
+firefox_ua = UserAgent.create(
+    name:                          'Firefox 36.0',
+    http_user_agent:               'Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0',
+    browser_cluster_screen_width:  1200,
+    browser_cluster_screen_height: 1600
 )
-puts 'SQLi profile created: ' << p.name
+
+ie_ua = UserAgent.create(
+    name:                          'Internet Explorer 11.0',
+    http_user_agent:               'Mozilla/5.0 (compatible, MSIE 11, Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko',
+    browser_cluster_screen_width:  1200,
+    browser_cluster_screen_height: 1600
+)
+
+ipad_ua = UserAgent.create(
+    name:                          'iPad (portrait)',
+    http_user_agent:               'Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10',
+    browser_cluster_screen_width:  768,
+    browser_cluster_screen_height: 1024
+)
+
+iphone_ua = UserAgent.create(
+    name:                          'iPhone (portrait)',
+    http_user_agent:               'Mozilla/5.0 (iPhone; CPU iPhone OS 6_1_4 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10B350 Safari/8536.25',
+    browser_cluster_screen_width:  320,
+    browser_cluster_screen_height: 480
+)
 
 puts 'Creating platforms'
 Arachni::Platform::Manager::TYPES.each do |shortname, name|
@@ -128,12 +172,50 @@ FrameworkHelper.framework do |f|
     end
 end
 
-user_agent = UserAgent.create(
-    name: 'Arachni',
-    http_user_agent: Arachni::Options.http.user_agent,
-    browser_cluster_screen_width:  1200,
-    browser_cluster_screen_height: 1600
-)
+# site = user.sites.create(
+#     protocol: 'http',
+#     host:     'testhtml5.vulnweb.com',
+#     port:     80,
+#
+#     profile_attributes: {
+#         http_request_concurrency: Arachni::Options.http.request_concurrency,
+#         input_values:             Arachni::Options.input.default_values.
+#                                       map { |k, v| "#{k.source}=#{v}" }.join( "\n" )
+#     }
+# )
+#
+# site.scans.create(
+#     profile:             all_checks_profile,
+#     site_role:           site.roles.first,
+#     user_agent:          user_agent,
+#     name:                site.url,
+#     schedule_attributes: {
+#         start_at: Time.now
+#     }
+# )
+#
+# site = user.sites.create(
+#     protocol: 'http',
+#     host:     'testfire.net',
+#     port:     80,
+#
+#     profile_attributes: {
+#         http_request_concurrency: Arachni::Options.http.request_concurrency,
+#         input_values:             Arachni::Options.input.default_values.
+#                                       map { |k, v| "#{k.source}=#{v}" }.join( "\n" )
+#     }
+# )
+# site.scans.create(
+#     profile:             all_checks_profile,
+#     site_role:           site.roles.first,
+#     user_agent:          user_agent,
+#     name:                site.url,
+#     schedule_attributes: {
+#         start_at: Time.now
+#     }
+# )
+
+exit
 
 scans_size         = 4
 revisions_per_scan = 3
