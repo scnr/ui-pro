@@ -8,9 +8,11 @@
        identification: 'Identification'
    )
 
-   sections.merge!(
-       remediation: 'Remediation'
-   )
+   if !@issue.type.remedy_guidance.to_s.empty?
+       sections.merge!(
+           remediation: 'Remediation'
+       )
+   end
 
    sections.merge!(
        _:                       nil,
