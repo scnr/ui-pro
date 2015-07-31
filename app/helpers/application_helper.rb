@@ -2,6 +2,13 @@ module ApplicationHelper
 
     SCOPED_FIND_EACH_BATCH_SIZE = 1000
 
+    def select_button_class( path )
+        default  = 'btn btn-sm'
+        selected = 'disabled btn btn-lg'
+
+        request.env['PATH_INFO'].starts_with?( path ) ? selected : default
+    end
+
     def seconds_to_hms( seconds )
         Arachni::Utilities.seconds_to_hms seconds
     end

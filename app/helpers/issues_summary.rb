@@ -130,6 +130,10 @@ module IssuesSummary
             data[:revisions] = data[:revisions].sort_by { |r| r.id }.reverse
         end
 
+        if data[:scans].is_a? Set
+            data[:scans] = data[:scans].sort_by { |r| r.id }.reverse
+        end
+
         {
             site:                data[:site],
             site_scans:          data[:site].scans.includes(:revisions).

@@ -41,6 +41,11 @@ feature 'Edit scan page' do
     it_behaves_like 'Scan sidebar'
     it_behaves_like 'Revisions sidebar'
 
+    scenario 'selects sidebar button' do
+        btn = find( "#sidebar-scan a[@href='#{current_path}']" )
+        expect(btn[:class]).to include 'disabled btn btn-lg'
+    end
+
     scenario 'has title' do
         expect(page).to have_title 'Edit'
         expect(page).to have_title scan.name

@@ -37,6 +37,11 @@ feature 'Site profile form' do
 
     it_behaves_like 'Site sidebar'
 
+    scenario 'selects sidebar button' do
+        btn = find( "#sidebar-site a[@href='#{current_path}']" )
+        expect(btn[:class]).to include 'disabled btn btn-lg'
+    end
+
     scenario 'sees profile form' do
         expect(find('.profile-form')).to be_truthy
     end

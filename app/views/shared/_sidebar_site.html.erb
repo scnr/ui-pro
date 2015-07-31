@@ -4,12 +4,13 @@
 
 <div id="sidebar-site">
     <h4>
-        <%= link_to_url_with_external display: @site.url,
+        <%= link_to_url_with_external display:  @site.url,
                                       external: @site.url,
-                                      internal: @site %>
+                                      internal: site_path( @site, filter_params )
+        %>
     </h4>
 
     <% if !hide_site_buttons %>
-        <%= render 'shared/sidebar_site_buttons' %>
+        <%= render partial: 'sites/buttons', locals: { site: @site } %>
     <% end %>
 </div>

@@ -22,6 +22,11 @@ feature 'Site roles index page' do
 
     it_behaves_like 'Site sidebar'
 
+    scenario 'selects sidebar button' do
+        btn = find( "#sidebar-site a[@href='#{current_path}']" )
+        expect(btn[:class]).to include 'disabled btn btn-lg'
+    end
+
     scenario 'user sees heading' do
         expect(find('h1')).to have_content 'User roles'
     end

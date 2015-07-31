@@ -75,21 +75,7 @@
             </td>
 
             <td>
-                <%= link_to site_roles_path( site ), title: 'User roles',
-                            class: 'btn btn-sm btn-default' do %>
-                    <i class="fa fa-users"></i>
-                <% end %>
-
-                <%= link_to edit_site_path( site ), title: 'Settings',
-                            class: 'btn btn-sm btn-default' do %>
-                    <i class="fa fa-cog"></i>
-                <% end %>
-
-                <%= link_to site, title: 'Delete site', method: :delete,
-                            class: 'btn btn-sm btn-danger',
-                            data: { confirm: 'Are you sure?' } do %>
-                    <i class="fa fa-trash"></i>
-                <% end %>
+                <%= render partial: 'buttons', locals: { site: site } %>
             </td>
         </tr>
     <% end %>

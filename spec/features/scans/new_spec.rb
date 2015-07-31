@@ -38,6 +38,11 @@ feature 'New scan page' do
     it_behaves_like 'Site sidebar'
     it_behaves_like 'Scans sidebar', without_filtering: true
 
+    scenario 'selects sidebar button' do
+        btn = find( "#sidebar-site a[@href='#{current_path}']" )
+        expect(btn[:class]).to include 'disabled btn btn-lg'
+    end
+
     scenario 'has title' do
         expect(page).to have_title 'New scan'
         expect(page).to have_title site.url

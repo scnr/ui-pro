@@ -57,6 +57,11 @@ EOJS
 
     it_behaves_like 'Site sidebar'
 
+    scenario 'selects sidebar button', js: false do
+        btn = find( "#sidebar-site a[@href='#{site_roles_path(site)}']" )
+        expect(btn[:class]).to include 'disabled btn btn-lg'
+    end
+
     scenario 'can create new role' do
         fill_in_form
         fill_in_form_login_form

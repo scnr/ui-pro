@@ -27,6 +27,11 @@ feature 'Show site role page' do
 
     it_behaves_like 'Site sidebar'
 
+    scenario 'selects sidebar button' do
+        btn = find( "#sidebar-site a[@href='#{site_roles_path(site)}']" )
+        expect(btn[:class]).to include 'disabled btn btn-lg'
+    end
+
     scenario 'sees name in heading' do
         expect(find('h2')).to have_content subject.name
     end
