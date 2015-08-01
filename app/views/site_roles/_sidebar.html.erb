@@ -1,1 +1,96 @@
 <%= render 'shared/sidebar_site' %>
+
+<% if @site_role %>
+
+    <hr/>
+
+    <ul id="sidebar-roles" class="nav nav-pills nav-stacked">
+        <li class="nav-header">
+            <a>
+                Roles
+            </a>
+        </li>
+
+        <%
+           @site.roles.each do |role|
+               scan_count = role.scans.count
+        %>
+            <li
+                id="sidebar-role-<%= role.id %>"
+
+                <% if @site_role == role %>
+                    class="active"
+                <% end %>
+
+                <% if scan_count > 0 %>
+                    title="<%= pluralize scan_count, 'scan' %>"
+                <% else %>
+                    title="No scans"
+                <% end %>
+            >
+                <%= link_to site_role_path( @site, role ) do %>
+                    <%= role %>
+
+                    <% if scan_count > 0 %>
+                        <span class="badge badge-info">
+                            <%= scan_count %>
+                        </span>
+                    <% end %>
+                <% end %>
+            </li>
+        <% end %>
+    </ul>
+
+    <% if @site_role.scans.count > 0 %>
+        <ul id="sidebar-scans" class="nav nav-pills nav-stacked">
+            <li class="nav-header">
+                <a>
+                    Used for <%= pluralize @site_role.scans.count, 'scan' %>
+                </a>
+            </li>
+
+            <%
+               @site_role.scans.each do |scan|
+                   max_severity   = scan.issues.max_severity
+                   issue_count    = scan.issues.size
+                   revision_count = scan.revisions.size
+
+                   if revision_count > 0 && issue_count == 0
+                       max_severity = 'none'
+                   end
+            %>
+
+                <li
+                    id="site-sidebar-scan-id-<%= scan.id %>"
+
+                    <% if revision_count > 0 %>
+                        <% if issue_count > 0 %>
+                            title="<%= pluralize issue_count, 'issue' %> with a maximum severity of <%= max_severity %>."
+                        <% else %>
+                            title="<%= pluralize issue_count, 'issue' %>."
+                        <% end %>
+                    <% else %>
+                        title="Has not run yet."
+                    <% end %>
+                >
+                    <%= link_to site_scan_path( @site, scan, filter_params ) do %>
+                        <%= scan.name %>
+
+                        <% if revision_count > 0 %>
+                        <span class="badge badge-severity-<%= max_severity %>">
+                            <%= issue_count %>
+                        </span>
+                        <% end %>
+                    <% end %>
+                </li>
+
+                <li class="sidebar-info" id="site-sidebar-scan-id-<%= scan.id %>-info">
+                    <small class="text-muted">
+                        <%= render partial: '/shared/scan_info', locals: { scan: scan } %>
+                    </small>
+                </li>
+            <% end %>
+        </ul>
+
+    <% end %>
+<% end %>

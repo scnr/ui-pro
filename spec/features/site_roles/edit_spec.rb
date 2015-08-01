@@ -23,6 +23,10 @@ feature 'Edit site role page' do
     end
 
     it_behaves_like 'Site sidebar'
+    it_behaves_like 'Roles sidebar'
+
+    let(:with_scans) { subject }
+    it_behaves_like 'Scans sidebar', without_filtering: true
 
     scenario 'selects sidebar button' do
         btn = find( "#sidebar-site a[@href='#{site_roles_path(site)}']" )

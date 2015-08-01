@@ -2,7 +2,6 @@ include Warden::Test::Helpers
 Warden.test_mode!
 
 feature 'Show site role page' do
-
     subject { FactoryGirl.create :site_role, site: site }
     let(:new_role) { site.reload.roles.last }
     let(:user) { FactoryGirl.create :user }
@@ -26,6 +25,10 @@ feature 'Show site role page' do
     end
 
     it_behaves_like 'Site sidebar'
+    it_behaves_like 'Roles sidebar'
+
+    let(:with_scans) { subject }
+    it_behaves_like 'Scans sidebar', without_filtering: true
 
     scenario 'selects sidebar button' do
         btn = find( "#sidebar-site a[@href='#{site_roles_path(site)}']" )
@@ -60,6 +63,10 @@ feature 'Show site role page' do
 
         scenario 'does not have delete link' do
             expect(page).to_not have_xpath "//a[@href='#{site_role_path( site, subject )}' and @data-method='delete']"
+        end
+
+        scenario 'shows alert about missing login info' do
+            expect(find('#role-guest .alert.alert-info')).to have_content 'Guest role has no login info'
         end
     end
 
@@ -155,36 +162,4 @@ feature 'Show site role page' do
             end
         end
     end
-
-    feature 'when there are no associated scans' do
-        before do
-            subject.scans = []
-            subject.save
-
-            visit "#{site_path( site )}#!/roles/#{subject.id}"
-        end
-
-        scenario 'does not list associated scans' do
-            expect(page).to_not have_css '#site-role-scans'
-        end
-    end
-
-    feature 'when there are associated scans' do
-        before do
-            subject.scans << scan
-            subject.scans << FactoryGirl.create( :scan, name: 'Fff', site: site )
-
-            refresh
-        end
-
-        let(:scans) { find( '#site-role-scans' ) }
-
-        scenario 'sees associated scans' do
-            subject.scans.each do |scan|
-                expect(scans).to have_content scan.name
-                expect(scans).to have_content scan.site.to_s
-            end
-        end
-    end
-
 end

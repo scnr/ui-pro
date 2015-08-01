@@ -36,6 +36,8 @@ feature 'New scan page' do
     end
 
     it_behaves_like 'Site sidebar'
+
+    let(:with_scans) { site }
     it_behaves_like 'Scans sidebar', without_filtering: true
 
     scenario 'selects new scan sidebar button' do

@@ -78,23 +78,11 @@
             </p>
         <% end %>
         </div>
-    <% end %>
-
-    <% if @site_role.scans.any? %>
-        <div class="col-md-4" id="site-role-scans">
-            <h3>
-                <%= @site_role.scans.size %> associated
-                <%= 'scan'.pluralize @site_role.scans.size %>
-            </h3>
-
-            <ol>
-                <% @site_role.scans.each do |scan| %>
-                    <li>
-                        <%= link_to scan.name, [scan.site, scan] %> of
-                        <%= link_to scan.site, scan.site %>
-                    </li>
-                <% end %>
-            </ol>
+    <% else %>
+        <div id="role-guest" class="col-md-12">
+            <p class="alert alert-info">
+                Guest role has no login info.
+            </p>
         </div>
     <% end %>
 </div>

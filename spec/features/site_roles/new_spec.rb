@@ -56,6 +56,7 @@ EOJS
     end
 
     it_behaves_like 'Site sidebar'
+    it_behaves_like 'Roles sidebar'
 
     scenario 'selects sidebar button', js: false do
         btn = find( "#sidebar-site a[@href='#{site_roles_path(site)}']" )

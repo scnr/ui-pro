@@ -1,10 +1,13 @@
 shared_examples_for 'Scans sidebar' do |options = {}|
 
-    let(:site) { FactoryGirl.create :site }
     let(:scan) { FactoryGirl.create :scan, site: site, profile: profile }
     let(:revision) { FactoryGirl.create :revision, scan: scan }
 
     let(:profile) { FactoryGirl.create :profile }
+
+    # Provided by parent.
+    let(:site) { super() }
+    let(:with_scans) { super() }
 
     def scans_sidebar_refresh
         visit current_url
@@ -12,7 +15,7 @@ shared_examples_for 'Scans sidebar' do |options = {}|
 
     before do
         revision
-        site.scans << scan
+        with_scans.scans << scan
         scan.reload
 
         scans_sidebar_refresh

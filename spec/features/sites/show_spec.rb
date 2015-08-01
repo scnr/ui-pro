@@ -28,6 +28,8 @@ feature 'Site page' do
     let(:site_info) { find '#site-info' }
 
     it_behaves_like 'Site sidebar'
+
+    let(:with_scans) { site }
     it_behaves_like 'Scans sidebar'
 
     scenario 'has title' do
