@@ -49,7 +49,7 @@
                             <%= pluralize revision.sitemap_entries.size, 'new page' %>
 
                             <% if (reviewed_issues = revision.reviewed_issues.size) > 0 %>
-                                , <%= reviewed_issues %> auto-reviewed
+                                , <%= reviewed_issues %> reviewed
                                 <%= 'issue'.pluralize reviewed_issues %>
                             <% end %>
                         </span>
