@@ -67,7 +67,7 @@ class SiteRolesController < ApplicationController
     end
 
     def set_site_roles
-        @site_roles = @site.roles
+        @site_roles = @site.roles.order( id: :asc )
     end
 
     def site_role_params

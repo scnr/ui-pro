@@ -80,7 +80,7 @@ class UserAgentsController < ApplicationController
     end
 
     def set_user_agents
-        @user_agents = UserAgent.all
+        @user_agents = UserAgent.all.order( id: :asc )
     end
 
     def user_agent_params

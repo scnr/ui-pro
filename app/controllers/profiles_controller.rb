@@ -86,7 +86,7 @@ class ProfilesController < ApplicationController
     end
 
     def set_profiles
-        @profiles = current_user.profiles
+        @profiles = current_user.profiles.order( id: :asc )
     end
 
     def authorize_edit
