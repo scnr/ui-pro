@@ -6,7 +6,6 @@ Warden.test_mode!
 #   I want to visit a site
 #   So I can see the profile options
 feature 'Profile page', :devise do
-
     subject { FactoryGirl.create :profile, scans: [scan] }
     let(:user) { FactoryGirl.create :user }
     let(:scan) { FactoryGirl.create :scan, site: site }
@@ -25,6 +24,9 @@ feature 'Profile page', :devise do
                 login_as( user, scope: :user )
                 visit profile_path( subject )
             end
+
+            let(:with_scans) { subject }
+            it_behaves_like 'Scans sidebar'
 
             scenario 'has title' do
                 expect(page).to have_title subject.name

@@ -1,7 +1,7 @@
 include Warden::Test::Helpers
 Warden.test_mode!
 
-feature 'User-agent new page' do
+feature 'User agent new page' do
 
     subject { FactoryGirl.create :user_agent }
     let(:user) { FactoryGirl.create :user }
@@ -11,7 +11,8 @@ feature 'User-agent new page' do
     end
 
     def submit
-        find( :xpath, "//input[@type='submit']" ).click
+        find( '#sidebar button' ).click
+        sleep 1
     end
 
     feature 'authenticated user' do
@@ -22,7 +23,7 @@ feature 'User-agent new page' do
 
         scenario 'has title' do
             expect(page).to have_title 'New'
-            expect(page).to have_title 'User-agents'
+            expect(page).to have_title 'User agents'
         end
 
         scenario 'has breadcrumbs' do
@@ -30,7 +31,7 @@ feature 'User-agent new page' do
 
             expect(breadcrumbs.find('li:nth-of-type(1) a').native['href']).to eq root_path
 
-            expect(breadcrumbs.find('li:nth-of-type(2)')).to have_content 'User-agents'
+            expect(breadcrumbs.find('li:nth-of-type(2)')).to have_content 'User agents'
             expect(breadcrumbs.find('li:nth-of-type(2) a').native['href']).to eq user_agents_path
 
             expect(breadcrumbs.find('li:nth-of-type(3)')).to have_content 'New'
@@ -41,7 +42,7 @@ feature 'User-agent new page' do
             expect(find('form')).to be_truthy
         end
 
-        feature 'form' do
+        feature 'form', js: true do
             before do
                 fill_in 'user_agent_name', with: 'My name'
                 fill_in 'user_agent_http_user_agent', with: 'My UA'

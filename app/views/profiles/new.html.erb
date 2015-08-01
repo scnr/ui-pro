@@ -1,6 +1,10 @@
 <%
-    title params[:action] == 'copy' ? "Copying #{@profile.name}" : 'New'
+    title params[:action].capitalize
     breadcrumb_add 'Profiles', profiles_path
+
+    if params[:action] == 'copy'
+        breadcrumb_add @profile.name, profile_path( params[:id] )
+    end
 %>
 
 <% add_to_sidebar do %>

@@ -27,7 +27,8 @@ feature 'Profile edit page', :devise do
             end
 
             scenario 'has title' do
-                expect(page).to have_title "Editing #{subject.name}"
+                expect(page).to have_title 'Edit'
+                expect(page).to have_title subject.name
                 expect(page).to have_title 'Profiles'
             end
 
@@ -39,8 +40,11 @@ feature 'Profile edit page', :devise do
                 expect(breadcrumbs.find('li:nth-of-type(2)')).to have_content 'Profiles'
                 expect(breadcrumbs.find('li:nth-of-type(2) a').native['href']).to eq profiles_path
 
-                expect(breadcrumbs.find('li:nth-of-type(3)')).to have_content "Editing #{subject.name}"
-                expect(breadcrumbs.find('li:nth-of-type(3) a').native['href']).to eq edit_profile_path( subject )
+                expect(breadcrumbs.find('li:nth-of-type(3)')).to have_content subject.name
+                expect(breadcrumbs.find('li:nth-of-type(3) a').native['href']).to eq profile_path( subject )
+
+                expect(breadcrumbs.find('li:nth-of-type(4)')).to have_content 'Edit'
+                expect(breadcrumbs.find('li:nth-of-type(4) a').native['href']).to eq edit_profile_path( subject )
             end
 
             scenario 'sees profile form' do

@@ -7,11 +7,11 @@
 %>
 
 <% add_to_sidebar do %>
-    <%= render partial: 'sidebar' %>
+    <%= render partial: 'sidebar', locals: { submit: true } %>
 <% end %>
 
 <h1>
-    Editing <%= link_to @site_role, site_roles_path( @site, @site_role ) %>
+    Editing <%= link_to @site_role, site_roles_path( @site, @site_role ) %> role
 </h1>
 
 <%= render 'form' %>

@@ -1,0 +1,65 @@
+<%
+   heading    = local_assigns[:title] || 'Associated scans'
+   scans      = local_assigns[:scans] || []
+   with_site  = local_assigns[:with_site]
+%>
+
+    <ul id="sidebar-scans" class="nav nav-pills nav-stacked">
+        <li class="nav-header">
+            <a>
+                <%= heading %>
+
+                <span class="badge badge-default">
+                    <%= scans.count %>
+                </span>
+            </a>
+        </li>
+
+        <%
+           if scans.any?
+
+           scans.each do |scan|
+               max_severity   = scan.issues.max_severity
+               issue_count    = scan.issues.size
+               revision_count = scan.revisions.size
+
+               if revision_count > 0 && issue_count == 0
+                   max_severity = 'none'
+               end
+        %>
+
+            <li id="site-sidebar-scan-id-<%= scan.id %>"
+
+                <% if revision_count > 0 %>
+                    <% if issue_count > 0 %>
+                        title="<%= pluralize issue_count, 'issue' %> with a maximum severity of <%= max_severity %>."
+                    <% else %>
+                        title="<%= pluralize issue_count, 'issue' %>."
+                    <% end %>
+                <% else %>
+                    title="Has not run yet."
+                <% end %>
+            >
+                <%= link_to site_scan_path( scan.site, scan, filter_params ) do %>
+                    <%= scan.name %>
+
+                    <% if with_site %>
+                        for <%= scan.site.url %>
+                    <% end %>
+
+                    <% if revision_count > 0 %>
+                        <span class="badge badge-severity-<%= max_severity %>">
+                            <%= issue_count %>
+                        </span>
+                    <% end %>
+                <% end %>
+            </li>
+
+            <li class="sidebar-info" id="site-sidebar-scan-id-<%= scan.id %>-info">
+                <small class="text-muted">
+                    <%= render partial: '/shared/scan_info', locals: { scan: scan } %>
+                </small>
+            </li>
+        <% end %>
+    </ul>
+<% end %>

@@ -21,7 +21,7 @@ feature 'New site role page', js: true do
     end
 
     def submit
-        find( :xpath, "//input[@type='submit']" ).click
+        find( '#sidebar button' ).click
         sleep 1
     end
 

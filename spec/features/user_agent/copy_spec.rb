@@ -1,7 +1,7 @@
 include Warden::Test::Helpers
 Warden.test_mode!
 
-feature 'User-agent copy page', :devise do
+feature 'User agent copy page', :devise do
 
     subject { FactoryGirl.create :user_agent, scans: [scan] }
     let(:user) { FactoryGirl.create :user }
@@ -13,7 +13,8 @@ feature 'User-agent copy page', :devise do
     end
 
     def submit
-        find( :xpath, "//input[@type='submit']" ).click
+        find( '#sidebar button' ).click
+        sleep 1
     end
 
     feature 'authenticated user' do
@@ -24,8 +25,9 @@ feature 'User-agent copy page', :devise do
             end
 
             scenario 'has title' do
-                expect(page).to have_title "Copying #{subject.name}"
-                expect(page).to have_title 'User-agents'
+                expect(page).to have_title 'Copy'
+                expect(page).to have_title subject.name
+                expect(page).to have_title 'User agents'
             end
 
             scenario 'has breadcrumbs' do
@@ -33,18 +35,21 @@ feature 'User-agent copy page', :devise do
 
                 expect(breadcrumbs.find('li:nth-of-type(1) a').native['href']).to eq root_path
 
-                expect(breadcrumbs.find('li:nth-of-type(2)')).to have_content 'User-agents'
+                expect(breadcrumbs.find('li:nth-of-type(2)')).to have_content 'User agents'
                 expect(breadcrumbs.find('li:nth-of-type(2) a').native['href']).to eq user_agents_path
 
-                expect(breadcrumbs.find('li:nth-of-type(3)')).to have_content "Copying #{subject.name}"
-                expect(breadcrumbs.find('li:nth-of-type(3) a').native['href']).to eq copy_user_agent_path( subject )
+                expect(breadcrumbs.find('li:nth-of-type(3)')).to have_content subject.name
+                expect(breadcrumbs.find('li:nth-of-type(3) a').native['href']).to eq user_agent_path( subject )
+
+                expect(breadcrumbs.find('li:nth-of-type(4)')).to have_content 'Copy'
+                expect(breadcrumbs.find('li:nth-of-type(4) a').native['href']).to eq copy_user_agent_path( subject )
             end
 
             scenario 'sees the user-agent form pre-filled' do
                 expect(find(:input, '#user_agent_name').value).to eq subject.name
             end
 
-            scenario 'creates a new user-agent' do
+            scenario 'creates a new user-agent', js: true do
                 name = 'New name here'
 
                 fill_in 'user_agent_name', with: name

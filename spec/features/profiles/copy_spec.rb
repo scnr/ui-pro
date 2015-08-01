@@ -16,7 +16,8 @@ feature 'Profile copy page', :devise do
     end
 
     def submit
-        find( :xpath, "//input[@type='submit']" ).click
+        find( '#sidebar button' ).click
+        sleep 1
     end
 
     feature 'authenticated user' do
@@ -29,7 +30,8 @@ feature 'Profile copy page', :devise do
             end
 
             scenario 'has title' do
-                expect(page).to have_title "Copying #{subject.name}"
+                expect(page).to have_title 'Copy'
+                expect(page).to have_title subject.name
                 expect(page).to have_title 'Profiles'
             end
 
@@ -41,15 +43,18 @@ feature 'Profile copy page', :devise do
                 expect(breadcrumbs.find('li:nth-of-type(2)')).to have_content 'Profiles'
                 expect(breadcrumbs.find('li:nth-of-type(2) a').native['href']).to eq profiles_path
 
-                expect(breadcrumbs.find('li:nth-of-type(3)')).to have_content "Copying #{subject.name}"
-                expect(breadcrumbs.find('li:nth-of-type(3) a').native['href']).to eq copy_profile_path( subject )
+                expect(breadcrumbs.find('li:nth-of-type(3)')).to have_content subject.name
+                expect(breadcrumbs.find('li:nth-of-type(3) a').native['href']).to eq profile_path( subject )
+
+                expect(breadcrumbs.find('li:nth-of-type(4)')).to have_content 'Copy'
+                expect(breadcrumbs.find('li:nth-of-type(4) a').native['href']).to eq copy_profile_path( subject )
             end
 
             scenario 'sees the profile form pre-filled' do
                 expect(find(:input, '#profile_name').value).to eq subject.name
             end
 
-            scenario 'creates a new profile' do
+            scenario 'creates a new profile', js: true do
                 name = 'New name here'
 
                 fill_in 'profile_name', with: name

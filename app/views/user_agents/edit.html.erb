@@ -1,8 +1,15 @@
 <%
-   title "Editing #{@user_agent.name}"
-   breadcrumb_add 'User-agents', user_agents_path
+   title 'Edit'
+   breadcrumb_add 'User agents', user_agents_path
+   breadcrumb_add @user_agent, user_agent_path( @user_agent )
 %>
 
-<h1>Editing user agent</h1>
+<% add_to_sidebar do %>
+    <%= render partial: 'sidebar', locals: { submit: true } %>
+<% end %>
+
+<h1>
+    Editing <%= link_to @user_agent %> user agent
+</h1>
 
 <%= render 'form' %>

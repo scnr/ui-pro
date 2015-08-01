@@ -1,4 +1,4 @@
-<%= simple_form_for @user_agent do |f| %>
+<%= simple_form_for @user_agent, html: { class: 'user_agent-form' } do |f| %>
     <%= f.error_notification %>
 
     <% if @user_agent.scans.any? %>
@@ -47,9 +47,5 @@
             %>
             <%= messages_for( :browser_cluster_screen_height ) %>
         </div>
-    </div>
-
-    <div class="form-actions">
-        <%= f.button :submit %>
     </div>
 <% end %>

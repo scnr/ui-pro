@@ -1,7 +1,7 @@
 include Warden::Test::Helpers
 Warden.test_mode!
 
-feature 'User-agent page', :devise do
+feature 'User agent page', :devise do
 
     subject { FactoryGirl.create :user_agent, scans: [scan] }
     let(:user) { FactoryGirl.create :user }
@@ -24,7 +24,7 @@ feature 'User-agent page', :devise do
 
             scenario 'has title' do
                 expect(page).to have_title subject.name
-                expect(page).to have_title 'User-agents'
+                expect(page).to have_title 'User agents'
             end
 
             scenario 'has breadcrumbs' do
@@ -32,7 +32,7 @@ feature 'User-agent page', :devise do
 
                 expect(breadcrumbs.find('li:nth-of-type(1) a').native['href']).to eq root_path
 
-                expect(breadcrumbs.find('li:nth-of-type(2)')).to have_content 'User-agents'
+                expect(breadcrumbs.find('li:nth-of-type(2)')).to have_content 'User agents'
                 expect(breadcrumbs.find('li:nth-of-type(2) a').native['href']).to eq user_agents_path
 
                 expect(breadcrumbs.find('li:nth-of-type(3)')).to have_content subject.name

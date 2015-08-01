@@ -1,9 +1,12 @@
 <%
-    title "Editing #{@profile.name}"
+    title 'Edit'
     breadcrumb_add 'Profiles', profiles_path
+    breadcrumb_add @profile, profile_path(@profile)
 %>
 
-<h1>Editing profile</h1>
+<h1>
+    Editing <%= link_to @profile %> profile
+</h1>
 
 <% add_to_sidebar do %>
     <%= render partial: 'sidebar' %>

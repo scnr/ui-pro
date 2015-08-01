@@ -38,7 +38,7 @@ feature 'New scan page' do
     it_behaves_like 'Site sidebar'
 
     let(:with_scans) { site }
-    it_behaves_like 'Scans sidebar', without_filtering: true
+    it_behaves_like 'Scans sidebar'
 
     scenario 'selects new scan sidebar button' do
         btn = find( "#sidebar-site a[@href='#{new_site_scan_path(site)}']" )

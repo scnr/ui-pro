@@ -1,7 +1,7 @@
 include Warden::Test::Helpers
 Warden.test_mode!
 
-feature 'User-agent index page' do
+feature 'User agent index page' do
 
     let(:user) { FactoryGirl.create :user }
     let(:admin) { FactoryGirl.create :user, :admin, email: 'ff@ff.cc' }
@@ -23,6 +23,10 @@ feature 'User-agent index page' do
         before do
             login_as( user, scope: :user )
             visit user_agents_path
+        end
+
+        scenario 'has title' do
+            expect(page).to have_title 'User agents'
         end
 
         scenario 'can set a default user_agent', js: true do

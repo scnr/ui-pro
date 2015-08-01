@@ -23,7 +23,7 @@ module ProfilesControllerImportable
         end
 
         respond_to do |format|
-            format.html { render 'edit' }
+            format.html { render 'new' }
         end
     end
 

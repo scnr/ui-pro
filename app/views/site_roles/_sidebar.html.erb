@@ -2,6 +2,20 @@
 
 <% if @site_role %>
 
+    <% if !@site_role.guest? %>
+        <hr/>
+
+        <% if submit %>
+            <button class="btn btn-default btn-primary"
+                    onclick="$('.site_role-form').submit()">
+
+                <%= @site_role.id ? 'Update' : 'Create' %>
+            </button>
+        <% else %>
+            <%= render 'actions', site_role: @site_role %>
+        <% end %>
+    <% end %>
+
     <hr/>
 
     <ul id="sidebar-roles" class="nav nav-pills nav-stacked">
@@ -41,56 +55,8 @@
         <% end %>
     </ul>
 
-    <% if @site_role.scans.count > 0 %>
-        <ul id="sidebar-scans" class="nav nav-pills nav-stacked">
-            <li class="nav-header">
-                <a>
-                    Used for <%= pluralize @site_role.scans.count, 'scan' %>
-                </a>
-            </li>
-
-            <%
-               @site_role.scans.each do |scan|
-                   max_severity   = scan.issues.max_severity
-                   issue_count    = scan.issues.size
-                   revision_count = scan.revisions.size
-
-                   if revision_count > 0 && issue_count == 0
-                       max_severity = 'none'
-                   end
-            %>
-
-                <li
-                    id="site-sidebar-scan-id-<%= scan.id %>"
-
-                    <% if revision_count > 0 %>
-                        <% if issue_count > 0 %>
-                            title="<%= pluralize issue_count, 'issue' %> with a maximum severity of <%= max_severity %>."
-                        <% else %>
-                            title="<%= pluralize issue_count, 'issue' %>."
-                        <% end %>
-                    <% else %>
-                        title="Has not run yet."
-                    <% end %>
-                >
-                    <%= link_to site_scan_path( @site, scan, filter_params ) do %>
-                        <%= scan.name %>
-
-                        <% if revision_count > 0 %>
-                        <span class="badge badge-severity-<%= max_severity %>">
-                            <%= issue_count %>
-                        </span>
-                        <% end %>
-                    <% end %>
-                </li>
-
-                <li class="sidebar-info" id="site-sidebar-scan-id-<%= scan.id %>-info">
-                    <small class="text-muted">
-                        <%= render partial: '/shared/scan_info', locals: { scan: scan } %>
-                    </small>
-                </li>
-            <% end %>
-        </ul>
-
-    <% end %>
+    <%= render partial: 'shared/sidebar_scans',
+               locals: {
+                       scans: @site_role.scans
+               } %>
 <% end %>

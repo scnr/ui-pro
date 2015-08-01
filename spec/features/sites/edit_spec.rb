@@ -56,11 +56,11 @@ feature 'Site profile form' do
     end
 
     feature 'when the form is submitted' do
-        scenario 'redirects to site', js: true do
+        scenario 'redirects to settings', js: true do
             submit_via_sidebar
             sleep 1
 
-            expect(current_url).to end_with site_path( site )
+            expect(current_url).to end_with edit_site_path( site )
         end
     end
 
@@ -403,7 +403,7 @@ feature 'Site profile form' do
                     click_button button
                     submit_via_sidebar
 
-                    expect(page).to have_content 'Site was successfully updated'
+                    expect(page).to have_content 'Site settings were successfully updated'
                 end
 
                 feature 'Linux, Apache, MySQL, PHP' do

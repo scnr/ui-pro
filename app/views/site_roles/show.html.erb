@@ -6,7 +6,7 @@
 %>
 
 <% add_to_sidebar do %>
-    <%= render partial: 'sidebar' %>
+    <%= render partial: 'sidebar', locals: { submit: false } %>
 <% end %>
 
 <%= render @site_role, format: :html %>

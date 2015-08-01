@@ -19,21 +19,22 @@ feature 'Edit site role page' do
     end
 
     def submit
-        find( :xpath, "//input[@type='submit']" ).click
+        find( '#sidebar button' ).click
+        sleep 1
     end
 
     it_behaves_like 'Site sidebar'
     it_behaves_like 'Roles sidebar'
 
     let(:with_scans) { subject }
-    it_behaves_like 'Scans sidebar', without_filtering: true
+    it_behaves_like 'Scans sidebar'
 
     scenario 'selects sidebar button' do
         btn = find( "#sidebar-site a[@href='#{site_roles_path(site)}']" )
         expect(btn[:class]).to include 'btn-lg'
     end
 
-    scenario 'can update the role' do
+    scenario 'can update the role', js: true do
         fill_in 'site_role_name', with: 'My new name'
 
         submit

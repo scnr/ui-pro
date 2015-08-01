@@ -1,7 +1,15 @@
 <%
-   title params[:action] == 'copy' ? "Copying #{@user_agent.name}" : 'New'
-   breadcrumb_add 'User-agents', user_agents_path
+   title params[:action].capitalize
+   breadcrumb_add 'User agents', user_agents_path
+
+   if params[:action] == 'copy'
+       breadcrumb_add @user_agent.name, user_agent_path( params[:id] )
+   end
 %>
+
+<% add_to_sidebar do %>
+    <%= render partial: 'sidebar', locals: { submit: true } %>
+<% end %>
 
 <h1>New user agent</h1>
 

@@ -132,6 +132,25 @@ feature 'Site issues summary' do
                             end
                         end
 
+                        feature 'sidebar' do
+                            let(:sidebar) { find '#sidebar-scans' }
+
+                            scenario 'only shows scans that have logged issues for that page' do
+                                all_scans  = site.scans.pluck(:name)
+                                page_scans = sitemap_entry.issues.map { |i| i.scan }.map(&:name)
+
+                                page_scans.each do |name|
+                                    expect(sidebar).to have_content name
+                                end
+
+                                expect(all_scans - page_scans).to be_any
+
+                                (all_scans - page_scans).each do |name|
+                                    expect(sidebar).to_not have_content name
+                                end
+                            end
+                        end
+
                         scenario 'user sees the page URL in the heading' do
                             expect(site_info.find('h1')).to have_content "showing #{path}"
                         end

@@ -9,7 +9,9 @@
 %>
 
 <% if submit %>
-    <button class="btn btn-default btn-primary" onclick="$('.profile-form').submit()">
+    <button class="btn btn-default btn-primary"
+            onclick="$('.profile-form').submit()">
+
         <%= @profile.id ? 'Update' : 'Create' %>
     </button>
 <% else %>
@@ -35,3 +37,12 @@
         <% end %>
     </ul>
 </div>
+
+<hr/>
+
+<%= render partial: 'shared/sidebar_scans',
+           locals: {
+                   scans:      @profile.scans,
+                   with_site:  true,
+                   with_count: true
+           } %>

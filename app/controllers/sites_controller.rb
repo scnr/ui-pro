@@ -50,7 +50,10 @@ class SitesController < ApplicationController
     def update
         respond_to do |format|
             if @site.update( site_profile_params )
-                format.html { redirect_to site_url(@site), notice: 'Site was successfully updated.' }
+                format.html do
+                    redirect_to edit_site_url(@site),
+                                notice: 'Site settings were successfully updated.'
+                end
                 format.json { render :show, status: :ok, location: @site }
             else
                 format.html { render :edit }
