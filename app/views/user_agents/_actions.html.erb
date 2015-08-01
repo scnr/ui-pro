@@ -1,30 +1,38 @@
 <%
-   button_size = local_assigns[:button_size] || 'sm'
+   disabled_edit   = nil
+   disabled_delete = nil
+   if user_agent.scans.any?
+       disabled_delete = 'Cannot delete user agent with associated scans.'
+       disabled_edit   = 'Cannot edit user agent with associated scans.'
+   end
+   if user_agent.default?
+       disabled_delete = 'Cannot delete default user agent.'
+   end
 %>
 
 <%= link_to copy_user_agent_path( user_agent ),
-            class: "btn btn-#{button_size} btn-primary" do %>
+            class: 'btn btn-sm btn-primary' do %>
     <i class="fa fa-copy"></i>
 <% end %>
 
-<% if user_agent.revisions.empty? %>
+<span data-title="<%= disabled_edit %>" data-toggle="tooltip">
     <%= link_to edit_user_agent_path( user_agent ),
-                class: "btn btn-#{button_size} btn-warning" do %>
+                class: "btn btn-sm btn-warning #{'disabled' if disabled_edit}" do %>
         <i class="fa fa-pencil"></i>
     <% end %>
-<% end %>
+</span>
 
-<% if user_agent.scans.empty? && !user_agent.default? %>
+<span data-title="<%= disabled_delete %>" data-toggle="tooltip">
     <%= link_to user_agent, method: :delete,
-                class: "btn btn-#{button_size} btn-danger",
+                class: "btn btn-sm btn-danger #{'disabled' if disabled_delete}",
                 data: { confirm: 'Are you sure?' } do %>
         <i class="fa fa-trash"></i>
     <% end %>
-<% end %>
+</span>
 
 <div class="btn-group" role="group">
     <button id="user_agent-export-button" type="button"
-            class="btn btn-<%= button_size %> btn-inverse dropdown-toggle"
+            class="btn btn-sm btn-inverse dropdown-toggle"
             data-toggle="dropdown">
 
         <i class="fa fa-download"></i>

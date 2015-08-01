@@ -29,7 +29,7 @@ feature 'User agent index page' do
             expect(page).to have_title 'User agents'
         end
 
-        scenario 'can set a default user_agent', js: true do
+        scenario 'can set a default user agent', js: true do
             user_agent
             other_user_agent
 
@@ -45,7 +45,7 @@ feature 'User agent index page' do
             expect(find( "#id_#{other_user_agent.id}" )).to_not be_checked
         end
 
-        feature 'can export user_agent as' do
+        feature 'can export user agent as' do
             scenario 'JSON' do
                 find_button('user_agent-export-button').click
                 click_link 'JSON'
@@ -68,7 +68,7 @@ feature 'User agent index page' do
             end
         end
 
-        feature 'can import user_agent as' do
+        feature 'can import user agent as' do
             let(:file) do
                 file = Tempfile.new( described_class.to_s )
 
@@ -123,16 +123,12 @@ feature 'User agent index page' do
             end
         end
 
-        # Scenario: User-agent listed on index page
-        #   Given I am signed in
-        #   When I visit the user_agent index page
-        #   Then I see my user_agents
-        scenario 'sees a list of their user_agents' do
+        scenario 'sees a list of their user agents' do
             expect(page).to have_content user_agent.name
             expect(page).to_not have_content other_user_agent.name
         end
 
-        scenario 'sees the amount of scans associated with each user_agent' do
+        scenario 'sees the amount of scans associated with each user agent' do
             user_agent.scans << scan
 
             login_as( user, scope: :user )
@@ -141,21 +137,12 @@ feature 'User agent index page' do
             expect(page).to have_content user_agent.scans.size
         end
 
-        # Scenario: Page contains a "New User-agent" link
-        #   Given I am signed in
-        #   When I visit the user_agent index page
-        #   Then I see a "New User-agent" link
-        scenario 'sees a new user_agent link' do
+        scenario 'sees a new user agent link' do
             expect(page).to have_xpath "//a[@href='#{new_user_agent_path}']"
         end
 
-        feature 'and the user_agent has no scans' do
+        feature 'and the user agent has no scans' do
 
-            # Scenario: User-agents without scans are accompanied by edit links
-            #   Given I am signed in
-            #   When I visit the user_agent index page
-            #   And the user_agent has no associated scans
-            #   Then I see my user_agents with edit links
             scenario 'can edit' do
                 expect(page).to have_xpath "//a[@href='#{edit_user_agent_path( user_agent )}']"
             end
@@ -164,76 +151,29 @@ feature 'User agent index page' do
                 expect(page).to have_xpath "//a[@href='#{copy_user_agent_path( user_agent )}']"
             end
 
-            # Scenario: User-agents without scans are accompanied by delete links
-            #   Given I am signed in
-            #   When I visit the user_agent index page
-            #   And the user_agent has no associated scans
-            #   Then I see user_agents with delete links
             scenario 'can delete' do
                 expect(page).to have_xpath "//a[@href='#{user_agent_path( user_agent )}' and @data-method='delete']"
             end
         end
 
         feature 'and the user_agent has scans' do
-            feature 'without revisions' do
-                before do
-                    user_agent.scans << scan
+            before do
+                user_agent.scans << scan
 
-                    login_as( user, scope: :user )
-                    visit user_agents_path
-                end
-
-                # Scenario: User-agents without scan revisions are accompanied by edit links
-                #   Given I am signed in
-                #   When I visit the user_agent index page
-                #   And the user_agent has no associated scans with revisions
-                #   Then I see my user_agents with edit links
-                scenario 'can edit' do
-                    expect(page).to have_xpath "//a[@href='#{edit_user_agent_path( user_agent )}']"
-                end
-
-                scenario 'can copy' do
-                    expect(page).to have_xpath "//a[@href='#{copy_user_agent_path( user_agent )}']"
-                end
-
-                # Scenario: User-agents without scan revisions are accompanied by delete links
-                #   Given I am signed in
-                #   When I visit the user_agent index page
-                #   And the user_agent has no associated scans with revisions
-                #   Then I see user_agents with delete links
-                scenario 'cannot delete' do
-                    expect(page).to_not have_xpath "//a[@href='#{user_agent_path( user_agent )}' and @data-method='delete']"
-                end
+                login_as( user, scope: :user )
+                visit user_agents_path
             end
 
-            feature 'with revisions' do
-                before do
-                    scan.revisions << FactoryGirl.create(:revision, scan: scan)
-                    user_agent.scans << scan
-                    visit user_agents_path
-                end
+            scenario 'cannot edit' do
+                expect(find(:xpath, "//a[@href='#{edit_user_agent_path( user_agent )}']")[:class]).to include 'disabled'
+            end
 
-                # Scenario: User-agents with scans are not accompanied by edit links
-                #   Given I am signed in
-                #   When I visit the user_agent index page
-                #   And the user_agent has associated scans
-                #   Then I don't see edit links
-                scenario 'cannot edit' do
-                    expect(page).to_not have_xpath "//a[@href='#{edit_user_agent_path(user_agent)}']"
-                end
+            scenario 'can copy' do
+                expect(page).to have_xpath "//a[@href='#{copy_user_agent_path( user_agent )}']"
+            end
 
-                scenario 'can copy' do
-                    expect(page).to have_xpath "//a[@href='#{copy_user_agent_path( user_agent )}']"
-                end
-
-                # Scenario: User-agents with scans are not accompanied by delete links
-                #   Given I am signed in
-                #   When I visit the user_agent index page
-                #   And the user_agent has associated scans
-                #   Then I don't see delete links
-                scenario 'cannot delete' do
-                    expect(page).to_not have_xpath "//a[@href='#{user_agent_path( user_agent )}' and @data-method='delete']"
-                end
+            scenario 'cannot delete' do
+                expect(find(:xpath, "//a[@href='#{user_agent_path( user_agent )}' and @data-method='delete']")[:class]).to include 'disabled'
             end
 
             feature 'when a user_agent is default' do
@@ -243,13 +183,8 @@ feature 'User agent index page' do
                     visit user_agents_path
                 end
 
-                # Scenario: User-agents with scans are not accompanied by delete links
-                #   Given I am signed in
-                #   When I visit the user_agent index page
-                #   And the user_agent has associated scans
-                #   Then I don't see delete links
                 scenario 'cannot delete' do
-                    expect(page).to_not have_xpath "//a[@href='#{user_agent_path( user_agent )}' and @data-method='delete']"
+                    expect(find(:xpath, "//a[@href='#{user_agent_path( user_agent )}' and @data-method='delete']")[:class]).to include 'disabled'
                 end
             end
         end

@@ -3,7 +3,7 @@ Warden.test_mode!
 
 feature 'User agent edit page', :devise do
 
-    subject { FactoryGirl.create :user_agent, scans: [scan] }
+    subject { FactoryGirl.create :user_agent }
     let(:user) { FactoryGirl.create :user }
     let(:scan) { FactoryGirl.create :scan, site: site }
     let(:revision) { FactoryGirl.create :revision, scan: scan }
@@ -17,6 +17,7 @@ feature 'User agent edit page', :devise do
         feature 'edits user agent' do
             before do
                 login_as( user, scope: :user )
+
                 visit edit_user_agent_path( subject )
             end
 
@@ -45,27 +46,15 @@ feature 'User agent edit page', :devise do
                 expect(find('form')).to be_truthy
             end
 
-            scenario 'sees the associated scans' do
-                subject.scans << scan
-                subject.scans << FactoryGirl.create( :scan, name: 'Fff', site: site )
-
-                visit edit_user_agent_path( subject )
-
-                subject.scans.each do |scan|
-                    expect(page).to have_content scan.name
-                    expect(page).to have_content scan.site.to_s
-                end
-            end
-
-            feature 'when the user-agent has a scan with revisions' do
+            feature 'when the user agent has scans' do
                 before do
-                    scan.revisions << revision
+                    subject.scans << scan
 
                     login_as( user, scope: :user )
                     visit edit_user_agent_path( subject )
                 end
 
-                scenario 'user gets redirected back to the user-agent page' do
+                scenario 'user gets redirected back to the user agent page' do
                     expect(current_url).to eq user_agent_url( subject )
                 end
             end

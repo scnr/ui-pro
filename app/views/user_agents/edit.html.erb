@@ -9,7 +9,7 @@
 <% end %>
 
 <h1>
-    Editing <%= link_to @user_agent %> user agent
+    Editing <%= link_to @user_agent, user_agent_path(@user_agent) %> user agent
 </h1>
 
 <%= render 'form' %>

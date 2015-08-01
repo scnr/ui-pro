@@ -12,7 +12,7 @@ class UserAgentsController < ApplicationController
     before_action :authorize_edit,    only: [:edit, :update]
     before_action :authorize_destroy, only: [:destroy]
 
-    PROFILE_EXPORT_PREFIX = 'Arachni Pro User-agent'
+    PROFILE_EXPORT_PREFIX = 'Arachni Pro user agent'
 
     respond_to :html
 
@@ -34,13 +34,20 @@ class UserAgentsController < ApplicationController
     end
 
     def create
-        @user_agent    = UserAgent.new(user_agent_params)
-        flash[:notice] = 'UserAgent was successfully created.' if @user_agent.save
+        @user_agent = UserAgent.new( user_agent_params )
+
+        if @user_agent.save
+            flash[:notice] = 'User agent was successfully created.'
+        end
+
         respond_with(@user_agent)
     end
 
     def update
-        flash[:notice] = 'UserAgent was successfully updated.' if @user_agent.update(user_agent_params)
+        if @user_agent.update( user_agent_params )
+            flash[:notice] = 'User agent was successfully updated.'
+        end
+
         respond_with(@user_agent)
     end
 
@@ -57,13 +64,15 @@ class UserAgentsController < ApplicationController
     private
 
     def authorize_edit
-        return if @user_agent.revisions.empty?
-        redirect_to @user_agent, error: 'Cannot edit a user-agent that has associated revisions.'
+        return if @user_agent.scans.empty?
+        redirect_to @user_agent,
+                    error: 'Cannot edit a user agent that has associated scans.'
     end
 
     def authorize_destroy
         return if @user_agent.scans.empty?
-        redirect_to @user_agent, error: 'Cannot delete a user-agent that has associated scans.'
+        redirect_to @user_agent,
+                    error: 'Cannot delete a user agent that has associated scans.'
     end
 
     def set_user_agent
