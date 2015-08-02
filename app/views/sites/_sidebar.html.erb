@@ -1,6 +1,9 @@
 <%
    scans     = @issues_summary[:scans]
    scan_data = @issues_summary[:scan_data]
+
+   total_scan_count   = @site.scans.size
+   current_scan_count = scans.size
 %>
 
 <%= render 'shared/sidebar_site' %>
@@ -13,6 +16,12 @@
     <li class="nav-header">
         <a>
             Scans
+
+            <% if total_scan_count != current_scan_count %>
+                &mdash;
+                Showing <%= current_scan_count %> out of
+                <%= total_scan_count %>
+            <% end %>
         </a>
     </li>
 
