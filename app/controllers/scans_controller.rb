@@ -108,6 +108,7 @@ class ScansController < ApplicationController
 
         permitted_params = params.permit( permitted_schedule_attributes )
         schedule = Schedule.new( permitted_params )
+        schedule.sanitize_start_at
 
         # If we have a scan pass it, we need to know how many revisions it has
         # in order to properly index the following occurrences.

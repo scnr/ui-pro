@@ -170,6 +170,12 @@ class Schedule < ActiveRecord::Base
         "#{s} - #{human_frequency}"
     end
 
+    def sanitize_start_at
+        return if !self.start_at
+
+        self.start_at = [self.start_at, Time.now].max
+    end
+
     private
 
     def validate_cron
@@ -192,12 +198,6 @@ class Schedule < ActiveRecord::Base
 
     def frequency_simple_next( base )
         base + (day_frequency.to_i.days + month_frequency.to_i.months)
-    end
-
-    def sanitize_start_at
-        return if !self.start_at
-
-        self.start_at = [self.start_at, Time.now].max
     end
 
     def set_default_values
