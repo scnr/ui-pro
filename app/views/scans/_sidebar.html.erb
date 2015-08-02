@@ -1,6 +1,9 @@
 <%
    revisions     = @issues_summary[:revisions]
    revision_data = @issues_summary[:revision_data]
+
+   total_revision_count   = @scan.revisions.size
+   current_revision_count = revisions.size
 %>
 
 <%= render 'shared/sidebar_scan' %>
@@ -13,6 +16,12 @@
             <li class="nav-header">
                 <a>
                     Revisions
+
+                    <% if total_revision_count != current_revision_count %>
+                        &mdash;
+                        Showing <%= current_revision_count %> out of
+                        <%= total_revision_count %>
+                    <% end %>
                 </a>
             </li>
 
