@@ -140,6 +140,8 @@ feature 'Site index page' do
 
         site = Site.last
 
+        expect(current_path).to eq edit_site_path(site)
+
         expect(site.protocol).to eq 'http'
         expect(site.host).to eq 'example.com'
         expect(site.port).to eq 8080
