@@ -55,10 +55,8 @@ feature 'Scans index' do
         refresh
     end
 
-    scenario 'selects sidebar button' do
-        btn = find( "#sidebar-site a[@href='#{current_path}']" )
-        expect(btn[:class]).to include 'btn-lg'
-    end
+    let(:site_sidebar_selected_button) { "a[@href='#{current_path}']" }
+    it_behaves_like 'Site sidebar'
 
     scenario 'has title' do
         expect(page).to have_title 'Scans'

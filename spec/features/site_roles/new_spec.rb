@@ -55,13 +55,9 @@ EOJS
 )
     end
 
+    let(:site_sidebar_selected_button) { "a[@href='#{site_roles_path(site)}']" }
     it_behaves_like 'Site sidebar'
     it_behaves_like 'Roles sidebar'
-
-    scenario 'selects sidebar button', js: false do
-        btn = find( "#sidebar-site a[@href='#{site_roles_path(site)}']" )
-        expect(btn[:class]).to include 'btn-lg'
-    end
 
     scenario 'can create new role' do
         fill_in_form

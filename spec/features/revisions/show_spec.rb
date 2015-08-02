@@ -26,6 +26,7 @@ feature 'Revision page' do
         refresh
     end
 
+    let(:site_sidebar_selected_button) { "a[@href='#{site_scans_path(site)}']" }
     it_behaves_like 'Scan sidebar'
     it_behaves_like 'Revisions sidebar'
 

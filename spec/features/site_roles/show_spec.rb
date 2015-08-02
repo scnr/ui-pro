@@ -24,16 +24,12 @@ feature 'Show site role page' do
         visit site_role_path( site, subject )
     end
 
+    let(:site_sidebar_selected_button) { "a[@href='#{site_roles_path(site)}']" }
     it_behaves_like 'Site sidebar'
     it_behaves_like 'Roles sidebar'
 
     let(:with_scans) { subject }
     it_behaves_like 'Scans sidebar'
-
-    scenario 'selects sidebar button' do
-        btn = find( "#sidebar-site a[@href='#{site_roles_path(site)}']" )
-        expect(btn[:class]).to include 'btn-lg'
-    end
 
     scenario 'sees name in heading' do
         expect(find('h2')).to have_content subject.name

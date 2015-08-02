@@ -23,16 +23,12 @@ feature 'Edit site role page' do
         sleep 1
     end
 
+    let(:site_sidebar_selected_button) { "a[@href='#{site_roles_path(site)}']" }
     it_behaves_like 'Site sidebar'
     it_behaves_like 'Roles sidebar'
 
     let(:with_scans) { subject }
     it_behaves_like 'Scans sidebar'
-
-    scenario 'selects sidebar button' do
-        btn = find( "#sidebar-site a[@href='#{site_roles_path(site)}']" )
-        expect(btn[:class]).to include 'btn-lg'
-    end
 
     scenario 'can update the role', js: true do
         fill_in 'site_role_name', with: 'My new name'

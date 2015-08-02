@@ -1,5 +1,6 @@
 shared_examples_for 'Site sidebar' do |options = {}|
     let(:site_sidebar) { find '#sidebar #sidebar-site' }
+    let(:site_sidebar_buttons) { site_sidebar.find '.btn-group' }
     let(:site_sidebar_heading) { site_sidebar.find 'h4' }
 
     scenario 'includes external link to site' do
@@ -11,39 +12,47 @@ shared_examples_for 'Site sidebar' do |options = {}|
     end
 
     if !options[:without_buttons]
-        feature 'buttons', js: false do
-            scenario 'includes new scan button' do
-                expect(site_sidebar).to have_xpath "a[@href='#{new_site_scan_path(site)}']"
 
-                btn = site_sidebar.find( "a[@href='#{new_site_scan_path(site)}']" )
-                expect(btn).to have_css 'i.fa.fa-plus'
+        let(:site_sidebar_selected_button){ [super()].flatten }
+
+        scenario 'selects sidebar button', js: false do
+            btn = site_sidebar_buttons.find( *site_sidebar_selected_button )
+            expect(btn[:class]).to include 'btn-selected'
+        end
+
+        feature 'buttons', js: false do
+            scenario 'includes site overview button' do
+                expect(site_sidebar_buttons).to have_xpath "a[@href='#{site_path(site)}' and not(@data-method)]"
+
+                btn = site_sidebar_buttons.find( :xpath, "a[@href='#{site_path(site)}' and not(@data-method)]" )
+                expect(btn).to have_css 'i.fa.fa-home'
             end
 
             scenario 'includes scans button' do
-                expect(site_sidebar).to have_xpath "a[@href='#{site_scans_path(site)}']"
+                expect(site_sidebar_buttons).to have_xpath "a[@href='#{site_scans_path(site)}']"
 
-                btn = site_sidebar.find( "a[@href='#{site_scans_path(site)}']" )
+                btn = site_sidebar_buttons.find( "a[@href='#{site_scans_path(site)}']" )
                 expect(btn).to have_css 'i.fa.fa-tasks'
             end
 
             scenario 'includes link to user roles' do
-                expect(site_sidebar).to have_xpath "a[@href='#{site_roles_path(site)}']"
+                expect(site_sidebar_buttons).to have_xpath "a[@href='#{site_roles_path(site)}']"
 
-                btn = site_sidebar.find( "a[@href='#{site_roles_path(site)}']" )
+                btn = site_sidebar_buttons.find( "a[@href='#{site_roles_path(site)}']" )
                 expect(btn).to have_css 'i.fa.fa-users'
             end
 
             scenario 'includes link to settings' do
-                expect(site_sidebar).to have_xpath "a[@href='#{edit_site_path(site)}']"
+                expect(site_sidebar_buttons).to have_xpath "a[@href='#{edit_site_path(site)}']"
 
-                btn = site_sidebar.find( "a[@href='#{edit_site_path(site)}']" )
+                btn = site_sidebar_buttons.find( "a[@href='#{edit_site_path(site)}']" )
                 expect(btn).to have_css 'i.fa.fa-cog'
             end
 
             scenario 'includes delete link' do
-                expect(site_sidebar).to have_xpath "a[@href='#{site_path(site)}' and @data-method='delete']"
+                expect(site_sidebar_buttons).to have_xpath "a[@href='#{site_path(site)}' and @data-method='delete']"
 
-                btn = site_sidebar.find( :xpath, "a[@href='#{site_path(site)}' and @data-method='delete']" )
+                btn = site_sidebar_buttons.find( :xpath, "a[@href='#{site_path(site)}' and @data-method='delete']" )
                 expect(btn).to have_css 'i.fa.fa-trash'
             end
         end

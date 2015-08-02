@@ -28,15 +28,11 @@ feature 'Scan page' do
         refresh
     end
 
+    let(:site_sidebar_selected_button) { "a[@href='#{site_scans_path(site)}']" }
     it_behaves_like 'Scan sidebar'
     it_behaves_like 'Revisions sidebar'
 
     let(:info) { find '#scan-info' }
-
-    scenario 'selects sidebar button' do
-        btn = find( "#sidebar-site a[@href='#{site_scans_path(site)}']" )
-        expect(btn[:class]).to include 'btn-lg'
-    end
 
     feature 'when the scan has revisions' do
         before do

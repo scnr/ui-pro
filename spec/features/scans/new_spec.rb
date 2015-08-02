@@ -35,20 +35,11 @@ feature 'New scan page' do
         visit new_site_scan_path( site )
     end
 
+    let(:site_sidebar_selected_button) { "a[@href='#{site_scans_path(site)}']" }
     it_behaves_like 'Site sidebar'
 
     let(:with_scans) { site }
     it_behaves_like 'Scans sidebar'
-
-    scenario 'selects new scan sidebar button' do
-        btn = find( "#sidebar-site a[@href='#{new_site_scan_path(site)}']" )
-        expect(btn[:class]).to include 'btn-lg'
-    end
-
-    scenario 'selects scans sidebar button' do
-        btn = find( "#sidebar-site a[@href='#{site_scans_path(site)}']" )
-        expect(btn[:class]).to include 'btn-lg'
-    end
 
     scenario 'has title' do
         expect(page).to have_title 'New'

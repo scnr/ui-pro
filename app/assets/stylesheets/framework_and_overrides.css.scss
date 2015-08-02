@@ -190,6 +190,10 @@ section {
     background-color: $severity-none-color-faded;
 }
 
+.btn-selected {
+    @extend .btn-lg;
+}
+
 .btn-inverse {
     background-color: #363636;
     background-image: linear-gradient(to bottom, #444444, #222222);

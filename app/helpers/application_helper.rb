@@ -2,11 +2,15 @@ module ApplicationHelper
 
     SCOPED_FIND_EACH_BATCH_SIZE = 1000
 
-    def select_button_class( path )
+    def select_button_class( path, children = true )
         default  = 'btn btn-sm'
-        selected = 'btn btn-lg'
+        selected = 'btn btn-selected'
 
-        request.env['PATH_INFO'].starts_with?( path ) ? selected : default
+        if children
+            request.env['PATH_INFO'].starts_with?( path ) ? selected : default
+        else
+            request.env['PATH_INFO'] ==  path ? selected : default
+        end
     end
 
     def seconds_to_hms( seconds )

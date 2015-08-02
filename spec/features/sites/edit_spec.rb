@@ -35,12 +35,8 @@ feature 'Site profile form' do
 
     let(:profile) { site.reload.profile }
 
+    let(:site_sidebar_selected_button) { "a[@href='#{current_path}']" }
     it_behaves_like 'Site sidebar'
-
-    scenario 'selects sidebar button' do
-        btn = find( "#sidebar-site a[@href='#{current_path}']" )
-        expect(btn[:class]).to include 'btn-lg'
-    end
 
     scenario 'sees profile form' do
         expect(find('.profile-form')).to be_truthy

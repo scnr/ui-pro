@@ -27,6 +27,9 @@ feature 'Site page' do
 
     let(:site_info) { find '#site-info' }
 
+    let(:site_sidebar_selected_button) do
+        [:xpath, "a[@href='#{site_path(site)}' and not(@data-method)]"]
+    end
     it_behaves_like 'Site sidebar'
 
     let(:with_scans) { site }
