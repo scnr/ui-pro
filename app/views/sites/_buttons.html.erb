@@ -1,5 +1,5 @@
 <div class="btn-group" role="group">
-    <%= link_to site_path( site ), title: 'Site overview',
+    <%= link_to site_path( site, filter_params ), title: 'Site overview',
                 class: select_button_class( site_path( site ), false ) + ' btn-primary' do %>
         <i class="fa fa-home"></i>
     <% end %>

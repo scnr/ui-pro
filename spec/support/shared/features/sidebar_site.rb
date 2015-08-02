@@ -21,10 +21,11 @@ shared_examples_for 'Site sidebar' do |options = {}|
         end
 
         feature 'buttons', js: false do
-            scenario 'includes site overview button' do
-                expect(site_sidebar_buttons).to have_xpath "a[@href='#{site_path(site)}' and not(@data-method)]"
+            scenario 'includes site overview button with filtering options' do
+                xpath = "a[starts-with(@href, '#{site_path( site )}?filter') and not(@data-method)]"
+                expect(site_sidebar_heading).to have_xpath xpath
 
-                btn = site_sidebar_buttons.find( :xpath, "a[@href='#{site_path(site)}' and not(@data-method)]" )
+                btn = site_sidebar_buttons.find( :xpath, xpath )
                 expect(btn).to have_css 'i.fa.fa-home'
             end
 
