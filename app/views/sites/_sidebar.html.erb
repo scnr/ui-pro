@@ -2,8 +2,8 @@
    scans     = @issues_summary[:scans]
    scan_data = @issues_summary[:scan_data]
 
-   total_scan_count   = @site.scans.size
-   current_scan_count = scans.size
+   total_scan_count   = @site.scans.count
+   current_scan_count = scans.count
 %>
 
 <%= render 'shared/sidebar_site' %>
