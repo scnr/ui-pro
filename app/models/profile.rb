@@ -6,7 +6,7 @@ class Profile < ActiveRecord::Base
     include ProfileDefaultHelpers
 
     belongs_to :user
-    has_many   :scans
+    has_many   :scans, -> { order id: :desc }
     has_many   :revisions, through: :scans
 
     validates_presence_of   :description

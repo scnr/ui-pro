@@ -5,7 +5,7 @@ class SiteRole < ActiveRecord::Base
     serialize :login_form_parameters, Hash
 
     belongs_to :site
-    has_many   :scans
+    has_many   :scans, -> { order id: :desc }
     has_many   :revisions, through: :scans
 
     validates :login_type, presence: true, inclusion: { in: %w(none form script) }

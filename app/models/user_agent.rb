@@ -5,7 +5,7 @@ class UserAgent < ActiveRecord::Base
     include ProfileExport
     include ProfileDefaultHelpers
 
-    has_many :scans
+    has_many :scans, -> { order id: :desc }
     has_many :revisions, through: :scans
 
     validates :name, presence: true, uniqueness: true
