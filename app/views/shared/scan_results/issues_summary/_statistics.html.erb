@@ -1,10 +1,10 @@
 <%
-   scans        = @issues_summary[:scans]
-   revisions    = @issues_summary[:revisions]
-   sitemap      = @issues_summary[:sitemap]
-   sitemap_with_issues = @issues_summary[:sitemap_with_issues]
-   issues_count = @issues_summary[:unique_issues_count]
-   max_severity = @issues_summary[:max_severity]
+   scans        = data[:scans]
+   revisions    = data[:revisions]
+   sitemap      = data[:sitemap]
+   sitemap_with_issues = data[:sitemap_with_issues]
+   issues_count = data[:unique_issues_count]
+   max_severity = data[:max_severity]
 %>
 
 <div id="summary-statistics">
@@ -74,7 +74,7 @@
                 <% end %>
 
                 <%
-                    severities_h = @issues_summary[:chart_data][:severities]
+                    severities_h = data[:chart_data][:severities]
                     severities_a = severities_h.keys
 
                     severities_a.each_with_index do |severity, i|
@@ -101,6 +101,8 @@
 </div>
 
 <script>
-    <%= render partial: 'shared/issues_summary/chart_load_data.js',
-        locals: { data: @issues_summary[:chart_data] } %>
+    <%= render partial: 'shared/scan_results/issues_summary/chart_load_data.js',
+        locals: {
+            data: data[:chart_data]
+        } %>
 </script>

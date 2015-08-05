@@ -1,0 +1,81 @@
+<%
+   by_state = {}
+   issues   = data[:issues]
+
+   group_issues = proc do |group, issue|
+       state = issue.auto_review_status
+
+       group[state] ||= []
+       group[state] << issue
+   end
+
+   if issues.is_a? Array
+       issues.each do |issue|
+           group_issues.call by_state, issue
+       end
+   else
+       scoped_find_each( issues ) do |issue|
+           group_issues.call by_state, issue
+       end
+   end
+
+   {
+       'regression'     => 'regressions',
+       'fixed'          => 'fixed',
+       'false_positive' => 'false_positives'
+   }.each do |k, v|
+       next if !by_state.include?( k )
+       by_state[v] = by_state.delete(k)
+   end
+%>
+
+<p class="text-muted">
+    The listed issues have been automatically reviewed based on state changes
+    over time and across scans.
+</p>
+
+<%
+   hr = nil
+   by_state.each do |state, issue_group| %>
+    <%= '<hr/>'.html_safe if hr %>
+    <% hr = true %>
+
+    <h2>
+        <%= state.humanize %>
+
+        <span class="badge badge-info">
+            <%= issue_group.size %>
+        </span>
+    </h2>
+
+    <p class="alert alert-info">
+        <%=
+            case state
+                when 'fixed'
+                    <<-EOHTML
+                        These issues did not appear in subsequent scans.
+                    EOHTML
+
+                when 'regressions'
+                    <<-EOHTML
+                        These issues were marked as fixed but re-appeared.
+                    EOHTML
+
+                when 'false_positives'
+                    <<-EOHTML
+                        These issues were marked as false-positives, as a result
+                        their state was applied to other identical issues.
+                    EOHTML
+            end
+        %>
+    </p>
+
+    <%= render partial: 'shared/scan_results/issues_summary/issues', locals: {
+            data: {
+                issues: issue_group
+            },
+            show_reviewed_by_revision: true,
+            force_show_logged_by:      true,
+            hide_state_icon:           true
+    } %>
+<% end %>

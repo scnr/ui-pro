@@ -9,15 +9,13 @@ class RevisionsController < ApplicationController
     # GET /revisions/1
     # GET /revisions/1.json
     def show
-        @issues_summary = issues_summary_data(
-            site:      @site,
-            sitemap:   @revision.sitemap_entries,
-            scans:     [@scan],
-            revisions: @scan.revisions.order( id: :desc ),
-
-            # We'll filter revision manually because we need issue data from
-            # all revisions.
-            issues:    @scan.issues
+        prepare_issues_summary_data(
+            site:            @site,
+            sitemap:         @revision.sitemap_entries,
+            scans:           [@scan],
+            revisions:       @scan.revisions.order( id: :desc ),
+            issues:          @scan.issues,
+            reviewed_issues: @revision.reviewed_issues,
         )
     end
 

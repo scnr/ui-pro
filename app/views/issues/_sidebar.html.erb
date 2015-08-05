@@ -91,8 +91,8 @@
             Reviewed by
             <%= link_to @issue.reviewed_by_revision,
                         site_scan_revision_path(
-                                @site,
-                                @scan,
+                                @issue.reviewed_by_revision.site,
+                                @issue.reviewed_by_revision.scan,
                                 @issue.reviewed_by_revision
                         ) %>
 
@@ -100,7 +100,7 @@
                 of
                 <%= link_to @issue.reviewed_by_revision.scan.name,
                             site_scan_path(
-                                    @site,
+                                    @issue.reviewed_by_revision.site,
                                     @issue.reviewed_by_revision.scan
                             ) %>
             <% end %>

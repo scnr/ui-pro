@@ -202,3 +202,17 @@ li .fa-arrow-right {
 #sidebar .scan-status {
     margin-right: 20px
 }
+
+#sitemap li {
+    padding-right: 20px;
+    float:   left;
+    display: inline;
+    width:   50%;
+    word-wrap: break-word;
+}
+
+#sitemap li code {
+    float: left;
+    width: 43px;
+    margin-right: 5px;
+}

@@ -1,6 +1,26 @@
 module IssuesSummary
 
+    def prepare_issues_summary_data( data )
+        @issues_summary = issues_summary_data( data )
+
+        @reviewed_issues_summary = issues_summary_data(
+            data.merge(
+                issues: data[:reviewed_issues],
+
+                # Don't filter by revision, we've already passed filtered issues.
+                filter_by_revision: false,
+                filter_by_state_and_severity: false
+            )
+        )
+    end
+
     def issues_summary_data( data )
+        filter_by_revision = data.include?(:filter_by_revision) ?
+            data[:filter_by_revision] : true
+
+        filter_by_state_and_severity = data.include?(:filter_by_state_and_severity) ?
+            data[:filter_by_state_and_severity] : true
+
         if !data[:scans].is_a?( Array )
             data[:scans] = data[:scans].includes(:revisions).
                 includes(:schedule).includes(:profile)
@@ -22,7 +42,9 @@ module IssuesSummary
             severities = issues.count_severities
         end
 
-        issues = filter_issues_by_severity_and_state( issues )
+        if filter_by_state_and_severity
+            issues = filter_issues_by_severity_and_state( issues )
+        end
 
         sitemap_with_issues  = {}
         chart_data           = {}
@@ -54,8 +76,10 @@ module IssuesSummary
             # Issues are sorted by severity, first one will be the max.
             pre_page_filter_data[:max_severity] ||= issue.severity.to_s
 
-            update_chart_data( chart_data, issue )
-            update_sitemap_data( sitemap_with_issues, issue )
+            if !(filter_by_revision && @revision && @revision.id != issue.revision.id)
+                update_chart_data( chart_data, issue )
+                update_sitemap_data( sitemap_with_issues, issue )
+            end
 
             # First level page issue filtering here...
             if filter_pages?
@@ -85,7 +109,7 @@ module IssuesSummary
             revision_data[issue.revision_id][:issue_count] ||= 0
             revision_data[issue.revision_id][:issue_count]  += 1
 
-            next if @revision && @revision.id != issue.revision.id
+            next if filter_by_revision && @revision && @revision.id != issue.revision.id
 
             # ... but only store the issues if their count is bellow the acceptable
             # batch size.
@@ -155,8 +179,6 @@ module IssuesSummary
     end
 
     def update_sitemap_data( data, issue )
-        return if @revision && @revision.id != issue.revision.id
-
         data[issue.vector.action] ||= {
             internal:     sitemap_entry_url( issue.vector.sitemap_entry_id ),
 
@@ -174,8 +196,6 @@ module IssuesSummary
     end
 
     def update_chart_data( data, issue )
-        return if @revision && @revision.id != issue.revision.id
-
         if data.empty?
             data.merge!(
                 issue_names:              {},
@@ -297,6 +317,7 @@ module IssuesSummary
     def preload_issue_associations( issues )
         issues.includes(:site).includes(:scan).
             includes( revision: { scan: [:profile, :schedule] } ).
+            includes(:reviewed_by_revision).
             includes(:type).includes(:severity).
             includes(:vector).includes( vector: :sitemap_entry ).
             includes( page: :sitemap_entry ).

@@ -2,10 +2,6 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-#scan-data {
-    border-left: 1px solid #eeeeee;
-}
-
 form.scan-form {
 
     label {
@@ -61,4 +57,12 @@ form.scan-form {
 
 #site-scans {
     border-right: 1px solid #eeeeee;
+}
+
+#scan-info {
+    padding-bottom: 10px
+}
+
+#scan-data {
+    border-left: 1px solid #eeeeee;
 }

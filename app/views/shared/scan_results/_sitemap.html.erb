@@ -1,0 +1,13 @@
+<ul>
+    <% @issues_summary[:sitemap].each do |entry| %>
+    <li>
+        <code>[<%= entry.code %>]</code>
+
+        <%= link_to entry.url,
+                    target: '_blank' do %>
+            <%= url_without_scheme_host_port( entry.url ) %>
+            <i class="fa fa-external-link"></i>
+        <% end %>
+    </li>
+    <% end %>
+</ul>

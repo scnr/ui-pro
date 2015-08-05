@@ -3,6 +3,10 @@
    breadcrumb_add 'Sites', sites_path
 %>
 
+<% add_to_sidebar do %>
+    <%= render partial: 'sidebar' %>
+<% end %>
+
 <div class="row" id="site-info">
     <div class="col-md-12">
         <%= render partial: 'shared/scan_heading' %>
@@ -33,6 +37,4 @@
     </div>
 </div>
 
-<hr/>
-
-<%= render partial: 'shared/scans_with_issue_summary' %>
+<%= render 'shared/scan_results' %>

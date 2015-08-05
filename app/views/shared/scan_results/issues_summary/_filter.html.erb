@@ -13,7 +13,7 @@
                 <div class="col-md-12">
                     <div class="form-group boolean">
                         <% i = 0
-                           @issues_summary[:states].each do |state, count| %>
+                           data[:states].each do |state, count| %>
 
                             <div class="checkbox">
                                 <input class="check_boxes" type="checkbox" id="issue-state-<%= state %>"
@@ -27,14 +27,14 @@
                                     <%= count %>)
                                 </label>
                             </div>
-                            <%= ',' if @issues_summary[:states].size != i + 1 %>
+                            <%= ',' if data[:states].size != i + 1 %>
                             <% i += 1 %>
                         <% end %>
 
                         issues of severities
 
                         <% i = 0
-                           @issues_summary[:severities].each do |severity, count| %>
+                           data[:severities].each do |severity, count| %>
 
                             <div class="checkbox">
                                 <input class="check_boxes" type="checkbox" id="issue-severity-<%= severity %>"
@@ -47,7 +47,7 @@
                                 </label>
                             </div>
 
-                            <%= ',' if @issues_summary[:states].size != i + 1 %>
+                            <%= ',' if data[:states].size != i + 1 %>
                             <% i += 1 %>
 
                         <% end %>

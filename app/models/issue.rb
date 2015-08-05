@@ -50,6 +50,7 @@ class Issue < ActiveRecord::Base
     end
 
     scope :by_severity, -> { includes(:severity).order IssueTypeSeverity.order_sql }
+    scope :reviewed,    -> { where.not reviewed_by_revision: nil }
 
     default_scope do
         includes(:type).includes(:vector).by_severity.
@@ -58,6 +59,21 @@ class Issue < ActiveRecord::Base
 
     def reviewed_by_revision?
         !!reviewed_by_revision
+    end
+
+    def auto_reviewed?
+        reviewed_by_revision?
+    end
+
+    def auto_review_status
+        return if !auto_reviewed?
+
+        case state
+            when 'trusted', 'untrusted'
+                'regression'
+            else
+                state
+        end
     end
 
     def to_s

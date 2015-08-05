@@ -40,7 +40,10 @@ module Issue
 
             # User has already said that it's a false-positive, keep that state.
             else
-                options[:state] = issue.state
+                options.merge!(
+                    reviewed_by_revision: issue.revision,
+                    state:                issue.state
+                )
             end
         end
 
@@ -124,6 +127,7 @@ module Issue
         revision.scan.issues.reorder('').where.not(
             revision: revision,
             digest:   issue_digests,
+            state:    'fixed'
         ).update_all(
             state:                   'fixed',
             reviewed_by_revision_id: revision

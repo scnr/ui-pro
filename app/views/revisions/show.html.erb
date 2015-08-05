@@ -6,8 +6,12 @@
    breadcrumb_add @scan.name, site_scan_path( @site, @scan )
 %>
 
-<div class="row">
-    <div class="col-md-12" id="revision-info">
+<% add_to_sidebar do %>
+    <%= render partial: 'sidebar' %>
+<% end %>
+
+<div class="row" id="revision-info">
+    <div class="col-md-12">
         <%= render partial: 'shared/scan_heading' %>
 
         <div class="description">
@@ -41,6 +45,4 @@
     </div>
 </div>
 
-<hr/>
-
-<%= render partial: 'shared/scans_with_issue_summary' %>
+<%= render 'shared/scan_results' %>
