@@ -3,14 +3,11 @@ shared_examples_for 'Coverage' do |options = {}|
 
     def flat_coverage_refresh
         visit current_url
+        click_link 'Coverage'
     end
 
     before do
-        user.sites << site
-
         flat_coverage_refresh
-
-        click_link 'Coverage'
     end
 
     after(:each) do
@@ -43,8 +40,6 @@ shared_examples_for 'Coverage' do |options = {}|
             )
 
             flat_coverage_refresh
-
-            click_link 'Coverage'
         end
 
         it 'includes a count of the entries in the tab' do
@@ -75,8 +70,6 @@ shared_examples_for 'Coverage' do |options = {}|
             with_sitemap_entries.save
 
             flat_coverage_refresh
-
-            click_link 'Coverage'
         end
 
         it 'shows info alert' do

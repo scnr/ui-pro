@@ -32,7 +32,7 @@
 
     <div class="row">
         <div class="col-md-12">
-            <div id="issue-summary-severity-<%= severity %>"
+            <div id="<%= id %>-issue-severity-<%= severity %>"
                  class="bg-severity-<%= severity %> cascade-container">
 <% end %>
 
@@ -43,7 +43,7 @@
                 </div>
             <% end %>
 
-            <div class="issue-summary-check-<%= issue.type.check_shortname %>">
+            <div id="<%= id %>-issue-check-<%= issue.type.check_shortname %>">
                 <h4>
                     <%= issue.type.name %>
 
@@ -82,12 +82,10 @@
                 </thead>
                 <tbody>
         <% end %>
-
-            <tr id="summary-issue-<%= issue.digest %>"
-                class="issue-summary-vector-<%= issue.vector.kind %>">
+            <tr id="<%= id %>-issue-<%= issue.digest %>">
 
                 <% if !hide_state_icon %>
-                    <td>
+                    <td id="<%= id %>-issue-<%= issue.digest %>-state-icon">
                         <%= link_to site_scan_revision_issue_path( issue.site, issue.scan, issue.revision, issue ),
                                     title: issue.state.humanize do %>
                             <i class="fa fa-<%= issue_state_to_icon issue.state %>">
@@ -96,18 +94,18 @@
                     </td>
                 <% end %>
 
-                <td>
+                <td id="<%= id %>-issue-<%= issue.digest %>-vector-kind">
                     <code><%= issue.vector.kind %></code>
                 </td>
 
                 <% if issue.vector.affected_input_name %>
-                    <td>
+                    <td id="<%= id %>-issue-<%= issue.digest %>-affected_input_name">
                         <code><%= issue.vector.affected_input_name %></code>
                     </td>
                 <% end %>
 
                 <% if !@sitemap_entry %>
-                    <td>
+                    <td id="<%= id %>-issue-<%= issue.digest %>-vector-action">
                         <%= link_to_url_with_external(
                                 external: issue.vector.action,
                                 internal: sitemap_entry_url( issue.vector.sitemap_entry ),
@@ -121,7 +119,7 @@
                     <%
                        reviewer = issue.reviewed_by_revision
                     %>
-                    <td>
+                    <td id="<%= id %>-issue-<%= issue.digest %>-reviewer">
                         <%= link_to "#{reviewer} of #{reviewer.scan} scan",
                                     site_scan_revision_path(
                                             reviewer.site_id,
@@ -133,7 +131,7 @@
                 <% end %>
 
                 <% if force_show_logged_by || (!@scan || !@revision) %>
-                    <td>
+                    <td id="<%= id %>-issue-<%= issue.digest %>-loggers">
                         <% if !force_show_logged_by && @scan %>
                             <%= link_to issue.revision,
                                         site_scan_revision_path(

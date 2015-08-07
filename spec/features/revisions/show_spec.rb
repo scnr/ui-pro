@@ -30,6 +30,8 @@ feature 'Revision page' do
     it_behaves_like 'Scan sidebar'
     it_behaves_like 'Revisions sidebar'
 
+    it_behaves_like 'Issue reviews'
+
     let(:info) { find '#revision-info' }
 
     scenario 'has title' do

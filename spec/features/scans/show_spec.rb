@@ -35,6 +35,8 @@ feature 'Scan page' do
     let(:with_sitemap_entries) { scan }
     it_behaves_like 'Coverage'
 
+    it_behaves_like 'Issue reviews'
+
     let(:info) { find '#scan-info' }
 
     feature 'when the scan has revisions' do

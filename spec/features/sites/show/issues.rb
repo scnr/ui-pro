@@ -354,20 +354,20 @@ feature 'Site issues', js: true do
                 feature 'grouped by severity' do
                     scenario 'user sees color-coded containers' do
                         IssueTypeSeverity::SEVERITIES.each do |severity|
-                            expect(issues.find("div#issue-summary-severity-#{severity}")[:class]).to include "bg-severity-#{severity}"
+                            expect(issues.find("div#summary-issue-severity-#{severity}")[:class]).to include "bg-severity-#{severity}"
                         end
                     end
 
                     feature 'and by issue type' do
                         scenario 'user sees issue type headings' do
                             types.each do |type|
-                                expect(issues.find(".issue-summary-check-#{type.check_shortname} h4")).to have_content type.name
+                                expect(issues.find("#summary-issue-check-#{type.check_shortname} h4")).to have_content type.name
                             end
                         end
 
                         scenario 'user sees amount of issues in the heading' do
                             types.each do |type|
-                                expect(issues.find(".issue-summary-check-#{type.check_shortname} h4 span.badge-severity-#{type.severity.name}")).to have_content type.issues.size
+                                expect(issues.find("#summary-issue-check-#{type.check_shortname} h4 span.badge-severity-#{type.severity.name}")).to have_content type.issues.size
                             end
                         end
 

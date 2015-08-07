@@ -40,42 +40,45 @@
     <%= '<hr/>'.html_safe if hr %>
     <% hr = true %>
 
-    <h2>
-        <%= state.humanize %>
+    <div id="reviews-<%= state %>">
+        <h2>
+            <%= state.humanize %>
 
-        <span class="badge badge-info">
-            <%= issue_group.size %>
-        </span>
-    </h2>
+            <span class="badge badge-info">
+                <%= issue_group.size %>
+            </span>
+        </h2>
 
-    <p class="alert alert-info">
-        <%=
-            case state
-                when 'fixed'
-                    <<-EOHTML
-                        These issues did not appear in subsequent scans.
-                    EOHTML
+        <p class="alert alert-info">
+            <%=
+                case state
+                    when 'fixed'
+                        <<-EOHTML
+                            These issues did not appear in subsequent scans.
+                        EOHTML
 
-                when 'regressions'
-                    <<-EOHTML
-                        These issues were marked as fixed but re-appeared.
-                    EOHTML
+                    when 'regressions'
+                        <<-EOHTML
+                            These issues were marked as fixed but re-appeared.
+                        EOHTML
 
-                when 'false_positives'
-                    <<-EOHTML
-                        These issues were marked as false-positives, as a result
-                        their state was applied to other identical issues.
-                    EOHTML
-            end
-        %>
-    </p>
+                    when 'false_positives'
+                        <<-EOHTML
+                            These issues were marked as false-positives, as a result
+                            their state was applied to other identical issues.
+                        EOHTML
+                end
+            %>
+        </p>
 
-    <%= render partial: 'shared/scan_results/issues_summary/issues', locals: {
-            data: {
-                issues: issue_group
-            },
-            show_reviewed_by_revision: true,
-            force_show_logged_by:      true,
-            hide_state_icon:           true
-    } %>
+        <%= render partial: 'shared/scan_results/issues_summary/issues', locals: {
+                data: {
+                    issues: issue_group
+                },
+                id:                        "reviews-#{state}",
+                show_reviewed_by_revision: true,
+                force_show_logged_by:      true,
+                hide_state_icon:           true
+        } %>
+    </div>
 <% end %>

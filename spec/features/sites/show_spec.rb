@@ -38,6 +38,8 @@ feature 'Site page' do
     let(:with_sitemap_entries) { site }
     it_behaves_like 'Coverage'
 
+    it_behaves_like 'Issue reviews'
+
     scenario 'has title' do
         expect(page).to have_title site.url
         expect(page).to have_title 'Sites'
