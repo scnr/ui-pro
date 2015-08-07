@@ -22,7 +22,17 @@ shared_examples_for 'Revisions sidebar' do |options = {}|
     end
 
     scenario 'user sees amount of new pages' do
-        expect(sidebar).to have_content "#{revision.sitemap_entries.size} new pages"
+        revision.sitemap_entries.create(
+            url:  revision.scan.url,
+            code: 200
+        )
+
+        revisions_sidebar_refresh
+        revision.reload
+
+        sz = revision.sitemap_entries.size
+
+        expect(sidebar).to have_content "#{sz} #{'page'.pluralize sz}"
     end
 
     scenario 'user sees amount of new issues'

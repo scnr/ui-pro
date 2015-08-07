@@ -605,7 +605,14 @@ describe ScanScheduler::Helpers::Scan do
     end
 
     describe '#download_report_and_shutdown' do
-        let(:report) { Factory[:report].tap { |r| r.options[:url] = 'http://test.com' } }
+        let(:report) do
+            report = Factory[:report]
+            report.options[:url] = 'http://test.com'
+            report.sitemap = {
+                report.options[:url] => 200
+            }
+            report
+        end
 
         before do
             expect(instance.service).to receive(:native_abort_and_report) do |_, &block|
@@ -632,6 +639,13 @@ describe ScanScheduler::Helpers::Scan do
 
         it 'passes the report to #import_issues_from_report' do
             expect(subject).to receive(:import_issues_from_report).
+                                   with( revision, report )
+
+            subject.download_report_and_shutdown(revision)
+        end
+
+        it 'passes the report to #import_sitemap_from_report' do
+            expect(subject).to receive(:import_sitemap_from_report).
                                    with( revision, report )
 
             subject.download_report_and_shutdown(revision)
@@ -689,6 +703,54 @@ describe ScanScheduler::Helpers::Scan do
                         subject.download_report_and_shutdown( revision, mark_issues_fixed: true )
                     end
                 end
+            end
+        end
+    end
+
+    describe '#import_sitemap_from_report' do
+        before do
+            revision.sitemap_entries = []
+            revision.save
+        end
+
+        let(:report) do
+            report = Factory[:report]
+            report.options[:url] = 'http://test.com'
+            report.sitemap = {
+                report.options[:url] => 404
+            }
+            report
+        end
+
+        context 'when a URL has already been logged' do
+            it 'skips it' do
+                revision.sitemap_entries.create( url: report.url, code: 404 )
+
+                subject.import_sitemap_from_report( revision, report )
+
+                revision.sitemap_entries.reload
+
+                expect(revision.sitemap_entries.size).to eq 1
+
+                entry = revision.sitemap_entries.first
+
+                expect(entry.url).to eq report.url
+                expect(entry.code).to eq 404
+            end
+        end
+
+        context 'when a URL has not already been logged' do
+            it 'creates an entry' do
+                subject.import_sitemap_from_report( revision, report )
+
+                revision.sitemap_entries.reload
+
+                expect(revision.sitemap_entries.size).to eq 1
+
+                entry = revision.sitemap_entries.first
+
+                expect(entry.url).to eq report.url
+                expect(entry.code).to eq 404
             end
         end
     end

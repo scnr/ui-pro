@@ -291,6 +291,7 @@ module Scan
             log_info_for revision, "Saved report at: #{report_path}"
 
             import_issues_from_report( revision, report )
+            import_sitemap_from_report( revision, report )
 
             if mark_issues_fixed && revision.scan.revisions.size > 1
                 mark_other_issues_fixed( revision, report.issues.map(&:digest) )
@@ -304,6 +305,13 @@ module Scan
 
                 log_info_for revision, status.capitalize
             end
+        end
+    end
+
+    def import_sitemap_from_report( revision, report )
+        report.sitemap.each do |url, code|
+            revision.sitemap_entries.create_with( url: url, code: code ).
+                find_or_create_by( url: url )
         end
     end
 

@@ -10,7 +10,7 @@ module IssuesHelper
         filter_params_without_page.merge(
             'filter[pages][]' =>
                 sitemap_entry.is_a?( Integer ) ?
-                    sitemap_entry : sitemap_entry.id
+                    sitemap_entry : sitemap_entry.digest
         )
     end
 

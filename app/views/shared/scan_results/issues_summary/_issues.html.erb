@@ -30,9 +30,10 @@
             </div>
     <% end %>
 
-    <div class="row" id="issue-summary-severity-<%= severity %>">
+    <div class="row">
         <div class="col-md-12">
-            <div class="bg-severity-<%= severity %> cascade-container">
+            <div id="issue-summary-severity-<%= severity %>"
+                 class="bg-severity-<%= severity %> cascade-container">
 <% end %>
 
         <% if issue.type.name != last_name %>

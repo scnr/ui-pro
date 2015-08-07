@@ -392,10 +392,11 @@ ActiveRecord::Schema.define(version: 20150406191208) do
   create_table "sitemap_entries", force: :cascade do |t|
     t.text     "url"
     t.integer  "code"
-    t.integer  "issues_count",      default: 0
-    t.integer  "integer",           default: 0
-    t.integer  "issue_pages_count", default: 0
-    t.integer  "vectors_count",     default: 0
+    t.integer  "issues_count",                default: 0
+    t.integer  "integer",                     default: 0
+    t.integer  "issue_pages_count",           default: 0
+    t.integer  "vectors_count",               default: 0
+    t.integer  "digest",            limit: 8
     t.integer  "site_id"
     t.integer  "scan_id"
     t.integer  "revision_id"
@@ -403,10 +404,11 @@ ActiveRecord::Schema.define(version: 20150406191208) do
     t.datetime "updated_at"
   end
 
+  add_index "sitemap_entries", ["digest", "revision_id"], name: "index_sitemap_entries_on_digest_and_revision_id", unique: true, using: :btree
+  add_index "sitemap_entries", ["digest"], name: "index_sitemap_entries_on_digest", using: :btree
   add_index "sitemap_entries", ["revision_id"], name: "index_sitemap_entries_on_revision_id", using: :btree
   add_index "sitemap_entries", ["scan_id"], name: "index_sitemap_entries_on_scan_id", using: :btree
   add_index "sitemap_entries", ["site_id"], name: "index_sitemap_entries_on_site_id", using: :btree
-  add_index "sitemap_entries", ["url", "site_id"], name: "index_sitemap_entries_on_url_and_site_id", unique: true, using: :btree
 
   create_table "sites", force: :cascade do |t|
     t.integer  "protocol"

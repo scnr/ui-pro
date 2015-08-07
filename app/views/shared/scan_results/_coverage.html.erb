@@ -1,0 +1,115 @@
+<%
+   sitemap_current_digests     = @issues_summary[:sitemap_current_digests]
+   sitemap_up_to_now_inclusive = @issues_summary[:sitemap_up_to_now_inclusive]
+
+   sitemap_up_to_now_exclusive_digests =
+           @issues_summary[:sitemap_up_to_now_exclusive_digests]
+
+   new       = sitemap_current_digests - sitemap_up_to_now_exclusive_digests
+   missing   = sitemap_up_to_now_exclusive_digests - sitemap_current_digests
+   revisited = sitemap_current_digests & sitemap_up_to_now_exclusive_digests
+
+if sitemap_up_to_now_inclusive.any? && @revision && @revision.index > 1
+
+    total_count   = Float(sitemap_up_to_now_inclusive.size)
+
+    new_pct       = ((new.size / total_count) * 100.0)
+    new_pct_round = new_pct.round
+
+    revisited_pct       = ((revisited.size / total_count) * 100.0)
+    revisited_pct_round = revisited_pct.round
+
+    missing_pct       = ((missing.size / total_count) * 100.0)
+    missing_pct_round = missing_pct.round
+
+    active_class = @scan.active? ? 'progress-bar-striped active' : nil
+    active_class = nil if @revision && @scan.revisions.size != @revision.index
+
+    if active_class
+        new_msg       = "#{new.size} resources are new."
+        revisited_msg = "#{revisited.size} resources have already been seen."
+        missing_msg   = "#{missing.size} resources haven't been scanned yet."
+    else
+        new_msg       = "#{new.size} resources were new."
+        revisited_msg = "#{revisited.size} resources had already been seen."
+        missing_msg   = "#{missing.size} previously seen resources weren't available for this scan."
+    end
+%>
+
+    <div id="coverage-incremental">
+        <div class="progress">
+            <% if new_pct > 0 %>
+                <div id="coverage-new-bar"
+                     data-location="new"
+
+                     data-toggle="tooltip"
+                     title="<%= new_msg %>"
+
+                     class="coverage-bar progress-bar progress-bar-success <%= active_class %>"
+                     style="width: <%= new_pct %>%">
+
+                    <span><%= new_pct_round %>%</span>
+                </div>
+            <% end %>
+
+            <% if revisited_pct > 0 %>
+                <div id="coverage-revisited-bar"
+                     data-location="revisited"
+
+                     data-toggle="tooltip"
+                     title="<%= revisited_msg %>"
+
+                     class="coverage-bar progress-bar progress-bar-info <%= active_class %>"
+                     style="width: <%= revisited_pct %>%">
+
+                    <span><%= revisited_pct_round %>%</span>
+                </div>
+            <% end %>
+
+            <% if missing_pct > 0 %>
+                <div id="coverage-missing-bar"
+                     data-location="missing"
+
+                     data-toggle="tooltip"
+                     title="<%= missing_msg %>"
+
+                     class="coverage-bar progress-bar progress-bar-warning <%= active_class %>"
+                     style="width: <%= missing_pct %>%">
+
+                    <span><%= missing_pct_round %>%</span>
+                </div>
+            <% end %>
+        </div>
+
+        <%= render partial: 'shared/scan_results/coverage/list', locals: {
+                id:      'coverage-new',
+                title:   'New',
+                message: new_msg,
+                badge:   'badge-severity-none',
+                sitemap: new.map { |digest| sitemap_up_to_now_inclusive[digest] }
+        } %>
+
+        <%= render partial: 'shared/scan_results/coverage/list', locals: {
+                id:      'coverage-revisited',
+                title:   'Revisited',
+                message: revisited_msg,
+                badge:   'badge-severity-informational',
+                sitemap: revisited.map { |digest| sitemap_up_to_now_inclusive[digest] }
+        } %>
+
+        <%= render partial: 'shared/scan_results/coverage/list', locals: {
+                id:      'coverage-missing',
+                title:   'Missing',
+                message: missing_msg,
+                badge:   'badge-severity-medium',
+                sitemap: missing.map { |digest| sitemap_up_to_now_inclusive[digest] }
+        } %>
+    </div>
+<% else %>
+    <%= render partial: 'shared/scan_results/coverage/list', locals: {
+            id:      'coverage-flat',
+            title:   nil,
+            message: nil,
+            sitemap: @issues_summary[:sitemap]
+    } %>
+<% end %>

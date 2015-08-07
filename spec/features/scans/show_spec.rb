@@ -32,6 +32,9 @@ feature 'Scan page' do
     it_behaves_like 'Scan sidebar'
     it_behaves_like 'Revisions sidebar'
 
+    let(:with_sitemap_entries) { scan }
+    it_behaves_like 'Coverage'
+
     let(:info) { find '#scan-info' }
 
     feature 'when the scan has revisions' do

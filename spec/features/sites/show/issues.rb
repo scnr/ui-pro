@@ -1,4 +1,4 @@
-feature 'Site issues summary' do
+feature 'Site issues', js: true do
     include SiteRolesHelper
 
     let(:user) { FactoryGirl.create :user }
@@ -17,6 +17,8 @@ feature 'Site issues summary' do
 
         login_as user, scope: :user
         visit site_path( site )
+
+        click_link 'Issues'
     end
 
     after(:each) do
@@ -114,7 +116,7 @@ feature 'Site issues summary' do
                 feature 'page' do
                     feature 'with issues' do
                         before do
-                            visit "#{site_path( site )}?filter[pages][]=#{sitemap_entry.id}&filter[states][]=trusted&filter[states][]=untrusted&filter[states][]=false_positive&filter[states][]=fixed&filter[severities][]=high&filter[severities][]=medium&filter[severities][]=low&filter[severities][]=informational&filter[type]=include"
+                            visit "#{site_path( site )}?filter[pages][]=#{sitemap_entry.digest}&filter[states][]=trusted&filter[states][]=untrusted&filter[states][]=false_positive&filter[states][]=fixed&filter[severities][]=high&filter[severities][]=medium&filter[severities][]=low&filter[severities][]=informational&filter[type]=include"
                         end
 
                         scenario 'only shows issues for that page' do
@@ -158,11 +160,11 @@ feature 'Site issues summary' do
 
                     feature 'without issues' do
                         before do
-                            visit "#{site_path( site )}?filter[pages][]=#{sitemap_entry.id}&filter[states][]=trusted&filter[states][]=untrusted&filter[states][]=false_positive&filter[states][]=fixed&filter[severities][]=high&filter[severities][]=medium&filter[severities][]=low&filter[severities][]=informational&filter[type]=exclude"
+                            visit "#{site_path( site )}?filter[pages][]=#{sitemap_entry.digest}&filter[states][]=trusted&filter[states][]=untrusted&filter[states][]=false_positive&filter[states][]=fixed&filter[severities][]=high&filter[severities][]=medium&filter[severities][]=low&filter[severities][]=informational&filter[type]=exclude"
                         end
 
                         let(:message) do
-                            find( '#scan-data div.well' )
+                            find( '#issues-summary div.well' )
                         end
 
                         scenario 'shows message' do

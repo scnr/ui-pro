@@ -35,6 +35,9 @@ feature 'Site page' do
     let(:with_scans) { site }
     it_behaves_like 'Scans sidebar'
 
+    let(:with_sitemap_entries) { site }
+    it_behaves_like 'Coverage'
+
     scenario 'has title' do
         expect(page).to have_title site.url
         expect(page).to have_title 'Sites'

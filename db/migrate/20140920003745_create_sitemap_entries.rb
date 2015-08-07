@@ -7,6 +7,8 @@ class CreateSitemapEntries < ActiveRecord::Migration
             t.integer :issue_pages_count, :integer, default: 0
             t.integer :vectors_count, :integer, default: 0
 
+            t.bigint :digest, index: true
+
             # We could have done this via a through :revisions association in
             # the model but we need it here for deduplication and easier analytics.
             t.belongs_to :site, index: true
@@ -16,6 +18,6 @@ class CreateSitemapEntries < ActiveRecord::Migration
             t.timestamps
         end
 
-        add_index :sitemap_entries, [:url, :site_id], unique: true
+        add_index :sitemap_entries, [:digest, :revision_id], unique: true
     end
 end

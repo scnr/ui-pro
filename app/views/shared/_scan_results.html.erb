@@ -1,42 +1,50 @@
-<div class="row">
+<div id="scan-results" class="row">
     <div class="col-md-12">
         <ul class="nav nav-tabs">
             <li class="active">
-                <a href="#!/issues-summary">
-                    Summary
+                <a href="#!/issues">
+                    Issues
                 </a>
             </li>
 
             <li>
-                <a href="#!/sitemap">
-                    Sitemap
+                <a href="#!/coverage">
+                    Coverage
+
+                    <span class="badge">
+                        <%= @issues_summary[:sitemap].count %>
+                    </span>
                 </a>
             </li>
 
             <% if @reviewed_issues_summary[:chart_data][:total_issues].to_i > 0 %>
                 <li>
-                    <a href="#!/issues-reviewed">
-                        Auto-reviewed issues
+                    <a href="#!/reviews">
+                        Reviews
+
+                        <span class="badge">
+                            <%= @reviewed_issues_summary[:chart_data][:total_issues] %>
+                        </span>
                     </a>
                 </li>
             <% end %>
         </ul>
 
         <div class="tab-content">
-            <div class="tab-pane active" id="issues-summary">
+            <div class="tab-pane active" id="issues">
                 <%= render partial: 'shared/scan_results/issues_summary', locals: {
                         data: @issues_summary
                 } %>
             </div>
 
-            <div class="tab-pane" id="sitemap">
-                <%= render partial: 'shared/scan_results/sitemap', locals: {
+            <div class="tab-pane" id="coverage">
+                <%= render partial: 'shared/scan_results/coverage', locals: {
                         data: @reviewed_issues_summary
                 } %>
             </div>
 
             <% if @reviewed_issues_summary[:chart_data][:total_issues].to_i > 0 %>
-                <div class="tab-pane" id="issues-reviewed">
+                <div class="tab-pane" id="reviews">
                     <%= render partial: 'shared/scan_results/reviewed_issues', locals: {
                             data: @reviewed_issues_summary
                     } %>

@@ -23,7 +23,7 @@
     </li>
 
     <% sitemap.each do |url, data|
-        active       = filter.include?( data[:id].to_s )
+        active       = filter.include?( data[:digest].to_s )
         max_severity = data[:max_severity]
         issue_count  = data[:issue_count]
     %>
@@ -33,7 +33,7 @@
                 bg-severity-<%= max_severity %>
                 <%= 'active' if active %>
                 sitemap-entry-with<% 'out' if issue_count == 0 %>-issues"
-            id="sitemap-entry-<%= data[:id] %>"
+            id="sitemap-entry-<%= data[:digest] %>"
             title="<%= pluralize issue_count, 'issue' %> with a <%= 'maximum' if issue_count > 1 %> severity of <%= max_severity %>."
         >
 

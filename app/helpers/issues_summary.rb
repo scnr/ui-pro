@@ -29,7 +29,7 @@ module IssuesSummary
         issues = preload_issue_associations( data[:issues] )
 
         if filter_pages?
-            @sitemap_entry = @site.sitemap_entries.find( params[:filter][:pages].first )
+            @sitemap_entry = @site.sitemap_entries.where( digest: params[:filter][:pages].first ).first
         end
 
         # This needs to happen here, we want this for filtering feedback and
@@ -83,8 +83,8 @@ module IssuesSummary
 
             # First level page issue filtering here...
             if filter_pages?
-                next if @sitemap_entry != issue.vector.sitemap_entry &&
-                    @sitemap_entry != issue.page.sitemap_entry
+                next if @sitemap_entry.digest != issue.vector.sitemap_entry.digest &&
+                    @sitemap_entry.digest != issue.page.sitemap_entry.digest
 
                 # Only include scans and revisions for issues for the page
                 # and scan we're filtering for.
@@ -158,13 +158,31 @@ module IssuesSummary
             data[:scans] = data[:scans].sort_by { |r| r.id }.reverse
         end
 
+        sitemap_current_digests             = Set.new
+        sitemap_up_to_now_exclusive_digests = Set.new
+        sitemap_up_to_now_inclusive         = {}
+
+        if @revision && @revision.index > 1
+            sitemap_current_digests.merge data[:sitemap].reorder('').pluck(:digest)
+
+            SitemapEntry.where(
+                revision: @scan.revisions.reorder( id: :asc )[0..(@revision.index-1)]
+            ).each do |entry|
+                sitemap_up_to_now_inclusive[entry.digest] = entry
+
+                next if entry.revision_id == @revision.id
+                sitemap_up_to_now_exclusive_digests << entry.digest
+            end
+        end
+
         {
             site:                data[:site],
-            site_scans:          data[:site].scans.includes(:revisions).
-                                    includes(:schedule).includes(:profile),
             scans:               data[:scans],
             revisions:           data[:revisions],
             sitemap:             data[:sitemap],
+            sitemap_current_digests:     sitemap_current_digests,
+            sitemap_up_to_now_inclusive: sitemap_up_to_now_inclusive,
+            sitemap_up_to_now_exclusive_digests: sitemap_up_to_now_exclusive_digests,
             sitemap_with_issues: sitemap_with_issues,
             states:              states,
             severities:          severities,
@@ -180,11 +198,11 @@ module IssuesSummary
 
     def update_sitemap_data( data, issue )
         data[issue.vector.action] ||= {
-            internal:     sitemap_entry_url( issue.vector.sitemap_entry_id ),
+            internal:     sitemap_entry_url( issue.vector.sitemap_entry.digest ),
 
             # Issues are sorted by severity first, the first one will be the max.
             max_severity: issue.severity.to_s,
-            id:           issue.vector.sitemap_entry_id,
+            digest:       issue.vector.sitemap_entry.digest,
             issue_count:  0,
             seen:         Set.new
         }
@@ -207,7 +225,7 @@ module IssuesSummary
             )
         end
 
-        if filter_pages? && !page_id_in_filter?( issue.vector.sitemap_entry_id )
+        if filter_pages? && !page_id_in_filter?( issue.vector.sitemap_entry.digest )
             return
         end
 
@@ -308,8 +326,9 @@ module IssuesSummary
     def filter_pages( issues )
         return issues if !filter_pages?
 
+        # TODO: This is broken.
         issues.joins(:page).where(
-            'issues.sitemap_entry_id IN (?) OR issue_pages.sitemap_entry_id IN (?)',
+            'issues.sitemap_entry.digest IN (?) OR issue_pages.sitemap_entry.digest IN (?)',
             params[:filter][:pages], params[:filter][:pages]
         )
     end

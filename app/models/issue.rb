@@ -200,11 +200,8 @@ class Issue < ActiveRecord::Base
     end
 
     def get_sitemap_entry( options = {} )
-        site.sitemap_entries.find_by_url( options[:url] ) ||
-            site.sitemap_entries.create({
-                scan:     scan,
-                revision: revision
-            }.merge(options) )
+        revision.sitemap_entries.create_with(options).
+            find_or_create_by( url: options[:url] )
     end
 
     def set_owners
