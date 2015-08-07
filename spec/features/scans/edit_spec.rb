@@ -176,12 +176,8 @@ feature 'Edit scan page' do
             refresh
         end
 
-        scenario 'the start_at field is missing' do
-            expect(page).to_not have_css '.scan_schedule_start_at'
-        end
-
-        scenario 'the stop_after field is missing' do
-            expect(page).to_not have_css '.scan_schedule_stop_after'
+        scenario 'user cannot change the start_at' do
+            expect(page).to have_css '.scan_schedule_start_at.disabled'
         end
     end
 

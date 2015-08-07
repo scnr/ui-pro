@@ -1,3 +1,9 @@
+<% if @scan.active? %>
+<p class="alert alert-warning">
+    Some options cannot be updated while the scan is in progress.
+</p>
+<% end %>
+
 <%= simple_form_for( [@site, @scan],
                      html: {
                          class: 'form-inline scan-form',
@@ -43,34 +49,33 @@
 
     <%= f.simple_fields_for :schedule do |sf| %>
     <div class="row">
-        <% if !@scan.active? %>
-            <div class="col-md-8">
-                <h2>Schedule</h2>
+        <div class="col-md-8">
+            <h2>Schedule</h2>
 
-                <div class="row">
-                    <div class="col-md-8 update_schedule_preview">
-                        <%= sf.input :start_at,
-                                     include_blank: true,
-                                     start_year: Date.today.year,
-                                     end_year: Date.today.year + 2,
-                                     default: Time.now,
-                                     hint: 'A time in the past will be replaced ' +
-                                            'with now.'
-                        %>
-                    </div>
+            <div class="row">
+                <div class="col-md-8 update_schedule_preview">
+                    <%= sf.input :start_at,
+                                 disabled: @scan.active?,
+                                 include_blank: true,
+                                 start_year: Date.today.year,
+                                 end_year: Date.today.year + 2,
+                                 default: Time.now,
+                                 hint: 'A time in the past will be replaced ' +
+                                        'with now.'
+                    %>
+                </div>
 
-                    <div class="col-md-4">
-                        <%= sf.input :stop_after_hours, label: 'Stop after' %> hours
-                        <%= sf.input :stop_suspend,
-                                     label: 'Suspend instead of aborting',
-                                     hint: 'Should the scan be suspended, the' +
-                                           ' frequency settings will take place' +
-                                           ' after it has been restored.'
-                        %>
-                    </div>
+                <div class="col-md-4">
+                    <%= sf.input :stop_after_hours, label: 'Stop after' %> hours
+                    <%= sf.input :stop_suspend,
+                                 label: 'Suspend instead of aborting',
+                                 hint: 'Should the scan be suspended, the' +
+                                       ' frequency settings will take place' +
+                                       ' after it has been restored.'
+                    %>
                 </div>
             </div>
-        <% end %>
+        </div>
 
         <div class="col-md-4">
             <h2>Frequency</h2>
@@ -144,17 +149,19 @@
     </div>
     <% end %>
 
-    <div class="row">
-        <%
-           path = @scan.id ?
-                   site_scan_path( @site, @scan ) : site_scans_path( @site )
-        %>
+    <% if !@scan.active? %>
+        <div class="row">
+            <%
+               path = @scan.id ?
+                       site_scan_path( @site, @scan ) : site_scans_path( @site )
+            %>
 
-        <div class="col-md-12">
-            <div id="scan-form-schedule-preview" data-path="<%= path %>">
+            <div class="col-md-12">
+                <div id="scan-form-schedule-preview" data-path="<%= path %>">
+                </div>
             </div>
         </div>
-    </div>
+    <% end %>
 
     <div class="row">
         <div class="form-actions col-md-12">
