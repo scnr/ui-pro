@@ -15,6 +15,7 @@ describe ScanScheduler::Helpers::Scan do
         )
     end
 
+    let(:other_revision) { new_revision }
     let(:revision) { new_revision }
     let(:scan) do
         FactoryGirl.create(
@@ -484,6 +485,21 @@ describe ScanScheduler::Helpers::Scan do
         it 'includes issues' do
             expect(instance.service).to receive(:native_progress) do |options|
                 expect(options[:with]).to include :issues
+            end
+
+            subject.update( revision ) {}
+        end
+
+        it 'excludes non-fixed scan issues' do
+            fissue = Issue.create_from_arachni( native_issue, revision: other_revision )
+            fissue.state = 'fixed'
+            fissue.save
+
+            issue = Issue.create_from_arachni( native_issue, revision: other_revision )
+            issue.save
+
+            expect(instance.service).to receive(:native_progress) do |options|
+                expect(options[:without][:issues]).to eq [issue.digest]
             end
 
             subject.update( revision ) {}

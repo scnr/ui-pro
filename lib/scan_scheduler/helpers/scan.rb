@@ -189,7 +189,10 @@ module Scan
 
         log_info_for revision, 'Checking progress.'
 
-        @issue_digests_per_revision_id[revision.id] ||= revision.scan.issues.digests
+        # Don't grab anything but issues marked as fixed, this way we'll be
+        # able to auto-review them ASAP and let the user know of regressions.
+        @issue_digests_per_revision_id[revision.id] ||=
+            revision.scan.issues.where.not( state: 'fixed' ).digests
 
         # With errors and live sitemap.
         instance.service.native_progress(
