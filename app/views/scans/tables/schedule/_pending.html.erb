@@ -32,7 +32,7 @@
 
             <td class="scans-schedule-pending-stop_after_hours">
                 <% if schedule.stop_after_hours %>
-                    <%= schedule.stop_after_hours.to_i %> hours
+                    <%= pluralize schedule.stop_after_hours.to_i, 'hour' %>
                 <% else %>
                     <span class="label label-info">
                         Unrestricted

@@ -77,6 +77,8 @@ class ScansController < ApplicationController
                 format.html { redirect_to [@site, @scan], notice: 'Scan was successfully updated.' }
                 format.json { render :show, status: :ok, location: @scan }
             else
+                prepare_site_issue_summary_data
+
                 format.html { render :edit }
                 format.json { render json: @scan.errors, status: :unprocessable_entity }
             end

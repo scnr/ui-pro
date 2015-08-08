@@ -45,7 +45,11 @@ module Scan
     def restore( revision )
         log_info_for revision, 'Restoring'
 
-        revision.scan.restoring!
+        scan = revision.scan
+        scan.restoring!
+        scan.timed_out = false
+        scan.save
+
         revision.update(
             started_at: Time.now,
             stopped_at: nil
@@ -69,6 +73,8 @@ module Scan
     # @param    [Revision]  revision
     def suspend( revision )
         log_info_for revision, 'Suspending'
+
+        suspending revision
 
         instance = instance_for( revision )
 
@@ -152,6 +158,8 @@ module Scan
         scan.schedule.unschedule
 
         scan.initializing!
+        scan.timed_out = false
+        scan.save
 
         revision = scan.revisions.create(
             # We don't use Time.now because it will lead to small time-slips
@@ -205,56 +213,93 @@ module Scan
             # missing issues from previous revisions as fixed.
             without: { issues: @issue_digests_per_revision_id[revision.id] }
         ) do |progress|
-            log_info_for revision, 'Got progress.'
+            handle_progress( revision, progress )
+        end
+    end
 
-            if progress.rpc_exception?
-                handle_rpc_error( revision, progress )
-                block.call true
-                next
-            end
+    def handle_progress( revision, progress )
+        log_info_for revision, 'Got progress.'
 
-            ap progress[:busy]
-            ap progress[:status]
-            ap progress[:statistics]
+        if progress.rpc_exception?
+            handle_rpc_error( revision, progress )
+            return
+        end
 
-            log_debug_for revision, "Busy: #{progress[:busy]}"
-            log_debug_for revision, "Status: #{progress[:status]}"
+        ap progress[:busy]
+        ap progress[:status]
+        ap progress[:statistics]
 
-            if progress[:busy]
-                log_debug_for revision, "Issues: #{progress[:issues].size}"
+        log_debug_for revision, "Busy:   #{progress[:busy]}"
+        log_debug_for revision, "Status: #{progress[:status]}"
 
-                progress[:issues].each do |issue|
-                    @issue_digests_per_revision_id[revision.id] << issue.digest
+        if progress[:busy]
+            handle_progress_active( revision, progress )
+        else
+            handle_progress_inactive( revision, progress )
+        end
+    end
 
-                    create_issue( revision, issue )
-                end
+    def handle_progress_active( revision, progress )
+        schedule = revision.scan.schedule
+        runtime  = progress[:statistics][:runtime]
 
-                revision.scan.update( status: progress[:status] )
+        if !suspending?( revision ) && schedule.stop_after_hours &&
+            schedule.stop_after_hours.hours < runtime.seconds
+
+            log_debug_for revision, 'Timeout reached.'
+            ap 'TIMEOUT'
+
+            revision.scan.timed_out = true
+            revision.scan.save
+
+            if schedule.stop_suspend
+                suspend revision
             else
-                stop_monitor( revision )
-
-                # Special case...
-                if progress[:status] == :suspended
-                    instance.service.snapshot_path do |path|
-                        next if handle_if_rpc_error( revision, path )
-
-                        log_info_for revision, "Suspended, got snapshot path: #{path}"
-
-                        revision.scan.update(
-                            status:        'suspended',
-                            snapshot_path: path
-                        )
-
-                        finish( revision )
-                    end
-                else
-                    download_report_and_shutdown( revision, status: 'completed' )
-                end
+                abort revision
             end
+
+            return
+        end
+
+        log_debug_for revision, "Issues: #{progress[:issues].size}"
+
+        @issue_digests_per_revision_id[revision.id] ||= []
+        progress[:issues].each do |issue|
+            @issue_digests_per_revision_id[revision.id] << issue.digest
+
+            create_issue( revision, issue )
+        end
+
+        revision.scan.update( status: progress[:status] )
+    end
+
+    def handle_progress_inactive( revision, progress )
+        instance = instance_for( revision )
+
+        stop_monitor( revision )
+
+        # Special case...
+        if progress[:status] == :suspended
+            instance.service.snapshot_path do |path|
+                next if handle_if_rpc_error( revision, path )
+
+                log_info_for revision, "Suspended, got snapshot path: #{path}"
+
+                revision.scan.update(
+                    status:        'suspended',
+                    snapshot_path: path
+                )
+
+                finish( revision )
+            end
+        else
+            download_report_and_shutdown( revision, status: 'completed' )
         end
     end
 
     def finish( revision )
+        done_suspending( revision )
+
         scan = revision.scan
 
         revision.update( stopped_at: Time.now )
@@ -318,10 +363,23 @@ module Scan
         end
     end
 
+    def done_suspending( revision )
+        @suspending.delete revision.id
+    end
+
+    def suspending( revision )
+        @suspending << revision.id
+    end
+
+    def suspending?( revision )
+        @suspending.include?( revision.id )
+    end
+
     # @private
     def reset_scan_state
         @issue_digests_per_revision_id = {}
-        @monitors = {}
+        @monitors   = {}
+        @suspending = Set.new
     end
 
 end

@@ -122,6 +122,15 @@ describe ScanScheduler::Helpers::Scan do
             subject.restore( revision )
         end
 
+        it 'removes #timed_out' do
+            scan.timed_out = true
+            scan.save
+
+            subject.restore( revision ) rescue Arachni::Reactor::Error::NotRunning
+
+            expect(scan).to_not be_timed_out
+        end
+
         it 'deletes the snapshot' do
             expect(FileUtils).to receive(:rm).with(snapshot_path)
             subject.restore( revision )
@@ -318,6 +327,15 @@ describe ScanScheduler::Helpers::Scan do
             subject.perform( scan ) rescue Arachni::Reactor::Error::NotRunning
 
             expect(scan).to be_initializing
+        end
+
+        it 'removes #timed_out' do
+            scan.timed_out = true
+            scan.save
+
+            subject.perform( scan ) rescue Arachni::Reactor::Error::NotRunning
+
+            expect(scan).to_not be_timed_out
         end
 
         it 'creates a new revision' do
@@ -519,6 +537,17 @@ describe ScanScheduler::Helpers::Scan do
             subject.update( revision ) {}
         end
 
+        it 'passes progress data to #handle_progress' do
+            progress = { busy: true }
+
+            expect(subject).to receive(:handle_progress_active).with(revision, progress)
+            allow(instance.service).to receive(:native_progress) do |_, &block|
+                block.call progress
+            end
+
+            subject.update( revision ) {}
+        end
+
         context 'subsequent calls' do
             it 'exclude seen sitemap entries'
             it 'exclude seen errors'
@@ -527,7 +556,10 @@ describe ScanScheduler::Helpers::Scan do
                 expect(instance.service).to receive(:native_progress) do |_, &block|
                     block.call(
                         busy:   true,
-                        issues: [native_issue]
+                        issues: [native_issue],
+                        statistics: {
+                            runtime: 60
+                        }
                     )
                 end
                 subject.update( revision ) {}
@@ -538,84 +570,164 @@ describe ScanScheduler::Helpers::Scan do
                 subject.update( revision ) {}
             end
         end
+    end
 
+    describe '#handle_progress' do
         context 'when :busy' do
-            it 'updates runtime statistics'
+            it 'passes progress data to #handle_progress_active' do
+                progress = { busy: true }
 
-            it 'updates revision state' do
-                expect(instance.service).to receive(:native_progress) do |_, &block|
-                    block.call(
-                        busy:   true,
-                        issues: [],
-                        status: 'stuff'
-                    )
-                end
-                subject.update( revision ) {}
-
-                expect(scan.reload.status).to eq 'stuff'
-            end
-
-            context 'and has :issues' do
-                it 'creates them' do
-                    expect(instance.service).to receive(:native_progress) do |_, &block|
-                        block.call(
-                            busy:   true,
-                            issues: [native_issue]
-                        )
-                    end
-
-                    expect(Issue).to receive(:create_from_arachni).with(
-                        native_issue, revision: revision
-                    )
-
-                    subject.update( revision ) {}
-                end
+                expect(subject).to receive(:handle_progress_active).with(revision, progress)
+                subject.handle_progress( revision, progress )
             end
         end
 
         context 'when not :busy' do
+            it 'passes progress data to #handle_progress_inactive' do
+                progress = { busy: false }
+
+                expect(subject).to receive(:handle_progress_inactive).with(revision, progress)
+                subject.handle_progress( revision, progress )
+            end
+        end
+
+        context 'when passed an RPC exception' do
+            let(:exception) { Arachni::RPC::Exceptions::Base.new }
+
+            it 'forwards it to #handle_rpc_error' do
+                expect(subject).to receive(:handle_rpc_error).with( revision, exception )
+                subject.handle_progress( revision, exception )
+            end
+        end
+    end
+
+    describe '#handle_progress_active' do
+        before do
+            instance
+        end
+
+        let(:progress) do
+            {
+                busy:       true,
+                issues:     [],
+                status:     'stuff',
+                statistics: {
+                    runtime: 2.hours.to_i
+                }
+            }
+        end
+
+        it 'updates statistics'
+        it 'updates errors'
+        it 'updates sitemap'
+
+        it 'updates scan state' do
+            subject.handle_progress_active( revision, progress ) {}
+            expect(scan.reload.status).to eq 'stuff'
+        end
+
+        context 'and has :issues' do
+            let(:progress) do
+                super().merge( issues: [native_issue] )
+            end
+
+            it 'creates them' do
+                expect(Issue).to receive(:create_from_arachni).with(
+                     native_issue, revision: revision
+                 )
+
+                subject.handle_progress_active( revision, progress ) {}
+            end
+        end
+
+        context 'when Schedule#stop_after_hours is set' do
             before do
-                expect(subject).to receive(:stop_monitor).with( revision )
+                scan.schedule.stop_after_hours = 1
+                scan.schedule.save
             end
 
-            context 'when the scan has not been suspended' do
-                before do
-                    expect(instance.service).to receive(:native_progress) do |_, &block|
-                        block.call( busy: false )
+            context 'and the runtime has exceeded it' do
+                it 'aborts the scan' do
+                    expect(subject).to receive(:abort).with(revision)
+                    subject.handle_progress_active( revision, progress ) {}
+                end
+
+                it 'sets Scan#timed_out' do
+                    expect(subject).to receive(:abort).with(revision)
+                    subject.handle_progress_active( revision, progress ) {}
+                    expect(scan).to be_timed_out
+                end
+
+                context 'and Schedule#stop_suspend is set' do
+                    before do
+                        scan.schedule.stop_suspend = true
+                        scan.schedule.save
                     end
-                    expect(subject).to receive(:download_report_and_shutdown).with(
-                                           revision,  status: 'completed' )
-                end
 
-                it 'calls #download_report_and_shutdown' do
-                    subject.update( revision ) {}
-                end
+                    it 'suspends the scan' do
+                        expect(subject).to receive(:suspend).with(revision)
+                        subject.handle_progress_active( revision, progress ) {}
+                    end
 
-                it 'sets Scan#status to nil' do
-                    subject.update( revision ) {}
+                    context 'and #suspend has already been called' do
+                        it 'does nothing' do
+                            subject.suspend revision
 
-                    expect(scan.reload.status).to be_nil
+                            expect(subject).to_not receive(:suspend).with(revision)
+                            subject.handle_progress_active( revision, progress ) {}
+                        end
+                    end
                 end
             end
+        end
+    end
 
-            context 'when the scan has been suspended' do
-                before do
-                    expect(instance.service).to receive(:native_progress) do |_, &block|
-                        block.call( busy: false, status: :suspended )
-                    end
-                end
+    describe '#handle_progress_inactive' do
+        before do
+            instance
+            expect(subject).to receive(:stop_monitor).with( revision )
+        end
 
-                it 'sets scan status to suspended' do
-                    subject.update( revision )
+        let(:progress) do
+            {
+                busy: false
+            }
+        end
 
-                    expect(scan.reload).to be_suspended
-                end
+        context 'when the scan has not been suspended' do
+            before do
+                expect(subject).to receive(:download_report_and_shutdown).with(
+                                       revision,  status: 'completed' )
+            end
 
-                it 'sets #snapshot_path' do
-                    subject.update( revision )
+            it 'calls #download_report_and_shutdown' do
+                subject.handle_progress_inactive( revision, progress ) {}
+            end
 
-                    expect(scan.reload.snapshot_path).to eq '/my/path'
-                end
+            it 'sets Scan#status to nil' do
+                subject.handle_progress_inactive( revision, progress ) {}
+
+                expect(scan.reload.status).to be_nil
+            end
+        end
+
+        context 'when the scan has been suspended' do
+            let(:progress) do
+                super().merge(
+                    status: :suspended
+                )
+            end
+
+            it 'sets scan status to suspended' do
+                subject.handle_progress_inactive( revision, progress ) {}
+
+                expect(scan.reload).to be_suspended
+            end
+
+            it 'sets #snapshot_path' do
+                subject.handle_progress_inactive( revision, progress ) {}
+
+                expect(scan.reload.snapshot_path).to eq '/my/path'
             end
         end
     end

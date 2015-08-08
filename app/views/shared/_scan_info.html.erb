@@ -15,9 +15,15 @@ as <%= link_to scan.site_role, site_role_path( scan.site, scan.site_role ) %>.
                     site_scan_revision_path( scan.site, scan, last_revision ) %>
 
         <% if extended %>
-            started on <%= l last_revision.started_at %>
-            &mdash;
-            <%= seconds_to_hms last_revision.duration %>.
+            started on <%= l last_revision.started_at %>;
+            running for
+            <%= seconds_to_hms last_revision.duration %>;
+
+            <% if stop_after_hours = scan.schedule.stop_after_hours %>
+                will <%= scan.schedule.stop_suspend ? 'suspend' : 'stop' %>
+                after <%= seconds_to_hms stop_after_hours.hours.to_i %>
+            <% end %>
+            .
         <% else %>
             started on <%= l last_revision.started_at %>.
         <% end %>
@@ -27,7 +33,13 @@ as <%= link_to scan.site_role, site_role_path( scan.site, scan.site_role ) %>.
 
         <% if extended %>
             started on <%= l last_revision.started_at %>;
-            <%= last_revision.scan.status %> on <%= l last_revision.stopped_at %>
+            <%= last_revision.scan.status %>
+
+            <% if scan.timed_out? %>
+                (due to time out)
+            <% end %>
+
+            on <%= l last_revision.stopped_at %>
             &mdash;
             <%= seconds_to_hms last_revision.duration %>.
         <% else %>

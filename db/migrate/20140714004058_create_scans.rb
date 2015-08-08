@@ -6,6 +6,7 @@ class CreateScans < ActiveRecord::Migration
       t.text :path
       t.text :snapshot_path
       t.string :status
+      t.boolean :timed_out
       t.integer :revisions_count, :integer, default: 0
       t.integer :issues_count, :integer, default: 0
       t.integer :sitemap_entries_count, :integer, default: 0

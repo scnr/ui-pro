@@ -1,8 +1,10 @@
 <% if schedule.start_at || schedule.recurring? %>
     <br/>
 
+    Running
+
     <% if schedule.start_at %>
-        Running <%= l schedule.start_at %>
+        on <%= l schedule.start_at %>
     <% end %>
 
     <% if schedule.start_at && schedule.recurring? %>
@@ -10,6 +12,7 @@
     <% end %>
 
     <% if schedule.recurring? %>
-        <%= render_frequency schedule %>
+        <%= render_frequency( schedule ) %>
     <% end %>
+    .
 <% end %>
