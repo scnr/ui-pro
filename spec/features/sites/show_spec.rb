@@ -57,6 +57,26 @@ feature 'Site page' do
         expect(breadcrumbs.find('li:nth-of-type(3) a').native['href']).to eq site_path( site )
     end
 
+    scenario 'user sees Overview as heading' do
+        expect(site_info.find('h1').text).to have_content 'Overview'
+    end
+
+    feature 'when the site has scans' do
+        before do
+            revision
+            site.scans << scan
+            site.save
+
+            visit site_path( site )
+        end
+
+        let(:scan_info) { site_info.find '.scan-info' }
+        it_behaves_like 'Scan info'
+
+        let(:revision_info) { site_info.find '.revision-info' }
+        it_behaves_like 'Revision info', extended: true
+    end
+
     feature 'when the site has no scans' do
         before do
             user.sites << other_site
@@ -70,55 +90,4 @@ feature 'Site page' do
         end
     end
 
-    scenario 'user sees Overview as heading' do
-        expect(site_info.find('h1').text).to have_content 'Overview'
-    end
-
-    feature 'when the site has been scanned' do
-        before do
-            revision
-            site.scans << scan
-            site.save
-
-            visit site_path( site )
-        end
-
-        scenario 'user sees the time of the last performed' do
-            expect(site_info).to have_content "#{revision} of #{scan} scan started on"
-            expect(site_info).to have_content I18n.l( site.last_scanned_at )
-        end
-
-        scenario 'user sees last performed scan link' do
-            expect(site_info).to have_xpath "//a[@href='#{site_scan_path( site, site.revisions.last.scan )}']"
-        end
-
-        scenario 'user sees last revision link' do
-            expect(site_info).to have_xpath "//a[@href='#{site_scan_revision_path( site, site.revisions.last.scan, site.revisions.last )}']"
-        end
-    end
-
-    feature 'when the site is being scanned' do
-        before do
-            revision.stopped_at = nil
-            revision.save
-
-            site.scans << scan
-            site.save
-
-            visit site_path( site )
-        end
-
-        scenario 'user sees the start time' do
-            expect(site_info).to have_content "#{revision} of #{scan} scan started on"
-            expect(site_info).to have_content I18n.l( revision.started_at )
-        end
-
-        scenario 'user sees last performed scan link' do
-            expect(site_info).to have_xpath "//a[@href='#{site_scan_path( site, site.revisions.last.scan )}']"
-        end
-
-        scenario 'user sees last revision link' do
-            expect(site_info).to have_xpath "//a[@href='#{site_scan_revision_path( site, site.revisions.last.scan, site.revisions.last )}']"
-        end
-    end
 end

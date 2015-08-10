@@ -17,11 +17,18 @@
             <%= md @scan.description %>
         </div>
 
-        <div class="text-muted">
+        <div class="text-muted" id="scan-info-details">
             <%= render partial: '/shared/scan_info', locals: {
-                    extended: true,
-                    scan:     @scan
+                    scan: @scan
             } %>
+
+            <% if lr = @scan.last_revision %>
+                <%= render partial: '/shared/revision_info', locals: {
+                        revision:       @scan.last_revision,
+                        hide_scan_name: true,
+                        extended:       true
+                } %>
+            <% end %>
         </div>
     </div>
 </div>

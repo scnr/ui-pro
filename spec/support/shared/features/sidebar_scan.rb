@@ -64,7 +64,7 @@ shared_examples_for 'Scan sidebar' do |options = {}|
 
         feature 'active' do
             let(:scan) do
-                super().tap { |s| s.revisions.create( started_at: Time.now ); s.scanning! }
+                super().tap { |s| s.revisions.create( started_at: Time.now ).scanning! }
             end
 
             scenario 'user sees pause button' do
@@ -84,6 +84,11 @@ shared_examples_for 'Scan sidebar' do |options = {}|
             end
 
             feature 'and scanning' do
+                before do
+                    revision.scanning!
+                    scan_sidebar_refresh
+                end
+
                 scenario 'user sees scan status' do
                     expect(status).to have_content 'Scanning'
                     expect(status[:class]).to include 'label-primary'
@@ -92,7 +97,7 @@ shared_examples_for 'Scan sidebar' do |options = {}|
 
             feature 'and paused' do
                 before do
-                    scan.paused!
+                    revision.paused!
                     scan_sidebar_refresh
                 end
 
@@ -116,8 +121,18 @@ shared_examples_for 'Scan sidebar' do |options = {}|
         end
 
         feature 'suspended' do
+            before do
+                revision.suspended!
+                scan_sidebar_refresh
+            end
+
             let(:scan) do
-                super().tap { |s| s.revisions.create( started_at: Time.now ); s.suspended! }
+                super().tap do |s|
+                    s.revisions.create(
+                        started_at: Time.now,
+                        stopped_at: Time.now
+                    ).suspended!
+                end
             end
 
             scenario 'user sees scan status' do
@@ -135,49 +150,17 @@ shared_examples_for 'Scan sidebar' do |options = {}|
         end
 
         feature 'finished' do
+            before do
+                revision.completed!
+                scan_sidebar_refresh
+            end
+
             let(:scan) do
                 super().tap do |s|
                     s.revisions.create(
                         started_at: Time.now,
                         stopped_at: Time.now
-                    )
-                    s.completed!
-                end
-            end
-
-            feature 'and completed' do
-                before do
-                    scan.completed!
-                    scan_sidebar_refresh
-                end
-
-                scenario 'user sees scan status' do
-                    expect(status).to have_content 'Completed'
-                    expect(status[:class]).to include 'label-success'
-                end
-            end
-
-            feature 'and aborted' do
-                before do
-                    scan.aborted!
-                    scan_sidebar_refresh
-                end
-
-                scenario 'user sees scan status' do
-                    expect(status).to have_content 'Aborted'
-                    expect(status[:class]).to include 'label-warning'
-                end
-            end
-
-            feature 'and failed' do
-                before do
-                    scan.failed!
-                    scan_sidebar_refresh
-                end
-
-                scenario 'user sees scan status' do
-                    expect(status).to have_content 'Failed'
-                    expect(status[:class]).to include 'label-danger'
+                    ).completed!
                 end
             end
 
@@ -191,6 +174,42 @@ shared_examples_for 'Scan sidebar' do |options = {}|
 
             scenario 'user sees delete button' do
                 expect(sidebar).to have_xpath "//a[@href='#{site_scan_path( site, scan )}' and @data-method='delete']"
+            end
+
+            feature 'and completed' do
+                before do
+                    revision.completed!
+                    scan_sidebar_refresh
+                end
+
+                scenario 'user sees scan status' do
+                    expect(status).to have_content 'Completed'
+                    expect(status[:class]).to include 'label-success'
+                end
+            end
+
+            feature 'and aborted' do
+                before do
+                    revision.aborted!
+                    scan_sidebar_refresh
+                end
+
+                scenario 'user sees scan status' do
+                    expect(status).to have_content 'Aborted'
+                    expect(status[:class]).to include 'label-warning'
+                end
+            end
+
+            feature 'and failed' do
+                before do
+                    revision.failed!
+                    scan_sidebar_refresh
+                end
+
+                scenario 'user sees scan status' do
+                    expect(status).to have_content 'Failed'
+                    expect(status[:class]).to include 'label-danger'
+                end
             end
         end
     end

@@ -153,7 +153,7 @@ feature 'Revision coverage', js: true do
 
             feature 'when the revision is active' do
                 before do
-                    scan.scanning!
+                    revision.scanning!
                     refresh
                 end
 
@@ -164,7 +164,7 @@ feature 'Revision coverage', js: true do
 
             feature 'when the revision is not active' do
                 before do
-                    scan.suspended!
+                    revision.suspended!
                     refresh
                 end
 
@@ -209,7 +209,7 @@ feature 'Revision coverage', js: true do
 
             feature 'when the revision is active' do
                 before do
-                    scan.scanning!
+                    revision.scanning!
                     refresh
                 end
 
@@ -220,7 +220,7 @@ feature 'Revision coverage', js: true do
 
             feature 'when the revision is not active' do
                 before do
-                    scan.suspended!
+                    revision.suspended!
                     refresh
                 end
 
@@ -265,7 +265,7 @@ feature 'Revision coverage', js: true do
 
             feature 'when the revision is active' do
                 before do
-                    scan.scanning!
+                    revision.scanning!
                     refresh
                 end
 
@@ -276,7 +276,7 @@ feature 'Revision coverage', js: true do
 
             feature 'when the revision is not active' do
                 before do
-                    scan.suspended!
+                    revision.suspended!
                     refresh
                 end
 

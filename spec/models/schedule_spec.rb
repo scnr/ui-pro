@@ -8,6 +8,7 @@ describe Schedule do
         ).schedule
     end
     let(:site) { FactoryGirl.create :site }
+    let(:revision) { FactoryGirl.create :revision, scan: subject.scan }
 
     expect_it { to belong_to :scan }
 
@@ -281,7 +282,7 @@ describe Schedule do
     describe '#suspended?' do
         context 'when the scan is suspended' do
             before do
-                subject.scan.suspended!
+                revision.suspended!
             end
 
             it 'returns true' do

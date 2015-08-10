@@ -13,6 +13,9 @@ feature 'Edit scan page' do
         FactoryGirl.create :scan, profile: profile, site: site,
                            schedule: FactoryGirl.create(:schedule), site_role: site_role
     end
+    let(:revision) do
+        FactoryGirl.create :revision, scan: scan
+    end
     let(:site_role) { FactoryGirl.create :site_role, name: 'Stuff', site: site }
     let(:other_site_role) { FactoryGirl.create :site_role, name: 'Other stuff', site: site }
     let(:profile) { FactoryGirl.create :profile, name: 'Stuff' }
@@ -148,8 +151,7 @@ feature 'Edit scan page' do
 
     feature 'when the scan has at least one revision' do
         before do
-            scan.revisions << FactoryGirl.create(:revision, scan: scan)
-
+            revision
             refresh
         end
 
@@ -172,7 +174,7 @@ feature 'Edit scan page' do
 
     feature 'when the scan is active' do
         before do
-            scan.scanning!
+            revision.scanning!
             refresh
         end
 

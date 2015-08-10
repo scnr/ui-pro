@@ -1,0 +1,75 @@
+<%
+   extended = !!local_assigns[:extended]
+
+   hide_scan_name     = local_assigns[:hide_scan_name]
+   hide_revision_name = local_assigns[:hide_revision_name]
+
+   scan ||= revision.scan
+
+   schedule = scan.schedule
+%>
+
+<div class="revision-info">
+    <% if revision.active? %>
+        <i class="fa fa-spin fa-circle-o-notch"></i>
+
+        <% if !hide_revision_name %>
+            <% if hide_scan_name %>
+                <%= link_to revision,
+                            site_scan_revision_path( scan.site, scan, revision ) %>
+            <% else %>
+                <%= link_to "#{revision} of #{scan} scan",
+                            site_scan_revision_path( scan.site, scan, revision ) %>
+            <% end %>
+
+            started
+        <% else %>
+            Started
+        <% end %>
+
+        on
+
+        <% if extended %>
+            <%= l revision.started_at %>;
+            running for
+            <%= seconds_to_hms revision.duration %>
+
+            <% if (stop_after_hours = schedule.stop_after_hours) %>
+                &mdash;
+                will <%= schedule.stop_suspend ? 'suspend' : 'stop' %>
+                after <%= seconds_to_hms stop_after_hours.hours.to_i %>
+                (<%= seconds_to_hms stop_after_hours.hours.to_i - revision.duration %>)
+            <% end %>
+        <% else %>
+            <%= l revision.started_at %>
+        <% end %>
+    <% else %>
+        <% if !hide_revision_name %>
+            <% if hide_scan_name %>
+                <%= link_to revision,
+                            site_scan_revision_path( scan.site, scan, revision ) %>
+            <% else %>
+                <%= link_to "#{revision} of #{scan} scan",
+                            site_scan_revision_path( scan.site, scan, revision ) %>
+            <% end %>
+        <% end %>
+
+        <% if extended %>
+            <%= hide_revision_name ? 'Started' : 'started' %>
+
+            on <%= l revision.started_at %>;
+            <%= revision.status %>
+
+            <% if revision.timed_out? %>
+                (due to time out)
+            <% end %>
+
+            on <%= l revision.stopped_at %>
+            &mdash;
+            <%= seconds_to_hms revision.duration %>.
+        <% else %>
+            <%= hide_revision_name ? revision.status.capitalize : revision.status %>
+            on <%= l revision.stopped_at %>.
+        <% end %>
+    <% end %>
+</div>

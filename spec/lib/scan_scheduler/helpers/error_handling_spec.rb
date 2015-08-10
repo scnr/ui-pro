@@ -56,7 +56,7 @@ describe ScanScheduler::Helpers::ErrorHandling do
 
         it 'sets the scan status to failed' do
             subject.handle_rpc_error( *args )
-            expect(scan).to be_failed
+            expect(revision).to be_failed
         end
     end
 end

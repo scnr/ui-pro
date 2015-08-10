@@ -281,6 +281,9 @@ ActiveRecord::Schema.define(version: 20150406191208) do
     t.integer  "scan_id"
     t.integer  "site_id"
     t.integer  "index"
+    t.text     "snapshot_path"
+    t.string   "status"
+    t.boolean  "timed_out"
     t.datetime "started_at"
     t.datetime "stopped_at"
     t.integer  "issues_count",          default: 0
@@ -297,7 +300,6 @@ ActiveRecord::Schema.define(version: 20150406191208) do
     t.string   "name"
     t.text     "description"
     t.text     "path"
-    t.text     "snapshot_path"
     t.string   "status"
     t.boolean  "timed_out"
     t.integer  "revisions_count",       default: 0

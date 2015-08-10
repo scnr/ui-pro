@@ -17,6 +17,11 @@ shared_examples_for 'Revisions sidebar' do |options = {}|
         revisions_sidebar_refresh
     end
 
+    let(:info) { sidebar.find "#sidebar-revisions-id-#{revision.id}-info" }
+
+    let(:revision_info) { info.find '.revision-info' }
+    it_behaves_like 'Revision info', extended: false, hide_revision_name: true
+
     scenario 'user sees index' do
         expect(sidebar).to have_content "##{revision.index}"
     end
@@ -41,34 +46,6 @@ shared_examples_for 'Revisions sidebar' do |options = {}|
 
     scenario 'user sees revision link with filtering options' do
         expect(sidebar).to have_xpath "//a[starts-with(@href, '#{site_scan_revision_path( site, scan, revision )}?filter') and not(@data-method)]"
-    end
-
-    feature 'when the revision is in progress' do
-        before do
-            other_revision.stopped_at = nil
-            other_revision.save
-
-            revision.stopped_at = nil
-            revision.save
-
-            revisions_sidebar_refresh
-        end
-
-        scenario 'user sees start datetime' do
-            expect(sidebar).to have_content 'Started on'
-            expect(sidebar).to have_content I18n.l( revision.started_at )
-        end
-
-        scenario 'user does not sees stop datetime' do
-            expect(sidebar).to_not have_content 'Performed on'
-        end
-    end
-
-    feature 'when the revision has been performed' do
-        scenario 'user sees stop datetime' do
-            expect(sidebar).to have_content 'Performed on'
-            expect(sidebar).to have_content I18n.l( revision.performed_at )
-        end
     end
 
 end

@@ -24,10 +24,6 @@ module ScanStates
                 where status: state
             end
 
-            define_method "#{state}!" do
-                update( status: state )
-            end
-
             define_method "#{state}?" do
                 self.status == state
             end

@@ -18,29 +18,15 @@
             <%= md @scan.description %>
         </div>
 
-        <div class="text-muted">
-            Using <%= link_to @scan.profile, profile_path( @scan.profile ) %>
-            from <%= link_to @scan.user_agent, user_agent_path( @scan.user_agent ) %>
-            as <%= link_to @scan.site_role, site_role_path( @site, @scan.site_role ) %>.
-
-            <br/>
-
-            <% if @revision.stopped? %>
-                Started on <%= l @revision.started_at %>;
-                stopped on <%= l @revision.stopped_at %>
-                &mdash;
-                <%= seconds_to_hms @revision.duration %>.
-            <% elsif @revision.in_progress? %>
-                <i class="fa fa-spin fa-circle-o-notch"></i>
-                Started on <%= l @revision.started_at %>
-                &mdash;
-                <%= seconds_to_hms @revision.duration %>.
-            <% end %>
-
-            <% if @scan.recurring? %>
-                <br/>
-                Running <%= @scan.schedule %>.
-            <% end %>
+        <div class="text-muted" id="revision-info-details">
+            <%= render partial: '/shared/scan_info', locals: {
+                    scan: @scan
+            } %>
+            <%= render partial: '/shared/revision_info', locals: {
+                    revision:           @scan.last_revision,
+                    extended:           true,
+                    hide_revision_name: true
+            } %>
         </div>
     </div>
 </div>

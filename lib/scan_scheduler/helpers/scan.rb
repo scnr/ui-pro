@@ -45,10 +45,9 @@ module Scan
     def restore( revision )
         log_info_for revision, 'Restoring'
 
-        scan = revision.scan
-        scan.restoring!
-        scan.timed_out = false
-        scan.save
+        revision.restoring!
+        revision.timed_out = false
+        revision.save
 
         revision.update(
             started_at: Time.now,
@@ -56,10 +55,10 @@ module Scan
         )
 
         spawn_instance_for( revision ) do |instance|
-            instance.service.restore( revision.scan.snapshot_path ) do |r|
+            instance.service.restore( revision.snapshot_path ) do |r|
                 log_info_for revision, 'Restoring'
 
-                FileUtils.rm( revision.scan.snapshot_path )
+                FileUtils.rm( revision.snapshot_path )
 
                 next if handle_if_rpc_error( revision, r )
 
@@ -92,7 +91,7 @@ module Scan
 
         stop_monitor( revision )
 
-        revision.scan.aborting!
+        revision.aborting!
 
         download_report_and_shutdown(
             revision,
@@ -157,15 +156,12 @@ module Scan
         # Remove this scan from the schedule list.
         scan.schedule.unschedule
 
-        scan.initializing!
-        scan.timed_out = false
-        scan.save
-
         revision = scan.revisions.create(
             # We don't use Time.now because it will lead to small time-slips
             # over time.
             started_at: start_at
         )
+        revision.initializing!
 
         log_info_for revision, 'Created revision.'
 
@@ -249,8 +245,8 @@ module Scan
             log_debug_for revision, 'Timeout reached.'
             ap 'TIMEOUT'
 
-            revision.scan.timed_out = true
-            revision.scan.save
+            revision.timed_out = true
+            revision.save
 
             if schedule.stop_suspend
                 suspend revision
@@ -270,7 +266,7 @@ module Scan
             create_issue( revision, issue )
         end
 
-        revision.scan.update( status: progress[:status] )
+        revision.update( status: progress[:status] )
     end
 
     def handle_progress_inactive( revision, progress )
@@ -285,7 +281,7 @@ module Scan
 
                 log_info_for revision, "Suspended, got snapshot path: #{path}"
 
-                revision.scan.update(
+                revision.update(
                     status:        'suspended',
                     snapshot_path: path
                 )
@@ -305,7 +301,7 @@ module Scan
         revision.update( stopped_at: Time.now )
 
         # This one's done, schedule the next one if it's recurring.
-        if !scan.suspended? && scan.recurring?
+        if !revision.suspended? && scan.recurring?
             scan.schedule_next
 
             log_info_for revision, 'Scheduled next occurrence for: ' +
@@ -348,8 +344,8 @@ module Scan
             finish( revision )
 
             if status
-                revision.scan.status = status
-                revision.scan.save
+                revision.status = status
+                revision.save
 
                 log_info_for revision, status.capitalize
             end

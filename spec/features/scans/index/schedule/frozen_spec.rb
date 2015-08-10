@@ -5,6 +5,7 @@ feature 'Frozen scan schedules table' do
 
     subject { scan.schedule }
     let(:scan) { FactoryGirl.create :scan, name: 'Stuff', site: site }
+    let(:revision) { FactoryGirl.create :revision, scan: scan }
     let(:user) { FactoryGirl.create :user }
     let(:site) { FactoryGirl.create :site }
     let(:other_site) { FactoryGirl.create :site, host: 'gg.gg' }
@@ -18,7 +19,7 @@ feature 'Frozen scan schedules table' do
     end
 
     before do
-        scan.revisions.create!
+        revision
         user.sites << site
 
         login_as( user, scope: :user )
@@ -30,6 +31,7 @@ feature 'Frozen scan schedules table' do
 
     feature 'when there are frozen scans' do
         before do
+            revision.completed!
             subject.start_at = nil
             subject.save
             refresh
@@ -53,8 +55,7 @@ feature 'Frozen scan schedules table' do
 
         feature 'when the scan is suspended' do
             before do
-                subject.scan.suspended!
-                subject.save
+                revision.suspended!
                 refresh
             end
 
@@ -78,8 +79,7 @@ feature 'Frozen scan schedules table' do
 
         feature 'when the scan is in progress' do
             before do
-                subject.scan.scanning!
-                subject.save
+                revision.scanning!
                 refresh
             end
 

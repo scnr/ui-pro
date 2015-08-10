@@ -40,7 +40,8 @@
                    end
             %>
 
-                <li
+                <li id="sidebar-revisions-id-<%= revision.id %>"
+
                     <% if issue_count > 0 %>
                         title="<%= pluralize issue_count, 'new issue' %> with a maximum severity of <%= max_severity %>."
                     <% else %>
@@ -71,14 +72,14 @@
                     <% end %>
                 </li>
 
-                <li class="sidebar-info">
+                <li class="sidebar-info"
+                    id="sidebar-revisions-id-<%= revision.id %>-info">
                     <small class="text-muted">
-                        <% if (performed_at = revision.performed_at) %>
-                            Performed on <%= l performed_at %>.
-                        <% elsif revision.in_progress? %>
-                            <i class="fa fa-spin fa-circle-o-notch"></i>
-                            Started on <%= l revision.started_at %>.
-                        <% end %>
+                        <%= render partial: '/shared/revision_info',
+                                   locals: {
+                                           hide_revision_name: true,
+                                           revision:           revision
+                                   } %>
                     </small>
                 </li>
             <% end %>

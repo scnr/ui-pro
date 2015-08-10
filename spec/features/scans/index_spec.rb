@@ -30,19 +30,18 @@ feature 'Scans index' do
     end
 
     let(:active) do
-        new_scan.tap { |s| s.revisions.create( started_at: Time.now ); s.scanning! }
+        new_scan.tap { |s| s.revisions.create( started_at: Time.now ).scanning! }
     end
 
     let(:suspended) do
-        new_scan.tap { |s| s.revisions.create( started_at: Time.now ); s.suspended! }
+        new_scan.tap { |s| s.revisions.create( started_at: Time.now ).suspended! }
     end
     let(:finished) do
         new_scan.tap do |s|
             s.revisions.create(
                 started_at: Time.now,
                 stopped_at: Time.now
-            )
-            s.completed!
+            ).completed!
         end
     end
 
@@ -80,6 +79,11 @@ feature 'Scans index' do
     end
 
     feature 'that are active' do
+        before do
+            revision.scanning!
+            refresh
+        end
+
         let(:scan) { active }
         let(:scans) { find '#site-scans-active' }
 
@@ -107,7 +111,7 @@ feature 'Scans index' do
 
         feature 'when the scan is paused' do
             before do
-                scan.paused!
+                revision.paused!
                 refresh
             end
 
@@ -126,7 +130,7 @@ feature 'Scans index' do
 
         feature 'when there are no scans' do
             before do
-                scan.completed!
+                revision.completed!
                 refresh
             end
 
@@ -137,6 +141,11 @@ feature 'Scans index' do
     end
 
     feature 'that are suspended' do
+        before do
+            revision.suspended!
+            refresh
+        end
+
         let(:scan) { suspended }
         let(:scans) { find '#site-scans-suspended' }
 
@@ -172,7 +181,7 @@ feature 'Scans index' do
 
         feature 'when there are no scans' do
             before do
-                scan.completed!
+                revision.completed!
                 refresh
             end
 
@@ -183,13 +192,18 @@ feature 'Scans index' do
     end
 
     feature 'that are finished' do
+        before do
+            revision.aborted!
+            refresh
+        end
+
         let(:scan) { finished }
         let(:scans) { find '#site-scans-finished' }
 
         it_behaves_like 'Site scan tables row fields'
 
         scenario 'user sees scan status' do
-            expect(scans).to have_content scan.status.capitalize
+            expect(scans).to have_content revision.status.capitalize
         end
 
         scenario 'user sees repeat button' do
@@ -206,7 +220,7 @@ feature 'Scans index' do
 
         feature 'when there are no scans' do
             before do
-                scan.scanning!
+                revision.scanning!
                 refresh
             end
 

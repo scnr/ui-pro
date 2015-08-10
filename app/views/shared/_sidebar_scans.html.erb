@@ -2,6 +2,8 @@
    heading    = local_assigns[:title] || 'Associated scans'
    scans      = local_assigns[:scans] || []
    with_site  = local_assigns[:with_site]
+
+   scan_details_options = local_assigns[:scan_details_options] || {}
 %>
 
     <ul id="sidebar-scans" class="nav nav-pills nav-stacked">
@@ -28,7 +30,7 @@
                end
         %>
 
-            <li id="site-sidebar-scan-id-<%= scan.id %>"
+            <li id="sidebar-scans-id-<%= scan.id %>"
 
                 <% if revision_count > 0 %>
                     <% if issue_count > 0 %>
@@ -55,9 +57,17 @@
                 <% end %>
             </li>
 
-            <li class="sidebar-info" id="site-sidebar-scan-id-<%= scan.id %>-info">
+            <li class="sidebar-info" id="sidebar-scans-id-<%= scan.id %>-info">
                 <small class="text-muted">
-                    <%= render partial: '/shared/scan_info', locals: { scan: scan } %>
+                    <%= render partial: '/shared/scan_info',
+                               locals: { scan: scan } %>
+
+                    <% if lr = scan.last_revision %>
+                        <%= render partial: '/shared/revision_info', locals: {
+                                revision:       lr,
+                                hide_scan_name: true
+                        } %>
+                    <% end %>
                 </small>
             </li>
         <% end %>

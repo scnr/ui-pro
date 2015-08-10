@@ -243,6 +243,17 @@ describe Revision do
         end
     end
 
+    describe '#status=' do
+        it 'also updates the #scan status' do
+            expect(subject.scan).to_not be_scanning
+
+            subject.status = 'scanning'
+            subject.save
+
+            expect(subject.scan).to be_scanning
+        end
+    end
+
     describe '#stopped?' do
         context 'when there is a stop time' do
             before do

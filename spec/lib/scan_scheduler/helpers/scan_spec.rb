@@ -81,9 +81,9 @@ describe ScanScheduler::Helpers::Scan do
         let(:snapshot_path) { '/my/dir.afs' }
 
         before do
-            scan.suspended!
-            scan.snapshot_path = snapshot_path
-            scan.save
+            revision.suspended!
+            revision.snapshot_path = snapshot_path
+            revision.save
 
             revision.update(
                 started_at: Time.now - 1000,
@@ -102,7 +102,7 @@ describe ScanScheduler::Helpers::Scan do
         end
 
         it 'restores the scan' do
-            expect_any_instance_of(MockInstanceClientService).to receive(:restore).with( scan.snapshot_path )
+            expect_any_instance_of(MockInstanceClientService).to receive(:restore).with( revision.snapshot_path )
             subject.restore( revision )
         end
 
@@ -118,17 +118,17 @@ describe ScanScheduler::Helpers::Scan do
         end
 
         it 'sets status to restoring' do
-            expect(revision.scan).to receive(:restoring!)
+            expect(revision).to receive(:restoring!)
             subject.restore( revision )
         end
 
         it 'removes #timed_out' do
-            scan.timed_out = true
-            scan.save
+            revision.timed_out = true
+            revision.save
 
             subject.restore( revision ) rescue Arachni::Reactor::Error::NotRunning
 
-            expect(scan).to_not be_timed_out
+            expect(revision).to_not be_timed_out
         end
 
         it 'deletes the snapshot' do
@@ -188,7 +188,7 @@ describe ScanScheduler::Helpers::Scan do
 
         it 'sets status to aborting' do
             subject.abort( revision )
-            expect(scan).to be_aborting
+            expect(revision).to be_aborting
         end
 
         it 'aborts progress monitoring' do
@@ -326,16 +326,7 @@ describe ScanScheduler::Helpers::Scan do
         it 'sets status to initializing' do
             subject.perform( scan ) rescue Arachni::Reactor::Error::NotRunning
 
-            expect(scan).to be_initializing
-        end
-
-        it 'removes #timed_out' do
-            scan.timed_out = true
-            scan.save
-
-            subject.perform( scan ) rescue Arachni::Reactor::Error::NotRunning
-
-            expect(scan).to_not be_timed_out
+            expect(scan.last_revision).to be_initializing
         end
 
         it 'creates a new revision' do
@@ -464,7 +455,7 @@ describe ScanScheduler::Helpers::Scan do
 
             context 'when the scan has been suspended' do
                 before do
-                    scan.suspended!
+                    revision.suspended!
                 end
 
                 it 'leaves it unscheduled' do
@@ -623,7 +614,7 @@ describe ScanScheduler::Helpers::Scan do
 
         it 'updates scan state' do
             subject.handle_progress_active( revision, progress ) {}
-            expect(scan.reload.status).to eq 'stuff'
+            expect(revision.status).to eq 'stuff'
         end
 
         context 'and has :issues' do
@@ -655,7 +646,7 @@ describe ScanScheduler::Helpers::Scan do
                 it 'sets Scan#timed_out' do
                     expect(subject).to receive(:abort).with(revision)
                     subject.handle_progress_active( revision, progress ) {}
-                    expect(scan).to be_timed_out
+                    expect(revision).to be_timed_out
                 end
 
                 context 'and Schedule#stop_suspend is set' do
@@ -707,7 +698,7 @@ describe ScanScheduler::Helpers::Scan do
             it 'sets Scan#status to nil' do
                 subject.handle_progress_inactive( revision, progress ) {}
 
-                expect(scan.reload.status).to be_nil
+                expect(revision.status).to be_nil
             end
         end
 
@@ -721,13 +712,13 @@ describe ScanScheduler::Helpers::Scan do
             it 'sets scan status to suspended' do
                 subject.handle_progress_inactive( revision, progress ) {}
 
-                expect(scan.reload).to be_suspended
+                expect(revision).to be_suspended
             end
 
             it 'sets #snapshot_path' do
                 subject.handle_progress_inactive( revision, progress ) {}
 
-                expect(scan.reload.snapshot_path).to eq '/my/path'
+                expect(revision.snapshot_path).to eq '/my/path'
             end
         end
     end
@@ -787,15 +778,15 @@ describe ScanScheduler::Helpers::Scan do
         context 'when :status is given' do
             it 'sets it' do
                 subject.download_report_and_shutdown( revision, status: 'completed' )
-                expect(scan).to be_completed
+                expect(revision).to be_completed
             end
         end
 
         context 'when :status is not given' do
             it 'does not affect the status' do
-                scan.paused!
+                revision.paused!
                 subject.download_report_and_shutdown( revision )
-                expect(scan).to be_paused
+                expect(revision).to be_paused
             end
         end
 

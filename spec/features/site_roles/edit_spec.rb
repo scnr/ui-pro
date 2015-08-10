@@ -28,7 +28,7 @@ feature 'Edit site role page' do
     it_behaves_like 'Roles sidebar'
 
     let(:with_scans) { subject }
-    it_behaves_like 'Scans sidebar'
+    it_behaves_like 'Scans sidebar', without_revisions: true
 
     scenario 'can update the role', js: true do
         fill_in 'site_role_name', with: 'My new name'

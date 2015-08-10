@@ -57,6 +57,9 @@
 
     <%= render partial: 'shared/sidebar_scans',
                locals: {
-                       scans: @site_role.scans
+                   scans: @site_role.scans,
+                   scan_details_options: {
+                       hide_scan_name: true
+                   }
                } %>
 <% end %>

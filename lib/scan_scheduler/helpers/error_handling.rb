@@ -13,7 +13,7 @@ module ErrorHandling
     def handle_rpc_error( revision, error )
         log_exception_for( revision, error )
 
-        revision.scan.failed!
+        revision.failed!
 
         finish revision
     end

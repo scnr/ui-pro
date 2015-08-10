@@ -1,13 +1,7 @@
 include Warden::Test::Helpers
 Warden.test_mode!
 
-# Feature: Revision page
-#   As a user
-#   I want to review a scan revision
-#   So I can see the scan results
 feature 'Revision page' do
-    include SiteRolesHelper
-
     let(:user) { FactoryGirl.create :user, sites: [site] }
     let(:site) { FactoryGirl.create :site }
     let(:scan) { FactoryGirl.create :scan, site: site }
@@ -33,6 +27,12 @@ feature 'Revision page' do
     it_behaves_like 'Issue reviews'
 
     let(:info) { find '#revision-info' }
+
+    let(:scan_info) { info.find '.scan-info' }
+    it_behaves_like 'Scan info'
+
+    let(:revision_info) { info.find '.revision-info' }
+    it_behaves_like 'Revision info', extended: true, hide_revision_name: true
 
     scenario 'has title' do
         expect(page).to have_title revision.index.ordinalize
@@ -79,71 +79,9 @@ feature 'Revision page' do
             scan.description = '**Stuff**'
             scan.save
 
-            visit site_scan_revision_path( site, scan, revision )
+            refresh
 
             expect(info.find('.description strong')).to have_content 'Stuff'
-        end
-
-        scenario 'user sees a link to the profile' do
-            expect(info).to have_xpath "//a[@href='#{profile_path(scan.profile)}']"
-        end
-
-        scenario 'user sees a link to the user agent' do
-            expect(info).to have_xpath "//a[@href='#{user_agent_path(scan.user_agent)}']"
-        end
-
-        scenario 'user sees a link to the site role' do
-            expect(info).to have_xpath "//a[@href='#{site_role_path(site, scan.site_role)}']"
-        end
-
-        scenario 'user sees last revision start datetime' do
-            expect(info).to have_content 'Started on'
-            expect(info).to have_content I18n.l( revision.started_at )
-        end
-
-        scenario 'user sees scan duration' do
-            expect(info).to have_content Arachni::Utilities.seconds_to_hms( revision.duration )
-        end
-
-        feature 'when the scan is recurring' do
-            before do
-                scan.schedule.start_at      = nil
-                scan.schedule.day_frequency = 1
-                scan.schedule.save
-                refresh
-            end
-
-            scenario 'user sees schedule' do
-                expect(info).to have_content scan.schedule.to_s
-            end
-        end
-
-        feature 'when the revision has stopped' do
-            scenario 'user sees last revision stop datetime' do
-                expect(info).to have_content 'stopped on'
-                expect(info).to have_content I18n.l( revision.stopped_at )
-            end
-        end
-    end
-
-    feature 'when the revision is in progress' do
-        before do
-            revision.stopped_at = nil
-            revision.save
-
-            visit site_scan_revision_path( site, scan, revision )
-        end
-
-        scenario 'user sees progress animation' do
-            expect(info).to have_css 'i.fa.fa-circle-o-notch'
-        end
-
-        scenario 'user sees start date' do
-            expect(info).to have_content I18n.l( revision.started_at )
-        end
-
-        scenario 'user does not sees last revision stop datetime' do
-            expect(info).to_not have_content 'stopped on'
         end
     end
 end
