@@ -62,9 +62,8 @@
                         <th></th>
                     <% end %>
 
-                    <th>Type</th>
-
                     <% if issue.vector.affected_input_name %>
+                        <th>Type</th>
                         <th>Name</th>
                     <% end %>
 
@@ -94,11 +93,11 @@
                     </td>
                 <% end %>
 
-                <td id="<%= id %>-issue-<%= issue.digest %>-vector-kind">
-                    <code><%= issue.vector.kind %></code>
-                </td>
-
                 <% if issue.vector.affected_input_name %>
+                    <td id="<%= id %>-issue-<%= issue.digest %>-vector-kind">
+                        <code><%= issue.vector.kind %></code>
+                    </td>
+
                     <td id="<%= id %>-issue-<%= issue.digest %>-affected_input_name">
                         <code><%= issue.vector.affected_input_name %></code>
                     </td>
