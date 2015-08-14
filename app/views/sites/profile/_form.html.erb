@@ -148,7 +148,7 @@
                 </div>
                 <div class="col-md-6 textarea-help">
                     <%= messages_for( :scope_template_path_patterns ) %>
-                    <p class="help-block alert alert-info">Input each rule in its own line.</p>
+                    <p class="help-block">Input each rule in its own line.</p>
                 </div>
             </div>
 
@@ -161,7 +161,7 @@
                 </div>
                 <div class="col-md-6 textarea-help">
                     <%= messages_for( :scope_exclude_path_patterns ) %>
-                    <p class="help-block alert alert-info">Input each rule in its own line.</p>
+                    <p class="help-block">Input each rule in its own line.</p>
                 </div>
             </div>
 
@@ -195,7 +195,7 @@
                     </div>
                     <div class="col-md-6 textarea-help">
                         <%= messages_for( :scope_extend_paths ) %>
-                        <p class="help-block alert alert-info">Input each path in its own line.</p>
+                        <p class="help-block">Input each path in its own line.</p>
                     </div>
                 </div>
 
@@ -210,7 +210,7 @@
                     </div>
                     <div class="col-md-6 textarea-help">
                         <%= messages_for( :scope_exclude_content_patterns ) %>
-                        <p class="help-block alert alert-info">Input each rule in its own line.</p>
+                        <p class="help-block">Input each rule in its own line.</p>
                     </div>
                 </div>
             <% end %>
@@ -235,7 +235,7 @@
                 </div>
                 <div class="col-md-6 textarea-help">
                     <%= messages_for( :audit_link_templates ) %>
-                    <p class="help-block alert alert-info">
+                    <p class="help-block">
                         For example, to extract the <code>input1</code> and <code>input2</code> inputs from
                         <code>http://test.com/input1/value1/input2/value2</code> use
                         <code>/input1\/(?&lt;input1&gt;\w+)\/input2\/(?&lt;input2&gt;\w+)/</code>.
@@ -255,8 +255,8 @@
                 </div>
                 <div class="col-md-6 textarea-help">
                     <%= messages_for( :scope_url_rewrites ) %>
-                    <p class="help-block alert alert-info">
-                        Rules take the format of <em>pattern:substitution</em>,
+                    <p class="help-block">
+                        Rules take the format of <kbd>pattern:substitution</kbd>,
                         input each rule in its own line.<br/>
 
                         For example, to convert <code>http://test.com/articles/some-stuff/23</code> to
@@ -278,8 +278,8 @@
                 </div>
                 <div class="col-md-6 textarea-help">
                     <%= messages_for( :input_values ) %>
-                    <p class="help-block alert alert-info">
-                        Rules take the format of <em>pattern=value</em>,
+                    <p class="help-block">
+                        Rules take the format of <kbd>pattern=value</kbd>,
                         input each rule in its own line &mdash; <kbd>pattern</kbd>
                         will be matched against input names.
                     </p>
@@ -330,8 +330,8 @@
                 </div>
                 <div class="col-md-6 textarea-help">
                     <%= messages_for( :http_cookies ) %>
-                    <p class="help-block alert alert-info">
-                        Cookies take the format of <em>name=value</em>,
+                    <p class="help-block">
+                        Cookies take the format of <kbd>name=value</kbd>,
                         input each cookie in its own line.
                     </p>
                 </div>
@@ -349,8 +349,8 @@
                 </div>
                 <div class="col-md-6 textarea-help">
                     <%= messages_for( :http_request_headers ) %>
-                    <p class="help-block alert alert-info">
-                        Headers take the format of <em>name=value</em>,
+                    <p class="help-block">
+                        Headers take the format of <kbd>name=value</kbd>,
                         input each header in its own line.
                     </p>
                 </div>
@@ -395,9 +395,9 @@
                 </div>
                 <div class="col-md-6 textarea-help">
                     <%= messages_for( :browser_cluster_wait_for_elements ) %>
-                    <div class="help-block alert alert-info">
+                    <div class="help-block">
                         <p>
-                            Rules take the format of <em>pattern:css</em>,
+                            Rules take the format of <kbd>pattern:css</kbd>,
                             input each rule in its own line.
                         </p>
 
@@ -411,7 +411,7 @@
 
                         <p>
                             Sometimes it is necessary to wait for an element for a
-                            page whose URL does not include a string. This is common
+                            page whose URL does not include a string; this is common
                             for client-side MVC frameworks when URLs include no
                             route information in the fragment section.
                         </p>

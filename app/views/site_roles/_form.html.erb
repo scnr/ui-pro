@@ -69,8 +69,9 @@
                     <%= f.input :scope_exclude_path_patterns, label: false,
                                 placeholder: 'Log-out exclusion patterns (Example: logout)',
                                 input_html: { value: @site_role.scope_exclude_path_patterns.join( "\n" ) }%>
+
                     <%= messages_for( :scope_exclude_path_patterns ) %>
-                    <p class="help-block alert alert-info">Input each rule in its own line.</p>
+                    <p class="help-block">Input each rule in its own line.</p>
                 </div>
 
                 <div class="col-md-5">
@@ -167,8 +168,8 @@
                                                                    map { |k, v| "#{k}=#{v}" }.join( "\n" )
                                             }
                                 %>
-                                <p class="help-block alert alert-info">
-                                    Parameters take the format of <em>name=value</em>,
+                                <p class="help-block">
+                                    Parameters take the format of <kbd>name=value</kbd>,
                                     input each pair in its own line.
                                 </p>
                             </div>

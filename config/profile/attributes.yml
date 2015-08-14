@@ -55,7 +55,7 @@ http_request_concurrency:
     warning: 'Using a very high concurrency setting could kill the web server and lead to corrupted results.'
 http_request_queue_size:
     description: 'Maximum amount of HTTP requests to keep in the queue.'
-    warning: 'More means better scheduling and better performance, fewer means less RAM consumption.'
+    notice: 'More means better scheduling and better performance, fewer means less RAM consumption.'
 http_proxy_host: 'Hostname or IP address of the proxy server to use.'
 http_proxy_password: 'Proxy server password.'
 http_proxy_port: 'Proxy server port.'
