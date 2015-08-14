@@ -21,32 +21,15 @@
 
 .profile-form {
 
-    .form-control {
-        display: inline
-    }
-
-    label {
-        padding: 0;
-        float: left;
-    }
-
-    .help-block {
-        clear: both
-    }
-
-    input {
-        float: right;
-    }
-
-    input[type="checkbox"] {
-        position: relative;
-        right: 15px;
-    }
-
-    input#profile_plugins, input#profile_checks {
+    input#profile_plugins,
+    input#profile_checks {
         float: left;
         margin-right: 10px;
         margin-top: 10px;
+    }
+
+    #profile-checks-search {
+        width: 100%;
     }
 
     #profile_name {
@@ -108,13 +91,9 @@
         float: left;
     }
 
-    .numeric {
-        width: 120px;
-        margin-top: 5px;
-    }
-
-    .form-actions input.btn {
-        float: left;
+    #session_token-input-group input {
+        width: 93%;
+        float: right;
     }
 
 }

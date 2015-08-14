@@ -12,23 +12,28 @@
         <small>Rules governing scan coverage</small>
     </h2>
 
-    <div class="row">
-        <div id="scope_page_limit" class="col-md-6">
+    <div id="scope_page_limit" class="row">
+        <div class="col-md-6">
             <strong>Page limit:</strong>
             <%= profile.scope_page_limit || 'Infinite' %>
-
+        </div>
+        <div class="col-md-6">
             <%= messages_for :scope_page_limit %>
         </div>
-        <div id="scope_directory_depth_limit" class="col-md-6">
+    </div>
+
+    <div id="scope_directory_depth_limit" class="row">
+        <div class="col-md-6">
             <strong>Directory depth limit:</strong>
             <%= profile.scope_directory_depth_limit || 'Infinite' %>
-
+        </div>
+        <div class="col-md-6">
             <%= messages_for :scope_directory_depth_limit %>
         </div>
     </div>
 
-    <div class="row">
-        <div id="scope_include_path_patterns" class="col-md-6">
+    <div id="scope_include_path_patterns" class="row">
+        <div class="col-md-6">
             <strong>Path inclusion patterns:</strong>
 
             <% if profile.scope_include_path_patterns.empty? %>
@@ -42,10 +47,14 @@
                 <% end %>
                 </ol>
             <% end %>
-
+        </div>
+        <div class="col-md-6">
             <%= messages_for :scope_include_path_patterns %>
         </div>
-        <div id="scope_exclude_path_patterns" class="col-md-6">
+    </div>
+
+    <div id="scope_exclude_path_patterns" class="row">
+        <div class="col-md-6">
             <strong>Path exclude patterns:</strong>
 
             <% if profile.scope_exclude_path_patterns.empty? %>
@@ -59,30 +68,36 @@
                     <% end %>
                 </ol>
             <% end %>
-
+        </div>
+        <div class="col-md-6">
             <%= messages_for :scope_exclude_path_patterns %>
         </div>
     </div>
 
     <%= advanced id: 'scope' do %>
-        <div class="row">
-            <div id="scope_exclude_binaries" class="col-md-6">
+        <div id="scope_exclude_binaries" class="row">
+            <div class="col-md-6">
                 <strong>Ignore binary content:</strong>
                 <input <%= 'checked' if profile.scope_exclude_binaries? %>
                        disabled type="checkbox">
-
+            </div>
+            <div class="col-md-6">
                 <%= messages_for( :scope_exclude_binaries ) %>
             </div>
-            <div id="scope_dom_depth_limit" class="col-md-6">
+        </div>
+
+        <div id="scope_dom_depth_limit" class="row">
+            <div class="col-md-6">
                 <strong>DOM depth limit:</strong>
                 <%= profile.scope_dom_depth_limit || 'Infinite' %>
-
+            </div>
+            <div class="col-md-6">
                 <%= messages_for( :scope_dom_depth_limit ) %>
             </div>
         </div>
 
-        <div class="row">
-            <div id="scope_restrict_paths" class="col-md-6">
+        <div id="scope_restrict_paths" class="row">
+            <div class="col-md-6">
                 <strong>Restrict paths:</strong>
 
                 <% if profile.scope_restrict_paths.empty? %>
@@ -96,10 +111,14 @@
                         <% end %>
                     </ol>
                 <% end %>
-
+            </div>
+            <div class="col-md-6">
                 <%= messages_for( :scope_restrict_paths ) %>
             </div>
-            <div id="scope_exclude_content_patterns" class="col-md-6">
+        </div>
+
+        <div id="scope_exclude_content_patterns" class="row">
+            <div class="col-md-6">
                 <strong>Content exclusion patterns:</strong>
 
                 <% if profile.scope_exclude_content_patterns.empty? %>
@@ -113,7 +132,8 @@
                         <% end %>
                     </ol>
                 <% end %>
-
+            </div>
+            <div class="col-md-6">
                 <%= messages_for( :scope_exclude_content_patterns ) %>
             </div>
         </div>
@@ -128,105 +148,139 @@
         <small>How the scanner will audit web application inputs</small>
     </h2>
 
-    <div class="row">
-        <div id="audit_forms" class="col-md-6">
+    <div id="audit_forms" class="row">
+        <div class="col-md-6">
             <p>
                 <strong>Forms:</strong>
                 <input <%= 'checked' if profile.audit_forms? %>
                        disabled type="checkbox">
             </p>
+        </div>
+        <div class="col-md-6">
             <%= messages_for :audit_forms %>
         </div>
-        <div id="audit_links" class="col-md-6">
+    </div>
+
+    <div id="audit_links" class="row">
+        <div class="col-md-6">
             <p>
                 <strong>Links:</strong>
                 <input <%= 'checked' if profile.audit_links? %>
                        disabled type="checkbox">
             </p>
+        </div>
+        <div class="col-md-6">
             <%= messages_for :audit_links %>
         </div>
     </div>
-    <div class="row">
-        <div id="audit_cookies" class="col-md-6">
+
+    <div id="audit_cookies" class="row">
+        <div class="col-md-6">
             <p>
                 <strong>Cookies:</strong>
                 <input <%= 'checked' if profile.audit_cookies? %>
                        disabled type="checkbox">
             </p>
+        </div>
+        <div class="col-md-6">
             <%= messages_for :audit_cookies %>
         </div>
+    </div>
 
-        <div id="audit_headers" class="col-md-6">
+    <div id="audit_headers" class="row">
+        <div class="col-md-6">
             <p>
                 <strong>Headers:</strong>
                 <input <%= 'checked' if profile.audit_headers? %>
                        disabled type="checkbox">
             </p>
+        </div>
+        <div class="col-md-6">
             <%= messages_for :audit_headers %>
         </div>
     </div>
 
-    <div class="row">
-        <div id="audit_xmls" class="col-md-6">
+    <div id="audit_xmls" class="row">
+        <div class="col-md-6">
             <p>
                 <strong>XML inputs:</strong>
                 <input <%= 'checked' if profile.audit_xmls? %>
                        disabled type="checkbox">
             </p>
+        </div>
+        <div class="col-md-6">
             <%= messages_for :audit_xmls %>
         </div>
+    </div>
 
-        <div id="audit_jsons" class="col-md-6">
+    <div id="audit_jsons" class="row">
+        <div class="col-md-6">
             <p>
                 <strong>JSON inputs:</strong>
                 <input <%= 'checked' if profile.audit_jsons? %>
                        disabled type="checkbox">
             </p>
+        </div>
+        <div class="col-md-6">
             <%= messages_for :audit_jsons %>
         </div>
     </div>
 
     <%= advanced id: 'audit' do %>
-        <div class="row">
-            <div id="audit_with_both_http_methods" class="col-md-6">
+        <div id="audit_with_both_http_methods" class="row">
+            <div class="col-md-6">
                 <p>
                     <strong>Audit with both http methods:</strong>
                     <input <%= 'checked' if profile.audit_with_both_http_methods? %>
                            disabled type="checkbox">
                 </p>
+            </div>
+            <div class="col-md-6">
                 <%= messages_for :audit_with_both_http_methods %>
             </div>
-            <div id="audit_cookies_extensively" class="col-md-6">
+        </div>
+
+        <div id="audit_cookies_extensively" class="row">
+            <div class="col-md-6">
                 <p>
                     <strong>Audit cookies extensively:</strong>
                     <input <%= 'checked' if profile.audit_cookies_extensively? %>
                            disabled type="checkbox">
                 </p>
+            </div>
+            <div class="col-md-6">
                 <%= messages_for :audit_cookies_extensively %>
             </div>
         </div>
 
-        <div class="row">
-            <div id="audit_with_extra_parameter" class="col-md-6">
+        <div id="audit_with_extra_parameter" class="row">
+            <div class="col-md-6">
                 <p>
                     <strong>Audit with extra parameter:</strong>
                     <input <%= 'checked' if profile.audit_with_extra_parameter? %>
                            disabled type="checkbox">
                 </p>
+            </div>
+            <div class="col-md-6">
                 <%= messages_for :audit_with_extra_parameter %>
             </div>
-            <div id="audit_parameter_names" class="col-md-6">
+        </div>
+
+        <div id="audit_parameter_names" class="row">
+            <div class="col-md-6">
                 <p>
                     <strong>Audit parameter names:</strong>
                     <input <%= 'checked' if profile.audit_parameter_names? %>
                            disabled type="checkbox">
                 </p>
+            </div>
+            <div class="col-md-6">
                 <%= messages_for :audit_parameter_names %>
             </div>
         </div>
 
-        <div class="row">
-            <div id="audit_include_vector_patterns" class="col-md-6">
+        <div id="audit_include_vector_patterns" class="row">
+            <div class="col-md-6">
                 <p>
                     <strong>Parameter inclusion patterns:</strong>
 
@@ -242,10 +296,14 @@
                     </ol>
                     <% end %>
                 </p>
-
+            </div>
+            <div class="col-md-6">
                 <%= messages_for :audit_include_vector_patterns %>
             </div>
-            <div id="audit_exclude_vector_patterns" class="col-md-6">
+        </div>
+
+        <div id="audit_exclude_vector_patterns" class="row">
+            <div class="col-md-6">
                 <p>
                     <strong>Parameter exclusion patterns:</strong>
 
@@ -261,7 +319,8 @@
                     </ol>
                 <% end %>
                 </p>
-
+            </div>
+            <div class="col-md-6">
                 <%= messages_for :audit_exclude_vector_patterns %>
             </div>
         </div>

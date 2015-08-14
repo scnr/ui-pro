@@ -84,12 +84,19 @@
                 <div class="col-md-6">
                     <%= f.input :scope_page_limit, label: 'Page limit',
                                 placeholder: 'Infinite' %>
+                </div>
+                <div class="col-md-6 input-help">
                     <%= messages_for( :scope_page_limit ) %>
                 </div>
+            </div>
+
+            <div class="row">
                 <div class="col-md-6">
                     <%= f.input :scope_directory_depth_limit,
                                 label: 'Directory depth limit',
                                 placeholder: 'Infinite' %>
+                </div>
+                <div class="col-md-6 input-help">
                     <%= messages_for( :scope_directory_depth_limit ) %>
                 </div>
             </div>
@@ -100,14 +107,21 @@
                                 label: 'Path inclusion patterns',
                                 placeholder: 'Include all resources',
                                 input_html: { value: @profile.scope_include_path_patterns.join( "\n" ) } %>
+                </div>
+                <div class="col-md-6 textarea-help">
                     <%= messages_for( :scope_include_path_patterns ) %>
                     <p class="help-block alert alert-info">Input each rule in its own line.</p>
                 </div>
+            </div>
+
+            <div class="row">
                 <div class="col-md-6">
                     <%= f.input :scope_exclude_path_patterns,
                                 label: 'Path exclusion patterns',
                                 placeholder: 'Do not exclude any resources',
                                 input_html: { value: @profile.scope_exclude_path_patterns.join( "\n" ) } %>
+                </div>
+                <div class="col-md-6 textarea-help">
                     <%= messages_for( :scope_exclude_path_patterns ) %>
                     <p class="help-block alert alert-info">Input each rule in its own line.</p>
                 </div>
@@ -119,12 +133,19 @@
                 <div class="row">
                     <div class="col-md-6">
                         <%= f.input :scope_exclude_binaries, label: 'Ignore binary content' %>
+                    </div>
+                    <div class="col-md-6 checkbox-help">
                         <%= messages_for( :scope_exclude_binaries ) %>
                     </div>
+                </div>
+
+                <div class="row">
                     <div class="col-md-6">
                         <%= f.input :scope_dom_depth_limit,
                                     label: 'DOM depth limit',
                                     placeholder: 'Infinite' %>
+                    </div>
+                    <div class="col-md-6 input-help">
                         <%= messages_for( :scope_dom_depth_limit ) %>
                     </div>
                 </div>
@@ -135,9 +156,14 @@
                                     label: 'Restrict paths',
                                     placeholder: 'Use paths discovered by the crawl',
                                     input_html: { value: @profile.scope_restrict_paths.join( "\n" ) } %>
+                    </div>
+                    <div class="col-md-6 textarea-help">
                         <%= messages_for( :scope_restrict_paths ) %>
                         <p class="help-block alert alert-info">Input each path in its own line.</p>
                     </div>
+                </div>
+
+                <div class="row">
                     <div class="col-md-6">
                         <%= f.input :scope_exclude_content_patterns,
                                     label: 'Content exclusion patterns',
@@ -145,6 +171,8 @@
                                     input_html: {
                                             value: @profile.scope_exclude_content_patterns.join( "\n" )
                                     } %>
+                    </div>
+                    <div class="col-md-6 textarea-help">
                         <%= messages_for( :scope_exclude_content_patterns ) %>
                         <p class="help-block alert alert-info">Input each rule in its own line.</p>
                     </div>
@@ -165,31 +193,53 @@
             <div class="row">
                 <div class="col-md-6">
                     <%= f.input :audit_forms %>
+                </div>
+                <div class="col-md-6 checkbox-help">
                     <%= messages_for( :audit_forms ) %>
                 </div>
+            </div>
+
+            <div class="row">
                 <div class="col-md-6">
                     <%= f.input :audit_links %>
+                </div>
+                <div class="col-md-6 checkbox-help">
                     <%= messages_for( :audit_links ) %>
                 </div>
             </div>
+
             <div class="row">
                 <div class="col-md-6">
                     <%= f.input :audit_cookies %>
+                </div>
+                <div class="col-md-6 checkbox-help">
                     <%= messages_for( :audit_cookies ) %>
                 </div>
+            </div>
+
+            <div class="row">
                 <div class="col-md-6">
                     <%= f.input :audit_headers %>
+                </div>
+                <div class="col-md-6 checkbox-help">
                     <%= messages_for( :audit_headers ) %>
                 </div>
             </div>
+
             <div class="row">
                 <div class="col-md-6">
                     <%= f.input :audit_xmls, label: 'Audit XML inputs' %>
+                </div>
+                <div class="col-md-6 checkbox-help">
                     <%= messages_for( :audit_xmls ) %>
                 </div>
-                <div class="col-md-6">
+            </div>
 
+            <div class="row">
+                <div class="col-md-6">
                     <%= f.input :audit_jsons, label: 'Audit JSON inputs' %>
+                </div>
+                <div class="col-md-6 checkbox-help">
                     <%= messages_for( :audit_jsons ) %>
                 </div>
             </div>
@@ -197,13 +247,21 @@
             <%= advanced id: 'audit',
                          message: 'In case there are inputs that need to be' <<
                             ' included/excluded or more extensively audited.' do %>
+
                 <div class="row">
                     <div class="col-md-6">
                         <%= f.input :audit_with_both_http_methods %>
+                    </div>
+                    <div class="col-md-6 checkbox-help">
                         <%= messages_for( :audit_with_both_http_methods ) %>
                     </div>
+                </div>
+
+                <div class="row">
                     <div class="col-md-6">
                         <%= f.input :audit_cookies_extensively %>
+                    </div>
+                    <div class="col-md-6 checkbox-help">
                         <%= messages_for( :audit_cookies_extensively ) %>
                     </div>
                 </div>
@@ -211,10 +269,17 @@
                 <div class="row">
                     <div class="col-md-6">
                         <%= f.input :audit_with_extra_parameter %>
+                    </div>
+                    <div class="col-md-6 checkbox-help">
                         <%= messages_for( :audit_with_extra_parameter ) %>
                     </div>
+                </div>
+
+                <div class="row">
                     <div class="col-md-6">
                         <%= f.input :audit_parameter_names %>
+                    </div>
+                    <div class="col-md-6 checkbox-help">
                         <%= messages_for( :audit_parameter_names ) %>
                     </div>
                 </div>
@@ -225,16 +290,21 @@
                                     label: 'Parameter inclusion patterns',
                                     placeholder: 'Include all parameters',
                                     input_html: { value: @profile.audit_include_vector_patterns.join( "\n" ) } %>
-
+                    </div>
+                    <div class="col-md-6 textarea-help">
                         <%= messages_for( :audit_include_vector_patterns ) %>
                         <p class="help-block alert alert-info">Input one pattern per line.</p>
                     </div>
+                </div>
+
+                <div class="row">
                     <div class="col-md-6">
                         <%= f.input :audit_exclude_vector_patterns,
                                     label: 'Parameter exclusion patterns',
                                     placeholder: 'Do not exclude any parameters',
                                     input_html: { value: @profile.audit_exclude_vector_patterns.join( "\n" ) } %>
-
+                    </div>
+                    <div class="col-md-6 textarea-help">
                         <%= messages_for( :audit_exclude_vector_patterns ) %>
                         <p class="help-block alert alert-info">Input one pattern per line.</p>
                     </div>

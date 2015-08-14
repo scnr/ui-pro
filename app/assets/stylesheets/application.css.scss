@@ -202,3 +202,54 @@ li .fa-arrow-right {
 #sidebar .scan-status {
     margin-right: 20px
 }
+
+.input-help {
+    margin-top: 5px
+}
+
+.checkbox-help {
+    margin-top: 8px
+}
+
+.textarea-help {
+    margin-top: 25px
+}
+
+form {
+
+    .form-control {
+        display: inline
+    }
+
+    label {
+        padding: 0;
+        float: left;
+    }
+
+    .help-block {
+        clear: both
+    }
+
+    input {
+        float: right;
+    }
+
+    input[type="checkbox"] {
+        position: relative;
+        right: 15px;
+    }
+
+    input.numeric {
+        width: 120px;
+        margin-top: 5px;
+    }
+
+    input.string {
+        width: 80%;
+    }
+
+    .form-actions input.btn {
+        float: left;
+    }
+
+}

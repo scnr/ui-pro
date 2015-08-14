@@ -25,12 +25,12 @@
         <div class="col-md-6">
             <%= f.input :name %>
         </div>
-
+    </div>
+    <div class="row">
         <div class="col-md-6">
             <%= f.input :http_user_agent, as: :string,
-                        label: 'User-agent'
+                        label: 'Identification string'
             %>
-            <%= messages_for( :http_user_agent ) %>
         </div>
     </div>
 
@@ -39,12 +39,19 @@
             <%= f.input :browser_cluster_screen_width,
                         label: 'Screen width'
             %>
+        </div>
+        <div class="col-md-6">
             <%= messages_for( :browser_cluster_screen_width ) %>
         </div>
+    </div>
+
+    <div class="row">
         <div class="col-md-6">
             <%= f.input :browser_cluster_screen_height,
                         label: 'Screen height'
             %>
+        </div>
+        <div class="col-md-6">
             <%= messages_for( :browser_cluster_screen_height ) %>
         </div>
     </div>

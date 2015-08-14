@@ -2,17 +2,23 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-#site_role_login_script_code_editor {
-    font-size: inherit;
-    width:     100%;
-    height:    500px;
-}
+.site_role-form {
+    #site_role_login_script_code_editor {
+        font-size: inherit;
+        width:     100%;
+        height:    500px;
+    }
 
-#site_role_login_script_code {
-    position: absolute;
-    left:     -99999em
-}
+    #site_role_login_script_code {
+        position: absolute;
+        left:     -99999em
+    }
 
-label[for="site_role_login_script_code"] {
-    display: none
+    label[for="site_role_login_script_code"] {
+        display: none
+    }
+
+    input.string {
+        width: 100%
+    }
 }

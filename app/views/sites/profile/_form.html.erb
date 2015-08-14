@@ -37,7 +37,8 @@
                     <%= pf.input :max_parallel_scans,
                                 label: 'Maximum parallel scans'
                     %>
-
+                </div>
+                <div class="col-md-6 input-help">
                     <%= messages_for( :max_parallel_scans ) %>
 
                     <p class="help-block alert alert-warning">
@@ -117,6 +118,8 @@
                         <%= f.input :no_fingerprinting,
                                     label: 'Disable fingerprinting'
                         %>
+                    </div>
+                    <div class="col-md-6 checkbox-help">
                         <%= messages_for( :no_fingerprinting ) %>
                     </div>
                 </div>
@@ -142,15 +145,21 @@
                                 input_html: {
                                         value: @site.profile.scope_template_path_patterns.join( "\n" )
                                 } %>
-
+                </div>
+                <div class="col-md-6 textarea-help">
                     <%= messages_for( :scope_template_path_patterns ) %>
                     <p class="help-block alert alert-info">Input each rule in its own line.</p>
                 </div>
+            </div>
+
+            <div class="row">
                 <div class="col-md-6">
                     <%= f.input :scope_exclude_path_patterns,
                                 label: 'Path exclusion patterns',
                                 placeholder: 'Do not exclude any resources',
                                 input_html: { value: @site.profile.scope_exclude_path_patterns.join( "\n" ) } %>
+                </div>
+                <div class="col-md-6 textarea-help">
                     <%= messages_for( :scope_exclude_path_patterns ) %>
                     <p class="help-block alert alert-info">Input each rule in its own line.</p>
                 </div>
@@ -161,6 +170,8 @@
                     <%= f.input :scope_auto_redundant_paths,
                                 label: 'Parameter redundancy limit',
                                 placeholder: 'Infinite' %>
+                </div>
+                <div class="col-md-6 input-help">
                     <%= messages_for( :scope_auto_redundant_paths ) %>
                 </div>
             </div>
@@ -181,9 +192,14 @@
                                     label: 'Extend paths',
                                     placeholder: 'Only use paths discovered by the crawl',
                                     input_html: { value: @site.profile.scope_extend_paths.join( "\n" ) } %>
+                    </div>
+                    <div class="col-md-6 textarea-help">
                         <%= messages_for( :scope_extend_paths ) %>
                         <p class="help-block alert alert-info">Input each path in its own line.</p>
                     </div>
+                </div>
+
+                <div class="row">
                     <div class="col-md-6">
                         <%= f.input :scope_exclude_content_patterns,
                                     label: 'Content exclusion patterns',
@@ -191,6 +207,8 @@
                                     input_html: {
                                             value: @site.profile.scope_exclude_content_patterns.join( "\n" )
                                     } %>
+                    </div>
+                    <div class="col-md-6 textarea-help">
                         <%= messages_for( :scope_exclude_content_patterns ) %>
                         <p class="help-block alert alert-info">Input each rule in its own line.</p>
                     </div>
@@ -214,7 +232,8 @@
                                 label: 'Custom inputs',
                                 placeholder: 'Custom inputs not necessary',
                                 input_html: { value: @site.profile.audit_link_templates.join( "\n" ) } %>
-
+                </div>
+                <div class="col-md-6 textarea-help">
                     <%= messages_for( :audit_link_templates ) %>
                     <p class="help-block alert alert-info">
                         For example, to extract the <code>input1</code> and <code>input2</code> inputs from
@@ -222,7 +241,9 @@
                         <code>/input1\/(?&lt;input1&gt;\w+)\/input2\/(?&lt;input2&gt;\w+)/</code>.
                     </p>
                 </div>
+            </div>
 
+            <div class="row">
                 <div class="col-md-6">
                     <%= f.input :scope_url_rewrites,
                                 label: 'URL rewrite rules',
@@ -231,6 +252,8 @@
                                         value: @site.profile.scope_url_rewrites.
                                                        map { |k, v| "#{k}:#{v}" }.join( "\n" )
                                 } %>
+                </div>
+                <div class="col-md-6 textarea-help">
                     <%= messages_for( :scope_url_rewrites ) %>
                     <p class="help-block alert alert-info">
                         Rules take the format of <em>pattern:substitution</em>,
@@ -244,7 +267,7 @@
             </div>
 
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-6">
                     <%= f.input :input_values,
                                 label: 'Fill-in values',
                                 placeholder: 'No need for special values',
@@ -252,6 +275,8 @@
                                         value: @site.profile.input_values.
                                                        map { |k, v| "#{k}=#{v}" }.join( "\n" )
                                 } %>
+                </div>
+                <div class="col-md-6 textarea-help">
                     <%= messages_for( :input_values ) %>
                     <p class="help-block alert alert-info">
                         Rules take the format of <em>pattern=value</em>,
@@ -277,12 +302,18 @@
                     <%= f.input :http_authentication_username,
                                 placeholder: 'No authentication',
                                 label: 'Username' %>
+                </div>
+                <div class="col-md-6 input-help">
                     <%= messages_for( :http_authentication_username ) %>
                 </div>
+            </div>
+            <div class="row">
                 <div class="col-md-6">
                     <%= f.input :http_authentication_password, as: :string,
                                 placeholder: 'No authentication',
                                 label: 'Password' %>
+                </div>
+                <div class="col-md-6 input-help">
                     <%= messages_for( :http_authentication_password ) %>
                 </div>
             </div>
@@ -296,13 +327,17 @@
                                         value: @site.profile.http_cookies.
                                                        map { |k, v| "#{k}=#{v}" }.join( "\n" )
                                 } %>
-
+                </div>
+                <div class="col-md-6 textarea-help">
                     <%= messages_for( :http_cookies ) %>
                     <p class="help-block alert alert-info">
                         Cookies take the format of <em>name=value</em>,
                         input each cookie in its own line.
                     </p>
                 </div>
+            </div>
+
+            <div class="row">
                 <div class="col-md-6">
                     <%= f.input :http_request_headers,
                                 label: 'Headers',
@@ -311,7 +346,8 @@
                                         value: @site.profile.http_request_headers.
                                                        map { |k, v| "#{k}=#{v}" }.join( "\n" )
                                 } %>
-
+                </div>
+                <div class="col-md-6 textarea-help">
                     <%= messages_for( :http_request_headers ) %>
                     <p class="help-block alert alert-info">
                         Headers take the format of <em>name=value</em>,
@@ -327,6 +363,8 @@
                                     label: 'Request concurrency',
                                     placeholder: Arachni::Options.http.request_concurrency.to_s
                         %>
+                    </div>
+                    <div class="col-md-6 input-help">
                         <%= messages_for( :http_request_concurrency ) %>
                     </div>
                 </div>
@@ -354,6 +392,8 @@
                                                        map { |k, v| "#{k}:#{v}" }.join( "\n" )
                                 }
                     %>
+                </div>
+                <div class="col-md-6 textarea-help">
                     <%= messages_for( :browser_cluster_wait_for_elements ) %>
                     <div class="help-block alert alert-info">
                         <p>
@@ -383,18 +423,20 @@
                         </p>
                     </div>
                 </div>
+            </div>
 
+            <div class="row">
                 <div class="col-md-6">
                     <%= f.input :browser_cluster_ignore_images,
                                 label: 'Do not load images'
                     %>
+                </div>
+                <div class="col-md-6 checkbox-help">
                     <%= messages_for( :browser_cluster_ignore_images ) %>
                 </div>
             </div>
-
         </fieldset>
     </div>
-
     <% end %>
 
     <div class="form-actions">

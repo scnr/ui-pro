@@ -10,7 +10,7 @@
     <% if option.type == :path %>
         disabled="disabled" type="file"
     <% elsif option.type == :bool %>
-        type="checkbox" class='boolean <%= required %>'
+        type="checkbox" class="boolean <%= required %>"
 
         <% if !value.nil? %>
             <%= value ? 'checked="checked"' : '' %>
@@ -25,7 +25,7 @@
             type='number'
         <% else %>
             class="string <%= required %> form-control"
-            type='text'
+            type="text"
         <%end%>
 
         <% if val = (value || option.default) %>
@@ -33,7 +33,3 @@
         <%end%>
     <%end%>
 >
-
-<div class="help-block">
-    <%= option.description %>
-</div>
