@@ -1,9 +1,9 @@
 <%
-   sitemap_current_digests     = @issues_summary[:sitemap_current_digests]
-   sitemap_up_to_now_inclusive = @issues_summary[:sitemap_up_to_now_inclusive]
+   sitemap_current_digests     = @coverage[:sitemap_current_digests]
+   sitemap_up_to_now_inclusive = @coverage[:sitemap_up_to_now_inclusive]
 
    sitemap_up_to_now_exclusive_digests =
-           @issues_summary[:sitemap_up_to_now_exclusive_digests]
+           @coverage[:sitemap_up_to_now_exclusive_digests]
 
    new       = sitemap_current_digests - sitemap_up_to_now_exclusive_digests
    missing   = sitemap_up_to_now_exclusive_digests - sitemap_current_digests
@@ -110,6 +110,6 @@ if sitemap_up_to_now_inclusive.any? && @revision && @revision.index > 1
             id:      'coverage-flat',
             title:   nil,
             message: nil,
-            sitemap: @issues_summary[:sitemap]
+            sitemap: @coverage[:sitemap]
     } %>
 <% end %>

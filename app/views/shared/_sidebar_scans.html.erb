@@ -42,7 +42,7 @@
                     title="Has not run yet."
                 <% end %>
             >
-                <%= link_to site_scan_path( scan.site, scan, filter_params ) do %>
+                <%= link_to_with_filters scan do %>
                     <%= scan.name %>
 
                     <% if with_site %>

@@ -1,6 +1,6 @@
 <%
    by_state = {}
-   issues   = data[:issues]
+   issues   = @reviews[:issues]
 
    group_issues = proc do |group, issue|
        state = issue.auto_review_status
@@ -20,9 +20,9 @@
    end
 
    {
-       'regression'     => 'regressions',
-       'fixed'          => 'fixed',
-       'false_positive' => 'false_positives'
+           'regression'     => 'regressions',
+           'fixed'          => 'fixed',
+           'false_positive' => 'false_positives'
    }.each do |k, v|
        next if !by_state.include?( k )
        by_state[v] = by_state.delete(k)
@@ -71,9 +71,9 @@
             %>
         </p>
 
-        <%= render partial: 'shared/scan_results/issues_summary/issues', locals: {
+        <%= render partial: 'shared/scan_results/issues/list', locals: {
                 data: {
-                    issues: issue_group
+                        issues: issue_group
                 },
                 id:                        "reviews-#{state}",
                 show_reviewed_by_revision: true,

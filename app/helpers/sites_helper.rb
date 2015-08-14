@@ -1,15 +1,37 @@
 module SitesHelper
     include IssuesHelper
 
-    def prepare_site_issue_summary_data
-        prepare_issues_summary_data(
-            site:            @site,
-            sitemap:         @site.sitemap_entries,
-            scans:           @scans.order( id: :desc ),
-            revisions:       @site.revisions.order( id: :desc ),
-            issues:          @site.issues,
-            reviewed_issues: @site.reviewed_issues
-        )
+    def prepare_site_sidebar_data
+        @site_sidebar = {
+            scans: @scans,
+            data:  {}
+        }
+
+        if filter_pages?
+            @site_sidebar[:scans] = Set.new
+        end
+
+        process_issues_after_page_filter do |issue|
+            if filter_pages?
+                @site_sidebar[:scans] << issue.scan
+            end
+
+            @site_sidebar[:data][issue.scan_id] ||= {}
+            @site_sidebar[:data][issue.scan_id][:max_severity] ||= issue.severity.to_s
+
+            @site_sidebar[:data][issue.scan_id][:issue_count] ||= Set.new
+            @site_sidebar[:data][issue.scan_id][:issue_count]  << issue.digest
+        end
+
+        process_issues_done do
+            @site_sidebar[:data].each do |scan_id, data|
+                @site_sidebar[:data][scan_id][:issue_count] =
+                    data[:issue_count].size
+            end
+
+            @site_sidebar[:scans] =
+                @site_sidebar[:scans].sort_by { |r| r.id }.reverse
+        end
     end
 
 end

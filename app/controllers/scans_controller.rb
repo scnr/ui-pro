@@ -6,14 +6,14 @@ class ScansController < ApplicationController
     before_filter :authenticate_user!
 
     before_action :set_site
-    before_action :set_scan, only: [:show, :repeat, :edit, :update, :destroy] + STATES
+    before_action :set_scan, only: [:show, :repeat, :edit, :update, :destroy] +
+                                       STATES + ScanResults::SCAN_RESULT_ACTIONS
+
+    include ScanResults
 
     # GET /scans
     # GET /scans.json
     def index
-        @scans = @site.scans.includes(:revisions).includes(:site_role).
-            includes(:user_agent).includes(:profile)
-
         @scheduled_scans   = @scans.scheduled
         @unscheduled_scans = @scans.unscheduled
     end
@@ -21,12 +21,12 @@ class ScansController < ApplicationController
     # GET /scans/1
     # GET /scans/1.json
     def show
-        prepare_scan_issue_summary_data
+        redirect_to issues_site_scan_path( @site, @scan, filter_params )
     end
 
     # GET /scans/new
     def new
-        prepare_site_issue_summary_data
+        fill_in_site_sidebar
 
         @scan = @site.scans.new
         @scan.build_schedule
@@ -34,7 +34,7 @@ class ScansController < ApplicationController
 
     # GET /scans/1/edit
     def edit
-        prepare_scan_issue_summary_data
+        fill_in_site_sidebar
     end
 
     # POST /scans
@@ -47,7 +47,7 @@ class ScansController < ApplicationController
                 format.html { redirect_to [@site, @scan], notice: 'Scan was successfully created.' }
                 format.json { render :show, status: :created, location: @scan }
             else
-                prepare_site_issue_summary_data
+                fill_in_site_sidebar
 
                 format.html { render :new }
                 format.json { render json: @scan.errors, status: :unprocessable_entity }
@@ -77,7 +77,7 @@ class ScansController < ApplicationController
                 format.html { redirect_to [@site, @scan], notice: 'Scan was successfully updated.' }
                 format.json { render :show, status: :ok, location: @scan }
             else
-                prepare_site_issue_summary_data
+                fill_in_site_sidebar
 
                 format.html { render :edit }
                 format.json { render json: @scan.errors, status: :unprocessable_entity }
@@ -130,14 +130,19 @@ class ScansController < ApplicationController
 
         raise ActionController::RoutingError.new( 'Site not found.' ) if !@site
 
-        @scans = @site.scans
+        @scans = @site.scans.includes(:schedule).includes(:user_agent).
+            includes(:site_role).includes(:profile).includes(:revisions)
     end
 
     # Use callbacks to share common setup or constraints between actions.
     def set_scan
-        @scan = @site.scans.includes(:revisions).find( params[:id] )
+        @scan = @site.scans.includes(:schedule).includes(:user_agent).
+            includes(:site_role).includes(:profile).includes(:revisions).
+            find( params[:id] )
 
         raise ActionController::RoutingError.new( 'Scan not found.' ) if !@scan
+
+        prepare_scan_sidebar_data
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
@@ -179,6 +184,25 @@ class ScansController < ApplicationController
             :frequency_cron,
             :frequency_format
         ]
+    end
+
+    def fill_in_site_sidebar
+        prepare_site_sidebar_data
+        process_issues( @site.issues )
+    end
+
+    def scan_results_owner
+        @scan
+    end
+
+    def prepare_issue_data
+        issues_summary_data(
+            site:      @site,
+            sitemap:   @scan.sitemap_entries,
+            scans:     [@scan],
+            revisions: @scan.revisions.order( id: :desc ),
+            issues:    scan_results_issues
+        )
     end
 
 end

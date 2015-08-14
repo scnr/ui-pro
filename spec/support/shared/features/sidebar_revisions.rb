@@ -45,7 +45,7 @@ shared_examples_for 'Revisions sidebar' do |options = {}|
     scenario 'user sees amount of auto-reviewed issues'
 
     scenario 'user sees revision link with filtering options' do
-        expect(sidebar).to have_xpath "//a[starts-with(@href, '#{site_scan_revision_path( site, scan, revision )}?filter') and not(@data-method)]"
+        expect(sidebar).to have_xpath "//a[starts-with(@href, '#{site_scan_revision_path( site, scan, revision )}/issues?filter') and not(@data-method)]"
     end
 
 end

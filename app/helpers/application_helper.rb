@@ -2,15 +2,19 @@ module ApplicationHelper
 
     SCOPED_FIND_EACH_BATCH_SIZE = 1000
 
-    def select_button_class( path, children = true )
+    def select_button_class( path, include_actions: [], include_children: true )
         default  = 'btn btn-sm'
         selected = 'btn btn-selected'
 
-        if children
-            request.env['PATH_INFO'].starts_with?( path ) ? selected : default
+        if include_actions.any?
+            include_actions.each do |action|
+                return selected if request.env['PATH_INFO'].starts_with?( "#{path}/#{action}" )
+            end
         else
-            request.env['PATH_INFO'] ==  path ? selected : default
+            return request.env['PATH_INFO'].start_with?( path ) ? selected : default
         end
+
+        request.env['PATH_INFO'] ==  path ? selected : default
     end
 
     def seconds_to_hms( seconds )
@@ -97,8 +101,14 @@ module ApplicationHelper
         if scope.is_a? Array
             scope.each(&block)
         else
-            (0..(size || scope.size)).step( batch ) do |i|
-                scope.offset(i).limit(batch).each(&block)
+            size ||= scope.size
+
+            if size <= batch
+                scope.each(&block)
+            else
+                (0..size).step( batch ) do |i|
+                    scope.offset(i).limit(batch).each(&block)
+                end
             end
         end
     end

@@ -83,6 +83,9 @@ class ProfilesController < ApplicationController
         @profile = current_user.profiles.find_by_id( params[:id] )
 
         raise ActionController::RoutingError.new( 'Profile not found.' ) if !@profile
+
+        @scans = @profile.scans.includes(:schedule).includes(:user_agent).
+            includes(:site_role).includes(:profile).includes(:revisions)
     end
 
     def set_profiles

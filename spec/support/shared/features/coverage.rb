@@ -43,7 +43,7 @@ shared_examples_for 'Coverage' do |options = {}|
         end
 
         it 'includes a count of the entries in the tab' do
-            tab = scan_results.find( :xpath, "//a[@href='#!/coverage']//span[@class='badge']" )
+            tab = scan_results.find( :xpath, "//li[@id='coverage-tab']//a//span[@class='badge']" )
             expect(tab).to have_content 4
         end
 

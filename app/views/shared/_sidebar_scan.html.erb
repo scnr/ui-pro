@@ -9,8 +9,8 @@
 
 <div id="sidebar-scan">
     <ul class="nav nav-stacked">
-        <li class="<%= 'active' if request.path == site_scan_path( @site, @scan ) %>">
-            <%= link_to site_scan_path( @scan.site, @scan, filter_params ) do %>
+        <li class="<%= 'active' if params[:controller] == 'scans' %>">
+            <%= link_to_with_filters @scan do %>
                 <% if @issue %>
                     <i class="fa fa-arrow-left"></i>
                 <% end %>

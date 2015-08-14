@@ -1,6 +1,7 @@
 <%
-   title @site.url
+   title params[:action].capitalize
    breadcrumb_add 'Sites', sites_path
+   breadcrumb_add @site, site_path( @site )
 %>
 
 <% add_to_sidebar do %>
@@ -15,15 +16,13 @@
             <div class="text-muted" id="site-info-details">
                 <%= render partial: '/shared/scan_info', locals: {
                         extended: true,
-                        scan:     @site.last_revision.scan
+                        scan:     lr.scan
                 } %>
 
-                <% if lr = @site.last_revision %>
-                    <%= render partial: '/shared/revision_info', locals: {
-                            extended: true,
-                            revision: lr
-                    } %>
-                <% end %>
+                <%= render partial: '/shared/revision_info', locals: {
+                        revision: lr,
+                        extended: true,
+                } %>
             </div>
         <% end %>
     </div>

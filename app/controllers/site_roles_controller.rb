@@ -64,6 +64,9 @@ class SiteRolesController < ApplicationController
 
     def set_site_role
         @site_role = @site.roles.find(params[:id])
+
+        @scans = @site_role.scans.includes(:schedule).includes(:user_agent).
+            includes(:site_role).includes(:profile).includes(:revisions)
     end
 
     def set_site_roles

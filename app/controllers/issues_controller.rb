@@ -4,7 +4,7 @@ class IssuesController < ApplicationController
     before_action :set_site
     before_action :set_scan
     before_action :set_revision
-    before_action :set_issue, except: :update
+    before_action :set_issue
 
     # GET /issues/1
     # GET /issues/1.json
@@ -15,7 +15,7 @@ class IssuesController < ApplicationController
     # PATCH/PUT /issues/1.json
     def update
         respond_to do |format|
-            if @revision.issues.find( params[:id] ).update_state( issue_params[:state] )
+            if @issue.update_state( issue_params[:state] )
                 format.html { redirect_to @issue, notice: 'Issue was successfully updated.' }
                 format.json { render :show, status: :ok, location: @issue }
                 format.js { head :ok }

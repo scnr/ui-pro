@@ -85,7 +85,7 @@
 
                 <% if !hide_state_icon %>
                     <td id="<%= id %>-issue-<%= issue.digest %>-state-icon">
-                        <%= link_to site_scan_revision_issue_path( issue.site, issue.scan, issue.revision, issue ),
+                        <%= link_to site_scan_revision_issue_path( issue.site_id, issue.scan, issue.revision, issue ),
                                     title: issue.state.humanize do %>
                             <i class="fa fa-<%= issue_state_to_icon issue.state %>">
                             </i>
@@ -107,7 +107,7 @@
                     <td id="<%= id %>-issue-<%= issue.digest %>-vector-action">
                         <%= link_to_url_with_external(
                                 external: issue.vector.action,
-                                internal: sitemap_entry_url( issue.vector.sitemap_entry ),
+                                internal: sitemap_entry_url( issue.sitemap_entry ),
                                 display_path_only: true
                             )
                         %>

@@ -3,7 +3,7 @@
         <% if data[:issues].any? %>
             <div class="row">
                 <div class="col-md-3 summary-sitemap-container" id="summary-sitemap">
-                    <%= render partial: 'shared/scan_results/issues_summary/sitemap',
+                    <%= render partial: 'shared/scan_results/issues/sitemap',
                                locals: {
                                        data: data
                                } %>
@@ -12,7 +12,7 @@
                 <div class="col-md-9">
                     <div class="row">
                         <div class="col-md-12">
-                            <%= render partial: 'shared/scan_results/issues_summary/filter',
+                            <%= render partial: 'shared/scan_results/issues/filter',
                                        locals: {
                                                data: data
                                        } %>
@@ -24,7 +24,7 @@
                             <% if data[:issues].count > 1 %>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <%= render partial: 'shared/scan_results/issues_summary/statistics',
+                                        <%= render partial: 'shared/scan_results/issues/statistics',
                                                    locals: {
                                                            data: data
                                                    } %>
@@ -34,7 +34,7 @@
 
                             <div class="row">
                                 <div class="col-md-12 summary-issues-container" id="summary-issues">
-                                    <%= render partial: 'shared/scan_results/issues_summary/issues',
+                                    <%= render partial: 'shared/scan_results/issues/list',
                                                locals: {
                                                    id: 'summary',
                                                    data: data
@@ -46,7 +46,7 @@
                 </div>
             </div>
         <% else %>
-            <%= render partial: 'shared/scan_results/issues_summary/filter',
+            <%= render partial: 'shared/scan_results/issues/filter',
                        locals: {
                                data: data
                        } %>

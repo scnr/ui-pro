@@ -1,8 +1,8 @@
 <%
-   revisions     = @issues_summary[:revisions]
-   revision_data = @issues_summary[:revision_data]
+   revisions     = @scan_sidebar[:revisions]
+   revision_data = @scan_sidebar[:data]
 
-   total_revision_count   = @scan.revisions.count
+   total_revision_count   = @scan.revisions.size
    current_revision_count = revisions.count
 %>
 
@@ -51,7 +51,7 @@
                     class="<%= 'active' if active %>"
                 >
 
-                    <%= link_to site_scan_revision_path( revision.scan.site, revision.scan, revision, filter_params ) do %>
+                    <%= link_to_with_filters revision do %>
                         #<%= revision.index %>
 
                         <span class="text-muted">
@@ -77,8 +77,9 @@
                     <small class="text-muted">
                         <%= render partial: '/shared/revision_info',
                                    locals: {
-                                           hide_revision_name: true,
-                                           revision:           revision
+                                           scan:               @scan,
+                                           revision:           revision,
+                                           hide_revision_name: true
                                    } %>
                     </small>
                 </li>

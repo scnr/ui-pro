@@ -2,7 +2,8 @@
    title @issue.to_s.html_safe
    breadcrumb_add 'Sites', sites_path
    breadcrumb_add @site.url, site_path( @site )
-   breadcrumb_add @scan.name, site_scan_path( @site, @scan )
+   breadcrumb_add 'Scans', site_scans_path( @site )
+   breadcrumb_add @scan, site_scan_path( @site, @scan )
    breadcrumb_add @revision, site_scan_revision_path( @site, @scan, @revision )
 %>
 

@@ -1,6 +1,6 @@
 <%
-   scans     = @issues_summary[:scans]
-   scan_data = @issues_summary[:scan_data]
+   scans     = @site_sidebar[:scans]
+   scan_data = @site_sidebar[:data]
 
    total_scan_count   = @site.scans.count
    current_scan_count = scans.count
@@ -27,6 +27,8 @@
 
     <%
        scans.each do |scan|
+            next if !scan.id
+
             max_severity   = scan_data[scan.id] ?
                     scan_data[scan.id][:max_severity] : nil
 
@@ -52,7 +54,7 @@
                 title="Has not run yet."
             <% end %>
         >
-            <%= link_to site_scan_path( @site, scan, filter_params ) do %>
+            <%= link_to_with_filters scan do %>
                 <%= scan.name %>
 
                 <i class="fa fa-arrow-right">

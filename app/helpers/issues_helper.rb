@@ -1,5 +1,4 @@
 module IssuesHelper
-    include IssuesSummary
 
     def data_dump( data )
         ap = AwesomePrint::Inspector.new( plain: true, html: true )

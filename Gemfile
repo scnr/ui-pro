@@ -3,7 +3,7 @@ ruby '2.2.1'
 
 gem 'rails', '4.2.3'
 gem 'sass-rails', '~> 5.0.3'
-gem 'uglifier', '>= 1.3.0'
+gem 'closure-compiler'
 gem 'coffee-rails', '~> 4.1.0'
 gem 'jquery-rails'
 gem 'turbolinks'
@@ -15,7 +15,6 @@ gem 'devise'
 gem 'devise_security_extension'
 gem 'simple_form'
 gem 'sidekiq'
-gem 'websocket-rails', '~> 0.7.0'
 
 gem 'kramdown'
 gem 'loofah'
@@ -54,7 +53,7 @@ end
 
 group :test do
     gem 'shoulda'
-    gem 'capybara-webkit'
+    gem 'capybara-webkit', '~> 1.4.0'
     # gem 'poltergeist'
     gem 'capybara'
     gem 'database_cleaner'

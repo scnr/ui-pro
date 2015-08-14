@@ -1,6 +1,10 @@
 <div class="btn-group" role="group">
-    <%= link_to site_path( site, filter_params ), title: 'Site overview',
-                class: select_button_class( site_path( site ), false ) + ' btn-primary' do %>
+    <%= link_to_with_filters site,
+                title: 'Site overview',
+                class: select_button_class(
+                               site_path( site ),
+                               include_actions: ScanResults::SCAN_RESULT_ACTIONS
+                       ) + ' btn-primary' do %>
         <i class="fa fa-home"></i>
     <% end %>
 

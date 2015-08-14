@@ -3,7 +3,11 @@ class SitesController < ApplicationController
 
     before_filter :authenticate_user!
 
-    before_action :set_site, only: [:show, :edit, :update, :destroy]
+    before_action :set_site, only: [:show, :edit, :update, :destroy] +
+                                       ScanResults::SCAN_RESULT_ACTIONS
+    before_action :set_scans, only: ScanResults::SCAN_RESULT_ACTIONS
+
+    include ScanResults
 
     # GET /sites
     # GET /sites.json
@@ -23,7 +27,7 @@ class SitesController < ApplicationController
             return
         end
 
-        prepare_show_data
+        redirect_to issues_site_path( @site, filter_params )
     end
 
     # POST /sites
@@ -80,10 +84,18 @@ class SitesController < ApplicationController
         @site = current_user.sites.find_by_id( params[:id] )
 
         raise ActionController::RoutingError.new( 'Site not found.' ) if !@site
+
     end
 
     def set_sites
         @sites = current_user.sites.order( id: :desc )
+    end
+
+    def set_scans
+        @scans = @site.scans.includes(:schedule).includes(:user_agent).
+            includes(:site_role).includes(:profile).includes(:revisions)
+
+        prepare_site_sidebar_data
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
@@ -124,10 +136,18 @@ class SitesController < ApplicationController
 
     end
 
-    def prepare_show_data
-        @scans = @site.scans.includes(:revisions).includes(:site_role).
-            includes(:user_agent).includes(:profile)
-
-        prepare_site_issue_summary_data
+    def scan_results_owner
+        @site
     end
+
+    def prepare_issue_data
+        issues_summary_data(
+            site:      @site,
+            sitemap:   @site.sitemap_entries,
+            scans:     @scans.order( id: :desc ),
+            revisions: @site.revisions.order( id: :desc ),
+            issues:    scan_results_issues
+        )
+    end
+
 end

@@ -13,7 +13,7 @@
 <% if @user_agent %>
     <%= render partial: 'shared/sidebar_scans',
                locals: {
-                       scans:      @user_agent.scans,
+                       scans:      @scans,
                        with_site:  true,
                        with_count: true
                } %>

@@ -22,6 +22,14 @@
                         display_path_only: true
                 )
             %>
+
+            <%= link_to filter_params_without_page,
+                        title: 'Remove page filter' do %>
+
+                <small>
+                    <i class="text text-danger fa fa-minus-circle"></i>
+                </small>
+            <% end %>
         </small>
     <% end %>
 </h1>

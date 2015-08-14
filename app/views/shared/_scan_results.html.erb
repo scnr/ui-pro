@@ -1,54 +1,63 @@
+<%
+   sections = {}
+   %w(issues coverage reviews).each do |section|
+       sections[section] = params[:action] == section
+   end
+%>
+
 <div id="scan-results" class="row">
     <div class="col-md-12">
         <ul class="nav nav-tabs">
-            <li class="active">
-                <a href="#!/issues">
+            <li id="issues-tab" class="<%= 'active' if sections['issues'] %>">
+                <%= link_to params.merge( action: 'issues' ).merge filter_params do %>
                     Issues
-                </a>
+                <% end %>
             </li>
 
-            <li>
-                <a href="#!/coverage">
+            <li id="coverage-tab" class="<%= 'active' if sections['coverage'] %>">
+                <%= link_to params.merge( action: 'coverage' ).merge filter_params do %>
                     Coverage
 
                     <span class="badge">
-                        <%= @issues_summary[:sitemap].count %>
+                        <%= @coverage_count %>
                     </span>
-                </a>
+                <% end %>
             </li>
 
-            <% if @reviewed_issues_summary[:chart_data][:total_issues].to_i > 0 %>
-                <li>
-                    <a href="#!/reviews">
+            <% if @reviews_count > 0 %>
+                <li id="reviews-tab" class="<%= 'active' if sections['reviews'] %>">
+                    <%= link_to params.merge( action: 'reviews' ).merge filter_params do %>
                         Reviews
 
                         <span class="badge">
-                            <%= @reviewed_issues_summary[:chart_data][:total_issues] %>
+                            <%= @reviews_count %>
                         </span>
-                    </a>
+                    <% end %>
                 </li>
             <% end %>
         </ul>
 
         <div class="tab-content">
-            <div class="tab-pane active" id="issues">
-                <%= render partial: 'shared/scan_results/issues_summary', locals: {
-                        data: @issues_summary
-                } %>
-            </div>
-
-            <div class="tab-pane" id="coverage">
-                <%= render partial: 'shared/scan_results/coverage', locals: {
-                        data: @reviewed_issues_summary
-                } %>
-            </div>
-
-            <% if @reviewed_issues_summary[:chart_data][:total_issues].to_i > 0 %>
-                <div class="tab-pane" id="reviews">
-                    <%= render partial: 'shared/scan_results/reviewed_issues', locals: {
-                            data: @reviewed_issues_summary
+            <% if sections['issues'] %>
+                <div class="tab-pane <%= 'active' if sections['issues'] %>" id="issues">
+                    <%= render partial: 'shared/scan_results/issues', locals: {
+                            data: @issues_summary
                     } %>
                 </div>
+            <% end %>
+
+            <% if sections['coverage'] %>
+                <div class="tab-pane <%= 'active' if sections['coverage'] %>" id="coverage">
+                    <%= render partial: 'shared/scan_results/coverage' %>
+                </div>
+            <% end %>
+
+            <% if @reviews_count > 0 %>
+                <% if sections['reviews'] %>
+                    <div class="tab-pane <%= 'active' if sections['reviews'] %>" id="reviews">
+                        <%= render partial: 'shared/scan_results/reviews' %>
+                    </div>
+                <% end %>
             <% end %>
         </div>
     </div>

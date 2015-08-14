@@ -42,7 +42,7 @@ shared_examples_for 'Scans sidebar' do |options = {}|
     end
 
     scenario 'user sees scan link with filtering options' do
-        expect(scans).to have_xpath "//a[starts-with(@href, '#{site_scan_path( site, scan )}?filter') and not(@data-method)]"
+        expect(scans).to have_xpath "//a[starts-with(@href, '#{site_scan_path( site, scan )}/issues?filter') and not(@data-method)]"
     end
 
 end

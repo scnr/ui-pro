@@ -69,14 +69,17 @@ feature 'Issue page' do
         expect(breadcrumbs.find('li:nth-of-type(3)')).to have_content site.url
         expect(breadcrumbs.find('li:nth-of-type(3) a').native['href']).to eq site_path( site )
 
-        expect(breadcrumbs.find('li:nth-of-type(4)')).to have_content scan.to_s
-        expect(breadcrumbs.find('li:nth-of-type(4) a').native['href']).to eq site_scan_path( site, scan )
+        expect(breadcrumbs.find('li:nth-of-type(4)')).to have_content 'Scans'
+        expect(breadcrumbs.find('li:nth-of-type(4) a').native['href']).to eq site_scans_path( site )
 
-        expect(breadcrumbs.find('li:nth-of-type(5)')).to have_content revision.to_s
-        expect(breadcrumbs.find('li:nth-of-type(5) a').native['href']).to eq site_scan_revision_path( site, scan, revision )
+        expect(breadcrumbs.find('li:nth-of-type(5)')).to have_content scan.to_s
+        expect(breadcrumbs.find('li:nth-of-type(5) a').native['href']).to eq site_scan_path( site, scan )
 
-        expect(breadcrumbs.find('li:nth-of-type(6)')).to have_content issue.to_s
-        expect(breadcrumbs.find('li:nth-of-type(6) a').native['href']).to eq site_scan_revision_issue_path( site, scan, revision, issue )
+        expect(breadcrumbs.find('li:nth-of-type(6)')).to have_content revision.to_s
+        expect(breadcrumbs.find('li:nth-of-type(6) a').native['href']).to eq site_scan_revision_path( site, scan, revision )
+
+        expect(breadcrumbs.find('li:nth-of-type(7)')).to have_content issue.to_s
+        expect(breadcrumbs.find('li:nth-of-type(7) a').native['href']).to eq site_scan_revision_issue_path( site, scan, revision, issue )
     end
 
     feature 'page header' do

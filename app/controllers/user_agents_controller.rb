@@ -77,6 +77,9 @@ class UserAgentsController < ApplicationController
 
     def set_user_agent
         @user_agent = UserAgent.find(params[:id])
+
+        @scans = @user_agent.scans.includes(:schedule).includes(:user_agent).
+            includes(:site_role).includes(:profile).includes(:revisions)
     end
 
     def set_user_agents

@@ -45,8 +45,8 @@
 
         <div class="col-md-<%= @sitemap_entry ? '6' : '4' %>">
             <h3>
-                <strong><%= revisions.size %></strong>
-                <%= 'revision'.pluralize revisions.size %>,
+                <strong><%= rc = revisions.size %></strong>
+                <%= 'revision'.pluralize rc %>,
 
                 <small>
                     from <strong><%= scans.size %></strong>
@@ -101,7 +101,7 @@
 </div>
 
 <script>
-    <%= render partial: 'shared/scan_results/issues_summary/chart_load_data.js',
+    <%= render partial: 'shared/scan_results/issues/chart_load_data.js',
         locals: {
             data: data[:chart_data]
         } %>

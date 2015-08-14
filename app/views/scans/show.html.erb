@@ -1,8 +1,9 @@
 <%
-   title @scan.name
+   title params[:action].capitalize
    breadcrumb_add 'Sites', sites_path
-   breadcrumb_add @scan.url, site_path( @site )
+   breadcrumb_add @site.url, site_path( @site )
    breadcrumb_add 'Scans', site_scans_path( @site )
+   breadcrumb_add @scan, site_scan_path( @site, @scan )
 %>
 
 <% add_to_sidebar do %>
@@ -24,7 +25,8 @@
 
             <% if lr = @scan.last_revision %>
                 <%= render partial: '/shared/revision_info', locals: {
-                        revision:       @scan.last_revision,
+                        scan:           @scan,
+                        revision:       lr,
                         hide_scan_name: true,
                         extended:       true
                 } %>
