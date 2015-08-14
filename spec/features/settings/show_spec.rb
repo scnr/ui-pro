@@ -27,6 +27,10 @@ feature 'Edit global settings' do
             visit settings_path
         end
 
+        scenario 'has title' do
+            expect(page).to have_title 'Settings'
+        end
+
         scenario 'sees profile form' do
             expect(find('.profile-form')).to be_truthy
         end
