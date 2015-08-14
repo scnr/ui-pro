@@ -28,7 +28,7 @@ class SiteRolesController < ApplicationController
         @site_role.site = @site
 
         if @site_role.save
-            flash[:notice] = 'SiteRole was successfully created.'
+            flash[:notice] = 'Site role was successfully created.'
             render :show
         else
             render :edit
@@ -39,7 +39,7 @@ class SiteRolesController < ApplicationController
         fail 'Cannot update Guest role.' if @site_role.guest?
 
         if @site_role.update(site_role_params)
-            flash[:notice] = 'SiteRole was successfully updated.'
+            flash[:notice] = 'Site role was successfully updated.'
             render :show
         else
             render :edit
