@@ -403,3 +403,8 @@ h1, h2, h3, h4, h5 {
     position: fixed;
     z-index: 1000
 }
+
+.radio label, .checkbox label {
+    font-weight: bold;
+    padding-left: 0;
+}
