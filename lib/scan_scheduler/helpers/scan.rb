@@ -7,6 +7,8 @@ module Scan
     # Names will be in the format of `<Revision#id>.afr`.
     REPORT_DIR = "#{Rails.root}/reports/"
 
+    PERFORMANCE_SNAPSHOT_CAPTURE_INTERVAL = 1.minute
+
     def initialize
         super
 
@@ -224,9 +226,14 @@ module Scan
         ap progress[:busy]
         ap progress[:status]
         ap progress[:statistics]
+        ap progress[:messages]
 
         log_debug_for revision, "Busy:   #{progress[:busy]}"
         log_debug_for revision, "Status: #{progress[:status]}"
+
+        # if !revision.seed
+        #     revision.update( seed: progress[:statistics][:seed] )
+        # end
 
         if progress[:busy]
             handle_progress_active( revision, progress )
@@ -236,8 +243,9 @@ module Scan
     end
 
     def handle_progress_active( revision, progress )
-        schedule = revision.scan.schedule
-        runtime  = progress[:statistics][:runtime]
+        schedule   = revision.scan.schedule
+        statistics = progress[:statistics]
+        runtime    = statistics[:runtime]
 
         if !suspending?( revision ) && schedule.stop_after_hours &&
             schedule.stop_after_hours.hours < runtime.seconds
@@ -265,6 +273,8 @@ module Scan
 
             create_issue( revision, issue )
         end
+
+        capture_performance_snapshot( revision, statistics )
 
         revision.update( status: progress[:status] )
     end
@@ -295,6 +305,7 @@ module Scan
 
     def finish( revision )
         done_suspending( revision )
+        @performance_snapshot_last_update.delete revision.id
 
         scan = revision.scan
 
@@ -371,9 +382,26 @@ module Scan
         @suspending.include?( revision.id )
     end
 
+    def capture_performance_snapshot( revision, statistics )
+        @performance_snapshot_last_update[revision.id] ||=
+            PERFORMANCE_SNAPSHOT_CAPTURE_INTERVAL.ago
+
+        attributes = PerformanceSnapshot.arachni_to_attributes( statistics )
+
+        revision.performance_snapshot.update( attributes )
+
+        return if Time.now - @performance_snapshot_last_update[revision.id] <
+                    PERFORMANCE_SNAPSHOT_CAPTURE_INTERVAL
+
+        revision.performance_snapshots.create( attributes )
+
+        @performance_snapshot_last_update[revision.id] = Time.now
+    end
+
     # @private
     def reset_scan_state
         @issue_digests_per_revision_id = {}
+        @performance_snapshot_last_update = {}
         @monitors   = {}
         @suspending = Set.new
     end

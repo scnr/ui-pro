@@ -1,14 +1,23 @@
 class Revision < ActiveRecord::Base
     include RevisionStates
 
+    has_one  :performance_snapshot, dependent: :destroy,
+             foreign_key: 'revision_current_id'
+
     belongs_to :scan, counter_cache: true
     belongs_to :site, counter_cache: true
+
     has_many :issues,  dependent: :destroy
     has_many :reviewed_issues,  class_name: 'Issue',
              foreign_key: 'reviewed_by_revision_id'
-    has_many :sitemap_entries
+
+    has_many :sitemap_entries, dependent: :destroy
+
+    has_many :performance_snapshots, -> { order id: :asc }, dependent: :destroy
 
     validates_presence_of :scan
+
+    before_create :ensure_performance_snapshot
 
     before_save :set_index
     before_save :set_site
@@ -58,5 +67,11 @@ class Revision < ActiveRecord::Base
 
     def set_site
         self.site = scan.site
+    end
+
+    private
+
+    def ensure_performance_snapshot
+        self.performance_snapshot ||= build_performance_snapshot
     end
 end

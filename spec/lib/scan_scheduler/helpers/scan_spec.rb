@@ -42,6 +42,31 @@ describe ScanScheduler::Helpers::Scan do
         subject.spawn_instance_for( revision ) { |i| instance = i }
         instance
     end
+    let(:statistics) do
+        {
+            seed:          '8f0510034adf8e1905ed47b7e141dbf3',
+            http:          {
+                request_count:               120209,
+                response_count:              120209,
+                time_out_count:              162,
+                total_responses_per_second:  41.08373646212503,
+                burst_response_time_sum:     3.963999,
+                burst_response_count:        18,
+                burst_responses_per_second:  20.98328921971754,
+                burst_average_response_time: 0.22022216666666666,
+                total_average_response_time: 0.3961567054297138,
+                max_concurrency:             10,
+                original_max_concurrency:    20
+            },
+            runtime:       2.hours.to_i,
+            found_pages:   84,
+            audited_pages: 569,
+            current_page:  'http://stuff.com/path/here/'
+        }
+    end
+    let(:performance_snapshot_attributes) do
+        PerformanceSnapshot.arachni_to_attributes( statistics )
+    end
 
     def new_revision
         FactoryGirl.create :revision, scan: scan
@@ -548,9 +573,7 @@ describe ScanScheduler::Helpers::Scan do
                     block.call(
                         busy:   true,
                         issues: [native_issue],
-                        statistics: {
-                            runtime: 60
-                        }
+                        statistics: statistics
                     )
                 end
                 subject.update( revision ) {}
@@ -602,13 +625,15 @@ describe ScanScheduler::Helpers::Scan do
                 busy:       true,
                 issues:     [],
                 status:     'stuff',
-                statistics: {
-                    runtime: 2.hours.to_i
-                }
+                statistics: statistics
             }
         end
 
-        it 'updates statistics'
+        it 'forwards the statistics to #capture_performance_snapshot' do
+            expect(subject).to receive(:capture_performance_snapshot).with( revision, statistics )
+            subject.handle_progress_active( revision, progress ) {}
+        end
+
         it 'updates errors'
         it 'updates sitemap'
 
@@ -694,12 +719,6 @@ describe ScanScheduler::Helpers::Scan do
             it 'calls #download_report_and_shutdown' do
                 subject.handle_progress_inactive( revision, progress ) {}
             end
-
-            it 'sets Scan#status to nil' do
-                subject.handle_progress_inactive( revision, progress ) {}
-
-                expect(revision.status).to be_nil
-            end
         end
 
         context 'when the scan has been suspended' do
@@ -719,6 +738,50 @@ describe ScanScheduler::Helpers::Scan do
                 subject.handle_progress_inactive( revision, progress ) {}
 
                 expect(revision.snapshot_path).to eq '/my/path'
+            end
+        end
+    end
+
+    describe '#capture_performance_snapshot' do
+        it 'updates the current performance snapshot' do
+            expect(revision.performance_snapshot).to receive(:update).
+                                                         with( performance_snapshot_attributes )
+
+            subject.capture_performance_snapshot( revision, statistics )
+        end
+
+        context 'the first time it is called' do
+            it 'stores the performance snapshot' do
+                expect(revision.performance_snapshots).to receive(:create).
+                                                             with( performance_snapshot_attributes )
+
+                subject.capture_performance_snapshot( revision, statistics )
+            end
+        end
+
+        context 'when more than PERFORMANCE_SNAPSHOT_CAPTURE_INTERVAL seconds have passed since the last call' do
+            it 'stores the performance snapshot' do
+                described_class::PERFORMANCE_SNAPSHOT_CAPTURE_INTERVAL = 2.seconds
+
+                subject.capture_performance_snapshot( revision, statistics )
+
+                sleep described_class::PERFORMANCE_SNAPSHOT_CAPTURE_INTERVAL
+
+                expect(revision.performance_snapshots).to receive(:create).
+                                                                  with( performance_snapshot_attributes )
+
+                subject.capture_performance_snapshot( revision, statistics )
+            end
+        end
+
+        context 'when less than PERFORMANCE_SNAPSHOT_CAPTURE_INTERVAL seconds has passed since the last call' do
+            it 'does not store the performance snapshot' do
+                subject.capture_performance_snapshot( revision, statistics )
+
+                expect(revision.performance_snapshots).to_not receive(:create).
+                                                              with( performance_snapshot_attributes )
+
+                subject.capture_performance_snapshot( revision, statistics )
             end
         end
     end

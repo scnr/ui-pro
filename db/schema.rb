@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150406191208) do
+ActiveRecord::Schema.define(version: 20150814220113) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -236,6 +236,25 @@ ActiveRecord::Schema.define(version: 20150406191208) do
   add_index "issues", ["site_id"], name: "index_issues_on_site_id", using: :btree
   add_index "issues", ["sitemap_entry_id"], name: "index_issues_on_sitemap_entry_id", using: :btree
   add_index "issues", ["state"], name: "index_issues_on_state", using: :btree
+
+  create_table "performance_snapshots", force: :cascade do |t|
+    t.integer  "http_request_count"
+    t.integer  "http_response_count"
+    t.integer  "http_time_out_count"
+    t.float    "http_average_responses_per_second"
+    t.float    "http_average_response_time"
+    t.integer  "http_max_concurrency"
+    t.integer  "http_original_max_concurrency"
+    t.float    "runtime"
+    t.integer  "page_count"
+    t.text     "current_page"
+    t.integer  "revision_current_id"
+    t.integer  "revision_id"
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
+  end
+
+  add_index "performance_snapshots", ["revision_current_id"], name: "index_performance_snapshots_on_revision_current_id", using: :btree
 
   create_table "profiles", force: :cascade do |t|
     t.integer  "user_id"

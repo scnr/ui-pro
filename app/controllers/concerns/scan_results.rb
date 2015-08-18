@@ -27,7 +27,7 @@ module ScanResults
     end
 
     def monitor
-        prepare_monitor_data
+        @monitor = prepare_monitor_data
 
         process_and_show
     end

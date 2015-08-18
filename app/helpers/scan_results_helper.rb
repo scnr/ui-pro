@@ -343,10 +343,15 @@ module ScanResultsHelper
             params:     filter_params
         }
 
-        if ScanResults::SCAN_RESULT_ACTIONS.include? params[:action].to_sym
+        if ScanResults::SCAN_RESULT_ACTIONS.include?( params[:action].to_sym )
             route[:action] = params[:action]
         else
             route[:action] = options[:action] || 'issues'
+        end
+
+        # Only revisions can be monitored.
+        if route[:controller] != 'revisions' && route[:action].to_s == 'monitor'
+            route[:action] = 'issues'
         end
 
         %w(site scan revision).each do |parent|

@@ -28,7 +28,13 @@ class RevisionsController < ApplicationController
     end
 
     def set_revision
-        @revision = @scan.revisions.find( params[:id] )
+        relation = @scan.revisions.includes(:performance_snapshot)
+
+        if params[:action] == :monitor
+            relation = relation.includes(:performance_snapshots)
+        end
+
+        @revision = relation.find( params[:id] )
 
         raise ActionController::RoutingError.new( 'Revision not found.' ) if !@revision
     end
@@ -52,6 +58,23 @@ class RevisionsController < ApplicationController
             revisions: @scan.revisions.order( id: :desc ),
             issues:    scan_results_issues
         )
+    end
+
+    def prepare_monitor_data
+        (@revision.performance_snapshots.map(&:attributes) +
+            [@revision.performance_snapshot.attributes]).map do |snapshot|
+
+            snapshot['duration'] =
+                Arachni::Utilities.seconds_to_hms( snapshot['runtime'] )
+
+            snapshot['http_average_response_time'] =
+                snapshot['http_average_response_time'].round( 2 )
+
+            snapshot['http_average_responses_per_second'] =
+                snapshot['http_average_responses_per_second'].to_i
+
+            snapshot
+        end
     end
 
 end

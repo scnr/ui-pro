@@ -1,7 +1,8 @@
 <%
    sections = {}
-   %w(issues coverage reviews).each do |section|
-       sections[section] = params[:action] == section
+   ScanResults::SCAN_RESULT_ACTIONS.each do |section|
+       section = section.to_s
+       sections[section] = params[:action].to_s == section
    end
 %>
 
@@ -35,6 +36,14 @@
                     <% end %>
                 </li>
             <% end %>
+
+            <% if @revision %>
+                <li id="monitor-tab" class="<%= 'active' if sections['monitor'] %>">
+                    <%= link_to params.merge( action: 'monitor' ).merge filter_params do %>
+                        Monitor
+                    <% end %>
+                </li>
+            <% end %>
         </ul>
 
         <div class="tab-content">
@@ -59,6 +68,13 @@
                     </div>
                 <% end %>
             <% end %>
+
+            <% if sections['monitor'] %>
+                <div class="tab-pane <%= 'active' if sections['monitor'] %>" id="monitor">
+                    <%= render partial: 'shared/scan_results/monitor' %>
+                </div>
+            <% end %>
+
         </div>
     </div>
 </div>

@@ -1,0 +1,75 @@
+class PerformanceSnapshot < ActiveRecord::Base
+
+    STATES = %i(excellent good fair poor)
+
+    MAX_HTTP_TIME_OUT_RATIO               = 0.05
+    MAX_HTTP_AVERAGE_RESPONSES_PER_SECOND = 120
+    MAX_HTTP_AVERAGE_RESPONSE_TIME        = 1
+
+    MIN_MAX_CONCURRENCY                   = 1
+
+    def http_time_out_count_state
+        self.class.determine_state(
+            http_time_out_count,
+            max_http_time_out_count,
+            better: :low
+        )
+    end
+
+    def max_http_time_out_count
+        (http_request_count * MAX_HTTP_TIME_OUT_RATIO).to_i
+    end
+
+    def http_time_out_count_pct
+        (http_time_out_count / Float( http_request_count ) * 100).round( 2 )
+    end
+
+    def http_average_responses_per_second_state
+        self.class.determine_state http_average_responses_per_second, 120
+    end
+
+    def http_max_concurrency_state
+        self.class.determine_state http_max_concurrency, http_original_max_concurrency
+    end
+
+    def http_average_response_time_state
+        self.class.determine_state http_average_response_time, 1, better: :low
+    end
+
+    def self.determine_state( value, max, min: 0.0, better: :high )
+        states = STATES
+        states = states.reverse if better == :high
+
+        max  = Float( max )
+        min  = Float( min )
+        max -= min
+
+        step = max / STATES.size
+
+        states.each.with_index do |state, i|
+            next if value >= step * (i+1)
+            return state
+        end
+
+        states.last
+    end
+
+    def self.create_from_arachni( statistics )
+        create( arachni_to_attributes( statistics ) )
+    end
+
+    def self.arachni_to_attributes( statistics )
+        {
+            http_request_count:                statistics[:http][:request_count],
+            http_response_count:               statistics[:http][:response_count],
+            http_time_out_count:               statistics[:http][:time_out_count],
+            http_average_responses_per_second: statistics[:http][:total_responses_per_second],
+            http_average_response_time:        statistics[:http][:total_average_response_time],
+            http_max_concurrency:              statistics[:http][:max_concurrency],
+            http_original_max_concurrency:     statistics[:http][:original_max_concurrency],
+            runtime:                           statistics[:runtime],
+            page_count:                        statistics[:found_pages],
+            current_page:                      statistics[:current_page]
+        }
+    end
+end

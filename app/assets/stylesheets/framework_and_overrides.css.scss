@@ -1,14 +1,14 @@
-$severity-high-color:       #d62728;
-$severity-high-color-faded: #fbe9ea;
+$severity-high-color:       #FF0000;
+$severity-high-color-faded: #ffe6e6;
 
-$severity-medium-color:       #ff7f0e;
-$severity-medium-color-faded: #fff2e7;
+$severity-medium-color:       #F97600;
+$severity-medium-color-faded: #fef1e6;
 
-$severity-low-color:       #f0ad4e;
+$severity-low-color:       #F6C600;
 $severity-low-color-faded: #fef7ed;
 
-$severity-informational-color:       #1f77b4;
-$severity-informational-color-faded: #e9f1f8;
+$severity-informational-color:       #60B044;
+$severity-informational-color-faded: #fef9e6;
 
 $severity-none-color:       #5cb85c;
 $severity-none-color-faded: #dff0d8;
@@ -266,16 +266,23 @@ section {
 .text-severity {
 }
 
+.text-state-poor,
 .text-severity-high {
     color: $severity-high-color;
 }
 
+.text-state-fair,
 .text-severity-medium {
     color: $severity-medium-color;
 }
 
+.text-state-good,
 .text-severity-low {
     color: $severity-low-color;
+}
+
+.text-state-excellent {
+    color: #60B044;
 }
 
 .text-severity-informational {
@@ -286,20 +293,27 @@ section {
     color: $severity-none-color;
 }
 
+.c3-region.chart-region-poor,
 .c3-region.severity-high {
     fill: $severity-high-color;
 }
 
+.c3-region.chart-region-fair,
 .c3-region.severity-medium {
     fill: $severity-medium-color;
 }
 
+.c3-region.chart-region-good,
 .c3-region.severity-low {
     fill: $severity-low-color;
 }
 
 .c3-region.severity-informational {
     fill: $severity-informational-color;
+}
+
+.c3-region.chart-region-excellent {
+    fill: #60B044;
 }
 
 .cascade-container {
