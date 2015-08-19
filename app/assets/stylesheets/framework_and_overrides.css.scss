@@ -7,8 +7,8 @@ $severity-medium-color-faded: #fef1e6;
 $severity-low-color:       #F6C600;
 $severity-low-color-faded: #fef7ed;
 
-$severity-informational-color:       #60B044;
-$severity-informational-color-faded: #fef9e6;
+$severity-informational-color:       #1f77b4;
+$severity-informational-color-faded: #e9f1f8;
 
 $severity-none-color:       #5cb85c;
 $severity-none-color-faded: #dff0d8;
@@ -232,7 +232,7 @@ section {
 }
 
 .btn-severity-none {
-    background-color: $severity-informational-color;
+    background-color: $severity-none-color;
 }
 
 .label-severity {
@@ -421,4 +421,9 @@ h1, h2, h3, h4, h5 {
 .radio label, .checkbox label {
     font-weight: bold;
     padding-left: 0;
+}
+
+// Wobble fix
+.fa-spin {
+    filter: blur(0);
 }
