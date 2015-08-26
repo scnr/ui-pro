@@ -442,6 +442,66 @@ feature 'Profile page', :devise do
                     end
                 end
 
+                feature 'UI forms' do
+                    let(:option) { find('#audit_ui_forms input') }
+
+                    feature 'when set' do
+                        before do
+                            subject.audit_ui_forms = true
+                            subject.save
+
+                            visit profile_path( subject )
+                        end
+
+                        scenario 'it is checked' do
+                            expect(option).to be_checked
+                        end
+                    end
+
+                    feature 'when not set' do
+                        before do
+                            subject.audit_ui_forms = false
+                            subject.save
+
+                            visit profile_path( subject )
+                        end
+
+                        scenario 'it is not checked' do
+                            expect(option).to_not be_checked
+                        end
+                    end
+                end
+
+                feature 'UI inputs' do
+                    let(:option) { find('#audit_ui_inputs input') }
+
+                    feature 'when set' do
+                        before do
+                            subject.audit_ui_inputs = true
+                            subject.save
+
+                            visit profile_path( subject )
+                        end
+
+                        scenario 'it is checked' do
+                            expect(option).to be_checked
+                        end
+                    end
+
+                    feature 'when not set' do
+                        before do
+                            subject.audit_ui_inputs = false
+                            subject.save
+
+                            visit profile_path( subject )
+                        end
+
+                        scenario 'it is not checked' do
+                            expect(option).to_not be_checked
+                        end
+                    end
+                end
+
                 feature 'Links' do
                     let(:option) { find('#audit_links input') }
 

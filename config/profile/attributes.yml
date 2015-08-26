@@ -1,11 +1,18 @@
-audit_cookies: ''
+audit_cookies: >
+  Audits cookie inputs that are set by HTTP responses, meta HTML tags or JavaScript.
 audit_cookies_extensively:
     description: 'Submits all links and forms of the page along with the cookie permutations.'
     warning: "Enabling this option severely increase the scan duration."
-audit_forms: ''
-audit_headers:
-    warning: "Enabling this option severely increase the scan duration."
-audit_links: ''
+audit_forms: 'Audits inputs grouped by HTML form elements.'
+audit_headers: >
+    Audits common HTTP request headers as well as custom headers extracted from
+    browser requests.
+audit_links: 'Audits inputs specified in link parameters.'
+audit_ui_forms: >
+  Audits input/button groups that do not belong to an HTML form but are instead
+  associated via JavaScript code.
+audit_ui_inputs: >
+  Audits orphan input elements with associated DOM events.
 audit_xmls: 'Audits XML inputs extracted from browser requests.'
 audit_jsons: 'Audits JSON inputs extracted from browser requests.'
 audit_link_templates: 'Regular expressions with named captures to use to extract input information from generic paths.'

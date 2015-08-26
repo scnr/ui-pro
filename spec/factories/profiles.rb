@@ -6,6 +6,8 @@ FactoryGirl.define do
         name { "MyString #{rand(99999)}" }
         description "This is my profile!"
         audit_links true
+        audit_ui_forms true
+        audit_ui_inputs true
         audit_forms true
         audit_cookies true
         audit_headers false

@@ -24,6 +24,8 @@ module ProfileRpcHelpers
         :audit_links,
         :audit_xmls,
         :audit_jsons,
+        :audit_ui_forms,
+        :audit_ui_inputs,
         :audit_parameter_values,
 
         :browser_cluster_screen_height,

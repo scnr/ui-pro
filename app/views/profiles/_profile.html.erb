@@ -161,6 +161,32 @@
         </div>
     </div>
 
+    <div id="audit_ui_forms" class="row">
+        <div class="col-md-6">
+            <p>
+                <strong>UI forms:</strong>
+                <input <%= 'checked' if profile.audit_ui_forms? %>
+                       disabled type="checkbox">
+            </p>
+        </div>
+        <div class="col-md-6">
+            <%= messages_for :audit_ui_forms %>
+        </div>
+    </div>
+
+    <div id="audit_ui_inputs" class="row">
+        <div class="col-md-6">
+            <p>
+                <strong>UI inputs:</strong>
+                <input <%= 'checked' if profile.audit_ui_inputs? %>
+                       disabled type="checkbox">
+            </p>
+        </div>
+        <div class="col-md-6">
+            <%= messages_for :audit_ui_inputs %>
+        </div>
+    </div>
+
     <div id="audit_links" class="row">
         <div class="col-md-6">
             <p>

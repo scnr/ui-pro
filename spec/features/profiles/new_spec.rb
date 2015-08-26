@@ -223,6 +223,20 @@ feature 'Profile new page' do
                     expect(Profile.last.audit_forms).to eq true
                 end
 
+                scenario 'can set Audit UI forms' do
+                    check 'Audit UI forms'
+                    submit
+
+                    expect(Profile.last.audit_ui_forms).to eq true
+                end
+
+                scenario 'can set Audit UI inputs' do
+                    check 'Audit UI inputs'
+                    submit
+
+                    expect(Profile.last.audit_ui_inputs).to eq true
+                end
+
                 scenario 'can set Audit links' do
                     check 'Audit links'
 

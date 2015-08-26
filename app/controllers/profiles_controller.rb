@@ -132,6 +132,8 @@ class ProfilesController < ApplicationController
             :audit_headers,
             :audit_jsons,
             :audit_xmls,
+            :audit_ui_forms,
+            :audit_ui_inputs,
             :audit_parameter_names,
             :audit_with_extra_parameter,
             :audit_with_both_http_methods,

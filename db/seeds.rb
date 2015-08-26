@@ -45,12 +45,14 @@ Arachni::Options.to_rpc_data.each do |name, value|
 end
 
 arachni_defaults.merge!(
-    name:          'Default',
-    description:   'Sensible, default settings.',
-    user:          user,
-    audit_links:   true,
-    audit_forms:   true,
-    audit_cookies: true
+    name:            'Default',
+    description:     'Sensible, default settings.',
+    user:            user,
+    audit_links:     true,
+    audit_forms:     true,
+    audit_cookies:   true,
+    audit_ui_forms:  true,
+    audit_ui_inputs: true
 )
 
 # exit
@@ -87,7 +89,7 @@ puts 'SQLi profile created: ' << p.name
 p = Profile.create! arachni_defaults.merge(
     name:        'XSS checks',
     description: 'Scans for XSS issues.',
-    checks:      %w(xss xss_dom xss_dom_inputs xss_dom_script_context xss_event
+    checks:      %w(xss xss_dom xss_dom_script_context xss_event
         xss_path xss_script_context xss_tag)
 )
 puts 'XSS profile created: ' << p.name
@@ -95,7 +97,7 @@ puts 'XSS profile created: ' << p.name
 p = Profile.create! arachni_defaults.merge(
     name:        'Client-side checks',
     description: 'Scans for DOM issues like DOM XSS, unvalidated redirects etc.',
-    checks:      %w(xss_dom xss_dom_inputs xss_dom_script_context unvalidated_redirect_dom)
+    checks:      %w(xss_dom xss_dom_script_context unvalidated_redirect_dom)
     )
 puts 'Client-side profile created: ' << p.name
 

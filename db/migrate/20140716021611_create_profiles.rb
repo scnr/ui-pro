@@ -17,6 +17,8 @@ class CreateProfiles < ActiveRecord::Migration
             t.boolean  "audit_headers"
             t.boolean  "audit_jsons"
             t.boolean  "audit_xmls"
+            t.boolean  "audit_ui_forms"
+            t.boolean  "audit_ui_inputs"
             t.boolean  "audit_parameter_names"
             t.boolean  "audit_with_extra_parameter"
             t.boolean  "audit_with_both_http_methods"
