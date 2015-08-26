@@ -126,7 +126,6 @@ describe ScanScheduler::Helpers::Issue do
         context 'when the report contains some issues from previous revisions' do
             it 'only creates new issues' do
                 first_issue = report.issues[0]
-                first_issue = first_issue.variations.first.to_solo( first_issue )
 
                 rev2 = new_revision
                 Issue.create_from_arachni( first_issue, revision: rev2 )
@@ -142,15 +141,14 @@ describe ScanScheduler::Helpers::Issue do
             context 'with new remark data' do
                 it 'updates the remark data' do
                     first_issue = report.issues[0]
-                    first_issue = first_issue.variations.first.to_solo( first_issue )
 
                     first_issue.remarks.clear
                     first_issue.add_remark 'author', 'text'
 
                     Issue.create_from_arachni( first_issue, revision: revision )
 
-                    report.issues[0].variations.first.remarks.clear
-                    report.issues[0].variations.first.add_remark 'author2', 'text2'
+                    report.issues[0].remarks.clear
+                    report.issues[0].add_remark 'author2', 'text2'
 
                     report.issues = [report.issues[0]]
                     subject.import_issues_from_report(revision, report)
@@ -168,14 +166,13 @@ describe ScanScheduler::Helpers::Issue do
             context 'with new status' do
                 it 'updates their status' do
                     first_issue = report.issues[0]
-                    first_issue = first_issue.variations.first.to_solo( first_issue )
 
                     first_issue.trusted = true
 
                     Issue.create_from_arachni( first_issue, revision: revision )
                     expect(revision.issues.first.state).to eq 'trusted'
 
-                    report.issues[0].variations.first.trusted = false
+                    report.issues[0].trusted = false
                     report.issues = [report.issues[0]]
                     subject.import_issues_from_report(revision, report)
 

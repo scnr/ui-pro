@@ -97,20 +97,16 @@ module Issue
 
             # If false, issue must have already been created **and** have
             # no data that needs updating, skip it.
-            if !update_issue?( revision, issue.variations.first )
+            if !update_issue?( revision, issue )
                 log_debug_for revision, 'No need to update issue from report:' +
                     " #{issue.unique_id} - #{issue.digest}"
                 next
             end
 
-            issue.variations.each do |variation|
-                solo = variation.to_solo( issue )
-
-                if revision_issues.include?( solo.digest )
-                    update_issue( revision, solo )
-                else
-                    create_issue( revision, solo )
-                end
+            if revision_issues.include?( issue.digest )
+                update_issue( revision, issue )
+            else
+                create_issue( revision, issue )
             end
         end
 
