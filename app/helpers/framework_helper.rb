@@ -62,6 +62,10 @@ module FrameworkHelper
         @_plugins ||= components_for( :plugins )
     end
 
+    def default_plugins
+        DEFAULT_PLUGINS
+    end
+
     def content_type_for_report( format )
         reporters[format.to_s][:content_type] || 'application/octet-stream'
     end

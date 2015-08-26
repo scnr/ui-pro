@@ -114,6 +114,12 @@ module ProfileRpcHelpers
                     inject({}) { |h, pattern| h[pattern] = TEMPLATE_PATH_PATTERN_COUNTER; h }
         end
 
+        opts['plugins'] ||= {}
+
+        FrameworkHelper.default_plugins.each do |name|
+            opts['plugins'][name] = {}
+        end
+
         opts
     end
 

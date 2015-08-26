@@ -13,6 +13,12 @@ EXCLUDE_PLUGINS = [
     :exec
 ]
 
+DEFAULT_PLUGINS = [
+    :timing_attacks,
+    :discovery,
+    :autothrottle
+]
+
 EXCLUDE_REPORTERS = [
     :txt
 ]
