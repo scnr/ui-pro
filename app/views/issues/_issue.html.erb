@@ -96,6 +96,7 @@
 
 <hr/>
 
+<% if @issue.has_proofs? %>
 <div id="identification">
     <h2>
         <a class="anchor" href="#!/identification">
@@ -109,6 +110,7 @@
 </div>
 
 <hr/>
+<% end %>
 
 <% if @issue.type.remedy_guidance %>
     <div id="remediation">

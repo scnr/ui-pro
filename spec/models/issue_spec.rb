@@ -212,6 +212,43 @@ describe Issue do
         end
     end
 
+    describe '#has_proofs?' do
+        before do
+            subject.page = IssuePage.create_from_arachni( Factory[:page] )
+            subject.page.dom = IssuePageDom.create_from_arachni( Factory[:dom] )
+            subject.page.dom.execution_flow_sinks = []
+            subject.proof = ''
+        end
+
+        context 'when is has #proof' do
+            before do
+                subject.proof = 'stuff'
+            end
+
+            it 'returns true' do
+                expect(subject).to have_proofs
+            end
+        end
+
+        context 'when the page has execution flow sinks' do
+            before do
+                subject.page.dom.execution_flow_sinks = [
+                    IssuePageDomExecutionFlowSink.create_from_arachni( Factory[:execution_flow] )
+                ]
+            end
+
+            it 'returns true' do
+                expect(subject).to have_proofs
+            end
+        end
+
+        context 'when the page has neither #proof nor execution flow sinks' do
+            it 'returns false' do
+                expect(subject).to_not have_proofs
+            end
+        end
+    end
+
     describe '#update_state' do
         let(:digest) { rand(9999999) }
         let(:state) { 'fixed' }

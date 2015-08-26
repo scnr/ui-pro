@@ -202,6 +202,18 @@ feature 'Issue page' do
                 expect(sibling.reload.state).to eq 'fixed'
             end
         end
+
+        context 'when the issue has #proof' do
+            it 'shows Identification'
+        end
+
+        context 'when the issue has a page with execution flow sinks' do
+            it 'shows Identification'
+        end
+
+        context 'when the issue has no proof data' do
+            it 'does not show Identification'
+        end
     end
 
     feature 'info' do
@@ -820,34 +832,11 @@ feature 'Issue page' do
                 issue.page.dom.execution_flow_sinks = []
                 issue.page.dom.save
 
-                issue.page.response.body = 'This is the response body.'
-                issue.page.response.save
-
-                issue.page.dom.body = 'This is the DOM body.'
-                issue.page.dom.save
-
                 refresh
             end
 
-            let(:proof) { identification.find '#identification-proof.body-proof .CodeRay' }
-
-            feature 'and has DOM transitions' do
-                scenario 'it shows code highlighted DOM body' do
-                    expect(proof).to have_content issue.page.dom.body
-                end
-            end
-
-            feature 'and has no transitions' do
-                before do
-                    issue.page.dom.transitions = []
-                    issue.page.dom.save
-
-                    refresh
-                end
-
-                scenario 'it shows code highlighted DOM body' do
-                    expect(proof).to have_content issue.page.response.to_s
-                end
+            scenario 'it does not show issue identification info' do
+                expect(page).to_not have_css '#identification'
             end
         end
     end

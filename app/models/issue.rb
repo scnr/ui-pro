@@ -57,6 +57,11 @@ class Issue < ActiveRecord::Base
             order('issue_types.name asc').order( state_order_sql )
     end
 
+    def has_proofs?
+        !proof.blank? || (page && page.dom && page.dom.execution_flow_sinks &&
+            page.dom.execution_flow_sinks.any?)
+    end
+
     def reviewed_by_revision?
         !!reviewed_by_revision
     end

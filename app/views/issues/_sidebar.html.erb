@@ -1,12 +1,14 @@
 <%
    sections = {
-        input_vector: 'Input vector'
+        input_vector: 'Input vector',
+        reproduction: 'Reproduction'
    }
 
-   sections.merge!(
-       reproduction:   'Reproduction',
-       identification: 'Identification'
-   )
+   if @issue.has_proofs?
+       sections.merge!(
+           identification: 'Identification'
+       )
+   end
 
    if !@issue.type.remedy_guidance.to_s.empty?
        sections.merge!(
