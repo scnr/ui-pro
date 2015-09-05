@@ -197,19 +197,22 @@ module Scan
 
         # Don't grab anything but issues marked as fixed, this way we'll be
         # able to auto-review them ASAP and let the user know of regressions.
-        @issue_digests_per_revision_id[revision.id] ||=
+        progress_tracking_for( revision )[:issue_digests] ||=
             revision.scan.issues.where.not( state: 'fixed' ).digests
 
         # With errors and live sitemap.
         instance.service.native_progress(
-            with:    [:issues],
+            with:    {
+                issues:  true,
+                sitemap: progress_tracking_for( revision )[:coverage_entries].size
+            },
 
             # We don't care about issues logged by previous revisions at this
             # point, nor do we want issues that we've already seen.
             #
             # We will care when it's time to grab the report in order to mark
             # missing issues from previous revisions as fixed.
-            without: { issues: @issue_digests_per_revision_id[revision.id] }
+            without: { issues: progress_tracking_for( revision )[:issue_digests] },
         ) do |progress|
             handle_progress( revision, progress )
         end
@@ -223,17 +226,19 @@ module Scan
             return
         end
 
+        ap progress
         ap progress[:busy]
         ap progress[:status]
         ap progress[:statistics]
         ap progress[:messages]
+        ap progress[:sitemap]
 
         log_debug_for revision, "Busy:   #{progress[:busy]}"
         log_debug_for revision, "Status: #{progress[:status]}"
 
-        # if !revision.seed
-        #     revision.update( seed: progress[:statistics][:seed] )
-        # end
+        if !revision.seed
+            revision.update( seed: progress[:seed] )
+        end
 
         if progress[:busy]
             handle_progress_active( revision, progress )
@@ -267,12 +272,14 @@ module Scan
 
         log_debug_for revision, "Issues: #{progress[:issues].size}"
 
-        @issue_digests_per_revision_id[revision.id] ||= []
+        progress_tracking_for( revision )[:issue_digests] ||= []
         progress[:issues].each do |issue|
-            @issue_digests_per_revision_id[revision.id] << issue.digest
+            progress_tracking_for( revision )[:issue_digests] << issue.digest
 
             create_issue( revision, issue )
         end
+
+        add_coverage_entries( revision, progress[:sitemap] )
 
         capture_performance_snapshot( revision, statistics )
 
@@ -305,7 +312,7 @@ module Scan
 
     def finish( revision )
         done_suspending( revision )
-        @performance_snapshot_last_update.delete revision.id
+        @progress_tracker.delete revision.id
 
         scan = revision.scan
 
@@ -346,7 +353,7 @@ module Scan
             log_info_for revision, "Saved report at: #{report_path}"
 
             import_issues_from_report( revision, report )
-            import_sitemap_from_report( revision, report )
+            import_coverage_from_report( revision, report )
 
             if mark_issues_fixed && revision.scan.revisions.size > 1
                 mark_other_issues_fixed( revision, report.issues.map(&:digest) )
@@ -363,11 +370,22 @@ module Scan
         end
     end
 
-    def import_sitemap_from_report( revision, report )
-        report.sitemap.each do |url, code|
-            revision.sitemap_entries.create_with( url: url, code: code ).
-                find_or_create_by( url: url )
+    def import_coverage_from_report( revision, report )
+        add_coverage_entries( revision, report.sitemap )
+    end
+
+    def add_coverage_entries( revision, sitemap )
+        sitemap.each do |url, code|
+            add_coverage_entry( revision, url, code )
         end
+    end
+
+    def add_coverage_entry( revision, url, code )
+        return if progress_tracking_for( revision )[:coverage_entries].include?( url )
+        progress_tracking_for( revision )[:coverage_entries] << url
+
+        entry = revision.sitemap_entries.find_or_initialize_by( url: url )
+        entry.update( coverage: true, code: code ) if !entry.coverage
     end
 
     def done_suspending( revision )
@@ -383,27 +401,34 @@ module Scan
     end
 
     def capture_performance_snapshot( revision, statistics )
-        @performance_snapshot_last_update[revision.id] ||=
+        progress_tracking_for( revision )[:last_performance_update] ||=
             PERFORMANCE_SNAPSHOT_CAPTURE_INTERVAL.ago
 
         attributes = PerformanceSnapshot.arachni_to_attributes( statistics )
 
         revision.performance_snapshot.update( attributes )
 
-        return if Time.now - @performance_snapshot_last_update[revision.id] <
+        return if Time.now - progress_tracking_for( revision )[:last_performance_update] <
                     PERFORMANCE_SNAPSHOT_CAPTURE_INTERVAL
 
         revision.performance_snapshots.create( attributes )
 
-        @performance_snapshot_last_update[revision.id] = Time.now
+        progress_tracking_for( revision )[:last_performance_update] = Time.now
+    end
+
+    def progress_tracking_for( revision )
+        @progress_tracker[revision.id] ||= {
+            issue_digests:    nil,
+            coverage_entries: [],
+            sitemap:          Arachni::Support::LookUp::HashSet.new
+        }
     end
 
     # @private
     def reset_scan_state
-        @issue_digests_per_revision_id = {}
-        @performance_snapshot_last_update = {}
-        @monitors   = {}
-        @suspending = Set.new
+        @progress_tracker = {}
+        @monitors         = {}
+        @suspending       = Set.new
     end
 
 end

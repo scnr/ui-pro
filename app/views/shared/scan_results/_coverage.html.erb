@@ -1,26 +1,42 @@
 <%
-   sitemap_current_digests     = @coverage[:sitemap_current_digests]
-   sitemap_up_to_now_inclusive = @coverage[:sitemap_up_to_now_inclusive]
+   current_digests             = @coverage[:current_digests]
+   up_to_now_inclusive         = @coverage[:up_to_now_inclusive]
+   up_to_now_exclusive_digests = @coverage[:up_to_now_exclusive_digests]
 
-   sitemap_up_to_now_exclusive_digests =
-           @coverage[:sitemap_up_to_now_exclusive_digests]
+   new       = current_digests - up_to_now_exclusive_digests
+   missing   = up_to_now_exclusive_digests - current_digests
+   revisited = current_digests & up_to_now_exclusive_digests
+%>
 
-   new       = sitemap_current_digests - sitemap_up_to_now_exclusive_digests
-   missing   = sitemap_up_to_now_exclusive_digests - sitemap_current_digests
-   revisited = sitemap_current_digests & sitemap_up_to_now_exclusive_digests
+<p class="text-muted">
+    Coverage data show all audited resources.
+</p>
 
-if sitemap_up_to_now_inclusive.any? && @revision && @revision.index > 1
+<% if @revision && @revision.active? %>
+    <h3 id="coverage-current-url">
+        Currently auditing:
 
-    total_count   = Float(sitemap_up_to_now_inclusive.size)
+        <small>
+            <%= link_to @revision.performance_snapshot.current_page, target: '_blank' do %>
+                <%= url_without_scheme_host_port( @revision.performance_snapshot.current_page ) %>
+                <i class="fa fa-external-link"></i>
+            <% end %>
+        </small>
+    </h3>
+<% end %>
+
+<% if up_to_now_inclusive.any? && @revision && @revision.index > 1
+
+    total_count   = Float(up_to_now_inclusive.size)
 
     new_pct       = ((new.size / total_count) * 100.0)
-    new_pct_round = new_pct.round
+    new_pct_round = new_pct.round(1)
 
     revisited_pct       = ((revisited.size / total_count) * 100.0)
-    revisited_pct_round = revisited_pct.round
+    revisited_pct_round = revisited_pct.round(1)
 
     missing_pct       = ((missing.size / total_count) * 100.0)
-    missing_pct_round = missing_pct.round
+    missing_pct_round = missing_pct.round(1)
 
     active_class = @scan.active? ? 'progress-bar-striped active' : nil
     active_class = nil if @revision && @scan.revisions.size != @revision.index
@@ -86,7 +102,7 @@ if sitemap_up_to_now_inclusive.any? && @revision && @revision.index > 1
                 title:   'New',
                 message: new_msg,
                 badge:   'badge-severity-none',
-                sitemap: new.map { |digest| sitemap_up_to_now_inclusive[digest] }
+                sitemap: new.map { |digest| up_to_now_inclusive[digest] }
         } %>
 
         <%= render partial: 'shared/scan_results/coverage/list', locals: {
@@ -94,7 +110,7 @@ if sitemap_up_to_now_inclusive.any? && @revision && @revision.index > 1
                 title:   'Revisited',
                 message: revisited_msg,
                 badge:   'badge-severity-informational',
-                sitemap: revisited.map { |digest| sitemap_up_to_now_inclusive[digest] }
+                sitemap: revisited.map { |digest| up_to_now_inclusive[digest] }
         } %>
 
         <%= render partial: 'shared/scan_results/coverage/list', locals: {
@@ -102,14 +118,20 @@ if sitemap_up_to_now_inclusive.any? && @revision && @revision.index > 1
                 title:   'Missing',
                 message: missing_msg,
                 badge:   'badge-severity-medium',
-                sitemap: missing.map { |digest| sitemap_up_to_now_inclusive[digest] }
+                sitemap: missing.map { |digest| up_to_now_inclusive[digest] }
         } %>
     </div>
 <% else %>
-    <%= render partial: 'shared/scan_results/coverage/list', locals: {
-            id:      'coverage-flat',
-            title:   nil,
-            message: nil,
-            sitemap: @coverage[:sitemap]
-    } %>
+    <% if @coverage[:coverage].any? %>
+        <%= render partial: 'shared/scan_results/coverage/list', locals: {
+                id:      'coverage-flat',
+                title:   nil,
+                message: nil,
+                sitemap: @coverage[:coverage]
+        } %>
+    <% else %>
+        <p class="alert alert-info">
+            No coverage data are available.
+        </p>
+    <% end %>
 <% end %>

@@ -1,3 +1,7 @@
+<%
+   sitemap = sitemap.sort_by { |entry| entry.url }
+%>
+
 <div class="row">
     <div class="col-md-12" id="<%= id %>">
 
@@ -35,10 +39,6 @@
                     </li>
                 <% end %>
             </ul>
-        <% else %>
-            <p class="alert alert-info">
-                No coverage data are available.
-            </p>
         <% end %>
     </div>
 </div>

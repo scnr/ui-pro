@@ -35,7 +35,7 @@ module ScanResults
     private
 
     def set_counters
-        @coverage_count = scan_results_coverage.count
+        @coverage_count = scan_results_coverage.count(:url, :code)
         @reviews_count  = filter_pages(
             scan_results_reviews_owner.reviewed_issues
         ).count
@@ -50,7 +50,7 @@ module ScanResults
     end
 
     def scan_results_coverage
-        scan_results_coverage_owner.sitemap_entries
+        scan_results_coverage_owner.sitemap_entries.coverage
     end
 
     def scan_results_reviewed_issues

@@ -233,29 +233,29 @@ module ScanResultsHelper
         store
     end
 
-    def coverage_data( sitemap )
-        sitemap_current_digests             = Set.new
-        sitemap_up_to_now_exclusive_digests = Set.new
-        sitemap_up_to_now_inclusive         = {}
+    def coverage_data( coverage )
+        current_digests             = Set.new
+        up_to_now_exclusive_digests = Set.new
+        up_to_now_inclusive         = {}
 
         if @revision && @revision.index > 1
-            sitemap_current_digests.merge sitemap.reorder('').pluck(:digest)
+            current_digests.merge coverage.reorder('').pluck(:digest)
 
-            SitemapEntry.where(
+            SitemapEntry.coverage.where(
                 revision: @scan.revisions.reorder( id: :asc )[0..(@revision.index-1)]
             ).each do |entry|
-                sitemap_up_to_now_inclusive[entry.digest] = entry
+                up_to_now_inclusive[entry.digest] = entry
 
                 next if entry.revision_id == @revision.id
-                sitemap_up_to_now_exclusive_digests << entry.digest
+                up_to_now_exclusive_digests << entry.digest
             end
         end
 
         {
-            sitemap:                             sitemap,
-            sitemap_current_digests:             sitemap_current_digests,
-            sitemap_up_to_now_inclusive:         sitemap_up_to_now_inclusive,
-            sitemap_up_to_now_exclusive_digests: sitemap_up_to_now_exclusive_digests,
+            coverage:                    coverage,
+            current_digests:             current_digests,
+            up_to_now_inclusive:         up_to_now_inclusive,
+            up_to_now_exclusive_digests: up_to_now_exclusive_digests,
         }
     end
 

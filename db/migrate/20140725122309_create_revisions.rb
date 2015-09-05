@@ -5,6 +5,7 @@ class CreateRevisions < ActiveRecord::Migration
       t.belongs_to :site, index: true
       t.integer :index
       t.text :snapshot_path
+      t.string :seed
       t.string :status
       t.boolean :timed_out
       t.datetime :started_at

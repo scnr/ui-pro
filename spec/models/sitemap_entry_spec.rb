@@ -7,16 +7,55 @@ describe SitemapEntry do
     expect_it { to belong_to :revision }
     expect_it { to have_many :issues }
 
-    describe :scope do
-        describe :with_issues do
+    describe 'scope' do
+        describe 'coverage' do
+            before do
+                FactoryGirl.create(
+                    :sitemap_entry,
+                    url: '1',
+                    code: 200
+                )
+                FactoryGirl.create(
+                    :sitemap_entry,
+                    url: '2',
+                    code: 404
+                )
+                FactoryGirl.create(
+                    :sitemap_entry,
+                    url: '3',
+                    code: 301,
+                    coverage: true
+                )
+
+                @coverage = []
+                @coverage << FactoryGirl.create(
+                    :sitemap_entry,
+                    url: '4',
+                    code: 200,
+                    coverage: true
+                )
+                @coverage << FactoryGirl.create(
+                    :sitemap_entry,
+                    url: '5 ',
+                    code: 200,
+                    coverage: true
+                )
+            end
+
+            it 'returns entries with marked as coverage and code 200' do
+                expect(described_class.coverage.map(&:url).sort).to eq @coverage.map(&:url).sort
+            end
+        end
+
+        describe ':with_issues' do
             it 'returns entries with issues'
         end
 
-        describe :without_issues do
+        describe ':without_issues' do
             it 'returns entries without issues'
         end
 
-        describe :default do
+        describe ':default' do
             it 'sorts entries by URL'
         end
     end

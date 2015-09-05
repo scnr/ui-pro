@@ -44,7 +44,6 @@ describe ScanScheduler::Helpers::Scan do
     end
     let(:statistics) do
         {
-            seed:          '8f0510034adf8e1905ed47b7e141dbf3',
             http:          {
                 request_count:               120209,
                 response_count:              120209,
@@ -540,7 +539,14 @@ describe ScanScheduler::Helpers::Scan do
         end
 
         it 'includes errors'
-        it 'includes sitemap entries'
+
+        it 'includes sitemap entries' do
+            expect(instance.service).to receive(:native_progress) do |options|
+                expect(options[:with]).to include :sitemap
+            end
+
+            subject.update( revision ) {}
+        end
 
         it 'excludes issues from previous revisions' do
             Issue.create_from_arachni( native_issue, revision: revision )
@@ -565,7 +571,26 @@ describe ScanScheduler::Helpers::Scan do
         end
 
         context 'subsequent calls' do
-            it 'exclude seen sitemap entries'
+            it 'exclude seen sitemap entries' do
+                expect(instance.service).to receive(:native_progress) do |_, &block|
+                    block.call(
+                        busy:   true,
+                        issues: [],
+                        statistics: statistics,
+                        sitemap: {
+                            'http://test/'  => 200,
+                            'http://test/1' => 200
+                        }
+                    )
+                end
+                subject.update( revision ) {}
+
+                expect(instance.service).to receive(:native_progress) do |options|
+                    expect(options[:with][:sitemap]).to eq 2
+                end
+                subject.update( revision ) {}
+            end
+
             it 'exclude seen errors'
 
             it 'exclude seen issues' do
@@ -573,7 +598,8 @@ describe ScanScheduler::Helpers::Scan do
                     block.call(
                         busy:   true,
                         issues: [native_issue],
-                        statistics: statistics
+                        statistics: statistics,
+                        sitemap: {}
                     )
                 end
                 subject.update( revision ) {}
@@ -587,19 +613,59 @@ describe ScanScheduler::Helpers::Scan do
     end
 
     describe '#handle_progress' do
-        context 'when :busy' do
-            it 'passes progress data to #handle_progress_active' do
-                progress = { busy: true }
+        before do
+            instance
+        end
 
+        let(:progress) do
+            {
+                busy:       true,
+                seed:       '8f0510034adf8e1905ed47b7e141dbf3',
+                statistics: statistics,
+                issues:     [],
+                sitemap:    []
+            }
+        end
+
+        context 'when there is no Revision#seed' do
+            before do
+                revision.seed = nil
+                revision.save
+            end
+
+            it 'sets the #seed' do
+                subject.handle_progress( revision, progress )
+
+                expect(revision.seed).to eq progress[:seed]
+            end
+        end
+
+        context 'when there is Revision#seed' do
+            before do
+                revision.seed = 'stuff'
+                revision.save
+            end
+
+            it 'sets the #seed' do
+                subject.handle_progress( revision, progress )
+
+                expect(revision.seed).to eq 'stuff'
+            end
+        end
+
+        context 'when :busy' do
+            let(:progress) { super().merge( busy: true ) }
+
+            it 'passes progress data to #handle_progress_active' do
                 expect(subject).to receive(:handle_progress_active).with(revision, progress)
                 subject.handle_progress( revision, progress )
             end
         end
 
         context 'when not :busy' do
-            it 'passes progress data to #handle_progress_inactive' do
-                progress = { busy: false }
+            let(:progress) { super().merge( busy: false ) }
 
+            it 'passes progress data to #handle_progress_inactive' do
                 expect(subject).to receive(:handle_progress_inactive).with(revision, progress)
                 subject.handle_progress( revision, progress )
             end
@@ -625,7 +691,8 @@ describe ScanScheduler::Helpers::Scan do
                 busy:       true,
                 issues:     [],
                 status:     'stuff',
-                statistics: statistics
+                statistics: statistics,
+                sitemap:    []
             }
         end
 
@@ -635,7 +702,25 @@ describe ScanScheduler::Helpers::Scan do
         end
 
         it 'updates errors'
-        it 'updates sitemap'
+
+        context 'and has :sitemap entries' do
+            let(:progress) do
+                super().merge(
+                    sitemap: {
+                        'http://test.com/1' => 200,
+                        'http://test.com/2' => 404
+                    }
+                )
+            end
+
+            it 'creates them' do
+                expect(subject).to receive(:add_coverage_entries).with(
+                    revision, progress[:sitemap]
+                )
+
+                subject.handle_progress_active( revision, progress ) {}
+            end
+        end
 
         it 'updates scan state' do
             subject.handle_progress_active( revision, progress ) {}
@@ -648,8 +733,8 @@ describe ScanScheduler::Helpers::Scan do
             end
 
             it 'creates them' do
-                expect(Issue).to receive(:create_from_arachni).with(
-                     native_issue, revision: revision
+                expect(subject).to receive(:create_issue).with(
+                    revision, native_issue
                  )
 
                 subject.handle_progress_active( revision, progress ) {}
@@ -826,8 +911,8 @@ describe ScanScheduler::Helpers::Scan do
             subject.download_report_and_shutdown(revision)
         end
 
-        it 'passes the report to #import_sitemap_from_report' do
-            expect(subject).to receive(:import_sitemap_from_report).
+        it 'passes the report to #import_coverage_from_report' do
+            expect(subject).to receive(:import_coverage_from_report).
                                    with( revision, report )
 
             subject.download_report_and_shutdown(revision)
@@ -889,12 +974,7 @@ describe ScanScheduler::Helpers::Scan do
         end
     end
 
-    describe '#import_sitemap_from_report' do
-        before do
-            revision.sitemap_entries = []
-            revision.save
-        end
-
+    describe '#import_coverage_from_report' do
         let(:report) do
             report = Factory[:report]
             report.options[:url] = 'http://test.com'
@@ -904,36 +984,70 @@ describe ScanScheduler::Helpers::Scan do
             report
         end
 
-        context 'when a URL has already been logged' do
-            it 'skips it' do
-                revision.sitemap_entries.create( url: report.url, code: 404 )
+        it 'forwards its sitemap to #add_coverage_entries' do
+            expect(subject).to receive(:add_coverage_entries).with( revision, report.sitemap )
+            subject.import_coverage_from_report( revision, report )
+        end
+    end
 
-                subject.import_sitemap_from_report( revision, report )
+    describe '#add_coverage_entries' do
+        before do
+            revision.sitemap_entries = []
+            revision.save
+        end
+
+        let(:sitemap) do
+            {
+                'http://test.com/1' => 200,
+                'http://test.com/2' => 404
+            }
+        end
+
+        context 'when a URL has already been logged' do
+            it 'updates it' do
+                revision.sitemap_entries.create( url: 'http://test.com/2', code: 200 )
+
+                subject.add_coverage_entries( revision, sitemap )
 
                 revision.sitemap_entries.reload
 
-                expect(revision.sitemap_entries.size).to eq 1
+                expect(revision.sitemap_entries.size).to eq 2
 
-                entry = revision.sitemap_entries.first
+                entries = revision.sitemap_entries
 
-                expect(entry.url).to eq report.url
+                entry = entries[0]
+                expect(entry.url).to eq 'http://test.com/1'
+                expect(entry.code).to eq 200
+                expect(entry).to be_coverage
+
+                entry = entries[1]
+                expect(entry.url).to eq 'http://test.com/2'
                 expect(entry.code).to eq 404
+                expect(entry).to be_coverage
             end
         end
 
         context 'when a URL has not already been logged' do
-            it 'creates an entry' do
-                subject.import_sitemap_from_report( revision, report )
+            it 'creates it' do
+                subject.add_coverage_entries( revision, sitemap )
 
                 revision.sitemap_entries.reload
 
-                expect(revision.sitemap_entries.size).to eq 1
+                expect(revision.sitemap_entries.size).to eq 2
 
-                entry = revision.sitemap_entries.first
+                entries = revision.sitemap_entries
 
-                expect(entry.url).to eq report.url
+                entry = entries[0]
+                expect(entry.url).to eq 'http://test.com/1'
+                expect(entry.code).to eq 200
+                expect(entry).to be_coverage
+
+                entry = entries[1]
+                expect(entry.url).to eq 'http://test.com/2'
                 expect(entry.code).to eq 404
+                expect(entry).to be_coverage
             end
         end
     end
+
 end

@@ -6,19 +6,6 @@
     window.performance_snapshots = <%= @monitor.to_json.html_safe %>;
 </script>
 
-<% if @revision.active? %>
-    <h2>
-        Currently auditing:
-
-        <small>
-            <%= link_to @revision.performance_snapshot.current_page, target: '_blank' do %>
-                <%= url_without_scheme_host_port( @revision.performance_snapshot.current_page ) %>
-                <i class="fa fa-external-link"></i>
-            <% end %>
-        </small>
-    </h2>
-<% end %>
-
 <div class="row">
     <div class="chart-container" id="monitor-scanner_performance">
         <h3>
@@ -33,7 +20,7 @@
         <p class="text-muted monitor-description">
             <%= case state
                    when :excellent
-                       'Operating at the configured maximum.'
+                       'Operating close to the configured maximum.'
 
                     when :good
                         'To alleviate temporary server stress concurrency had to be lowered a little.'

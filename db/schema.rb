@@ -270,6 +270,8 @@ ActiveRecord::Schema.define(version: 20150814220113) do
     t.boolean  "audit_headers"
     t.boolean  "audit_jsons"
     t.boolean  "audit_xmls"
+    t.boolean  "audit_ui_forms"
+    t.boolean  "audit_ui_inputs"
     t.boolean  "audit_parameter_names"
     t.boolean  "audit_with_extra_parameter"
     t.boolean  "audit_with_both_http_methods"
@@ -301,6 +303,7 @@ ActiveRecord::Schema.define(version: 20150814220113) do
     t.integer  "site_id"
     t.integer  "index"
     t.text     "snapshot_path"
+    t.string   "seed"
     t.string   "status"
     t.boolean  "timed_out"
     t.datetime "started_at"
@@ -412,6 +415,7 @@ ActiveRecord::Schema.define(version: 20150814220113) do
   end
 
   create_table "sitemap_entries", force: :cascade do |t|
+    t.boolean  "coverage"
     t.text     "url"
     t.integer  "code"
     t.integer  "issues_count",                default: 0

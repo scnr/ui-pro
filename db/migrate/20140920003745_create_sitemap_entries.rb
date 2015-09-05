@@ -1,6 +1,7 @@
 class CreateSitemapEntries < ActiveRecord::Migration
     def change
         create_table :sitemap_entries do |t|
+            t.boolean :coverage
             t.text :url
             t.integer :code
             t.integer :issues_count, :integer, default: 0

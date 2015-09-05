@@ -7,6 +7,10 @@ class SitemapEntry < ActiveRecord::Base
     has_many :vectors
     has_many :pages, class_name: 'IssuePage', foreign_key: 'sitemap_entry_id'
 
+    scope :coverage, -> do
+        select(:revision_id, :coverage, :digest, :url, :code).distinct.
+            where( code: 200, coverage: true )
+    end
     scope :with_issues, -> { joins(:issues).where.not( issues: { sitemap_entry_id: nil } ) }
     scope :without_issues, -> { joins(:issues).where( issues: { sitemap_entry_id: nil } ) }
     default_scope { includes(:issues).order(:url).uniq }
