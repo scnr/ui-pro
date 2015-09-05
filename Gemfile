@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '2.2.1'
+ruby '2.2.3'
 
 gem 'rails', '4.2.3'
 gem 'sass-rails', '~> 5.0.3'
@@ -14,7 +14,6 @@ gem 'font-kit-rails'
 gem 'devise'
 gem 'devise_security_extension'
 gem 'simple_form'
-gem 'sidekiq'
 
 gem 'kramdown'
 gem 'loofah'
@@ -53,14 +52,13 @@ end
 
 group :test do
     gem 'shoulda'
-    gem 'capybara-webkit', '~> 1.4.0'
+    gem 'capybara-webkit'
     # gem 'poltergeist'
     gem 'capybara'
     gem 'database_cleaner'
     gem 'faker'
     gem 'launchy'
     gem 'selenium-webdriver'
-    gem 'rspec-sidekiq'
     gem 'factory_girl_rails'
     gem 'rspec-rails'
 end
@@ -70,4 +68,5 @@ group :development, :test do
     gem 'awesome_print'
 end
 
+gem 'arachni-reactor', path: '../../arachni-reactor/'
 gem 'arachni', path: File.dirname( __FILE__ ) + '/../../arachni'
