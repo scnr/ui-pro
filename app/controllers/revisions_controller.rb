@@ -30,7 +30,7 @@ class RevisionsController < ApplicationController
     def set_revision
         relation = @scan.revisions.includes(:performance_snapshot)
 
-        if params[:action] == :monitor
+        if params[:action] == :health
             relation = relation.includes(:performance_snapshots)
         end
 
@@ -60,7 +60,7 @@ class RevisionsController < ApplicationController
         )
     end
 
-    def prepare_monitor_data
+    def prepare_health_data
         (@revision.performance_snapshots.map(&:attributes) +
             [@revision.performance_snapshot.attributes]).map do |snapshot|
 

@@ -6,7 +6,7 @@ module ScanResults
         before_action :set_counters, only: SCAN_RESULT_ACTIONS
     end
 
-    SCAN_RESULT_ACTIONS = [ :issues, :coverage, :reviews, :monitor ]
+    SCAN_RESULT_ACTIONS = [ :issues, :coverage, :reviews, :health ]
 
     def issues
         @issues_summary = prepare_issue_data
@@ -26,8 +26,8 @@ module ScanResults
         process_and_show
     end
 
-    def monitor
-        @monitor = prepare_monitor_data
+    def health
+        @health = prepare_health_data
 
         process_and_show
     end
@@ -88,7 +88,7 @@ module ScanResults
         fail 'Not implemented'
     end
 
-    def prepare_monitor_data
+    def prepare_health_data
         fail 'Not implemented'
     end
 

@@ -1,4 +1,4 @@
-feature 'Revision monitor' do
+feature 'Revision health' do
     let(:user) { FactoryGirl.create :user }
     let(:site) { FactoryGirl.create :site }
     let(:profile) { FactoryGirl.create :profile }
@@ -15,7 +15,7 @@ feature 'Revision monitor' do
 
     def refresh
         visit site_scan_revision_path( site, scan, revision )
-        click_link 'Monitor'
+        click_link 'Health'
     end
 
     before do
@@ -32,13 +32,13 @@ feature 'Revision monitor' do
     end
 
     let(:scan_results) { find '#scan-results' }
-    let(:monitor) { find '#monitor' }
+    let(:health) { find '#health' }
 
-    let(:state) { section.find 'h4.monitor-state' }
-    let(:description) { section.find 'p.monitor-description' }
+    let(:state) { section.find 'h4.health-state' }
+    let(:description) { section.find 'p.health-description' }
 
     feature 'Scanner performance' do
-        let(:section) { monitor.find '#monitor-scanner_performance' }
+        let(:section) { health.find '#health-scanner_performance' }
 
         feature 'when Excellent' do
             before do
@@ -133,7 +133,7 @@ feature 'Revision monitor' do
                 refresh
             end
 
-            let(:gauge) { monitor.find '#current_http_max_concurrency' }
+            let(:gauge) { health.find '#current_http_max_concurrency' }
 
             it 'shows current concurrency' do
                 expect(gauge.find('.c3-gauge-value')).to have_content '10'
@@ -154,7 +154,7 @@ feature 'Revision monitor' do
     end
 
     feature 'Server performance' do
-        let(:section) { monitor.find '#monitor-server_performance' }
+        let(:section) { health.find '#health-server_performance' }
 
         feature 'when Excellent' do
             before do
@@ -248,7 +248,7 @@ feature 'Revision monitor' do
                 refresh
             end
 
-            let(:gauge) { monitor.find '#current_http_average_responses_per_second' }
+            let(:gauge) { health.find '#current_http_average_responses_per_second' }
 
             it 'shows requests per second' do
                 expect(gauge.find('.c3-gauge-value')).to have_content '43'
@@ -269,7 +269,7 @@ feature 'Revision monitor' do
     end
 
     feature 'Server responsiveness' do
-        let(:section) { monitor.find '#monitor-server_responsiveness' }
+        let(:section) { health.find '#health-server_responsiveness' }
 
         feature 'when Excellent' do
             before do
@@ -363,7 +363,7 @@ feature 'Revision monitor' do
                 refresh
             end
 
-            let(:gauge) { monitor.find '#current_http_average_response_time' }
+            let(:gauge) { health.find '#current_http_average_response_time' }
 
             it 'shows average response time' do
                 expect(gauge.find('.c3-gauge-value')).to have_content '0.8'
@@ -384,7 +384,7 @@ feature 'Revision monitor' do
     end
 
     feature 'Network reliability' do
-        let(:section) { monitor.find '#monitor-network_reliability' }
+        let(:section) { health.find '#health-network_reliability' }
 
         feature 'when Excellent' do
             before do
@@ -478,7 +478,7 @@ feature 'Revision monitor' do
                 refresh
             end
 
-            let(:gauge) { monitor.find '#current_http_time_out_count' }
+            let(:gauge) { health.find '#current_http_time_out_count' }
 
             it 'shows percentage based on total requests' do
                 expect(gauge.find('.c3-gauge-value')).to have_content '3.23%'
@@ -499,10 +499,10 @@ feature 'Revision monitor' do
     end
 
     feature 'Request counter', js: true do
-        let(:section) { monitor.find '#monitor-request_counter' }
+        let(:section) { health.find '#health-request_counter' }
 
         feature 'gauge', js: true  do
-            let(:gauge) { monitor.find '#current_http_request_count' }
+            let(:gauge) { health.find '#current_http_request_count' }
 
             it 'shows count' do
                 expect(gauge.find('.c3-gauge-value')).to have_content '10,000'

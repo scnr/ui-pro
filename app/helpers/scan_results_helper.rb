@@ -349,8 +349,8 @@ module ScanResultsHelper
             route[:action] = options[:action] || 'issues'
         end
 
-        # Only revisions can be monitored.
-        if route[:controller] != 'revisions' && route[:action].to_s == 'monitor'
+        # Only revisions can have health.
+        if route[:controller] != 'revisions' && route[:action].to_s == 'health'
             route[:action] = 'issues'
         end
 

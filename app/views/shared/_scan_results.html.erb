@@ -38,9 +38,9 @@
             <% end %>
 
             <% if @revision %>
-                <li id="monitor-tab" class="<%= 'active' if sections['monitor'] %>">
-                    <%= link_to params.merge( action: 'monitor' ).merge filter_params do %>
-                        Monitor
+                <li id="health-tab" class="<%= 'active' if sections['health'] %>">
+                    <%= link_to params.merge( action: 'health' ).merge filter_params do %>
+                        Health
                     <% end %>
                 </li>
             <% end %>
@@ -69,9 +69,9 @@
                 <% end %>
             <% end %>
 
-            <% if sections['monitor'] %>
-                <div class="tab-pane <%= 'active' if sections['monitor'] %>" id="monitor">
-                    <%= render partial: 'shared/scan_results/monitor' %>
+            <% if sections['health'] %>
+                <div class="tab-pane <%= 'active' if sections['health'] %>" id="health">
+                    <%= render partial: 'shared/scan_results/health' %>
                 </div>
             <% end %>
 
