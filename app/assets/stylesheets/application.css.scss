@@ -253,3 +253,21 @@ form {
     }
 
 }
+
+div.vertical-line {
+    border-left: 2px solid #ccc;
+    height: 40px;
+    margin-left: 50%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    line-height: 35px;
+
+    span {
+        padding-left: 10px;
+    }
+}
+
+div.vertical-line:first-child {
+    visibility: hidden;
+    height: 10px;
+}

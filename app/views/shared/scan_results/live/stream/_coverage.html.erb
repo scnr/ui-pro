@@ -1,0 +1,33 @@
+<%
+   coverage_entry_count = @live[:coverage].size
+%>
+
+<% if coverage_entry_count > 1 %>
+    <div class="live-stream-entry">
+        <div class="row">
+            <div class="col-md-12">
+                <h3>
+                    <%= coverage_entry_count %> more
+                    scanned <%= 'page'.pluralize coverage_entry_count %>
+                </h3>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="list-unstyled">
+                    <% @live[:coverage].each do |entry| %>
+                        <li>
+                            <code>[<%= entry.code %>]</code>
+
+                            <%= link_to entry.url, target: '_blank' do %>
+                                <%= url_without_scheme_host_port( entry.url ) %>
+                                <i class="fa fa-external-link"></i>
+                            <% end %>
+                        </li>
+                    <% end %>
+                </ul>
+            </div>
+        </div>
+    </div>
+<% end %>

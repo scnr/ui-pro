@@ -1,0 +1,114 @@
+<%
+    coverage_entry_count = @revision.sitemap_entries.coverage.size
+    issue_count          = @revision.issues.size
+    max_severity         = @revision.issues.max_severity
+    severities           = @revision.issues.count_severities
+    performance_snapshot = @revision.performance_snapshot
+
+    reviewed_issues_count = @revision.reviewed_issues.size
+%>
+
+<div id="summary-statistics">
+    <div class="row">
+        <div class="col-md-2">
+            <h3>
+                <% state = performance_snapshot.http_max_concurrency_state %>
+                <strong class="text text-state-<%= state %> health-state">
+                    <%= state.capitalize %>
+                </strong>
+
+                health
+            </h3>
+        </div>
+
+        <div class="col-md-2">
+            <h3>
+                <strong><%= coverage_entry_count %></strong>
+                <%= 'page'.pluralize coverage_entry_count %>
+            </h3>
+        </div>
+
+        <div class="col-md-5">
+            <h3>
+                <strong><%= issue_count %></strong>
+                <%= 'issue'.pluralize issue_count %>
+
+                <% if issue_count > 0 %>
+                  ,
+                    <small>
+                        with a maximum severity of
+
+                        <span class="label-severity label-severity-<%= max_severity %>">
+                            <%= max_severity.capitalize %>
+                        </span>
+                    </small>
+                <% end %>
+            </h3>
+        </div>
+
+        <div class="col-md-3">
+            <h3>
+                <strong>
+                    <%= reviewed_issues_count %>
+                </strong>
+
+                reviewed <%= 'issue'.pluralize reviewed_issues_count %>
+            </h3>
+        </div>
+    </div>
+</div>
+
+<div id="live-stream-container">
+    <% if issue_count > 0 %>
+        <div class="row">
+            <div class="col-md-8">
+                <h4 id="live-stream-issue-severity-breakdown">
+                    <%= render partial: '/shared/scan_results/issues/severity_breakdown',
+                               locals: {
+                                       severities: severities
+                               } %>
+                </h4>
+            </div>
+        </div>
+    <% end %>
+
+    <div class="row">
+        <div class="col-md-8" id="live-stream-actions">
+            <div class="btn-group" role="group">
+                <button id="acknowledge-all" type="button" class="btn btn-default">
+                    Acknowledge all
+                </button>
+
+                <button id="merge-updates" type="button" class="btn btn-default">
+                    Merge updates
+                </button>
+
+                <button id="clear-updates" type="button" class="btn btn-default">
+                    Clear stream
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <h4 id="live-stream-clock"></h4>
+
+            <div class="loading-bullets">
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div id="live-stream" class="col-md-8">
+        </div>
+    </div>
+
+</div>
+
+<script>
+    window.start_live_stream_clock( '<%= @revision.duration %>' );
+</script>

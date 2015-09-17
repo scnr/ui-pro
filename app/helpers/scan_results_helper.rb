@@ -350,7 +350,8 @@ module ScanResultsHelper
         end
 
         # Only revisions can have health.
-        if route[:controller] != 'revisions' && route[:action].to_s == 'health'
+        if route[:controller] != 'revisions' &&
+            (route[:action].to_s == 'health' || route[:action].to_s == 'live')
             route[:action] = 'issues'
         end
 

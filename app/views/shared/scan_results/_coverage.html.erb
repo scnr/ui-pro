@@ -13,16 +13,9 @@
 </p>
 
 <% if @revision && @revision.active? %>
-    <h3 id="coverage-current-url">
-        Currently auditing:
-
-        <small>
-            <%= link_to @revision.performance_snapshot.current_page, target: '_blank' do %>
-                <%= url_without_scheme_host_port( @revision.performance_snapshot.current_page ) %>
-                <i class="fa fa-external-link"></i>
-            <% end %>
-        </small>
-    </h3>
+    <%= render partial: '/shared/scan_results/coverage/current_page', locals: {
+        url: @revision.performance_snapshot.current_page
+    } %>
 <% end %>
 
 <% if up_to_now_inclusive.any? && @revision && @revision.index > 1

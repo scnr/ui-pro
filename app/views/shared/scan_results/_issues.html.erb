@@ -30,6 +30,15 @@
                                                    } %>
                                     </div>
                                 </div>
+
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <%= render partial: 'shared/scan_results/issues/chart',
+                                             locals: {
+                                                     data: data[:chart_data]
+                                             } %>
+                                </div>
+                              </div>
                             <% end %>
 
                             <div class="row">

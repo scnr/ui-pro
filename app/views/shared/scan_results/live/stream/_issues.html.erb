@@ -1,0 +1,47 @@
+<%
+   issue_count           = @live[:issues].size
+   issue_severity_counts = @live[:issues].count_severities
+%>
+
+<% if issue_count > 1 %>
+    <div class="live-stream-entry">
+        <div class="row">
+            <div class="col-md-12">
+                <%= render partial: '/shared/scan_results/live/severity_breakdown',
+                           locals: {
+                              severities: issue_severity_counts
+                      } %>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="list-unstyled">
+                    <%
+                       last_severity = severity = nil
+                       @live[:issues].each do |issue|
+                           severity = issue.severity.to_s
+                    %>
+
+                        <% if severity != last_severity &&
+                                issue_severity_counts[severity] != issue_count %>
+                            <li>
+                                <h4 class="text-severity text-severity-<%= severity %>">
+                                    <%= issue_severity_counts[severity] %> <%= severity%> severity
+                                </h4>
+                            </li>
+                        <% end %>
+
+                        <li>
+                            <%= render partial: '/shared/scan_results/live/stream/issue',
+                                       locals: { issue: issue } %>
+                        </li>
+                    <%
+                       last_severity = severity
+                       end
+                    %>
+                </ul>
+            </div>
+        </div>
+    </div>
+<% end %>

@@ -1,0 +1,23 @@
+<%
+    rendered = render( partial: '/shared/scan_results/live/stream.html' ).strip.html_safe
+%>
+
+<% if !rendered.empty?
+
+node = <<EOHTML
+<div class="vertical-line"></div>
+<div class="live-stream-batch pulsating">
+    <h4>
+        <small>
+            #{seconds_to_hms @revision.duration}
+        </small>
+    </h4>
+
+    #{rendered}
+</div>
+EOHTML
+
+%>
+    $( "<%= escape_javascript( node ).html_safe %>" ).
+            prependTo( "#live-stream" ).hide().slideDown();
+<% end %>

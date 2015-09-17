@@ -29,6 +29,7 @@ Rails.application.routes.draw do
             post  :repeat,     on: :member
 
             resources :revisions, only: [:show, :destroy] do
+                get :live,     on: :member
                 get :issues,   on: :member
                 get :coverage, on: :member
                 get :reviews,  on: :member

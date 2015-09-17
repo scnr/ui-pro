@@ -1,0 +1,61 @@
+<%
+   count = 0
+   by_state = {}
+   issues   = @live[:reviews]
+
+   group_issues = proc do |group, issue|
+       state = issue.auto_review_status
+
+       count += 1
+
+       group[state] ||= []
+       group[state] << issue
+   end
+
+   if issues.is_a? Array
+       issues.each do |issue|
+           group_issues.call by_state, issue
+       end
+   else
+       scoped_find_each( issues ) do |issue|
+           group_issues.call by_state, issue
+       end
+   end
+
+   {
+           'regression'     => 'regressions',
+           'fixed'          => 'fixed',
+           'false_positive' => 'false_positives'
+   }.each do |k, v|
+       next if !by_state.include?( k )
+       by_state[v] = by_state.delete(k)
+   end
+%>
+
+<% if count > 1 %>
+    <div class="live-stream-entry">
+        <% by_state.each do |state, issue_group| %>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>
+                        <%= issue_group.size %> <%= state %>
+                    </h3>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-offset-3 col-md-9">
+                    <ul class="list-unstyled">
+                        <% issue_group.each do |issue| %>
+                            <li>
+                                <%= render partial: '/shared/scan_results/live/stream/issue',
+                                               locals: { issue: issue } %>
+                            </li>
+                        <% end %>
+                    </ul>
+                </div>
+            </div>
+        <% end %>
+    </div>
+<% end %>

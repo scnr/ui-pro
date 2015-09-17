@@ -9,6 +9,15 @@
 <div id="scan-results" class="row">
     <div class="col-md-12">
         <ul class="nav nav-tabs">
+
+            <% if @revision %>
+                <li id="live-tab" class="<%= 'active' if sections['live'] %>">
+                    <%= link_to params.merge( action: 'live' ).merge filter_params do %>
+                        Live
+                    <% end %>
+                </li>
+            <% end %>
+
             <li id="issues-tab" class="<%= 'active' if sections['issues'] %>">
                 <%= link_to params.merge( action: 'issues' ).merge filter_params do %>
                     Issues
@@ -47,10 +56,18 @@
         </ul>
 
         <div class="tab-content">
+            <% if sections['live'] %>
+                <div class="tab-pane <%= 'active' if sections['live'] %>" id="live">
+                    <%= render partial: 'shared/scan_results/live', locals: {
+                        data: @live
+                    } %>
+                </div>
+            <% end %>
+
             <% if sections['issues'] %>
                 <div class="tab-pane <%= 'active' if sections['issues'] %>" id="issues">
                     <%= render partial: 'shared/scan_results/issues', locals: {
-                            data: @issues_summary
+                        data: @issues_summary
                     } %>
                 </div>
             <% end %>
@@ -61,12 +78,10 @@
                 </div>
             <% end %>
 
-            <% if @reviews_count > 0 %>
-                <% if sections['reviews'] %>
-                    <div class="tab-pane <%= 'active' if sections['reviews'] %>" id="reviews">
-                        <%= render partial: 'shared/scan_results/reviews' %>
-                    </div>
-                <% end %>
+            <% if @reviews_count > 0 && sections['reviews'] %>
+                <div class="tab-pane <%= 'active' if sections['reviews'] %>" id="reviews">
+                    <%= render partial: 'shared/scan_results/reviews' %>
+                </div>
             <% end %>
 
             <% if sections['health'] %>

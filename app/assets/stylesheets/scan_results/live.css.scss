@@ -1,0 +1,79 @@
+@keyframes pulse {
+    0%, 100% {
+        background-color: #F0F8FF;
+    }
+    50% {
+        background-color: #e9f1f8;
+    }
+}
+
+#live-stream-container {
+    padding-left: 20%;
+
+    h3, h4 {
+        text-align: center;
+    }
+}
+
+.live-stream-batch {
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+.live-stream-entry {
+}
+
+.pulsating {
+    animation: pulse 2s linear infinite alternate;
+}
+
+.unpulse {
+    animation: pulse 2s linear;
+}
+
+#live-stream-clock {
+    color: #65a3ff;
+    margin: 20px;
+    font-weight: bold;
+}
+
+.loading-bullets {
+    margin: 10px 49.2%;
+    margin-bottom: 0;
+    width: 70px;
+}
+
+.loading-bullets > div {
+    width: 18px;
+    height: 18px;
+    background-color: #65a3ff;
+    border-radius: 100%;
+    animation: sk-bouncedelay 1s infinite ease-in-out both;
+}
+
+.loading-bullets .bounce1 {
+    animation-delay: -0.32s;
+}
+
+.loading-bullets .bounce2 {
+    animation-delay: -0.16s;
+}
+
+@keyframes sk-bouncedelay {
+    0%, 80%, 100% {
+        transform: scale(0);
+    }
+    40% {
+        transform: scale(1.0);
+    }
+}
+
+#live-stream-issue-severity-breakdown {
+    padding-top: 20px;
+}
+
+#live-stream-actions {
+    text-align: center;
+    padding-top: 20px;
+}

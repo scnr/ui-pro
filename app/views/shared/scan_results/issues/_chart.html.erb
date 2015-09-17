@@ -1,0 +1,11 @@
+<div id="summary-charts-issues-container">
+    <div id='chart-issues'>
+    </div>
+</div>
+
+<script>
+    <%= render partial: 'shared/scan_results/issues/chart_load_data.js',
+        locals: {
+            data: data
+        } %>
+</script>
