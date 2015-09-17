@@ -218,11 +218,26 @@ describe Issue do
             subject.page.dom = IssuePageDom.create_from_arachni( Factory[:dom] )
             subject.page.dom.execution_flow_sinks = []
             subject.proof = ''
+            subject.remarks = []
+
+            subject.save
         end
 
-        context 'when is has #proof' do
+        context 'when it has #proof' do
             before do
                 subject.proof = 'stuff'
+            end
+
+            it 'returns true' do
+                expect(subject).to have_proofs
+            end
+        end
+
+        context 'when it has #remarks' do
+            before do
+                subject.remarks = [
+                    IssueRemark.create( author: 'stuff', text: 'blah' )
+                ]
             end
 
             it 'returns true' do

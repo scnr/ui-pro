@@ -58,8 +58,9 @@ class Issue < ActiveRecord::Base
     end
 
     def has_proofs?
-        !proof.blank? || (page && page.dom && page.dom.execution_flow_sinks &&
-            page.dom.execution_flow_sinks.any?)
+        remarks.any? || !proof.blank? ||
+            (page && page.dom && page.dom.execution_flow_sinks &&
+                page.dom.execution_flow_sinks.any?)
     end
 
     def reviewed_by_revision?
