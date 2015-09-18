@@ -11,7 +11,7 @@
                     external: @sitemap_entry.url,
                     internal: sitemap_entry_url( @sitemap_entry ),
                     display_path_only: true,
-                    class: "text-severity text-severity-#{max_severity}"
+                    class: "text-severity text-severity-#{severities.keys.first}"
             )
         %>
         has
