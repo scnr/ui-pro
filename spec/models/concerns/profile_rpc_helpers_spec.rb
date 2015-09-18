@@ -18,7 +18,7 @@ describe ProfileRpcHelpers do
 
         it 'includes default plugins' do
             DEFAULT_PLUGINS.each do |name|
-                expect(rpc_options['plugins'][name]).to eq Hash.new
+                expect(rpc_options['plugins'][name.to_s]).to eq Hash.new
             end
         end
     end

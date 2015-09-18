@@ -117,7 +117,7 @@ module ProfileRpcHelpers
         opts['plugins'] ||= {}
 
         FrameworkHelper.default_plugins.each do |name|
-            opts['plugins'][name] = {}
+            opts['plugins'][name.to_s] = {}
         end
 
         opts
