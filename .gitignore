@@ -80,3 +80,4 @@ pickle-email-*.html
 
 /config/component_cache/*.yml
 /reports/*
+/public/site_favicons/*
