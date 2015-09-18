@@ -52,6 +52,14 @@
                         Health
                     <% end %>
                 </li>
+
+                <% if !@revision.error_messages.blank? %>
+                    <li id="errors-tab" class="<%= 'active' if sections['errors'] %>">
+                        <%= link_to params.merge( action: 'errors' ).merge filter_params do %>
+                            Errors
+                        <% end %>
+                    </li>
+                <% end %>
             <% end %>
         </ul>
 
@@ -87,6 +95,12 @@
             <% if sections['health'] %>
                 <div class="tab-pane <%= 'active' if sections['health'] %>" id="health">
                     <%= render partial: 'shared/scan_results/health' %>
+                </div>
+            <% end %>
+
+            <% if sections['errors'] %>
+                <div class="tab-pane <%= 'active' if sections['errors'] %>" id="errors">
+                    <%= render partial: 'shared/scan_results/errors' %>
                 </div>
             <% end %>
 

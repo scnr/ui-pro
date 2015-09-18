@@ -303,6 +303,7 @@ ActiveRecord::Schema.define(version: 20150814220113) do
     t.integer  "site_id"
     t.integer  "index"
     t.text     "snapshot_path"
+    t.text     "error_messages"
     t.string   "seed"
     t.string   "status"
     t.boolean  "timed_out"

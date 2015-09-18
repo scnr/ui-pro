@@ -13,6 +13,9 @@ module ErrorHandling
     def handle_rpc_error( revision, error )
         log_exception_for( revision, error )
 
+        revision.error_messages = "#{revision.error_messages}[#{error.class}] #{error.to_s}\n"
+        revision.error_messages << "#{(error.backtrace || []).join("\n")}\n"
+
         revision.failed!
 
         finish revision

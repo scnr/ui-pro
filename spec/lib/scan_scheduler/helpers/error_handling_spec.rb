@@ -1,7 +1,11 @@
 describe ScanScheduler::Helpers::ErrorHandling do
     subject { ScanScheduler.instance }
 
-    let(:exception) { Arachni::RPC::Exceptions::Base.new }
+    let(:exception) do
+        e = Arachni::RPC::Exceptions::Base.new( 'My message' )
+        e.set_backtrace [ 'line 1', 'line 2' ]
+        e
+    end
     let(:revision) { FactoryGirl.create :revision, scan: scan }
     let(:scan) { FactoryGirl.create :scan, site: site }
     let(:site) { FactoryGirl.create :site }
@@ -57,6 +61,14 @@ describe ScanScheduler::Helpers::ErrorHandling do
         it 'sets the scan status to failed' do
             subject.handle_rpc_error( *args )
             expect(revision).to be_failed
+        end
+
+        it 'updates Revision#error_messages' do
+            revision.error_messages = "Stuff\n"
+
+            subject.handle_rpc_error( *args )
+
+            expect(revision.error_messages).to eq "Stuff\n[Arachni::RPC::Exceptions::Base] My message\nline 1\nline 2\n"
         end
     end
 end

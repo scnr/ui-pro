@@ -204,7 +204,8 @@ module Scan
         instance.service.native_progress(
             with:    {
                 issues:  true,
-                sitemap: progress_tracking_for( revision )[:coverage_entries].size
+                sitemap: progress_tracking_for( revision )[:coverage_entries].size,
+                errors:  progress_tracking_for( revision )[:error_lines]
             },
 
             # We don't care about issues logged by previous revisions at this
@@ -283,13 +284,27 @@ module Scan
 
         capture_performance_snapshot( revision, statistics )
 
-        revision.update( status: progress[:status] )
+        progress_tracking_for( revision )[:error_lines] += progress[:errors].size
+
+        # Add a newline at the end if we have any errors.
+        if progress[:errors].any?
+            progress[:errors] << ''
+        end
+
+        revision.update(
+            status:         progress[:status],
+            error_messages: "#{revision.error_messages}#{progress[:errors].join( "\n" )}"
+        )
     end
 
     def handle_progress_inactive( revision, progress )
         instance = instance_for( revision )
 
         stop_monitor( revision )
+
+        if progress[:errors].any?
+            revision.error_messages = "#{revision.error_messages}#{progress[:errors].join( "\n" )}\n"
+        end
 
         # Special case...
         if progress[:status] == :suspended
@@ -420,7 +435,8 @@ module Scan
         @progress_tracker[revision.id] ||= {
             issue_digests:    nil,
             coverage_entries: [],
-            sitemap:          Arachni::Support::LookUp::HashSet.new
+            sitemap:          Arachni::Support::LookUp::HashSet.new,
+            error_lines:      0
         }
     end
 

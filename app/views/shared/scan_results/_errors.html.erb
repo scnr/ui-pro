@@ -1,0 +1,19 @@
+<%
+   errors = @revision.error_messages.split( /^-+/ ).last
+%>
+
+<% if @revision.failed? %>
+    <p class="alert alert-danger">
+        The errors may have caused the scan to fail.
+    </p>
+<% else %>
+    <p class="alert alert-info">
+        <% if @revision.active? %>
+            The errors were recoverable and should not affect the rest of the scan.
+        <% else %>
+            The errors were recoverable, the scan was successful.
+        <% end %>
+    </p>
+<% end %>
+
+<pre><%= errors %></pre>

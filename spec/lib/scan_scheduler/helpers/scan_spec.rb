@@ -538,7 +538,13 @@ describe ScanScheduler::Helpers::Scan do
             subject.update( revision ) {}
         end
 
-        it 'includes errors'
+        it 'includes errors' do
+            expect(instance.service).to receive(:native_progress) do |options|
+                expect(options[:with]).to include :errors
+            end
+
+            subject.update( revision ) {}
+        end
 
         it 'includes sitemap entries' do
             expect(instance.service).to receive(:native_progress) do |options|
@@ -577,6 +583,7 @@ describe ScanScheduler::Helpers::Scan do
                         busy:   true,
                         issues: [],
                         statistics: statistics,
+                        errors: [],
                         sitemap: {
                             'http://test/'  => 200,
                             'http://test/1' => 200
@@ -591,7 +598,26 @@ describe ScanScheduler::Helpers::Scan do
                 subject.update( revision ) {}
             end
 
-            it 'exclude seen errors'
+            it 'exclude seen errors' do
+                expect(instance.service).to receive(:native_progress) do |_, &block|
+                    block.call(
+                        busy:   true,
+                        issues: [],
+                        statistics: statistics,
+                        sitemap: {},
+                        errors: [
+                            'line 1',
+                            'line 2'
+                        ]
+                    )
+                end
+                subject.update( revision ) {}
+
+                expect(instance.service).to receive(:native_progress) do |options|
+                    expect(options[:with][:errors]).to eq 2
+                end
+                subject.update( revision ) {}
+            end
 
             it 'exclude seen issues' do
                 expect(instance.service).to receive(:native_progress) do |_, &block|
@@ -599,6 +625,7 @@ describe ScanScheduler::Helpers::Scan do
                         busy:   true,
                         issues: [native_issue],
                         statistics: statistics,
+                        errors: [],
                         sitemap: {}
                     )
                 end
@@ -622,6 +649,7 @@ describe ScanScheduler::Helpers::Scan do
                 busy:       true,
                 seed:       '8f0510034adf8e1905ed47b7e141dbf3',
                 statistics: statistics,
+                errors:     [],
                 issues:     [],
                 sitemap:    []
             }
@@ -692,6 +720,7 @@ describe ScanScheduler::Helpers::Scan do
                 issues:     [],
                 status:     'stuff',
                 statistics: statistics,
+                errors:     [],
                 sitemap:    []
             }
         end
@@ -701,9 +730,26 @@ describe ScanScheduler::Helpers::Scan do
             subject.handle_progress_active( revision, progress ) {}
         end
 
-        it 'updates errors'
+        context 'with :errors' do
+            let(:progress) do
+                super().merge(
+                    errors: [
+                        'line 1',
+                        'line 2'
+                    ]
+                )
+            end
 
-        context 'and has :sitemap entries' do
+            it 'updates them' do
+                revision.error_messages = "Stuff\n"
+
+                subject.handle_progress_active( revision, progress ) {}
+
+                expect(revision.error_messages).to eq "Stuff\nline 1\nline 2\n"
+            end
+        end
+
+        context 'with :sitemap entries' do
             let(:progress) do
                 super().merge(
                     sitemap: {
@@ -727,7 +773,7 @@ describe ScanScheduler::Helpers::Scan do
             expect(revision.status).to eq 'stuff'
         end
 
-        context 'and has :issues' do
+        context 'with :issues' do
             let(:progress) do
                 super().merge( issues: [native_issue] )
             end
@@ -786,13 +832,40 @@ describe ScanScheduler::Helpers::Scan do
     describe '#handle_progress_inactive' do
         before do
             instance
-            expect(subject).to receive(:stop_monitor).with( revision )
+
+            allow(subject).to receive(:stop_monitor)
+            allow(subject).to receive(:download_report_and_shutdown)
         end
 
         let(:progress) do
             {
-                busy: false
+                busy:   false,
+                errors: []
             }
+        end
+
+        it 'stops monitoring' do
+            expect(subject).to receive(:stop_monitor).with( revision )
+            subject.handle_progress_inactive( revision, progress ) {}
+        end
+
+        context 'with :errors' do
+            let(:progress) do
+                super().merge(
+                    errors: [
+                        'line 1',
+                        'line 2'
+                    ]
+                )
+            end
+
+            it 'updates them' do
+                revision.error_messages = "Stuff\n"
+
+                subject.handle_progress_inactive( revision, progress ) {}
+
+                expect(revision.error_messages).to eq "Stuff\nline 1\nline 2\n"
+            end
         end
 
         context 'when the scan has not been suspended' do

@@ -34,6 +34,7 @@ Rails.application.routes.draw do
                 get :coverage, on: :member
                 get :reviews,  on: :member
                 get :health,   on: :member
+                get :errors,   on: :member
 
                 resources :issues, only: [:show, :update]
             end

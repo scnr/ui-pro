@@ -6,7 +6,9 @@ module ScanResults
         before_action :set_counters, only: SCAN_RESULT_ACTIONS
     end
 
-    SCAN_RESULT_ACTIONS = [ :live, :issues, :coverage, :reviews, :health ]
+    SCAN_RESULT_REVISION_ACTIONS = [ :live, :health, :errors ]
+    SCAN_RESULT_ACTIONS          = [ :issues, :coverage, :reviews ] +
+        SCAN_RESULT_REVISION_ACTIONS
 
     def live
         from = nil
@@ -77,6 +79,15 @@ module ScanResults
 
     def health
         @health = prepare_health_data
+
+        process_and_show
+    end
+
+    def errors
+        if @revision.error_messages.blank?
+            redirect_to action: :show
+            return
+        end
 
         process_and_show
     end

@@ -349,9 +349,9 @@ module ScanResultsHelper
             route[:action] = options[:action] || 'issues'
         end
 
-        # Only revisions can have health.
         if route[:controller] != 'revisions' &&
-            (route[:action].to_s == 'health' || route[:action].to_s == 'live')
+            ScanResults::SCAN_RESULT_REVISION_ACTIONS.include?( route[:action].to_sym )
+
             route[:action] = 'issues'
         end
 
