@@ -824,9 +824,26 @@ feature 'Issue page' do
             end
         end
 
+        feature 'when the issue has only remarks as proof' do
+            before do
+                issue.proof = nil
+                issue.save
+
+                issue.page.dom.execution_flow_sinks = []
+                issue.page.dom.save
+
+                refresh
+            end
+
+            scenario 'shows them' do
+                expect(identification).to have_css '#identification-remarks'
+            end
+        end
+
         feature 'when the issue has no associated proof of any kind' do
             before do
                 issue.proof = nil
+                issue.remarks = []
                 issue.save
 
                 issue.page.dom.execution_flow_sinks = []
