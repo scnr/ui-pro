@@ -30,3 +30,21 @@
 #site-info {
     padding-bottom: 10px
 }
+
+table .site-favicon {
+    float:        left;
+    margin-right: 5px;
+    line-height:  18px;
+}
+
+i.site-favicon {
+    padding: 0;
+    margin:  0
+}
+
+.site-favicon {
+    width:       16px;
+    height:      16px;
+    font-size:   16px;
+    line-height: 16px;
+}

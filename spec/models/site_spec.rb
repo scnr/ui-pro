@@ -110,26 +110,6 @@ describe Site, type: :model do
         end
 
         describe '#host' do
-            context 'is not a valid hostname' do
-                it 'is not accepted' do
-                    ['stuff ff.com', 'blah.c', 'g!@.com'].each do |host|
-                        subject.host = host
-                        subject.save
-                        expect(subject.errors).to include :host
-
-                        @site = nil
-                    end
-                end
-            end
-
-            context 'missing a TLD' do
-                it 'is not accepted' do
-                    subject.host = 'test'
-                    subject.save
-                    expect(subject.errors).to include :host
-                end
-            end
-
             context 'nil' do
                 it 'is not accepted' do
                     subject.host = nil
@@ -206,6 +186,22 @@ describe Site, type: :model do
                         expect(subject.errors).to be_empty
                     end
                 end
+
+                context '0' do
+                    it 'is not accepted' do
+                        subject.port = 0
+                        subject.save
+                        expect(subject.errors).to include :port
+                    end
+                end
+
+                context '< 0' do
+                    it 'is not accepted' do
+                        subject.port = -1
+                        subject.save
+                        expect(subject.errors).to include :port
+                    end
+                end
             end
 
             context 'non numeric' do
@@ -224,8 +220,6 @@ describe Site, type: :model do
                 end
             end
         end
-
-        it 'as URL with Arachni::URI'
     end
 
     describe '#url' do
@@ -501,6 +495,80 @@ describe Site, type: :model do
             it 'returns nil' do
                 expect(subject.last_scanned_at).to be_nil
             end
+        end
+    end
+
+    describe '#favicon_path' do
+        context 'when it has a favicon' do
+            before do
+                expect(subject).to receive(:has_favicon?).and_return( true )
+            end
+
+            it 'returns #provisioned_favicon_path' do
+                expect(subject.favicon_path).to eq subject.provisioned_favicon_path
+            end
+        end
+
+        context 'when it does not have a favicon' do
+            before do
+                expect(subject).to receive(:has_favicon?).and_return( false )
+            end
+
+            it 'returns nil' do
+                expect(subject.favicon_path).to be_nil
+            end
+        end
+    end
+
+    describe '#favicon' do
+        context 'when it has a favicon' do
+            before do
+                expect(subject).to receive(:has_favicon?).and_return( true )
+            end
+
+            it 'returns #provisioned_favicon' do
+                expect(subject.favicon).to eq subject.provisioned_favicon
+            end
+        end
+
+        context 'when it does not have a favicon' do
+            before do
+                expect(subject).to receive(:has_favicon?).and_return( false )
+            end
+
+            it 'returns nil' do
+                expect(subject.favicon).to be_nil
+            end
+        end
+    end
+
+    describe '#has_favicon?' do
+        context 'when the favicon file exists' do
+            before do
+                IO.write subject.provisioned_favicon_path, ''
+            end
+
+            expect_it { to have_favicon }
+        end
+
+        context 'when the favicon file does not exist' do
+            before do
+                FileUtils.rm_f subject.provisioned_favicon_path
+            end
+
+            expect_it { to_not have_favicon }
+        end
+    end
+
+    describe '#provisioned_favicon_path' do
+        it 'returns the file-system path to the icon' do
+            expect(subject.provisioned_favicon_path).to eq "#{described_class::FAVICONS_DIR}/#{subject.provisioned_favicon}"
+        end
+    end
+
+    describe '#provisioned_favicon' do
+        it 'returns the icon name' do
+            expect(subject.provisioned_favicon).to eq "#{subject.host}_#{subject.port}.ico"
         end
     end
 

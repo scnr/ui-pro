@@ -1,5 +1,6 @@
 class Site < ActiveRecord::Base
     PROTOCOL_TYPES = %w(http https)
+    FAVICONS_DIR   = "#{Rails.root}/public/site_favicons/"
 
     enum protocol: [ :http, :https ]
 
@@ -28,11 +29,10 @@ class Site < ActiveRecord::Base
     validates_presence_of :protocol
 
     validates_presence_of   :host
-    validates_format_of     :host, with: /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}\z/
     validates_uniqueness_of :host, scope: [:user_id, :port, :protocol]
 
     validates_presence_of     :port
-    validates_numericality_of :port
+    validates_numericality_of :port, greater_than: 0
 
     after_create :create_guest_role
     before_save  :ensure_profile
@@ -77,6 +77,28 @@ class Site < ActiveRecord::Base
 
     def https?
         protocol == 'https'
+    end
+
+    def favicon_path
+        return if !has_favicon?
+        provisioned_favicon_path
+    end
+
+    def favicon
+        return if !has_favicon?
+        provisioned_favicon
+    end
+
+    def has_favicon?
+        File.exist? provisioned_favicon_path
+    end
+
+    def provisioned_favicon_path
+        "#{FAVICONS_DIR}/#{provisioned_favicon}"
+    end
+
+    def provisioned_favicon
+        "#{host}_#{port}.ico"
     end
 
     private

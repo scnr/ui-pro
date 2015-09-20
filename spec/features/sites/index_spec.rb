@@ -10,6 +10,10 @@ feature 'Site index page' do
     let(:site) { FactoryGirl.create :site }
     let(:other_site) { FactoryGirl.create :site, host: 'gg.gg' }
 
+    def refresh
+        visit sites_path
+    end
+
     after(:each) do
         Warden.test_reset!
     end
@@ -19,7 +23,7 @@ feature 'Site index page' do
         user.sites << site
 
         login_as( user, scope: :user )
-        visit sites_path
+        refresh
     end
 
     # Scenario: Site listed on index page
@@ -32,7 +36,7 @@ feature 'Site index page' do
     end
 
     scenario 'user sees show link' do
-        expect(page).to have_xpath "//a[@href='#{site_path( site )}' and not(@data-method)]"
+        expect(page).to have_xpath "//a[starts-with(@href, '#{issues_site_path( site )}?filter') and not(@data-method)]"
     end
 
     # Scenario: Sites which are verified are accompanied by delete links
@@ -43,10 +47,36 @@ feature 'Site index page' do
         expect(page).to have_xpath "//a[@href='#{site_path( site )}' and @data-method='delete']"
     end
 
+    scenario 'icon links to site' do
+        expect(find('a.site-favicon')[:href]).to eq site.url
+    end
+
+    feature 'when the site has a favicon' do
+        before do
+            IO.write( site.provisioned_favicon_path, '' )
+            refresh
+        end
+
+        scenario 'user sees favicon' do
+            expect(find('a.site-favicon img')[:src]).to eq "/site_favicons/#{site.favicon}"
+        end
+    end
+
+    feature 'when the site has no favicon' do
+        before do
+            FileUtils.rm_f site.provisioned_favicon_path
+            refresh
+        end
+
+        scenario 'user sees fa icon' do
+            expect(find('a.site-favicon i')[:class]).to include 'fa fa-external-link'
+        end
+    end
+
     feature 'with scans' do
         before do
             scan
-            visit sites_path
+            refresh
         end
 
         let(:scan) { FactoryGirl.create :scan, site: site, profile: profile }
@@ -69,7 +99,7 @@ feature 'Site index page' do
                     stopped_at: Time.now - 1000
                 )
 
-                visit sites_path
+                refresh
             end
 
             scenario 'user sees time passed since last revision' do
@@ -86,7 +116,7 @@ feature 'Site index page' do
                         )
                     end
 
-                    visit sites_path
+                    refresh
                 end
 
                 let(:type) { FactoryGirl.create( :issue_type, severity: severity ) }
@@ -122,7 +152,7 @@ feature 'Site index page' do
 
     feature 'without scans' do
         before do
-            visit sites_path
+            refresh
         end
 
         scenario 'user does not see the table' do
@@ -130,21 +160,109 @@ feature 'Site index page' do
         end
     end
 
-    scenario 'user can add new site' do
-        select 'http', from: 'site[protocol]'
-        fill_in 'site[host]', with: 'example.com'
-        fill_in 'site[port]', with: 8080
-        click_button 'Add'
+    feature 'new site form' do
+        before do
+            allow(Arachni::HTTP::Client).to receive(:get) do |url, options = {}|
+                response.url = url if response
+                response
+            end
 
-        expect(page).to have_content 'Site was successfully created.'
+            select protocol, from: 'site[protocol]'
+            fill_in 'site[host]', with: host
+            fill_in 'site[port]', with: port
+            click_button 'Add'
+        end
 
-        site = Site.last
+        after do
+            FileUtils.rm_f( new_site.provisioned_favicon_path ) if new_site
+        end
 
-        expect(current_path).to eq edit_site_path(site)
+        let(:response) do
+            Arachni::HTTP::Response.new(
+                url:     "#{url}/favicon.ico",
+                code:    200,
+                body:    'icon data',
+                headers: {
+                    'Content-Type' => 'image/x-icon'
+                }
+            )
+        end
 
-        expect(site.protocol).to eq 'http'
-        expect(site.host).to eq 'example.com'
-        expect(site.port).to eq 8080
+        let(:url) { "#{protocol}://#{host}:#{port}" }
+        let(:protocol) { 'http' }
+        let(:host) { 'example.com' }
+        let(:port) { 8080 }
+
+        let(:new_site) do
+            Site.where( protocol: protocol, host: host, port: port ).first
+        end
+
+        scenario 'user can add new site' do
+            expect(page).to have_content 'Site was successfully created.'
+
+            expect(current_path).to eq edit_site_path(new_site)
+
+            expect(new_site.protocol).to eq protocol
+            expect(new_site.host).to eq host
+            expect(new_site.port).to eq port
+        end
+
+        context 'validates connectivity' do
+            let(:host_errors) do
+                find '.site_host.has-error'
+            end
+
+            context 'when the Content-Type is for an image' do
+                it 'stores the favicon' do
+                    expect( IO.read( new_site.favicon_path ) ).to eq response.body
+                end
+            end
+
+            context 'when the Content-Type is not for an image' do
+                let(:response) do
+                    super().tap do |response|
+                        response.headers['content-type'] = 'text/html'
+                    end
+                end
+
+                it 'does not store a favicon' do
+                    expect(new_site).to_not have_favicon
+                end
+            end
+
+            context 'when the request is invalid' do
+                let(:response) do
+                    nil
+                end
+
+                it 'shows error' do
+                    expect(host_errors).to have_content 'could not get response'
+                end
+
+                it 'does not create the site' do
+                    expect(new_site).to be_nil
+                end
+            end
+
+            context 'when no connection could be made' do
+                let(:response) do
+                    Arachni::HTTP::Response.new(
+                        url:            url,
+                        code:           0,
+                        return_message: 'Could not connect'
+                    )
+                end
+
+                it 'shows error' do
+                    expect(host_errors).to have_content response.return_message.downcase
+                end
+
+                it 'does not create the site' do
+                    expect(new_site).to be_nil
+                end
+            end
+        end
+
     end
 
     scenario 'protocol drop-down updates port', js: true do

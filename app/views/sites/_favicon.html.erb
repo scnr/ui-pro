@@ -1,0 +1,7 @@
+<%= link_to site.url, target: '_blank', class: 'site-favicon' do %>
+    <% if site.has_favicon? %>
+        <img src="/site_favicons/<%= site.favicon %>" />
+    <% else %>
+        <i class="fa fa-external-link"></i>
+    <% end %>
+<% end %>

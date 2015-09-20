@@ -8,7 +8,7 @@ shared_examples_for 'Site sidebar' do |options = {}|
     end
 
     scenario 'includes internal link to site with filtering options' do
-        expect(site_sidebar_heading).to have_xpath "a[starts-with(@href, '#{site_path( site )}?filter')]"
+        expect(site_sidebar_heading).to have_xpath "a[starts-with(@href, '#{issues_site_path( site )}?filter')]"
     end
 
     if !options[:without_buttons]
@@ -22,7 +22,7 @@ shared_examples_for 'Site sidebar' do |options = {}|
 
         feature 'buttons', js: false do
             scenario 'includes site overview button with filtering options' do
-                xpath = "a[starts-with(@href, '#{site_path( site )}/issues?filter') and not(@data-method)]"
+                xpath = "a[starts-with(@href, '#{issues_site_path( site )}?filter') and not(@data-method)]"
                 expect(site_sidebar_buttons).to have_xpath xpath
 
                 btn = site_sidebar_buttons.find( :xpath, xpath )

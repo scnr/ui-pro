@@ -37,7 +37,7 @@ class SitesController < ApplicationController
         @site.user = current_user
 
         respond_to do |format|
-            if @site.save
+            if validate_connectivity( @site ) && @site.save
                 format.html { redirect_to edit_site_url(@site), notice: 'Site was successfully created.' }
                 format.json { render :show, status: :created, location: @site }
             else
@@ -148,6 +148,33 @@ class SitesController < ApplicationController
             revisions: @site.revisions.order( id: :desc ),
             issues:    scan_results_issues
         )
+    end
+
+    def validate_connectivity( site )
+        return true if site.protocol.blank? || site.host.blank? || site.port.blank?
+
+        response = Arachni::HTTP::Client.get(
+            "#{site.url}/favicon.ico",
+            follow_location: true,
+            mode:            :sync
+        )
+
+        if !response
+            site.errors.add :host, "could not get response for: #{site.url}"
+            return
+        end
+
+        if response.code == 0
+            site.errors.add :host,
+                       "#{response.return_message.to_s.downcase} for: #{site.url}"
+            return
+        end
+
+        if response.headers['content-type'].start_with?( 'image' )
+            IO.binwrite( site.provisioned_favicon_path, response.body )
+        end
+
+        true
     end
 
 end

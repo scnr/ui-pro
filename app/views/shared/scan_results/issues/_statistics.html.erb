@@ -27,7 +27,7 @@
             </div>
         <% end %>
 
-        <div class="col-md-<%= @sitemap_entry ? '6' : '4' %>">
+        <div class="col-md-<%= @sitemap_entry ? '6' : '5' %>">
             <h3>
                 <strong><%= issues_count %></strong>
                 <%= 'issues'.pluralize issues_count %>,
@@ -44,7 +44,7 @@
             </h3>
         </div>
 
-        <div class="col-md-<%= @sitemap_entry ? '6' : '4' %>">
+        <div class="col-md-<%= @sitemap_entry ? '6' : '3' %>">
             <h3>
                 <strong><%= rc = revisions.size %></strong>
                 <%= 'revision'.pluralize rc %>,

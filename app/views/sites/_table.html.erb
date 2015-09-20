@@ -14,7 +14,11 @@
     <% sites.each do |site| %>
         <tr>
             <td>
-                <%= link_to_url_with_external external: site.url, internal: site %>
+                <span class="site-favicon-container">
+                    <%= render partial: 'favicon', locals: { site: site } %>
+                </span>
+
+                <%= link_to_with_filters site.url, site %>
             </td>
 
             <td class="state">

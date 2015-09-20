@@ -3,11 +3,11 @@
 %>
 
 <div id="sidebar-site">
+
+    <%= render partial: '/sites/favicon', locals: { site: @site } %>
+
     <h4>
-        <%= link_to_url_with_external display:  @site.url,
-                                      external: @site.url,
-                                      internal: site_path( @site, filter_params )
-        %>
+        <%= link_to_with_filters @site.url, @site %>
     </h4>
 
     <% if !hide_site_buttons %>
