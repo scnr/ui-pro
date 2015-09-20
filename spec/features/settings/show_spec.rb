@@ -27,6 +27,13 @@ feature 'Edit global settings' do
             visit settings_path
         end
 
+        scenario 'it updates the global options' do
+            expect(Arachni::Options).to receive(:update).with(subject.to_rpc_options)
+            expect(Arachni::HTTP::Client).to receive(:reset)
+
+            submit
+        end
+
         scenario 'has title' do
             expect(page).to have_title 'Settings'
         end
