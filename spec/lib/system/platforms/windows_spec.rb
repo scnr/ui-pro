@@ -9,6 +9,14 @@ describe System::Platforms::Windows do
         it 'returns the amount of CPUs'
     end
 
+    describe '#memory_for_process_group' do
+        it 'returns bytes of memory used by the group'
+    end
+
+    describe '#kill_group' do
+        it 'kills a process group'
+    end
+
     describe '.current?' do
         context 'when running on Windows' do
             it 'returns true'

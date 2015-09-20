@@ -344,6 +344,10 @@ EOTXT
         it 'returns bytes of memory used by the group'
     end
 
+    describe '#kill_group' do
+        it 'kills a process group'
+    end
+
     describe '.current?' do
         context 'when running on Linux' do
             it 'returns true' do

@@ -39,6 +39,10 @@ EOTXT
         end
     end
 
+    describe '#kill_group' do
+        it 'kills a process group'
+    end
+
     describe '.current?' do
         context 'when running on OSX' do
             it 'returns true' do

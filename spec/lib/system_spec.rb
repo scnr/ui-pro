@@ -19,6 +19,13 @@ describe System do
         end
     end
 
+    describe '#kill_group' do
+        it 'delegates to #platform' do
+            expect(subject.platform).to receive(:kill_group).with(123).and_return(10)
+            expect(subject.kill_group(123)).to eq 10
+        end
+    end
+
     describe '#cpu_count' do
         it 'delegates to #platform' do
             expect(subject.platform).to receive(:cpu_count).and_return(10)

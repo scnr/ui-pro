@@ -36,10 +36,12 @@ module Instance
         increment_active_instance_count_for_site revision.site
 
         # Don't fork, we don't want the entire Rails env.
-        instances.spawn fork: false do |instance|
+        pid = instances.spawn fork: false do |instance|
             log_info_for revision, "Spawned instance at #{instance.url}"
 
             @revision_id_to_instance_url[revision.id] = instance.url
+            @revision_id_to_pid[revision.id]          = pid
+
             block.call instance
         end
     end
@@ -50,11 +52,9 @@ module Instance
     def kill_instance_for( revision )
         log_info_for revision, 'Killing instance.'
 
-        url = instance_url_for( revision )
-
         Thread.new do
             begin
-                instances.kill url
+                System.kill_group pid_for( revision )
 
                 log_info_for revision, 'Killed instance.'
             rescue => e
@@ -63,7 +63,10 @@ module Instance
         end
 
         log_info_for revision, 'Removing from active list.'
+
         @revision_id_to_instance_url.delete revision.id
+        @revision_id_to_pid.delete revision.id
+
         decrement_active_instance_count_for_site revision.site
 
         nil
@@ -94,6 +97,10 @@ module Instance
         @revision_id_to_instance_url[revision.id]
     end
 
+    def pid_for( revision )
+        @revision_id_to_pid[revision.id]
+    end
+
     def instances
         Arachni::Processes::Instances
     end
@@ -102,6 +109,7 @@ module Instance
     def reset_instance_state
         @site_instance_count         = {}
         @revision_id_to_instance_url = {}
+        @revision_id_to_pid          = {}
     end
 
     private

@@ -30,6 +30,21 @@ class Linux < Base
         rss * System::PAGESIZE
     end
 
+    # @param    [Integer]   pgid
+    #   Process group ID.
+    def kill_group( pgid )
+        Timeout.timeout 2 do
+            while sleep 0.1 do
+                begin
+                    Process.kill( '-TERM', pgid )
+                rescue Errno::ESRCH
+                    return
+                end
+            end
+        end
+    rescue Timeout::Error
+    end
+
     class <<self
         def current?
             ruby_platform =~ /linux/i

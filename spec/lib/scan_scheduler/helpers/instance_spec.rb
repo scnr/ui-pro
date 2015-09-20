@@ -79,7 +79,8 @@ describe ScanScheduler::Helpers::Instance do
 
     describe '#kill_instance_for' do
         it 'kills a spawned instance' do
-            expect(subject.instances).to receive(:kill).with(instance.url)
+            expect(subject).to receive(:pid_for).with(revision).and_return(123)
+            expect(System).to receive(:kill_group).with(123)
             subject.kill_instance_for revision
         end
     end

@@ -40,6 +40,10 @@ module Platforms
             raise 'Missing implementation'
         end
 
+        def kill_group( pgid )
+            raise 'Missing implementation'
+        end
+
         # @return   [Integer]
         #   Amount of CPU cores.
         #

@@ -26,6 +26,12 @@ class System
         platform.memory_for_process_group( pgid )
     end
 
+    # @param    [Integer]   pgid
+    #   Process group ID.
+    def kill_group( pgid )
+        platform.kill_group( pgid )
+    end
+
     # @return   [Integer]
     #   Amount of CPU cores.
     def cpu_count
