@@ -24,7 +24,7 @@
                     scan: @scan
             } %>
             <%= render partial: '/shared/revision_info', locals: {
-                    revision:           @scan.last_revision,
+                    revision:           @revision,
                     scan:               @scan,
                     extended:           true,
                     hide_revision_name: true
