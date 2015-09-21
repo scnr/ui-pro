@@ -16,33 +16,7 @@ user = User.create(
     password_confirmation: 'testtest'
 )
 
-arachni_defaults = {}
-ap profile_columns  = Profile.column_names
-
-Arachni::Options.to_rpc_data.each do |name, value|
-    name = name.to_sym
-    next if value.nil?
-
-    if Arachni::Options.group_classes.include?( name )
-        value.each do |k, v|
-            next if v.nil?
-
-            key = "#{name}_#{k}".to_sym
-            if !profile_columns.include?( key.to_s )
-                $stderr.puts "[Profile defaults] Ignoring: #{key}"
-                next
-            end
-
-            arachni_defaults[key] = v
-        end
-    else
-        if !profile_columns.include?( name.to_s )
-            $stderr.puts "[Profile defaults] Ignoring: #{name}"
-            next
-        end
-        arachni_defaults[name] = value
-    end
-end
+ap arachni_defaults  = Profile.flatten( Arachni::Options.to_rpc_data )
 
 arachni_defaults.merge!(
     name:            'Default',
@@ -66,10 +40,7 @@ arachni_defaults.merge!(
 # p.default!
 # puts 'Default settings created: ' << p.name
 
-Setting.create!(
-    http_request_timeout:      Arachni::Options.http.request_timeout,
-    browser_cluster_pool_size: Arachni::Options.browser_cluster.pool_size
-)
+Setting.create!( Setting.flatten( Arachni::Options.to_rpc_data ) )
 
 all_checks_profile = Profile.create! arachni_defaults.merge(
     name:        'All checks',
