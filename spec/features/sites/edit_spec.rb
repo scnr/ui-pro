@@ -337,6 +337,19 @@ feature 'Site profile form' do
                 })
             end
 
+            scenario 'sorts them by name' do
+                profile.input_values = {
+                    'b' => '1',
+                    'a' => '2',
+                    'c' => '0'
+                }
+                profile.save
+
+                visit current_url
+
+                expect(find('#site_profile_attributes_input_values').native.text).to eq "a=2\nb=1\nc=0"
+            end
+
             feature 'when given invalid pattern' do
                 scenario 'shows error' do
                     fill_in 'Fill-in values', with: '(test=33'
@@ -345,7 +358,6 @@ feature 'Site profile form' do
                     expect(find('.site_profile_input_values.has-error').text).to include 'invalid pattern'
                 end
             end
-
         end
 
         feature 'HTTP' do

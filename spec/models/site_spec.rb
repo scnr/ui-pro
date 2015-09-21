@@ -16,15 +16,21 @@ describe Site, type: :model do
     expect_it { to have_many(:sitemap_entries).dependent(:destroy) }
 
     it 'has a Guest role' do
-        roles = described_class.create(
-            protocol: 'http',
-            host:     "test#{rand(99999)}.com",
-            port:     1,
-            profile:  FactoryGirl.create( :site_profile )
-        ).roles
-
+        roles = subject.roles
         expect(roles.size).to eq 1
         expect(roles.first).to be_guest
+    end
+
+    it 'has a profile with default options' do
+        profile = described_class.create(
+            protocol: 'http',
+            host:     "test#{rand(99999)}.com",
+            port:     1
+        ).profile
+
+        SiteProfile.flatten( Arachni::Options.to_rpc_data ).each do |k, v|
+            expect(profile.send(k)).to eq v
+        end
     end
 
     describe :validations do
