@@ -273,7 +273,8 @@
                                 placeholder: 'No need for special values',
                                 input_html: {
                                         value: @site.profile.input_values.
-                                                       map { |k, v| "#{k}=#{v}" }.join( "\n" )
+                                                sort_by{ |k, _| k }.
+                                                map { |k, v| "#{k}=#{v}" }.join( "\n" )
                                 } %>
                 </div>
                 <div class="col-md-6 textarea-help">
