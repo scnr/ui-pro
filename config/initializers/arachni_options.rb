@@ -11,19 +11,28 @@
 
 options = Arachni::Options
 
+# Exclude files that won't contribute anything to the scan.
+#
+# The browsers will not check the scope of asset files, so these shouldn't
+# mess with it, they should only narrow down the audit.
 options.scope.exclude_file_extensions = %w(
 gif bmp tif tiff jpg jpeg jpe pjpeg png ico psd xcf
 mpg mpeg mpe 3gp avi flv mov mp4 swf vob wmv
 mp3 wav wma mid m4a ogg flac
-pdf ps
 zip zipx tar gz 7z rar pkg deb rpm msi
 bin cue dmg iso mdf vcd raw
 exe apk app jar
-xls xlsx doc docx pps ppt pptx odt
-ttf otf
+ttf otf woff
 css
 js
 )
+
+# Document files are a tough call.
+# There are checks that look for SSN and credit-card numbers and these files
+# could expose them.
+# options.scope.exclude_file_extensions.merge %w(
+# pdf ps xls xlsx doc docx pps ppt pptx odt
+# )
 
 # Safeguard against broken relative links leading to a loop of 404s, each
 # adding +1 depth.
