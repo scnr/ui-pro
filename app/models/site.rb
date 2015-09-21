@@ -104,7 +104,9 @@ class Site < ActiveRecord::Base
     private
 
     def ensure_profile
-        self.profile ||= build_profile
+        self.profile ||= build_profile(
+            SiteProfile.flatten( Arachni::Options.to_rpc_data )
+        )
     end
 
     def create_guest_role
