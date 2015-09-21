@@ -119,6 +119,7 @@ class SitesController < ApplicationController
                 :http_authentication_username,
                 :http_authentication_password,
 
+                :scope_exclude_file_extensions,
                 :scope_exclude_path_patterns,
                 :scope_exclude_content_patterns,
                 :scope_extend_paths,

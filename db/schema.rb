@@ -378,6 +378,7 @@ ActiveRecord::Schema.define(version: 20150814220113) do
     t.boolean  "no_fingerprinting"
     t.text     "input_values"
     t.text     "audit_link_templates"
+    t.text     "scope_exclude_file_extensions"
     t.text     "scope_exclude_path_patterns"
     t.text     "scope_exclude_content_patterns"
     t.text     "scope_extend_paths"

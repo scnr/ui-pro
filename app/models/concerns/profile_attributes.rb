@@ -52,7 +52,8 @@ module ProfileAttributes
 
             http_cookies:                   Hash,
             http_request_headers:           Hash,
-    
+
+            scope_exclude_file_extensions:  Array,
             scope_exclude_path_patterns:    Array,
             scope_exclude_content_patterns: Array,
             scope_include_path_patterns:    Array,
@@ -157,6 +158,12 @@ module ProfileAttributes
 
     def has_option?( *args )
         self.class.has_option?( *args )
+    end
+
+    def scope_exclude_file_extensions=( extensions )
+        super extensions.is_a?( String ) ?
+                  extensions.split( /\s+/ ) :
+                  extensions.to_a
     end
 
     def checks_with_info
@@ -293,8 +300,9 @@ module ProfileAttributes
                 next if !available.include? plugin.to_s
 
                 begin
-                    f.plugins.prepare_options( plugin, f.plugins[plugin],
-                                               (options || {}).reject { |k, v| v.empty? }
+                    f.plugins.prepare_options(
+                        plugin, f.plugins[plugin],
+                        (options || {}).reject { |k, v| v.empty? }
                     )
                 rescue Arachni::Component::Options::Error::Invalid => e
                     errors.add :plugins, e.to_s

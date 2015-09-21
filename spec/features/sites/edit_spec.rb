@@ -228,6 +228,15 @@ feature 'Site profile form' do
                 end
             end
 
+            feature 'Exclude file extensions' do
+                scenario 'can be set' do
+                    fill_in 'Exclude file extensions', with: 'js css png'
+                    submit
+
+                    expect(profile.scope_exclude_file_extensions).to eq %w(js css png)
+                end
+            end
+
             feature 'Path exclusion patterns' do
                 scenario 'can be set' do
                     fill_in 'Path exclusion patterns', with: "test\\w+\ninclude this (.*)"

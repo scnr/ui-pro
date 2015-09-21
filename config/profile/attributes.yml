@@ -32,6 +32,8 @@ no_fingerprinting:
     description: 'Disables automated platform fingerprinting.'
     warning: 'If this option is selected and no platforms have been explicitly specified, the scanner will always inject all available payloads.'
 
+scope_exclude_extensions: >
+  Will not process resources with the specified file extensions.
 scope_auto_redundant_paths:
     description: 'Limits the amount of times URLs with identical query parameter names will be followed.'
     notice: 'Helps avoid auditing pages like calendars and catalogs over and over.'

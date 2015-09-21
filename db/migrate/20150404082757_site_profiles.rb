@@ -8,6 +8,7 @@ class SiteProfiles < ActiveRecord::Migration
 
             t.text     :audit_link_templates
 
+            t.text     :scope_exclude_file_extensions
             t.text     :scope_exclude_path_patterns
             t.text     :scope_exclude_content_patterns
             t.text     :scope_extend_paths
