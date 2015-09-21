@@ -273,7 +273,6 @@
                                 placeholder: 'No need for special values',
                                 input_html: {
                                         value: @site.profile.input_values.
-                                                sort_by{ |k, _| k }.
                                                 map { |k, v| "#{k}=#{v}" }.join( "\n" )
                                 } %>
                 </div>
@@ -283,6 +282,10 @@
                         Rules take the format of <kbd>pattern=value</kbd>,
                         input each rule in its own line &mdash; <kbd>pattern</kbd>
                         will be matched against input names.
+
+                        <br/>
+
+                        Rules will be matched in the given order.
                     </p>
                 </div>
             </div>
