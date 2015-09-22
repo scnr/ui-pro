@@ -39,9 +39,9 @@ js
 #
 # It's rare and it will still suck, but at least the scan won't take forever.
 #
-# Also, limiting the scan to 10 directories deep shouldn't result in any
+# Also, limiting the scan to 20 directories deep shouldn't result in any
 # appreciable loss of coverage 90+% of the time.
-options.scope.directory_depth_limit = 10
+options.scope.directory_depth_limit = 20
 
 # A little more conservative than the default, makes things faster.
 options.scope.dom_depth_limit = 4
@@ -50,7 +50,7 @@ options.scope.dom_depth_limit = 4
 #
 # Watch out for sites where routing is based on a URL parameter?
 # Like: ?content=index
-options.scope.auto_redundant_paths  = 10
+options.scope.auto_redundant_paths  = 20
 
 # We do this so that the values that will be used will appear in the UI.
 options.input.values = options.input.default_values.dup
