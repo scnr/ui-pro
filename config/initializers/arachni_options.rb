@@ -11,28 +11,42 @@
 
 options = Arachni::Options
 
-# Exclude files that won't contribute anything to the scan.
-#
-# The browsers will not check the scope of asset files, so these shouldn't
-# mess with it, they should only narrow down the audit.
-options.scope.exclude_file_extensions = %w(
-gif bmp tif tiff jpg jpeg jpe pjpeg png ico psd xcf
-mpg mpeg mpe 3gp avi flv mov mp4 swf vob wmv
-mp3 wav wma mid m4a ogg flac
-zip zipx tar gz 7z rar pkg deb rpm msi
-bin cue dmg iso mdf vcd raw
-exe apk app jar
-ttf otf woff
-css
-js
-)
+# Dev defaults, for comparison with other branches and Pro vs CLI.
+options.audit.elements :forms, :links, :ui_forms, :ui_inputs
 
-# Document files are a tough call.
-# There are checks that look for SSN and credit-card numbers and these files
-# could expose them.
-# options.scope.exclude_file_extensions.merge %w(
-# pdf ps xls xlsx doc docx pps ppt pptx odt
-# )
+# Production defaults.
+# options.audit.elements :forms, :links, :cookies, :ui_forms, :ui_inputs
+
+# Exclude files that won't contribute anything to the scan.
+options.scope.exclude_file_extensions = {
+    # Media
+    image:       %w(
+        gif bmp tif tiff jpg jpeg jpe pjpeg png ico psd xcf 3dm max svg eps drw
+        ai
+    ),
+    video:       %w(asf rm mpg mpeg mpe 3gp 3g2  avi flv mov mp4 swf vob wmv),
+    audio:       %w(aif mp3 mpa ra wav wma mid m4a ogg flac),
+
+    # Generic data
+    archive:     %w(zip zipx tar gz 7z rar bz2),
+    disk:        %w(bin cue dmg iso mdf vcd raw),
+
+    # Executables -- or thereabouts.
+    application: %w(exe apk app jar pkg deb rpm msi),
+
+    # Assets
+    #
+    # The browsers will not check the scope of asset files, so these shouldn't
+    # mess with it, they should only narrow down the audit.
+    font:        %w(ttf otf woff fon fnt),
+    stylesheet:  %w(css),
+    script:      %w(js),
+
+    # Documents
+    #
+    # Allow rtf, ps, xls, doc, ppt, ppts since they can contain greppable text.
+    document:    %w(pdf docx xlsx pptx odt odp),
+}.values.flatten.uniq
 
 # Safeguard against broken relative links leading to a loop of 404s, each
 # adding +1 depth.

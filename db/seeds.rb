@@ -19,14 +19,9 @@ user = User.create(
 ap arachni_defaults  = Profile.flatten( Arachni::Options.to_rpc_data )
 
 arachni_defaults.merge!(
-    name:            'Default',
-    description:     'Sensible, default settings.',
-    user:            user,
-    audit_links:     true,
-    audit_forms:     true,
-    audit_cookies:   true,
-    audit_ui_forms:  true,
-    audit_ui_inputs: true
+    name:        'Default',
+    description: 'Sensible, default settings.',
+    user:        user
 )
 
 # exit
