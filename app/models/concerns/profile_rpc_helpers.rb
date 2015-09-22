@@ -95,8 +95,7 @@ module ProfileRpcHelpers
     def to_rpc_options
         opts = {}
         attributes.each do |k, v|
-            next if !self.class::RPC_OPTS.include?( k.to_sym ) || v.nil? ||
-                (v.respond_to?( :empty? ) ? v.empty? : false)
+            next if !self.class::RPC_OPTS.include?( k.to_sym )
 
             if (group_name = find_group_option( k ))
                 group_name = group_name.to_s
