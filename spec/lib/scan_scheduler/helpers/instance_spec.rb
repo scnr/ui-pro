@@ -3,7 +3,8 @@ describe ScanScheduler::Helpers::Instance do
 
     let(:revision) { new_revision }
     let(:scan) { FactoryGirl.create :scan, site: site }
-    let(:site) { FactoryGirl.create :site }
+    let(:site) { FactoryGirl.create :site, user: user }
+    let(:user) { FactoryGirl.create :user }
     let(:instance_manager) { MockInstanceManager.new }
 
     let(:instance) do
@@ -79,8 +80,7 @@ describe ScanScheduler::Helpers::Instance do
 
     describe '#kill_instance_for' do
         it 'kills a spawned instance' do
-            expect(subject).to receive(:pid_for).with(revision).and_return(123)
-            expect(System).to receive(:kill_group).with(123)
+            expect(subject.instances).to receive(:kill).with(instance.url)
             subject.kill_instance_for revision
         end
     end

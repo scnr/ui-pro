@@ -4,7 +4,8 @@ describe Revision do
     subject { FactoryGirl.create :revision, scan: scan }
     let(:other_revision) { FactoryGirl.create :revision, scan: scan }
     let(:scan) { FactoryGirl.create :scan, site: site }
-    let(:site) { FactoryGirl.create :site }
+    let(:site) { FactoryGirl.create :site, user: user }
+    let(:user) { FactoryGirl.create( :user ) }
 
     expect_it { to belong_to(:scan).counter_cache(true) }
     expect_it { to have_many(:issues).dependent(:destroy) }
@@ -384,6 +385,17 @@ describe Revision do
 
         it 'returns #stopped_at' do
             expect(subject.performed_at.object_id).to eq subject.stopped_at.object_id
+        end
+    end
+
+    describe '#rpc_options' do
+        it 'returns the scan RPC options at the time of creation' do
+            expect(subject.rpc_options).to eq scan.rpc_options
+
+            scan.site.profile.scope_auto_redundant_paths = 10000
+            scan.site.profile.save
+
+            expect(subject.rpc_options).to_not eq scan.rpc_options
         end
     end
 

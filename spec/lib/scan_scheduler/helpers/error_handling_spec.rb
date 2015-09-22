@@ -8,7 +8,8 @@ describe ScanScheduler::Helpers::ErrorHandling do
     end
     let(:revision) { FactoryGirl.create :revision, scan: scan }
     let(:scan) { FactoryGirl.create :scan, site: site }
-    let(:site) { FactoryGirl.create :site }
+    let(:site) { FactoryGirl.create :site, user: user }
+    let(:user) { FactoryGirl.create :user }
 
     before do
         subject.reset

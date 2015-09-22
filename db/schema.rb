@@ -302,6 +302,7 @@ ActiveRecord::Schema.define(version: 20150814220113) do
     t.integer  "scan_id"
     t.integer  "site_id"
     t.integer  "index"
+    t.text     "rpc_options"
     t.text     "snapshot_path"
     t.text     "error_messages"
     t.string   "seed"

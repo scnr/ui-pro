@@ -1,5 +1,5 @@
 describe Site, type: :model do
-    subject { @site = FactoryGirl.create(:site) }
+    subject { @site = FactoryGirl.create(:site, user: user) }
     let(:scan) { FactoryGirl.create :scan, site: subject }
     let(:other_scan) { FactoryGirl.create :scan, site: subject }
     let(:user) { FactoryGirl.create :user }

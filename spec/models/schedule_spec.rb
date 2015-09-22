@@ -4,11 +4,12 @@ describe Schedule do
     subject do
         FactoryGirl.create(
             :scan,
-            site: site
+            site: site,
         ).schedule
     end
-    let(:site) { FactoryGirl.create :site }
+    let(:site) { FactoryGirl.create :site, user: user }
     let(:revision) { FactoryGirl.create :revision, scan: subject.scan }
+    let(:user) { FactoryGirl.create :user }
 
     expect_it { to belong_to :scan }
 

@@ -1,6 +1,8 @@
 class Revision < ActiveRecord::Base
     include RevisionStates
 
+    serialize :rpc_options, Hash
+
     has_one  :performance_snapshot, dependent: :destroy,
              foreign_key: 'revision_current_id'
 
@@ -21,6 +23,7 @@ class Revision < ActiveRecord::Base
 
     before_save :set_index
     before_save :set_site
+    before_save :set_rpc_options
 
     scope :in_progress, -> do
         where.not( started_at: nil ).where( stopped_at: nil )
@@ -61,6 +64,13 @@ class Revision < ActiveRecord::Base
         "#{index.ordinalize} revision"
     end
 
+    private
+
+    def set_rpc_options
+        return if self.rpc_options.any?
+        self.rpc_options = scan.rpc_options
+    end
+
     def set_index
         self.index ||= scan.revisions.count + 1
     end
@@ -68,8 +78,6 @@ class Revision < ActiveRecord::Base
     def set_site
         self.site = scan.site
     end
-
-    private
 
     def ensure_performance_snapshot
         self.performance_snapshot ||= build_performance_snapshot

@@ -159,7 +159,7 @@ module Scan
         scan.schedule.unschedule
 
         revision = scan.revisions.create(
-            # We don't use Time.now because it will lead to small time-slips
+            # We don't use Time.now because it will lead to small slips
             # over time.
             started_at: start_at
         )
@@ -168,7 +168,7 @@ module Scan
         log_info_for revision, 'Created revision.'
 
         spawn_instance_for( revision ) do |instance|
-            instance.service.scan( scan.rpc_options ) do |response|
+            instance.service.scan( revision.rpc_options ) do |response|
                 next if handle_if_rpc_error( revision, response )
 
                 monitor( revision )

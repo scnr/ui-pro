@@ -7,7 +7,8 @@ describe ScanScheduler::Helpers::Issue do
     let(:other_revision) { FactoryGirl.create :revision, scan: scan }
     let(:revision) { new_revision }
     let(:scan) { FactoryGirl.create :scan, site: site }
-    let(:site) { FactoryGirl.create :site }
+    let(:site) { FactoryGirl.create :site, user: user }
+    let(:user) { FactoryGirl.create :user }
     let(:native_issue) { Factory[:issue] }
 
     def new_revision

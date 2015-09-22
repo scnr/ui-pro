@@ -32,8 +32,12 @@ describe Issue do
         Factory[:issue]
     end
 
+    let(:user) do
+        FactoryGirl.create( :user )
+    end
+
     let(:site) do
-        FactoryGirl.create( :site )
+        FactoryGirl.create( :site, user: user )
     end
 
     let(:scan) do
