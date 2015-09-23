@@ -158,7 +158,7 @@ feature 'Issue page' do
             end
 
             scenario 'shows a link to the revision' do
-                expect(reviewed_by_revision.find('.label-info')).to have_xpath "a[@href='#{site_scan_revision_path( site, scan, revision )}']"
+                expect(reviewed_by_revision.find('.label-info')).to have_xpath "a[@href='#{reviews_site_scan_revision_path( site, scan, revision )}']"
             end
 
             feature 'when the revision is from the same scan' do

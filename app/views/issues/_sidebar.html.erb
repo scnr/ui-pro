@@ -92,7 +92,7 @@
         <span class="label label-info label-emphasis">
             Reviewed by
             <%= link_to @issue.reviewed_by_revision,
-                        site_scan_revision_path(
+                        reviews_site_scan_revision_path(
                                 @issue.reviewed_by_revision.site,
                                 @issue.reviewed_by_revision.scan,
                                 @issue.reviewed_by_revision
