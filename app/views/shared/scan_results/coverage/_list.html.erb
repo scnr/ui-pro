@@ -16,7 +16,7 @@
         <% end %>
 
         <% if message %>
-            <p class="alert alert-info">
+            <p class="text text-muted">
                 <%= message %>
             </p>
         <% end %>
@@ -29,8 +29,8 @@
                        next if seen.include? entry.digest
                        seen << entry.digest
                 %>
-                    <li id="coverage-entry-<%= entry.digest %>">
-                        <code>[<%= entry.code %>]</code>
+                    <li class="coverage-entry" id="coverage-entry-<%= entry.digest %>">
+                        <code class="status-code">[<%= entry.code %>]</code>
 
                         <%= link_to entry.url, target: '_blank' do %>
                             <%= url_without_scheme_host_port( entry.url ) %>

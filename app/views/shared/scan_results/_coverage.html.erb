@@ -12,10 +12,20 @@
     Coverage data show all audited resources.
 </p>
 
-<% if @revision && @revision.active? %>
-    <%= render partial: '/shared/scan_results/coverage/current_page', locals: {
-        url: @revision.performance_snapshot.current_page
-    } %>
+<p class="alert alert-info">
+    <i class="fa fa-info-circle"></i>
+
+    You can <%= link_to 'customize the site-wide scope', "#{edit_site_path( @site )}#scope" %>
+    in order to limit processing of template-based, redundant resources, as
+    well as exclude dangerous or unwanted ones.
+</p>
+
+<% if @revision %>
+    <% if @revision.active? %>
+        <%= render partial: '/shared/scan_results/coverage/current_page', locals: {
+            url: @revision.performance_snapshot.current_page
+        } %>
+    <% end %>
 <% end %>
 
 <% if up_to_now_inclusive.any? && @revision && @revision.index > 1

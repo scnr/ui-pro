@@ -1,0 +1,32 @@
+#coverage {
+    ul li.coverage-entry {
+        list-style-type: none;
+        padding-right: 20px;
+        float:   left;
+        display: inline;
+        width:   50%;
+        word-wrap: break-word;
+
+        code.status-code {
+            float: left;
+            width: 43px;
+            margin-right: 5px;
+        }
+    }
+
+    .progress {
+        .progress-bar {
+            span {
+                font-weight: bold;
+            }
+        }
+    }
+
+    .coverage-bar {
+        cursor: pointer;
+    }
+
+    .coverage-bar:hover {
+        opacity: 0.8;
+    }
+}
