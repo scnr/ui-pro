@@ -111,8 +111,9 @@ class Site < ActiveRecord::Base
 
     def create_guest_role
         self.roles.create(
-            name:       'Guest',
-            login_type: 'none'
+            name:        'Guest',
+            description: 'Un-authenticated visitor.',
+            login_type:  'none'
         )
     end
 
@@ -120,6 +121,7 @@ class Site < ActiveRecord::Base
         global = Settings.max_parallel_scans
         return if !global || max_parallel_scans <= global
 
-        errors.add :max_parallel_scans, "cannot be greater than the global setting of #{global}"
+        errors.add :max_parallel_scans,
+                   "cannot be greater than the global setting of #{global}"
     end
 end
