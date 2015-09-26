@@ -1,0 +1,11 @@
+<%=
+    render layout: '/shared/scan_results/configuration/cell',
+           locals: {
+                   tag_name:     'td',
+                   show_current: true,
+                   current:      @revision.site.profile,
+                   snapshot:     @revision.site_profile,
+                   highlight:    true,
+                   attribute:    attribute
+           } { |*args| yield *args }
+%>

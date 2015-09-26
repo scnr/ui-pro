@@ -7,7 +7,7 @@ feature 'Frozen scan schedules table' do
     let(:scan) { FactoryGirl.create :scan, name: 'Stuff', site: site }
     let(:revision) { FactoryGirl.create :revision, scan: scan }
     let(:user) { FactoryGirl.create :user }
-    let(:site) { FactoryGirl.create :site }
+    let(:site) { FactoryGirl.create :site, user: user }
     let(:other_site) { FactoryGirl.create :site, host: 'gg.gg' }
 
     after(:each) do

@@ -80,11 +80,16 @@ module ApplicationHelper
     end
 
     def url_without_scheme_host_port( url )
+        url = url.dup
+
         parsed = Arachni::URI( url )
         scheme_host_and_port = "#{parsed.scheme}://#{parsed.host}"
         scheme_host_and_port << ":#{parsed.port}" if parsed.port
 
-        url.sub( scheme_host_and_port, '' )
+        url.sub!( scheme_host_and_port, '' )
+        return '/' if url.empty?
+
+        url
     end
 
     def link_to_url_with_external( options = {} )
@@ -94,6 +99,12 @@ module ApplicationHelper
 
         render partial: 'shared/link_to_url_with_external', locals: {
             options:      options
+        }
+    end
+
+    def link_to_external( url )
+        render partial: 'shared/link_to_external', locals: {
+            url: url
         }
     end
 

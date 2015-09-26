@@ -396,6 +396,7 @@ ActiveRecord::Schema.define(version: 20150814220113) do
     t.boolean  "browser_cluster_ignore_images"
     t.text     "browser_cluster_wait_for_elements"
     t.integer  "site_id"
+    t.integer  "revision_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -404,6 +405,7 @@ ActiveRecord::Schema.define(version: 20150814220113) do
 
   create_table "site_roles", force: :cascade do |t|
     t.integer  "site_id"
+    t.integer  "revision_id"
     t.string   "name"
     t.text     "description"
     t.text     "session_check_url"

@@ -1,6 +1,6 @@
 feature 'Revision errors' do
     let(:user) { FactoryGirl.create :user }
-    let(:site) { FactoryGirl.create :site }
+    let(:site) { FactoryGirl.create :site, user: user }
     let(:profile) { FactoryGirl.create :profile }
     let(:scan) { FactoryGirl.create :scan, site: site, profile: profile }
     let(:revision) { FactoryGirl.create :revision, scan: scan }

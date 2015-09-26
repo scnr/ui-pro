@@ -5,4 +5,5 @@ class SiteProfile < ActiveRecord::Base
     include ProfileExport
 
     belongs_to :site
+    belongs_to :revision
 end

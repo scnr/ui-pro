@@ -3,6 +3,9 @@ class CreateSiteRoles < ActiveRecord::Migration
         create_table :site_roles do |t|
             t.belongs_to :site
 
+            # Frozen copy at the time of Revision creation.
+            t.belongs_to :revision
+
             t.string :name
             t.text   :description
 

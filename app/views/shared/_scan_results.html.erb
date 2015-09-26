@@ -61,6 +61,14 @@
                     </li>
                 <% end %>
             <% end %>
+
+            <% if @revision %>
+                <li id="configuration-tab" class="<%= 'active' if sections['configuration'] %>">
+                    <%= link_to params.merge( action: 'configuration' ).merge filter_params do %>
+                        Configuration
+                    <% end %>
+                </li>
+            <% end %>
         </ul>
 
         <div class="tab-content">
@@ -101,6 +109,12 @@
             <% if sections['errors'] %>
                 <div class="tab-pane <%= 'active' if sections['errors'] %>" id="errors">
                     <%= render partial: 'shared/scan_results/errors' %>
+                </div>
+            <% end %>
+
+            <% if sections['configuration'] %>
+                <div class="tab-pane <%= 'active' if sections['configuration'] %>" id="configuration">
+                    <%= render partial: 'shared/scan_results/configuration' %>
                 </div>
             <% end %>
 

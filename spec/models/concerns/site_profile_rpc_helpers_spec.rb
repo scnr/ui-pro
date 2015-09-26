@@ -26,13 +26,5 @@ describe ProfileRpcHelpers do
                 })
             end
         end
-
-        context 'when there are no #scope_template_path_patterns' do
-            it 'includes the as redundant_path_patterns'do
-                subject.scope_template_path_patterns = []
-
-                expect(rpc_options['scope']).to_not include 'redundant_path_patterns'
-            end
-        end
     end
 end

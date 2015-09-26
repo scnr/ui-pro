@@ -3,9 +3,9 @@ Rails.application.routes.draw do
     root to: 'dashboard#index'
 
     resources :sites do
-        get :issues,   on: :member
-        get :coverage, on: :member
-        get :reviews,  on: :member
+        ScanResults::SCAN_RESULT_SITE_ACTIONS.each do |action|
+            get action, on: :member
+        end
 
         resources :site_roles, as: 'roles', path: 'roles' do
             post  :import, on: :collection
@@ -13,9 +13,9 @@ Rails.application.routes.draw do
         end
 
         resources :scans do
-            get :issues,   on: :member
-            get :coverage, on: :member
-            get :reviews,  on: :member
+            ScanResults::SCAN_RESULT_SCAN_ACTIONS.each do |action|
+                get action, on: :member
+            end
 
             get :preview_schedule, on: :collection
             get :preview_schedule, on: :member
@@ -29,12 +29,11 @@ Rails.application.routes.draw do
             post  :repeat,     on: :member
 
             resources :revisions, only: [:show, :destroy] do
-                get :live,     on: :member
-                get :issues,   on: :member
-                get :coverage, on: :member
-                get :reviews,  on: :member
-                get :health,   on: :member
-                get :errors,   on: :member
+                ScanResults::SCAN_RESULT_REVISION_ACTIONS.each do |action|
+                    get action, on: :member
+                end
+
+                put :revert_configuration, on: :member
 
                 resources :issues, only: [:show, :update]
             end

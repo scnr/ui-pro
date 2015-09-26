@@ -1,0 +1,62 @@
+<%
+   options = {
+           tag_name: 'td'
+   }.merge( local_assigns )
+%>
+
+<table class="table table-condensed">
+    <thead>
+    <tr>
+
+        <%= render layout: '/shared/scan_results/configuration/site_role/th',
+                   locals: {
+                           attribute: 'login_form_url',
+                   } do %>
+            Form URL
+        <% end %>
+
+        <%= render layout: '/shared/scan_results/configuration/site_role/th',
+                   locals: {
+                           attribute: 'login_form_parameters'
+                   } do %>
+            Parameters
+        <% end %>
+
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr>
+
+        <%= render layout: '/shared/scan_results/configuration/site_role/td',
+                   locals: options.merge({
+                         attribute: 'login_form_url',
+                    }) do |value| %>
+
+            <%= link_to_external value %>
+        <% end %>
+
+        <%= render layout: '/shared/scan_results/configuration/site_role/td',
+                   locals: options.merge({
+                           attribute: 'login_form_parameters'
+                   }) do |value| %>
+
+            <% if value.any? %>
+                <ul class="list-unstyled">
+
+                    <% value.each do |k, v| %>
+                        <li>
+                            <code><%= k %> = <%= v %></code>
+                        </li>
+                    <% end %>
+
+                </ul>
+            <% else %>
+                None
+            <% end %>
+
+        <% end %>
+
+    </tr>
+    </tbody>
+</table>

@@ -1,0 +1,15 @@
+<%
+   locals = {
+           tag_name:     'td',
+           show_current: true,
+           current:      @scan.site_role,
+           snapshot:     @revision.site_role,
+           highlight:    true,
+           attribute:    attribute
+   }.merge( local_assigns )
+%>
+<%=
+    render( layout: '/shared/scan_results/configuration/cell',
+           locals: locals) { |*args| yield *args }
+%>
+

@@ -1,0 +1,23 @@
+#configuration {
+
+    .btn-toggle-current-value,
+    .configuration-current-value  > .btn,
+    .configuration-snapshot-value > .btn {
+        width: 100%
+    }
+
+    td.scope_exclude_file_extensions {
+        width: 80%
+    }
+
+    td {
+        ul, ol {
+            margin: 0;
+        }
+    }
+
+    table.CodeRay {
+        margin: 0
+    }
+
+}

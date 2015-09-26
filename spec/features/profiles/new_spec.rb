@@ -7,7 +7,7 @@ feature 'Profile new page' do
     let(:user) { FactoryGirl.create :user }
     let(:scan) { FactoryGirl.create :scan, site: site }
     let(:revision) { FactoryGirl.create :revision, scan: scan }
-    let(:site) { FactoryGirl.create :site }
+    let(:site) { FactoryGirl.create :site, user: user }
 
     after(:each) do
         Warden.test_reset!

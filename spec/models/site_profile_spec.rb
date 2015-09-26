@@ -5,5 +5,6 @@ describe SiteProfile do
     let(:site) { FactoryGirl.create :site }
 
     expect_it { to belong_to :site }
+    expect_it { to belong_to :revision }
 
 end

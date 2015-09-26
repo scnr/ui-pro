@@ -3,7 +3,7 @@ Warden.test_mode!
 
 feature 'User agent new page' do
 
-    subject { FactoryGirl.create :user_agent }
+    subject { FactoryGirl.create :user_agent, user: user }
     let(:user) { FactoryGirl.create :user }
 
     after(:each) do

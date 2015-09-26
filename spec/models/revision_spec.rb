@@ -9,6 +9,8 @@ describe Revision do
 
     expect_it { to belong_to(:scan).counter_cache(true) }
     expect_it { to have_many(:issues).dependent(:destroy) }
+    expect_it { to have_one(:site_profile).dependent(:destroy) }
+    expect_it { to have_one(:site_role).dependent(:destroy) }
     expect_it { to have_many(:reviewed_issues) }
     expect_it { to have_many(:sitemap_entries) }
 
@@ -385,6 +387,30 @@ describe Revision do
 
         it 'returns #stopped_at' do
             expect(subject.performed_at.object_id).to eq subject.stopped_at.object_id
+        end
+    end
+
+    describe '#site_role' do
+        it 'returns the state of the site role at the time the revision was created' do
+            expect(subject.site_role.to_rpc_options).to eq scan.site_role.to_rpc_options
+
+            scan.site_role.scope_exclude_path_patterns = [
+                'stuff here'
+            ]
+            scan.site_role.save
+
+            expect(subject.site_role.to_rpc_options).to_not eq scan.site_role.to_rpc_options
+        end
+    end
+
+    describe '#site_profile' do
+        it 'returns the state of a site profile at the time the revision was created' do
+            expect(subject.site_profile.to_rpc_options).to eq site.profile.to_rpc_options
+
+            site.profile.scope_auto_redundant_paths = 10000
+            site.profile.save
+
+            expect(subject.site_profile.to_rpc_options).to_not eq site.profile.to_rpc_options
         end
     end
 

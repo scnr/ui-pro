@@ -1,7 +1,7 @@
 feature 'Revision coverage' do
     let(:user) { FactoryGirl.create :user }
     let(:other_user) { FactoryGirl.create(:user, email: 'other@example.com') }
-    let(:site) { FactoryGirl.create :site }
+    let(:site) { FactoryGirl.create :site, user: user }
     let(:profile) { FactoryGirl.create :profile }
     let(:other_site) { FactoryGirl.create :site, host: 'fff.com' }
     let(:scan) { FactoryGirl.create :scan, site: site, profile: profile }
@@ -344,7 +344,7 @@ feature 'Revision coverage' do
         let(:coverage) { scan_results.find '#coverage' }
 
         it 'shows info alert' do
-            expect(coverage.find('.alert.alert-info')).to have_content 'No coverage data are available.'
+            expect(coverage.find('.alert.alert-info.no-coverage')).to have_content 'No coverage data are available.'
         end
     end
 end

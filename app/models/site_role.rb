@@ -5,14 +5,20 @@ class SiteRole < ActiveRecord::Base
     serialize :login_form_parameters, Hash
 
     belongs_to :site
+    belongs_to :revision
+
     has_many   :scans, -> { order id: :desc }
     has_many   :revisions, through: :scans
 
     validates :login_type, presence: true, inclusion: { in: %w(none form script) }
 
-    validates_presence_of   :site
+    validates_presence_of   :site,
+                            # If it has a revision it means it's a frozen copy
+                            # for the revision, to keep as reference.
+                            # Thus, it won't have a #site.
+                            if: lambda { !revision }
     validates_presence_of   :name
-    validates_uniqueness_of :name, scope: :site
+    validates_uniqueness_of :name, scope: [:site, :revision]
 
     validates_presence_of   :session_check_url,
                             if: lambda { !guest? }

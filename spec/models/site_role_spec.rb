@@ -2,10 +2,14 @@ require 'rails_helper'
 
 describe SiteRole, type: :model do
     subject { FactoryGirl.create :site_role }
-    let(:site){ FactoryGirl.create :site }
+    let(:revision){ FactoryGirl.create :revision, scan: scan }
+    let(:scan){ FactoryGirl.create :scan, site: site }
+    let(:site){ FactoryGirl.create :site, user: user }
     let(:other_site){ FactoryGirl.create :site }
+    let(:user){ FactoryGirl.create :user }
 
     expect_it { to belong_to :site }
+    expect_it { to belong_to :revision }
     expect_it { to have_many :scans }
     expect_it { to have_many :revisions }
     expect_it { to validate_presence_of :site }
@@ -16,13 +20,19 @@ describe SiteRole, type: :model do
     expect_it { to validate_presence_of :login_type }
 
     describe '#name' do
-        it 'is unique for each site' do
+        it 'is unique for each site and revision' do
             data = subject.attributes.merge( name: 'stuff' )
             data.delete 'id'
 
             expect(site.roles.create( data )).to be_valid
 
             role = site.roles.create( data )
+            expect(role.errors.messages).to include :name
+
+            role = site.roles.create( data.merge( revision: revision ))
+            expect(role).to be_valid
+
+            role = site.roles.create( data.merge( revision: revision ) )
             expect(role.errors.messages).to include :name
         end
     end

@@ -1,0 +1,8 @@
+<%= render layout: '/shared/scan_results/configuration/content',
+           locals: local_assigns.merge(
+               snapshot:     snapshot,
+               current:      current,
+               wrapper:      tag_name,
+               attribute:    attribute
+           ), &proc { |*args| yield *args }
+%>

@@ -1,0 +1,165 @@
+<%
+   changed = @scan.site_role.to_rpc_options !=
+           @revision.site_role.to_rpc_options
+%>
+
+<div id="configuration-site_role">
+    <h2>
+        User role:
+
+        <small>
+            <%= link_to @scan.site_role, site_role_path( @site, @scan.site_role ) %>
+
+            <% if !@scan.site_role.guest? %>
+                &mdash;
+
+                <% if changed %>
+                    Out of date
+
+                    <%= render partial: '/shared/scan_results/configuration/revert_button',
+                               locals: {
+                                   model: :site_role
+                               }
+                    %>
+                <% else %>
+                    Up to date
+                <% end %>
+            <% end %>
+        </small>
+    </h2>
+
+    <div class="text text-muted">
+        <%= md @scan.site_role.description %>
+    </div>
+
+    <% if !@scan.site_role.guest? %>
+
+        <div id="configuration-site_role-alert"
+             class="alert alert-<%= changed ? 'warning' : 'info' %>">
+            User role settings at the time the revision was created are
+
+            <% if changed %>
+                different from <%= link_to 'current', site_role_path( @site, @scan.site_role ) %> ones.
+            <% else %>
+                the same as <%= link_to 'current', site_role_path( @site, @scan.site_role ) %> ones.
+            <% end %>
+        </div>
+
+        <div id="configuration-site_role-session">
+            <h3>Session</h3>
+
+            <table class="table table-condensed">
+                <thead>
+                <tr>
+
+                    <%= render layout: '/shared/scan_results/configuration/site_role/th',
+                               locals: {
+                                       attribute: 'session_check_url'
+                               } do %>
+                        Check URL
+                    <% end %>
+
+                    <%= render layout: '/shared/scan_results/configuration/site_role/th',
+                               locals: {
+                                       attribute: 'session_check_pattern'
+                               } do %>
+                        Check pattern
+                    <% end %>
+
+                    <%= render layout: '/shared/scan_results/configuration/site_role/th',
+                               locals: {
+                                       attribute: 'scope_exclude_path_patterns'
+                               } do %>
+                        Logout exclusion patterns
+                    <% end %>
+
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr>
+
+                    <%= render layout: '/shared/scan_results/configuration/site_role/td',
+                               locals: {
+                                       attribute: 'session_check_url'
+                               } do |value| %>
+
+                        <%= link_to_external value %>
+                    <% end %>
+
+                    <%= render layout: '/shared/scan_results/configuration/site_role/td',
+                               locals: {
+                                       attribute: 'session_check_pattern'
+                               } do |value| %>
+
+                            <code><%= value %></code>
+                    <% end %>
+
+                    <%= render layout: '/shared/scan_results/configuration/site_role/td',
+                               locals: {
+                                       attribute: 'scope_exclude_path_patterns'
+                               } do |value| %>
+
+                        site role
+
+                        <% if value.any? %>
+                            <ul class="list-unstyled">
+
+                                <% value.each do |regexp| %>
+                                    <li>
+                                        <code><%= regexp %></code>
+                                    </li>
+                                <% end %>
+
+                            </ul>
+                        <% else %>
+                            None
+                        <% end %>
+
+                    <% end %>
+
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="configuration-site_role-login">
+            <h3>Login</h3>
+
+            <%= render layout: '/shared/scan_results/configuration/content',
+                      locals: local_assigns.merge(
+                              snapshot:     @revision.site_role,
+                              current:      @scan.site_role,
+                              show_current: true,
+                              highlight:    true,
+                              attribute:    'login_type'
+                      ) do |login_type, changed_type, in_snapshot|
+            %>
+
+                <% if login_type == 'form' %>
+                    <%= render partial: '/shared/scan_results/configuration/site_role/login_form',
+                               locals: {
+                                       show_current: !changed_type && in_snapshot,
+                                       highlight:    !changed_type && in_snapshot,
+                                       current:      (!in_snapshot ? @revision : @scan).site_role,
+                                       snapshot:     (in_snapshot ? @revision : @scan).site_role
+                               }
+                    %>
+                <% else %>
+                    <%= render layout: '/shared/scan_results/configuration/content',
+                               locals: {
+                                   tag_name:     'div',
+                                   show_current: !changed_type && in_snapshot,
+                                   highlight:    !changed_type && in_snapshot,
+                                   current:      (!in_snapshot ? @revision : @scan).site_role,
+                                   snapshot:     (in_snapshot ? @revision : @scan).site_role,
+                                   attribute:   'login_script_code'
+                               } do |value| %>
+
+                        <%= code_highlight( value, :ruby ) %>
+                    <% end %>
+                <% end %>
+            <% end %>
+        </div>
+    <% end %>
+</div>

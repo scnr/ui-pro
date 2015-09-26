@@ -11,7 +11,7 @@
 
 options = Arachni::Options
 
-# Dev defaults, for comparison with other branches and Pro vs CLI.
+# Dev defaults, for comparison with other branches  and Pro vs CLI.
 options.audit.elements :forms, :links, :ui_forms, :ui_inputs
 
 # Production defaults.

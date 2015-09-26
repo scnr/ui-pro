@@ -6,9 +6,19 @@ module ScanResults
         before_action :set_counters, only: SCAN_RESULT_ACTIONS
     end
 
-    SCAN_RESULT_REVISION_ACTIONS = [ :live, :health, :errors ]
-    SCAN_RESULT_ACTIONS          = [ :issues, :coverage, :reviews ] +
-        SCAN_RESULT_REVISION_ACTIONS
+    REVERT_MODELS = [ :site_profile, :site_role ]
+
+    SCAN_RESULT_SITE_ACTIONS     = [ :issues, :coverage, :reviews ]
+
+    SCAN_RESULT_SCAN_ACTIONS     =
+        SCAN_RESULT_SITE_ACTIONS
+
+    SCAN_RESULT_REVISION_ACTIONS =
+        SCAN_RESULT_SITE_ACTIONS +
+        SCAN_RESULT_SCAN_ACTIONS +
+            [ :revert_configuration, :configuration, :live, :health, :errors ]
+
+    SCAN_RESULT_ACTIONS          = SCAN_RESULT_REVISION_ACTIONS
 
     def live
         from = nil
@@ -92,6 +102,40 @@ module ScanResults
         process_and_show
     end
 
+    def configuration
+        @configuration = prepare_configuration_data
+        process_and_show
+    end
+
+    def revert_configuration
+        revert_model = params.permit(:model)[:model].to_sym
+
+        if !REVERT_MODELS.include?( revert_model )
+            fail "Cannot revert #{revert_model}"
+        end
+
+        @configuration = prepare_configuration_data
+
+        snapshot = @revision.send( revert_model )
+
+        if revert_model == :site_role
+            current  = @scan.site_role
+        else
+            current  = @site.profile
+        end
+
+        attributes = snapshot.attributes.dup
+        %w(id site_id revision_id created_at updated_at).each do |attribute|
+            attributes.delete attribute
+        end
+
+        if current.update( attributes )
+            redirect_to :back, notice: 'Settings were successfully updated.'
+        else
+            redirect_to :back, notice: 'Settings could not be updated.'
+        end
+    end
+
     private
 
     def set_counters
@@ -142,6 +186,13 @@ module ScanResults
 
     def prepare_reviews_data
         { issues: scan_results_reviewed_issues }
+    end
+
+    def prepare_configuration_data
+        {
+            snapshot: scan_results_owner.rpc_options,
+            current:  @revision ? @revision.scan.rpc_options : nil
+        }
     end
 
     def prepare_issue_data

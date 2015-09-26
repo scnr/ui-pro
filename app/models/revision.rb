@@ -9,6 +9,11 @@ class Revision < ActiveRecord::Base
     belongs_to :scan, counter_cache: true
     belongs_to :site, counter_cache: true
 
+    # Copies of site settings and role at the time the revision was created.
+    # These can change over time so keep a frozen copy.
+    has_one :site_profile, dependent: :destroy
+    has_one :site_role, dependent: :destroy
+
     has_many :issues,  dependent: :destroy
     has_many :reviewed_issues,  class_name: 'Issue',
              foreign_key: 'reviewed_by_revision_id'
@@ -24,6 +29,8 @@ class Revision < ActiveRecord::Base
     before_save :set_index
     before_save :set_site
     before_save :set_rpc_options
+    before_save :copy_site_profile
+    before_save :copy_site_role
 
     scope :in_progress, -> do
         where.not( started_at: nil ).where( stopped_at: nil )
@@ -66,6 +73,26 @@ class Revision < ActiveRecord::Base
 
     private
 
+    def copy_site_profile
+        return if self.site_profile
+
+        dupped = site.profile.dup
+        # Associations will get confused, revision has a #site anyways.
+        dupped.site = nil
+
+        self.site_profile = dupped
+    end
+
+    def copy_site_role
+        return if self.site_role
+
+        dupped = scan.site_role.dup
+        # Associations will get confused, revision has a #site anyways.
+        dupped.site = nil
+
+        self.site_role = dupped
+    end
+
     def set_rpc_options
         return if self.rpc_options.any?
         self.rpc_options = scan.rpc_options
@@ -76,7 +103,7 @@ class Revision < ActiveRecord::Base
     end
 
     def set_site
-        self.site = scan.site
+        self.site ||= scan.site
     end
 
     def ensure_performance_snapshot

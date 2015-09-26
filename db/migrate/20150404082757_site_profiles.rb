@@ -29,6 +29,9 @@ class SiteProfiles < ActiveRecord::Migration
 
             t.belongs_to :site, index: true
 
+            # Frozen copy at the time of Revision creation.
+            t.belongs_to :revision
+
             t.timestamps
         end
     end

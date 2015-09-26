@@ -2,9 +2,9 @@ feature 'Scans index' do
 
     let(:user) { FactoryGirl.create :user }
     let(:other_user) { FactoryGirl.create(:user, email: 'other@example.com') }
-    let(:site) { FactoryGirl.create :site }
+    let(:site) { FactoryGirl.create :site, user: user }
     let(:profile) { FactoryGirl.create :profile }
-    let(:other_site) { FactoryGirl.create :site, host: 'fff.com' }
+    let(:other_site) { FactoryGirl.create :site, host: 'fff.com', user: user }
     let(:revision) { FactoryGirl.create :revision, scan: scan }
     let(:scan) { new_scan }
     let(:other_scan) { new_scan }

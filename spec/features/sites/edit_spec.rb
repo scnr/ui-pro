@@ -3,11 +3,11 @@ feature 'Site profile form' do
     let(:other_user) { FactoryGirl.create(:user, email: 'other@example.com') }
     let(:profile) { FactoryGirl.create :profile }
 
-    let(:site) { FactoryGirl.create :site, profile: nil }
+    let(:site) { FactoryGirl.create :site, profile: nil, user: user }
     let(:scan) { FactoryGirl.create :scan, site: site, profile: FactoryGirl.create( :profile ) }
     let(:revision) { FactoryGirl.create :revision, scan: scan }
 
-    let(:https_site) { FactoryGirl.create :site, protocol: 'https' }
+    let(:https_site) { FactoryGirl.create :site, protocol: 'https', user: user }
     let(:https_scan) { FactoryGirl.create :scan, site: https_site, profile: FactoryGirl.create( :profile ) }
     let(:https_revision) { FactoryGirl.create :revision, scan: https_scan }
 

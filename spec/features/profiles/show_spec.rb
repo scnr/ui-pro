@@ -9,7 +9,7 @@ feature 'Profile page', :devise do
     subject { FactoryGirl.create :profile, scans: [scan] }
     let(:user) { FactoryGirl.create :user }
     let(:scan) { FactoryGirl.create :scan, site: site }
-    let(:site) { FactoryGirl.create :site }
+    let(:site) { FactoryGirl.create :site, user: user }
     let(:revision) { FactoryGirl.create :revision }
 
     after(:each) do

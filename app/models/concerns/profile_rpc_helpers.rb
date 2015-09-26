@@ -28,6 +28,7 @@ module ProfileRpcHelpers
         :audit_ui_inputs,
         :audit_parameter_values,
 
+        :browser_cluster_wait_for_elements,
         :browser_cluster_screen_height,
         :browser_cluster_screen_width,
         :browser_cluster_pool_size,
@@ -106,9 +107,7 @@ module ProfileRpcHelpers
             end
         end
 
-        if has_option?( :scope_template_path_patterns ) &&
-            scope_template_path_patterns.any?
-
+        if has_option?( :scope_template_path_patterns )
             opts['scope']['redundant_path_patterns'] =
                 scope_template_path_patterns.
                     inject({}) { |h, pattern| h[pattern] = TEMPLATE_PATH_PATTERN_COUNTER; h }

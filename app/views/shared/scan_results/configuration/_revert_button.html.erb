@@ -1,0 +1,15 @@
+<%= link_to revert_configuration_site_scan_revision_path(
+                    @site, @scan, @revision, local_assigns
+            ),
+            method:   :put,
+            class:   'btn btn-primary btn-xs',
+            data: {
+                confirm: 'Are you sure you want to overwrite the existing settings?'
+            } do
+    %>
+
+    <i class="fa fa-undo"></i>
+
+    Revert
+
+<% end %>

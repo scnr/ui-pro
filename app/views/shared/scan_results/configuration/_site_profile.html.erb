@@ -1,0 +1,573 @@
+<%
+   changed = @revision.site_profile.to_rpc_options !=
+           @revision.site.profile.to_rpc_options
+%>
+
+<p class="text text-muted">
+    Snapshot of the configuration options used for this revision.
+</p>
+
+<div id="configuration-site">
+    <h2>
+        Site settings:
+
+        <small>
+
+            <% if changed %>
+                Out of date
+
+                <%= render partial: '/shared/scan_results/configuration/revert_button',
+                        locals: {
+                            model: :site_profile
+                        }
+                %>
+            <% else %>
+                Up to date
+            <% end %>
+        </small>
+    </h2>
+
+    <div
+        id="configuration-site-alert"
+        class="alert alert-<%= changed ? 'warning' : 'info' %>">
+
+        Site settings at the time the revision was created are
+
+        <% if changed %>
+            different from <%= link_to 'current', edit_site_path( @site ) %> ones.
+        <% else %>
+            the same as <%= link_to 'current', edit_site_path( @site ) %> ones.
+        <% end %>
+    </div>
+
+    <div id="configuration-site-platforms">
+        <h3>Platforms</h3>
+
+        <table class="table table-condensed">
+            <thead>
+            <tr>
+                <%= render layout: '/shared/scan_results/configuration/site_profile/th',
+                    locals: {
+                        attribute:       'platforms',
+                        fragment_prefix: nil
+                    } do %>
+                    Selected
+                <% end %>
+
+                <%= render layout: '/shared/scan_results/configuration/site_profile/th',
+                           locals: {
+                               attribute: 'no_fingerprinting'
+                           } do %>
+                    Fingerprinting
+                <% end %>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr>
+                <%= render layout: '/shared/scan_results/configuration/site_profile/td',
+                           locals: {
+                                   attribute: 'platforms'
+                           } do |value| %>
+                    <% if value.any? %>
+
+                        <ul class="list-unstyled">
+
+                            <% value.each do |platform| %>
+                                <li>
+                                    <%= platform_fullname platform %>
+                                </li>
+                            <% end %>
+
+                        </ul>
+
+                    <% else %>
+                        None
+                    <% end %>
+                <% end %>
+
+                <%= render layout: '/shared/scan_results/configuration/site_profile/td',
+                           locals: {
+                                   attribute: 'no_fingerprinting'
+                           } do |value| %>
+                    <%= value ? 'Disabled' : 'Enabled' %>
+                <% end %>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="configuration-site-scope">
+        <h3>Scope</h3>
+
+        <table class="table table-condensed">
+            <thead>
+            <tr>
+                <% if @site.https? %>
+                    <%= render layout: '/shared/scan_results/configuration/site_profile/th',
+                               locals: {
+                                   attribute: 'scope_https_only'
+                               } do %>
+                        HTPS only?
+                    <% end %>
+                <% end %>
+
+                <%= render layout: '/shared/scan_results/configuration/site_profile/th',
+                           locals: {
+                               attribute: 'scope_auto_redundant_paths'
+                           } do %>
+                    Parameter redundancy limit
+                <% end %>
+
+                <%= render layout: '/shared/scan_results/configuration/site_profile/th',
+                           locals: {
+                               attribute: 'scope_template_path_patterns'
+                           } do %>
+                    Template patterns
+                <% end %>
+
+                <%= render layout: '/shared/scan_results/configuration/site_profile/th',
+                           locals: {
+                           attribute: 'scope_exclude_path_patterns'
+                           } do %>
+                    Exclusion patterns
+                <% end %>
+
+                <%= render layout: '/shared/scan_results/configuration/site_profile/th',
+                           locals: {
+                               attribute: 'scope_exclude_content_patterns'
+                           } do %>
+                    Content exclusion patterns
+                <% end %>
+
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr>
+                <% if @site.https? %>
+                    <%= render layout: '/shared/scan_results/configuration/site_profile/td',
+                               locals: {
+                                   attribute: 'scope_https_only'
+                               } do |value| %>
+                        <%= value ? 'Yes' : 'No' %>
+                    <% end %>
+                <% end %>
+
+                <%= render layout: '/shared/scan_results/configuration/site_profile/td',
+                           locals: {
+                               attribute: 'scope_auto_redundant_paths'
+                           } do |value| %>
+                    <%= value || 'Unlimited' %>
+                <% end %>
+
+                <%= render layout: '/shared/scan_results/configuration/site_profile/td',
+                           locals: {
+                               attribute: 'scope_template_path_patterns'
+                           } do |value| %>
+
+                    <% if value.any? %>
+                        <ul class="list-unstyled">
+
+                            <% value.each do |regexp| %>
+                                <li>
+                                    <code><%= regexp %></code>
+                                </li>
+                            <% end %>
+
+                        </ul>
+                    <% else %>
+                        None
+                    <% end %>
+
+                <% end %>
+
+                <%= render layout: '/shared/scan_results/configuration/site_profile/td',
+                           locals: {
+                               attribute: 'scope_exclude_path_patterns'
+                           } do |value| %>
+
+                    <% if value.any? %>
+                        <ul class="list-unstyled">
+
+                            <% value.each do |regexp| %>
+                                <li>
+                                    <code><%= regexp %></code>
+                                </li>
+                            <% end %>
+
+                        </ul>
+                    <% else %>
+                        None
+                    <% end %>
+
+                <% end %>
+
+                <%= render layout: '/shared/scan_results/configuration/site_profile/td',
+                           locals: {
+                               attribute: 'scope_exclude_content_patterns'
+                           } do |value| %>
+
+                    <% if value.any? %>
+                        <ul class="list-unstyled">
+
+                            <% value.each do |regexp| %>
+                                <li>
+                                    <code><%= regexp %></code>
+                                </li>
+                            <% end %>
+
+                        </ul>
+                    <% else %>
+                        None
+                    <% end %>
+
+                <% end %>
+
+            </tr>
+            </tbody>
+        </table>
+
+        <table class="table table-condensed">
+            <thead>
+            <tr>
+                <%= render layout: '/shared/scan_results/configuration/site_profile/th',
+                           locals: {
+                               attribute: 'scope_exclude_file_extensions'
+                           } do %>
+                    Exclude file extensions
+                <% end %>
+
+                <%= render layout: '/shared/scan_results/configuration/site_profile/th',
+                           locals: {
+                               attribute: 'scope_extend_paths'
+                           } do %>
+                    Extend paths
+                <% end %>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr>
+
+                <%= render layout: '/shared/scan_results/configuration/site_profile/td',
+                           locals: {
+                               attribute: 'scope_exclude_file_extensions'
+                           } do |value| %>
+                    <%= value.any? ? value.join( ' ' ) : 'None' %>
+                <% end %>
+
+                <%= render layout: '/shared/scan_results/configuration/site_profile/td',
+                           locals: {
+                               attribute: 'scope_extend_paths'
+                           } do |value| %>
+
+                    <% if value.any? %>
+                        <%= render layout: '/shared/scan_results/configuration/show_in_modal',
+                                   locals: {
+                                       id:    "extend_paths_#{value.hash}",
+                                       title: 'Extend paths'
+                                   } do %>
+
+                            <pre><%= value.join( "\n" ) %></pre>
+
+                        <% end %>
+                    <% else %>
+                        None
+                    <% end %>
+
+                <% end %>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="configuration-site-inputs">
+        <h3>Inputs</h3>
+
+        <table class="table table-condensed">
+            <thead>
+            <tr>
+
+                <%= render layout: '/shared/scan_results/configuration/site_profile/th',
+                           locals: {
+                                   attribute: 'audit_link_templates'
+                           } do %>
+                    Custom inputs
+                <% end %>
+
+                <%= render layout: '/shared/scan_results/configuration/site_profile/th',
+                           locals: {
+                                   attribute: 'scope_url_rewrites'
+                           } do %>
+                    URL rewrites
+                <% end %>
+
+                <%= render layout: '/shared/scan_results/configuration/site_profile/th',
+                           locals: {
+                                   attribute: 'input_values'
+                           } do %>
+                    Fill-in values
+                <% end %>
+
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr>
+                <%= render layout: '/shared/scan_results/configuration/site_profile/td',
+                           locals: {
+                                   attribute: 'audit_link_templates'
+                           } do |value| %>
+
+                    <% if value.any? %>
+                        <ul class="list-unstyled">
+
+                            <% value.each do |regexp| %>
+                                <li>
+                                    <code><%= regexp %></code>
+                                </li>
+                            <% end %>
+
+                        </ul>
+                    <% else %>
+                        None
+                    <% end %>
+
+                <% end %>
+
+                <%= render layout: '/shared/scan_results/configuration/site_profile/td',
+                           locals: {
+                                   attribute: 'scope_url_rewrites'
+                           } do |value| %>
+
+                    <% if value.any? %>
+                        <ul class="list-unstyled">
+
+                            <% value.each do |regexp, rewrite| %>
+                                <li>
+                                    <code><%= regexp %></code> =>
+                                    <code><%= rewrite %></code>
+                                </li>
+                            <% end %>
+
+                        </ul>
+                    <% else %>
+                        None
+                    <% end %>
+
+                <% end %>
+
+                <%= render layout: '/shared/scan_results/configuration/site_profile/td',
+                           locals: {
+                                   attribute: 'input_values'
+                           } do |value| %>
+
+                    <% if value.any? %>
+
+                        <ul class="list-unstyled">
+
+                            <% value.each do |pattern, v| %>
+                                <li>
+                                    <code><%= pattern %></code> = <kbd><%= v %></kbd>
+                                </li>
+                            <% end %>
+
+                        </ul>
+
+                    <% else %>
+                        None
+                    <% end %>
+
+                <% end %>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="configuration-site-http">
+        <h3>HTTP</h3>
+
+        <table class="table table-condensed">
+            <thead>
+            <tr>
+
+                <%= render layout: '/shared/scan_results/configuration/site_profile/th',
+                           locals: {
+                                   attribute: 'http_authentication_username'
+                           } do %>
+                    Username
+                <% end %>
+
+                <%= render layout: '/shared/scan_results/configuration/site_profile/th',
+                           locals: {
+                                   attribute: 'http_authentication_password'
+                           } do %>
+                    Password
+                <% end %>
+
+                <%= render layout: '/shared/scan_results/configuration/site_profile/th',
+                           locals: {
+                                   attribute: 'http_cookies'
+                           } do %>
+                    Cookies
+                <% end %>
+
+                <%= render layout: '/shared/scan_results/configuration/site_profile/th',
+                           locals: {
+                                   attribute: 'http_request_headers'
+                           } do %>
+                    Headers
+                <% end %>
+
+                <%= render layout: '/shared/scan_results/configuration/site_profile/th',
+                           locals: {
+                                   attribute: 'http_request_concurrency'
+                           } do %>
+                    Request concurrency
+                <% end %>
+
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr>
+
+                <%= render layout: '/shared/scan_results/configuration/site_profile/td',
+                           locals: {
+                                   attribute: 'http_authentication_username'
+                           } do |value| %>
+
+                    <%= value.blank? ? 'None' : value %>
+
+                <% end %>
+
+                <%= render layout: '/shared/scan_results/configuration/site_profile/td',
+                           locals: {
+                                   attribute: 'http_authentication_password'
+                           } do |value| %>
+
+                    <%= value.blank? ? 'None' : value %>
+                <% end %>
+
+                <%= render layout: '/shared/scan_results/configuration/site_profile/td',
+                           locals: {
+                                   attribute: 'http_cookies'
+                           } do |value| %>
+
+                    <% if value.any? %>
+                        <ul class="list-unstyled">
+
+                            <% value.each do |k, v| %>
+                                <li>
+                                    <code>
+                                        <%= k %> = <%= v %>
+                                    </code>
+                                </li>
+                            <% end %>
+
+                        </ul>
+                    <% else %>
+                        None
+                    <% end %>
+                <% end %>
+
+                <%= render layout: '/shared/scan_results/configuration/site_profile/td',
+                           locals: {
+                                   attribute: 'http_request_headers'
+                           } do |value| %>
+
+                    <% if value.any? %>
+                        <ul class="list-unstyled">
+
+                            <% value.each do |k, v| %>
+                                <li>
+                                    <code>
+                                        <%= k %> = <%= v %>
+                                    </code>
+                                </li>
+                            <% end %>
+
+                        </ul>
+                    <% else %>
+                        None
+                    <% end %>
+                <% end %>
+
+                <%= render layout: '/shared/scan_results/configuration/site_profile/td',
+                           locals: {
+                                   attribute: 'http_request_concurrency'
+                           } do |value| %>
+
+                    <%= value %>
+                <% end %>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="configuration-site-browser">
+        <h3>Browser</h3>
+
+        <table class="table table-condensed">
+            <thead>
+            <tr>
+
+                <%= render layout: '/shared/scan_results/configuration/site_profile/th',
+                           locals: {
+                                   attribute: 'browser_cluster_wait_for_elements'
+                           } do %>
+                    Wait for elements to appear
+                <% end %>
+
+                <%= render layout: '/shared/scan_results/configuration/site_profile/th',
+                           locals: {
+                                   attribute: 'browser_cluster_ignore_images'
+                           } do %>
+                    Load images
+                <% end %>
+
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr>
+
+                <%= render layout: '/shared/scan_results/configuration/site_profile/td',
+                           locals: {
+                                   attribute: 'browser_cluster_wait_for_elements'
+                           } do |value| %>
+
+                    <% if value.any? %>
+                        <ul class="list-unstyled">
+
+                            <% value.each do |pattern, css| %>
+                                <li>
+                                    <code><%= pattern %></code> =>
+                                    <code><%= css %></code>
+                                </li>
+                            <% end %>
+
+                        </ul>
+                    <% else %>
+                        None
+                    <% end %>
+                <% end %>
+
+                <%= render layout: '/shared/scan_results/configuration/site_profile/td',
+                           locals: {
+                                   attribute: 'browser_cluster_ignore_images'
+                           } do |value| %>
+
+                    <%= value ? 'Disabled' : 'Enabled' %>
+                <% end %>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
