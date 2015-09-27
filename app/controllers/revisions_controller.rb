@@ -61,6 +61,8 @@ class RevisionsController < ApplicationController
     end
 
     def prepare_health_data
+        return [] if !@revision.performance_snapshot.http_max_concurrency
+
         (@revision.performance_snapshots.map(&:attributes) +
             [@revision.performance_snapshot.attributes]).map do |snapshot|
 

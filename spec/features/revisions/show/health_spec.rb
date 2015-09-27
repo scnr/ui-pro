@@ -46,6 +46,20 @@ feature 'Revision health' do
         end
     end
 
+    feature 'when no performance data is available' do
+        before do
+            revision.performance_snapshot.destroy
+            revision.build_performance_snapshot
+            revision.save
+
+            refresh
+        end
+
+        scenario 'is shows alert' do
+            expect(health.find('.alert')).to have_content 'No health data available.'
+        end
+    end
+
     feature 'Scanner performance' do
         let(:section) { health.find '#health-scanner_performance' }
 
