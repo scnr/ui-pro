@@ -1,3 +1,42 @@
+<%
+   site_profile_changed = @revision.site_profile.to_rpc_options != @revision.site.profile.to_rpc_options
+
+   site_role_changed    = !@scan.site_role.guest? &&
+           @revision.site_role.to_rpc_options != @scan.site_role.to_rpc_options
+
+   changed              = site_profile_changed || site_role_changed
+%>
+
+<p class="text text-muted">
+    Snapshot of the configuration options used for this revision.
+</p>
+
+<% if changed %>
+    <p class="alert alert-help">
+        <i class="fa fa-info-circle"></i>
+
+        Found the perfect configuration of
+
+        <% if site_profile_changed %>
+            <%= link_to 'site', '#!/configuration-site',
+                        target: '_blank' %>
+        <% end %>
+
+        <% if site_profile_changed && site_role_changed %>
+            or
+        <% end %>
+
+        <% if site_role_changed %>
+            <%= link_to 'user role', '#!/configuration-site_role',
+                        target: '_blank' %>
+        <% end %>
+
+        settings?
+
+        Getting them back is as easy as clicking the "Revert" button.
+    </p>
+<% end %>
+
 <%= render partial: '/shared/scan_results/configuration/site_profile' %>
 <%= render partial: '/shared/scan_results/configuration/site_role' %>
 <%= render partial: '/shared/scan_results/configuration/profile' %>

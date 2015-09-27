@@ -113,6 +113,11 @@ section {
     font-size: 16px;
 }
 
+.alert-help {
+    @extend .alert-info;
+    //text-align: center;
+}
+
 .button-xs {
     @extend .btn;
     @extend .btn-primary;

@@ -23,6 +23,7 @@ feature 'Revision coverage' do
         Warden.test_reset!
     end
 
+    let(:help_alert) { find '.alert-help' }
     let(:configuration) { find '#configuration' }
     let(:snapshot) { td.find ".#{attribute}-snapshot" }
     let(:current) { td.find ".#{attribute}-current" }
@@ -58,6 +59,15 @@ feature 'Revision coverage' do
 
             scenario 'shows status in alert' do
                 expect(alert).to have_content 'different from current ones'
+            end
+
+            scenario 'shows help alert', js: true do
+                expect(help_alert).to have_content 'Found the perfect configuration'
+
+                within help_alert do
+                    click_link 'site'
+                    expect( URI(current_url).fragment ).to eq '!/configuration-site'
+                end
             end
         end
 
@@ -1629,6 +1639,15 @@ feature 'Revision coverage' do
                     end
 
                     expect(scan.site_role.reload.session_check_url).to eq revision.site_role.session_check_url
+                end
+
+                scenario 'shows help alert', js: true do
+                    expect(help_alert).to have_content 'Found the perfect configuration'
+
+                    within help_alert do
+                        click_link 'user role'
+                        expect( URI(current_url).fragment ).to eq '!/configuration-site_role'
+                    end
                 end
             end
 

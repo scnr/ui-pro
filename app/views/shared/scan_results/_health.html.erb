@@ -6,6 +6,21 @@
     window.performance_snapshots = <%= @health.to_json.html_safe %>;
 </script>
 
+<p class="alert alert-help">
+    <i class="fa fa-info-circle"></i>
+
+    You can <%= link_to 'adjust the HTTP request concurrency',
+                        "#{edit_site_path( @site )}#!/site_profile_attributes_http_request_concurrency",
+                        target: '_blank'
+                %>
+
+    in order to find the perfect balance between performance and server stress.
+
+    <br/>
+
+    Nevertheless, Arachni will automatically throttle itself down upon detection of server stress.
+</p>
+
 <div class="row">
     <div class="chart-container" id="health-scanner_performance">
         <h3>

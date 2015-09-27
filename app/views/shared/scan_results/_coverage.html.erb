@@ -12,10 +12,12 @@
     Coverage data show all audited resources.
 </p>
 
-<p class="alert alert-info">
+<p class="alert alert-help">
     <i class="fa fa-info-circle"></i>
 
-    You can <%= link_to 'customize the site-wide scope', "#{edit_site_path( @site )}#scope" %>
+    You can <%= link_to 'customize the site-wide scope',
+                        "#{edit_site_path( @site )}#!/scope",
+                        target: '_blank' %>
     in order to limit processing of template-based, redundant resources, as
     well as exclude dangerous or unwanted ones.
 </p>

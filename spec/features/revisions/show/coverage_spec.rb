@@ -108,6 +108,21 @@ feature 'Revision coverage' do
     let(:missing_entry_4) { "#{scan.url}/missing-entry/4" }
     let(:missing_entries) { [missing_entry_1, missing_entry_2, missing_entry_3, missing_entry_4] }
 
+    let(:help_alert) { find '.alert-help' }
+
+    feature 'help alert' do
+        before do
+            visit coverage_site_scan_revision_path( site, scan, revision_root )
+        end
+
+        scenario 'shows link to concurrency setting', js: true do
+            within help_alert do
+                click_link 'customize the site-wide scope'
+                expect( current_url ).to end_with "#{edit_site_path( site )}#!/scope"
+            end
+        end
+    end
+
     feature 'when the revision is the root one' do
         before do
             visit site_scan_revision_path( site, scan, revision_root )
