@@ -126,6 +126,14 @@ feature 'Revision coverage' do
                         refresh
                     end
 
+                    scenario 'highlights the snapshot value' do
+                        expect(snapshot[:class]).to have_content 'bg-warning'
+                    end
+
+                    scenario 'highlights the current value' do
+                        expect(current[:class]).to have_content 'bg-info'
+                    end
+
                     scenario 'it lists current ones' do
                         site.profile.platforms.each do |platform|
                             expect(current).to have_content FrameworkHelper.platform_fullname( platform )
@@ -214,6 +222,14 @@ feature 'Revision coverage' do
                         refresh
                     end
 
+                    scenario 'highlights the snapshot value' do
+                        expect(snapshot[:class]).to have_content 'bg-warning'
+                    end
+
+                    scenario 'highlights the current value' do
+                        expect(current[:class]).to have_content 'bg-info'
+                    end
+
                     scenario 'shows it' do
                         expect(current).to have_content 'Enabled'
                     end
@@ -278,6 +294,14 @@ feature 'Revision coverage' do
                         site.profile.save
 
                         refresh
+                    end
+
+                    scenario 'highlights the snapshot value' do
+                        expect(snapshot[:class]).to have_content 'bg-warning'
+                    end
+
+                    scenario 'highlights the current value' do
+                        expect(current[:class]).to have_content 'bg-info'
                     end
 
                     scenario 'shows value' do
@@ -365,6 +389,14 @@ feature 'Revision coverage' do
                         site.profile.save
 
                         refresh
+                    end
+
+                    scenario 'highlights the snapshot value' do
+                        expect(snapshot[:class]).to have_content 'bg-warning'
+                    end
+
+                    scenario 'highlights the current value' do
+                        expect(current[:class]).to have_content 'bg-info'
                     end
 
                     scenario 'it lists current ones' do
@@ -456,6 +488,14 @@ feature 'Revision coverage' do
                         refresh
                     end
 
+                    scenario 'highlights the snapshot value' do
+                        expect(snapshot[:class]).to have_content 'bg-warning'
+                    end
+
+                    scenario 'highlights the current value' do
+                        expect(current[:class]).to have_content 'bg-info'
+                    end
+
                     scenario 'it lists current ones' do
                         site.profile.scope_exclude_path_patterns.each do |pattern|
                             expect(current).to have_content pattern.source
@@ -545,6 +585,14 @@ feature 'Revision coverage' do
                         refresh
                     end
 
+                    scenario 'highlights the snapshot value' do
+                        expect(snapshot[:class]).to have_content 'bg-warning'
+                    end
+
+                    scenario 'highlights the current value' do
+                        expect(current[:class]).to have_content 'bg-info'
+                    end
+
                     scenario 'it lists current ones' do
                         site.profile.scope_exclude_content_patterns.each do |pattern|
                             expect(current).to have_content pattern.source
@@ -632,6 +680,14 @@ feature 'Revision coverage' do
                         site.profile.save
 
                         refresh
+                    end
+
+                    scenario 'highlights the snapshot value' do
+                        expect(snapshot[:class]).to have_content 'bg-warning'
+                    end
+
+                    scenario 'highlights the current value' do
+                        expect(current[:class]).to have_content 'bg-info'
                     end
 
                     scenario 'it lists current ones' do
@@ -729,6 +785,14 @@ feature 'Revision coverage' do
                         site.profile.save
 
                         refresh
+                    end
+
+                    scenario 'highlights the snapshot value' do
+                        expect(snapshot[:class]).to have_content 'bg-warning'
+                    end
+
+                    scenario 'highlights the current value' do
+                        expect(current[:class]).to have_content 'bg-info'
                     end
 
                     feature 'when not empty', js: true do
@@ -831,6 +895,14 @@ feature 'Revision coverage' do
                         refresh
                     end
 
+                    scenario 'highlights the snapshot value' do
+                        expect(snapshot[:class]).to have_content 'bg-warning'
+                    end
+
+                    scenario 'highlights the current value' do
+                        expect(current[:class]).to have_content 'bg-info'
+                    end
+
                     scenario 'it lists current ones' do
                         site.profile.audit_link_templates.each do |pattern|
                             expect(current).to have_content pattern.source
@@ -916,6 +988,14 @@ feature 'Revision coverage' do
                         site.profile.save
 
                         refresh
+                    end
+
+                    scenario 'highlights the snapshot value' do
+                        expect(snapshot[:class]).to have_content 'bg-warning'
+                    end
+
+                    scenario 'highlights the current value' do
+                        expect(current[:class]).to have_content 'bg-info'
                     end
 
                     scenario 'it lists current ones' do
@@ -1007,6 +1087,14 @@ feature 'Revision coverage' do
                         refresh
                     end
 
+                    scenario 'highlights the snapshot value' do
+                        expect(snapshot[:class]).to have_content 'bg-warning'
+                    end
+
+                    scenario 'highlights the current value' do
+                        expect(current[:class]).to have_content 'bg-info'
+                    end
+
                     scenario 'it lists current ones' do
                         site.profile.input_values.each do |name, value|
                             expect(current).to have_content "#{name} = #{value}"
@@ -1075,6 +1163,14 @@ feature 'Revision coverage' do
                         refresh
                     end
 
+                    scenario 'highlights the snapshot value' do
+                        expect(snapshot[:class]).to have_content 'bg-warning'
+                    end
+
+                    scenario 'highlights the current value' do
+                        expect(current[:class]).to have_content 'bg-info'
+                    end
+
                     scenario 'shows value' do
                         expect(current).to have_content 'john'
                     end
@@ -1137,6 +1233,14 @@ feature 'Revision coverage' do
                         site.profile.save
 
                         refresh
+                    end
+
+                    scenario 'highlights the snapshot value' do
+                        expect(snapshot[:class]).to have_content 'bg-warning'
+                    end
+
+                    scenario 'highlights the current value' do
+                        expect(current[:class]).to have_content 'bg-info'
                     end
 
                     scenario 'shows value' do
@@ -1224,6 +1328,14 @@ feature 'Revision coverage' do
                         site.profile.save
 
                         refresh
+                    end
+
+                    scenario 'highlights the snapshot value' do
+                        expect(snapshot[:class]).to have_content 'bg-warning'
+                    end
+
+                    scenario 'highlights the current value' do
+                        expect(current[:class]).to have_content 'bg-info'
                     end
 
                     scenario 'it lists current ones' do
@@ -1315,6 +1427,14 @@ feature 'Revision coverage' do
                         refresh
                     end
 
+                    scenario 'highlights the snapshot value' do
+                        expect(snapshot[:class]).to have_content 'bg-warning'
+                    end
+
+                    scenario 'highlights the current value' do
+                        expect(current[:class]).to have_content 'bg-info'
+                    end
+
                     scenario 'it lists current ones' do
                         site.profile.http_request_headers.each do |name, value|
                             expect(current).to have_content "#{name} = #{value}"
@@ -1379,6 +1499,14 @@ feature 'Revision coverage' do
                         site.profile.save
 
                         refresh
+                    end
+
+                    scenario 'highlights the snapshot value' do
+                        expect(snapshot[:class]).to have_content 'bg-warning'
+                    end
+
+                    scenario 'highlights the current value' do
+                        expect(current[:class]).to have_content 'bg-info'
                     end
 
                     scenario 'shows value' do
@@ -1468,6 +1596,14 @@ feature 'Revision coverage' do
                         refresh
                     end
 
+                    scenario 'highlights the snapshot value' do
+                        expect(snapshot[:class]).to have_content 'bg-warning'
+                    end
+
+                    scenario 'highlights the current value' do
+                        expect(current[:class]).to have_content 'bg-info'
+                    end
+
                     scenario 'it lists current ones' do
                         site.profile.browser_cluster_wait_for_elements.each do |pattern, css|
                             expect(current).to have_content "#{pattern} => #{css}"
@@ -1554,6 +1690,14 @@ feature 'Revision coverage' do
                         site.profile.save
 
                         refresh
+                    end
+
+                    scenario 'highlights the snapshot value' do
+                        expect(snapshot[:class]).to have_content 'bg-warning'
+                    end
+
+                    scenario 'highlights the current value' do
+                        expect(current[:class]).to have_content 'bg-info'
                     end
 
                     scenario 'shows it' do
@@ -1687,6 +1831,14 @@ feature 'Revision coverage' do
                         refresh
                     end
 
+                    scenario 'highlights the snapshot value' do
+                        expect(snapshot[:class]).to have_content 'bg-warning'
+                    end
+
+                    scenario 'highlights the current value' do
+                        expect(current[:class]).to have_content 'bg-info'
+                    end
+
                     scenario 'shows value' do
                         expect(current).to have_content 'http://test/2'
                     end
@@ -1749,6 +1901,14 @@ feature 'Revision coverage' do
                         scan.site_role.save
 
                         refresh
+                    end
+
+                    scenario 'highlights the snapshot value' do
+                        expect(snapshot[:class]).to have_content 'bg-warning'
+                    end
+
+                    scenario 'highlights the current value' do
+                        expect(current[:class]).to have_content 'bg-info'
                     end
 
                     scenario 'shows value' do
@@ -1821,6 +1981,14 @@ feature 'Revision coverage' do
                         scan.site_role.save
 
                         refresh
+                    end
+
+                    scenario 'highlights the snapshot value' do
+                        expect(snapshot[:class]).to have_content 'bg-warning'
+                    end
+
+                    scenario 'highlights the current value' do
+                        expect(current[:class]).to have_content 'bg-info'
                     end
 
                     scenario 'it lists current ones' do
@@ -1897,6 +2065,14 @@ feature 'Revision coverage' do
                                 refresh
                             end
 
+                            scenario 'highlights the snapshot value' do
+                                expect(snapshot[:class]).to have_content 'bg-warning'
+                            end
+
+                            scenario 'highlights the current value' do
+                                expect(current[:class]).to have_content 'bg-info'
+                            end
+
                             scenario 'shows value' do
                                 expect(current).to have_content 'http://test/2'
                             end
@@ -1967,6 +2143,14 @@ feature 'Revision coverage' do
                                 scan.site_role.save
 
                                 refresh
+                            end
+
+                            scenario 'highlights the snapshot value' do
+                                expect(snapshot[:class]).to have_content 'bg-warning'
+                            end
+
+                            scenario 'highlights the current value' do
+                                expect(current[:class]).to have_content 'bg-info'
                             end
 
                             scenario 'it lists current ones' do
@@ -2077,6 +2261,14 @@ feature 'Revision coverage' do
                             scan.site_role.save
 
                             refresh
+                        end
+
+                        scenario 'highlights the snapshot value' do
+                            expect(snapshot[:class]).to have_content 'bg-warning'
+                        end
+
+                        scenario 'highlights the current value' do
+                            expect(current[:class]).to have_content 'bg-info'
                         end
 
                         scenario 'shows the current one' do
