@@ -2,5 +2,6 @@
    fragment_prefix = 'site_role_' if !local_assigns.include?( :fragment_prefix )
 %>
 <%= content_tag 'th' do
-    link_to "#{edit_site_role_path( @site, @scan.site_role )}##{fragment_prefix}#{attribute}", &proc{ yield }
+    link_to "#{edit_site_role_path( @site, @scan.site_role )}##{fragment_prefix}#{attribute}",
+            target: '_blank', &proc{ yield }
 end %>

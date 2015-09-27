@@ -2,5 +2,6 @@
    fragment_prefix = 'site_profile_attributes_' if !local_assigns.include?( :fragment_prefix )
 %>
 <%= content_tag 'th' do
-    link_to "#{edit_site_path( @site )}#!/#{fragment_prefix}#{attribute}", &proc{ yield }
+    link_to "#{edit_site_path( @site )}#!/#{fragment_prefix}#{attribute}",
+            target: '_blank', &proc{ yield }
 end %>
