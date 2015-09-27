@@ -22,6 +22,7 @@
 //= require ace/mode-ruby
 //= require_tree .
 
+jQuery.fn.reverse = [].reverse;
 jQuery.fn.exists = function(){ return this.length > 0; };
 
 $.expr[':'].icontains = function(obj, index, meta, stack){
@@ -70,48 +71,46 @@ function goTo( location ){
     // Restore the last open tab from the URL fragment.
     if( !location || location.length <= 0 ) return;
 
-    // Clear the current active status of the navigation links.
-    $("nav li").removeClass("active");
+    var target = $('#' + location.replace( /\//g, '-' ));
 
-    var splits          = location.split('/');
-    var href_breadcrumb = '#!/';
-    var id_breadcrumb   = '';
+    var nodes = target.parents();
+    nodes.reverse();
+    nodes.push( target );
 
-    for( var i = 0; i < splits.length; i++ ) {
-        href_breadcrumb += splits[i];
-        id_breadcrumb   += splits[i];
+    nodes.each(function() {
+        var level = $(this);
 
-        var tab_selector = $('a[href="' + href_breadcrumb + '"]');
-        var level        = $('#' + id_breadcrumb );
+        var id = level.attr('id');
 
-        getRemote( level );
-
-        // Mark all links in the navigation tree as active at every step.
-        tab_selector.parents('li').siblings().removeClass('active');
-        tab_selector.parents('li').addClass('active');
+        if( !id ) return;
 
         // Mark all other tabs of this level as inactive...
         level.siblings().removeClass('active');
         //.. and activate the one we want.
         level.addClass('active');
-
         // In case it's hidden.
         level.show();
+
+        var tab_selector;
+        if( !(tab_selector = $('a[href="#!/' + id + '"]')).exists() ) {
+            if( !(tab_selector = $('a[href="#!/' + id.replace( /-/g, '/' ) + '"]')).exists() ) {
+                return;
+            }
+        }
+
+        // Mark all links in the navigation tree as active at every step.
+        tab_selector.parents('li').siblings().removeClass('active');
+        tab_selector.parents('li').addClass('active');
+
 
         // In case it's a collapsible.
         if( level.hasClass('collapse') ) {
             level.addClass('in');
         }
 
-        if( i != splits.length - 1) {
-            href_breadcrumb += '/';
-            id_breadcrumb   += '-';
-        }
-    }
+        target = level;
+    });
 
-    getRemote( $('a[href="' + href_breadcrumb + '"]') );
-
-    var target = $('#' + id_breadcrumb);
     if( !target.length ) return;
     if( !target.hasClass('tab-pane') ) {
         $('html,body').scrollTop( target.offset().top - window.topOffset );
@@ -159,17 +158,6 @@ function scrollToChild( parent_selector, child_selector ){
         );
     });
 
-}
-
-function getRemote( element ) {
-    if( !element.attr('data-js') ) return;
-
-    $.ajax( element.attr('data-js') + '.js', {
-        async:    false,
-        complete: function ( data ){
-            eval( data );
-        }
-    })
 }
 
 function setupScroll(){
