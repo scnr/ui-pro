@@ -176,6 +176,40 @@ module Scan
         end
     end
 
+    def rescope( revision )
+        scan     = revision.scan
+        instance = instance_for( revision )
+
+        log_info "Rescoping: #{scan}"
+
+        now = Time.now
+        started_at = revision.started_at
+
+        stop_monitor( revision )
+        revision.update(
+            status:     'rescoped',
+            stopped_at: now
+        )
+
+        instance_url = @revision_id_to_instance_url.delete( revision.id )
+
+        # Use the previous revision's start time
+        revision = scan.revisions.create(
+            started_at: started_at
+        )
+        revision.initializing!
+
+        log_info_for revision, 'Created revision.'
+
+        @revision_id_to_instance_url[revision.id] = instance_url
+
+        instance.options.set( revision.rpc_options ) do |response|
+            next if handle_if_rpc_error( revision, response )
+
+            monitor( revision )
+        end
+    end
+
     def monitor( revision )
         reactor.at_interval TICK do |task|
             @monitors[revision.id] = task
@@ -184,6 +218,8 @@ module Scan
     end
 
     def stop_monitor( revision )
+        return if !@monitors[revision.id]
+
         @monitors.delete( revision.id ).done
     end
 
@@ -321,7 +357,13 @@ module Scan
                 finish( revision )
             end
         else
-            download_report_and_shutdown( revision, status: 'completed' )
+            download_report_and_shutdown(
+                revision,
+                # Don't mark issues as fixed if they're missing from a rescoped
+                # scan, issues may be missing due to the scope reduction.
+                mark_issues_fixed: revision.index == 1 || !revision.previous.rescoped?,
+                status:            'completed'
+            )
         end
     end
 

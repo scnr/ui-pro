@@ -101,6 +101,63 @@ describe ScanScheduler::Helpers::Scan do
         end
     end
 
+    describe '#rescope' do
+        before do
+            instance
+            expect(subject).to receive(:stop_monitor).with( revision )
+        end
+
+        it 'stops monitoring' do
+            subject.rescope( revision )
+        end
+
+        it 'sets status to rescoped' do
+            subject.rescope( revision )
+
+            expect(revision).to be_rescoped
+        end
+
+        it 'sets stopped at to now' do
+            now = Time.now
+
+            subject.rescope( revision )
+
+            expect(revision.stopped_at).to be > now
+            expect(revision.stopped_at).to be < Time.now
+        end
+
+        it 'creates new revision' do
+            subject.rescope( revision )
+
+            expect(revision.next).to be_truthy
+        end
+
+        it 'new revision has the start time of the previous revision' do
+            subject.rescope( revision )
+
+            expect(revision.next.started_at.to_s).to eq revision.started_at.to_s
+        end
+
+        it 'new revision has status initialising' do
+            subject.rescope( revision )
+
+            expect(revision.next).to be_initializing
+        end
+
+        it 'updates options' do
+            expect_any_instance_of(MockInstanceClientOptions).to receive(:set).with( scan.rpc_options )
+            subject.rescope( revision )
+        end
+
+        it 'sets up progress monitoring' do
+            expect(subject).to receive(:monitor) do |r|
+                expect(r).to eq revision.next
+            end
+
+            subject.rescope( revision )
+        end
+    end
+
     describe '#restore' do
         let(:snapshot_path) { '/my/dir.afs' }
 
@@ -869,13 +926,28 @@ describe ScanScheduler::Helpers::Scan do
         end
 
         context 'when the scan has not been suspended' do
-            before do
+            it 'calls #download_report_and_shutdown' do
                 expect(subject).to receive(:download_report_and_shutdown).with(
-                                       revision,  status: 'completed' )
+                   revision, mark_issues_fixed: true, status: 'completed'
+                )
+
+                subject.handle_progress_inactive( revision, progress ) {}
             end
 
-            it 'calls #download_report_and_shutdown' do
-                subject.handle_progress_inactive( revision, progress ) {}
+            context 'when the revision was a result of a rescope' do
+                let(:args) { [revision.next, mark_issues_fixed: false, status: 'completed'] }
+
+                it 'calls does not mark issues fixed' do
+                    subject.rescope( revision )
+
+                    r = revision.next
+
+                    expect(subject).to receive(:download_report_and_shutdown).with(
+                        r, mark_issues_fixed: false, status: 'completed'
+                    )
+
+                    subject.handle_progress_inactive( r, progress ) {}
+                end
             end
         end
 

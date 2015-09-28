@@ -4,7 +4,7 @@ module ScanStates
     extend ActiveSupport::Concern
 
     ACTIVE_STATES   = %w(initializing restoring scanning pausing paused aborting suspending)
-    FINISHED_STATES = %w(aborted failed completed)
+    FINISHED_STATES = %w(aborted failed completed rescoped)
     INACTIVE_STATES = FINISHED_STATES + %w(suspended)
     STATES          = ACTIVE_STATES + INACTIVE_STATES
 

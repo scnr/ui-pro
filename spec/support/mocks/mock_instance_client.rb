@@ -6,4 +6,8 @@ class MockInstanceClient
     def service
         @service ||= MockInstanceClientService.new
     end
+
+    def options
+        @options ||= MockInstanceClientOptions.new
+    end
 end

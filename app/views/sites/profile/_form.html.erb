@@ -1,3 +1,5 @@
+<%= render partial: '/sites/profile/confirm_rescope' %>
+
 <%= simple_form_for @site, html: { class: 'profile-form' } do |pf| %>
     <%= pf.error_notification %>
 
@@ -457,6 +459,10 @@
         </fieldset>
     </div>
     <% end %>
+
+    <div class="hide">
+        <%= pf.input :apply, as: :fake %>
+    </div>
 
     <div class="form-actions">
         <%= pf.button :submit, class: 'hide' %>

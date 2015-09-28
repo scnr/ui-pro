@@ -13,10 +13,18 @@
 
 <hr/>
 
-<button class="btn btn-default btn-primary"
-        onclick="$('.profile-form').submit()">
+<button class="btn btn-default btn-primary" id="site_profile-submit">
     Save
 </button>
+
+<% if @site.revisions.active.any? %>
+    <span data-toggle="tooltip" title="Save and apply to active scans.">
+        <button class="btn btn-default btn-warning" data-toggle="modal"
+                data-target="#site_profile-submit-and-apply-confirm">
+            Save and apply
+        </button>
+    </span>
+<% end %>
 
 <hr/>
 

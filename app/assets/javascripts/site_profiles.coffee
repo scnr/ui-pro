@@ -17,6 +17,11 @@ setup = () ->
     $('.profile-form button.platforms-preset').click ->
         selectPlatforms $(this).html()
         false
+    $('button#site_profile-submit').click ->
+        $('.profile-form').submit()
+    $('button#site_profile-submit-and-apply').click ->
+        $('.profile-form #apply').val( 1 )
+        $('.profile-form').submit()
 
 $(document).on 'page:load', setup
 jQuery setup

@@ -52,8 +52,22 @@ class SitesController < ApplicationController
     # PATCH/PUT /sites/1
     # PATCH/PUT /sites/1.json
     def update
+        pre = @site.profile.to_rpc_options
+
         respond_to do |format|
             if @site.update( site_profile_params )
+
+                if pre != @site.profile.to_rpc_options && params[:apply] == '1'
+                    @site.revisions.active.each do |revision|
+                        if revision.site_profile.to_rpc_options ==
+                            @site.profile.to_rpc_options
+                            next
+                        end
+
+                        ScanScheduler.rescope( revision )
+                    end
+                end
+
                 format.html do
                     redirect_to edit_site_url(@site),
                                 notice: 'Site settings were successfully updated.'

@@ -18,11 +18,15 @@ feature 'Site profile form' do
         user.sites << site
 
         login_as user, scope: :user
-        visit edit_site_path( site )
+        refresh
     end
 
     after(:each) do
         Warden.test_reset!
+    end
+
+    def refresh
+        visit edit_site_path( site )
     end
 
     def submit
@@ -30,7 +34,7 @@ feature 'Site profile form' do
     end
 
     def submit_via_sidebar
-        find('#sidebar button').click
+        find('#sidebar button#site_profile-submit').click
     end
 
     let(:profile) { site.reload.profile }
@@ -57,6 +61,59 @@ feature 'Site profile form' do
             sleep 1
 
             expect(current_url).to end_with edit_site_path( site )
+        end
+    end
+
+    feature 'when there are no running scans' do
+        before do
+            revision.completed!
+            refresh
+        end
+
+        scenario 'does not show "Save and apply" button' do
+            expect(page).to_not have_button 'Save and apply'
+        end
+    end
+
+    feature 'when there are running scans' do
+        before do
+            revision.scanning!
+            refresh
+        end
+
+        scenario 'shows "Save and apply" button' do
+            expect(page).to have_button 'Save and apply'
+        end
+
+        feature 'Save button', js: true do
+            scenario 'does not rescope active revisions' do
+                expect(ScanScheduler).to_not receive(:rescope)
+
+                click_button 'Save'
+            end
+        end
+
+        feature 'Save and apply button', js: true do
+            before do
+                click_button 'Save and apply'
+            end
+
+            feature 'when there are no changes' do
+                scenario 'does not rescope active revisions' do
+                    expect(ScanScheduler).to_not receive(:rescope).with( revision )
+
+                    click_button 'OK'
+                end
+            end
+
+            feature 'when there are changes' do
+                scenario 'rescopes active revisions' do
+                    expect(ScanScheduler).to receive(:rescope).with( revision )
+
+                    fill_in 'Parameter redundancy limit', with: 10
+                    click_button 'OK'
+                end
+            end
         end
     end
 
