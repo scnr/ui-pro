@@ -15,15 +15,15 @@
 <p class="alert alert-help">
     <i class="fa fa-info-circle"></i>
 
-    You can <%= link_to 'customize the site-wide scope',
+    <%= link_to 'Customize the site-wide scope',
                         "#{edit_site_path( @site )}#!/scope",
                         target: '_blank' %>
-    in order to limit processing of template-based, redundant resources, as
-    well as exclude dangerous or unwanted ones.
+    to limit processing of template-based, redundant resources, as well as
+    exclude dangerous or unwanted ones.
 </p>
 
 <% if @revision %>
-    <% if @revision.active? %>
+    <% if @revision.active? && @revision.performance_snapshot.current_page %>
         <%= render partial: '/shared/scan_results/coverage/current_page', locals: {
             url: @revision.performance_snapshot.current_page
         } %>
