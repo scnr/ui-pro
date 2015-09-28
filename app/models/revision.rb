@@ -49,6 +49,14 @@ class Revision < ActiveRecord::Base
         in_progress.any?
     end
 
+    def previous
+        scan.revisions.where( index: index - 1 ).first
+    end
+
+    def next
+        scan.revisions.where( index: index + 1 ).first
+    end
+
     def duration
         return if !started_at
 

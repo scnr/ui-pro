@@ -390,6 +390,28 @@ describe Revision do
         end
     end
 
+    describe '#next' do
+        it 'returns the next scan revision' do
+            r  = scan.revisions.create
+            r2 = scan.revisions.create
+            r3 = scan.revisions.create
+
+            expect(r.next.index).to eq r2.index
+            expect(r.next.next.index).to eq r3.index
+        end
+    end
+
+    describe '#previous' do
+        it 'returns the next scan revision' do
+            r  = scan.revisions.create
+            r2 = scan.revisions.create
+            r3 = scan.revisions.create
+
+            expect(r3.previous.index).to eq r2.index
+            expect(r3.previous.previous.index).to eq r.index
+        end
+    end
+
     describe '#site_role' do
         it 'returns the state of the site role at the time the revision was created' do
             expect(subject.site_role.to_rpc_options).to eq scan.site_role.to_rpc_options
