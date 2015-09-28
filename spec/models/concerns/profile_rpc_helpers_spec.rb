@@ -21,5 +21,73 @@ describe ProfileRpcHelpers do
                 expect(rpc_options['plugins'][name.to_s]).to eq Hash.new
             end
         end
+
+        context 'http' do
+            subject { FactoryGirl.create :site_profile }
+
+            context 'when authentication_username is' do
+                context 'empty' do
+                    before do
+                        subject.http_authentication_username = ''
+                    end
+
+                    it 'does not include it' do
+                        expect(rpc_options['http']).to_not include 'authentication_username'
+                    end
+                end
+
+                context 'nil' do
+                    before do
+                        subject.http_authentication_username = nil
+                    end
+
+                    it 'does not include it' do
+                        expect(rpc_options['http']).to_not include 'authentication_username'
+                    end
+                end
+
+                context 'not blank' do
+                    before do
+                        subject.http_authentication_username = 'stuff'
+                    end
+
+                    it 'does not include it' do
+                        expect(rpc_options['http']['authentication_username']).to eq 'stuff'
+                    end
+                end
+            end
+
+            context 'when authentication_password is' do
+                context 'empty' do
+                    before do
+                        subject.http_authentication_password = ''
+                    end
+
+                    it 'does not include it' do
+                        expect(rpc_options['http']).to_not include 'authentication_password'
+                    end
+                end
+
+                context 'nil' do
+                    before do
+                        subject.http_authentication_password = nil
+                    end
+
+                    it 'does not include it' do
+                        expect(rpc_options['http']).to_not include 'authentication_password'
+                    end
+                end
+
+                context 'not blank' do
+                    before do
+                        subject.http_authentication_password = 'stuff'
+                    end
+
+                    it 'does not include it' do
+                        expect(rpc_options['http']['authentication_password']).to eq 'stuff'
+                    end
+                end
+            end
+        end
     end
 end

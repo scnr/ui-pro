@@ -113,6 +113,16 @@ module ProfileRpcHelpers
                     inject({}) { |h, pattern| h[pattern] = TEMPLATE_PATH_PATTERN_COUNTER; h }
         end
 
+        if has_option?( :http_authentication_username ) ||
+            has_option?( :http_authentication_password )
+
+            %w(authentication_username authentication_password).each do |k|
+                next if !opts['http'][k].blank?
+
+                opts['http'].delete k
+            end
+        end
+
         opts['plugins'] ||= {}
 
         FrameworkHelper.default_plugins.each do |name|
