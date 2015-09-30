@@ -122,11 +122,11 @@
                         <ul class="nav nav-tabs" role="tablist">
                             <li role="presentation"
                                 class="<%= 'active' if !@site_role.login_type || @site_role.login_type == 'form' %>">
-                                <a href="#form" role="tab" data-toggle="tab">Form</a>
+                                <a href="#!/form" role="tab">Form</a>
                             </li>
 
                             <li role="presentation" class="<%= 'active' if @site_role.login_type == 'script' %>">
-                                <a href="#script" role="tab" data-toggle="tab">Script</a>
+                                <a href="#!/script" role="tab" >Script</a>
                             </li>
                         </ul>
 
@@ -135,13 +135,10 @@
                                  role="tabpanel"
                                  id="form">
 
-                                <div class="alert">
+                                <div class="help-block">
                                     When using form-based authentication the system
-                                    will look for a form that matches the given parameters
-                                    at the specified URL.
-                                    <br/>
-                                    It will then fill-in the form with the
-                                    parameter values and submit it via a browser.
+                                    will look for a form whose inputs include the
+                                    specified parameters at the given URL.
                                 </div>
 
                                 <div class="alert alert-warning">
@@ -149,13 +146,14 @@
                                     regular user would and is thus limited to the
                                     same extent.
                                     <br/>
-                                    For example, if the login form is by default
-                                    hidden and requires a sequence of UI interactions
-                                    in order to become visible, it will not be possible
-                                    to submit it.
+                                    For example, if the login form is hidden and
+                                    requires a sequence of interface interactions
+                                    in order to become visible, it will not be
+                                    possible to submit it.
                                     <br/>
                                     In cases where a sequence of events needs to
-                                    be triggered, the script method should be preferred instead.
+                                    be triggered, the <a href="#!/script">script</a> method
+                                    should be preferred instead.
                                 </div>
 
                                 <%= f.input :login_form_url, as: :string, label: false,

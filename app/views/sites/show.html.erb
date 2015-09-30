@@ -13,7 +13,7 @@
         <%= render partial: 'shared/scan_heading' %>
 
         <% if lr = @site.last_revision %>
-            <div class="text-muted" id="site-info-details">
+            <div class="help-block" id="site-info-details">
                 <%= render partial: '/shared/scan_info', locals: {
                         extended: true,
                         scan:     lr.scan

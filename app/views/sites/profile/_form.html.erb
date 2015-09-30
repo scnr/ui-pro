@@ -8,7 +8,9 @@
             <ul>
                 <% @site.profile.errors.messages.each do |attribute, messages| %>
                     <li>
-                        <%= link_to attribute.to_s.humanize, "#site_profile_attributes_#{attribute}", class: 'scroll' %>
+                        <%= link_to attribute.to_s.humanize,
+                                    "#site_profile_attributes_#{attribute}",
+                                    class: 'scroll' %>
                         <% if messages.size == 1 %>
                             <%= messages.first %>
                         <% else %>
@@ -63,7 +65,7 @@
                 <small>What platforms does the application use?</small>
             </h2>
 
-            <div class="help-block alert alert-info">
+            <div class="help-block">
                 Providing as much platform information as possible will result
                 in a much faster and focused scan.
             </div>
@@ -138,6 +140,12 @@
                 Scope
                 <small>Are there any special considerations regarding the scope of the scan?</small>
             </h2>
+
+            <div class="help-block">
+                If there are dangerous, redundant or generally unwanted resources,
+                you can configure the site-wide scan scope to limit their processing
+                or exclude them altogether.
+            </div>
 
             <div class="row">
                 <div class="col-md-6">
@@ -351,10 +359,17 @@
                 </div>
                 <div class="col-md-6 textarea-help">
                     <%= messages_for( :http_cookies ) %>
+
                     <p class="help-block">
                         Cookies take the format of <kbd>name=value</kbd>,
                         input each cookie in its own line.
                     </p>
+
+                    <p class="alert alert-warning">
+                        Please do not use this option for authentication purposes,
+                        instead configure a <%= link_to 'user role', site_roles_path( @site ) %>.
+                    </p>
+
                 </div>
             </div>
 
