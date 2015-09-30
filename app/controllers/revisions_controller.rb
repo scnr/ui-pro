@@ -63,20 +63,34 @@ class RevisionsController < ApplicationController
     def prepare_health_data
         return [] if !@revision.performance_snapshot.http_max_concurrency
 
-        (@revision.performance_snapshots.map(&:attributes) +
-            [@revision.performance_snapshot.attributes]).map do |snapshot|
+        snapshots = []
 
-            snapshot['duration'] =
-                Arachni::Utilities.seconds_to_hms( snapshot['runtime'] )
+        @revision.performance_snapshots.find_in_batches.map do |batch|
+            batch.each do |snapshot|
+                snapshot = snapshot.attributes
 
-            snapshot['http_average_response_time'] =
-                snapshot['http_average_response_time'].round( 2 )
+                snapshot['duration'] =
+                    Arachni::Utilities.seconds_to_hms( snapshot['runtime'] )
 
-            snapshot['http_average_responses_per_second'] =
-                snapshot['http_average_responses_per_second'].to_i
+                snapshot['http_average_response_time'] =
+                    snapshot['http_average_response_time'].round( 2 )
 
-            snapshot
+                snapshot['http_average_responses_per_second'] =
+                    snapshot['http_average_responses_per_second'].to_i
+
+                snapshots << snapshot
+            end
         end
+
+        snapshot = @revision.performance_snapshot.attributes
+        snapshot['duration'] =
+            Arachni::Utilities.seconds_to_hms( snapshot['runtime'] )
+        snapshot['http_average_response_time'] =
+            snapshot['http_average_response_time'].round( 2 )
+        snapshot['http_average_responses_per_second'] =
+            snapshot['http_average_responses_per_second'].to_i
+
+        snapshots << snapshot
     end
 
 end
