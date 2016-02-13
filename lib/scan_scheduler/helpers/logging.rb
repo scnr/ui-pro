@@ -29,7 +29,7 @@ module Logging
         @log_prefixes[revision.id] ||=
             "[#{revision.index.ordinalize} #{revision.scan}]"
 
-        prepare_log_line "[#{@log_prefixes[revision.id]}] #{line}"
+        prepare_log_line "#{@log_prefixes[revision.id]} #{line}"
     end
 
     def log_exception( e )
