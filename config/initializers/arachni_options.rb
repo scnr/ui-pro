@@ -11,7 +11,7 @@
 
 options = Arachni::Options
 
-# Dev defaults, for comparison with other branches  and Pro vs CLI.
+# Dev defaults, for comparison with other branches and Pro vs CLI.
 options.audit.elements :forms, :links, :ui_forms, :ui_inputs
 
 # Production defaults.
@@ -36,7 +36,7 @@ options.scope.exclude_file_extensions = {
 
     # Assets
     #
-    # The browsers will not check the scope of asset files, so these shouldn't
+    # The browsers will not check the scope for asset files, so these shouldn't
     # mess with it, they should only narrow down the audit.
     font:        %w(ttf otf woff fon fnt),
     stylesheet:  %w(css),
@@ -64,27 +64,29 @@ options.scope.dom_depth_limit = 4
 #
 # Watch out for sites where routing is based on a URL parameter?
 # Like: ?content=index
-options.scope.auto_redundant_paths  = 15
+options.scope.auto_redundant_paths = 15
 
 # We do this so that the values that will be used will appear in the UI.
 options.input.values = options.input.default_values.dup
 options.input.default_values.clear
 
+# Significantly more conservative than the default, makes things slower but
+# we've got to play it safe, cause less stress on the servers.
+options.http.request_concurrency = 14
+
+# Significantly more conservative than the default and tightly coupled with
+# request_concurrency in turn of performance outcome.
+#
+# Since request_concurrency has been lowered we can lower this too to lower
+# RAM usage without further performance impact.
+options.http.request_queue_size = 50
+
 # Significantly more conservative than the default, makes things faster and
 # it's still a valid assumption that after 5s the game is over.
 options.http.request_timeout = 5_000
 
-# A little more conservative than the default, will result in decreased
-# job-processing performance but when taking into account the rest of the
-# option updates the overall scan will end up being faster.
-#
-# Plus, less resource utilization is a very good thing for Pro, means more
-# parallel scans.
-options.browser_cluster.pool_size = 4
-
-# A little more conservative than the default, makes things faster.
-# Also, if a job takes more than 10s, screw it.
-options.browser_cluster.job_timeout   = 10
+# Play it safe, assume slow server and a page that loads many un-cacheable resources.
+options.browser_cluster.job_timeout = options.http.request_timeout * 10
 
 # Images almost never play a part so skip them.
 options.browser_cluster.ignore_images = true
