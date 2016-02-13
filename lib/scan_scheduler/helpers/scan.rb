@@ -103,6 +103,12 @@ module Scan
     end
 
     def each_due_scan( &block )
+        # Check for due scans first, THEN for free slots.
+        # The free slots check will use a lot of CPU and we can't run it for
+        # every tick.
+        due = Schedule.includes( scan: :site ).due
+        return if due.empty?
+
         slots = self.slots_free
 
         # Don't even bother...
@@ -120,7 +126,7 @@ module Scan
         #
         # This will block scans for other sites which could be run, until the
         # previous site's scans are performed, one at a time -- which is stupid.
-        Schedule.includes( scan: :site ).due.each do |schedule|
+        due.each do |schedule|
             scan = schedule.scan
             log_info "Scan due: #{scan} (#{scan.id})"
 
