@@ -1,5 +1,4 @@
 source 'https://rubygems.org'
-ruby '2.2.3'
 
 gem 'rails', '4.2.3'
 gem 'sass-rails', '~> 5.0.3'
@@ -36,6 +35,9 @@ gem 'vmstat'
 
 gem 'sys-proctable'
 
+# Audit trail
+gem 'paper_trail', '~> 4.0.0'
+
 group :doc do
     gem 'sdoc', '~> 0.4.0'
 end
@@ -68,5 +70,4 @@ group :development, :test do
     gem 'awesome_print'
 end
 
-gem 'arachni-reactor', path: '../../arachni-reactor/'
 gem 'arachni', path: File.dirname( __FILE__ ) + '/../../arachni'

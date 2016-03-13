@@ -1,5 +1,8 @@
 class Revision < ActiveRecord::Base
+    include WithEvents
     include RevisionStates
+
+    has_paper_trail track: %w(status timed_out)
 
     serialize :rpc_options, Hash
 

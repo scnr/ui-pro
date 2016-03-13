@@ -1,9 +1,12 @@
 class UserAgent < ActiveRecord::Base
+    include WithEvents
     include ProfileRpcHelpers
     include ProfileAttributes
     include ProfileImport
     include ProfileExport
     include ProfileDefaultHelpers
+
+    has_paper_trail
 
     has_many :scans, -> { order id: :desc }
     has_many :revisions, through: :scans

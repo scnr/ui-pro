@@ -57,4 +57,12 @@ module ScansHelper
         end
     end
 
+    def scan_path( scan )
+        site_scan_path( scan.site_id, scan )
+    end
+
+    def events_scan_path( scan )
+        events_site_scan_path( scan.site_id, scan )
+    end
+
 end

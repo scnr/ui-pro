@@ -1,9 +1,12 @@
 class Profile < ActiveRecord::Base
+    include WithEvents
     include ProfileRpcHelpers
     include ProfileAttributes
     include ProfileImport
     include ProfileExport
     include ProfileDefaultHelpers
+
+    has_paper_trail
 
     belongs_to :user
     has_many   :scans, -> { order id: :desc }

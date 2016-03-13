@@ -349,16 +349,18 @@ module ScanResultsHelper
             route[:action] = options[:action] || 'issues'
         end
 
-        if route[:controller] != 'revisions' &&
-            ScanResults::SCAN_RESULT_REVISION_ACTIONS.include?( route[:action].to_sym )
+        ScanResults::SCAN_RESULT_SITE_ACTIONS_PER_CONTROLLER.each do |controller, actions|
+            # If the controller doesn't support the current action revert to
+            # the default.
+            if route[:controller].to_sym == controller &&
+                !actions.include?( route[:action].to_sym )
+                route[:action] = ScanResults::DEFAULT_ACTION
+            end
 
-            route[:action] = 'issues'
-        end
-
-        %w(site scan revision).each do |parent|
-            next if !resource.respond_to? parent
-
-            route["#{parent}_id"] = resource.send( "#{parent}_id" )
+            parent = controller.to_s.singularize
+            if resource.respond_to?( parent )
+                route["#{parent}_id"] = resource.send( "#{parent}_id" )
+            end
         end
 
         route['id'] = resource.id

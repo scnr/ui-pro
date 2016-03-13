@@ -1,6 +1,10 @@
 class Issue < ActiveRecord::Base
+    include WithEvents
+
     DEFAULT_STATES = 'trusted'
     STATES         = %w(trusted untrusted false_positive fixed)
+
+    has_paper_trail track: %w(state)
 
     belongs_to :revision, counter_cache: true
     belongs_to :reviewed_by_revision, class_name: 'Revision',
@@ -9,7 +13,8 @@ class Issue < ActiveRecord::Base
     belongs_to :site, counter_cache: true
     belongs_to :scan, counter_cache: true
 
-    has_many :siblings, class_name: 'Issue', foreign_key: :digest, primary_key: :digest
+    has_many :siblings, class_name: 'Issue', foreign_key: :digest,
+             primary_key: :digest
 
     belongs_to :page, class_name: 'IssuePage', foreign_key: 'issue_page_id',
                dependent: :destroy
@@ -83,7 +88,21 @@ class Issue < ActiveRecord::Base
     end
 
     def to_s
-        "#{type.name} in #{vector.kind} input '#{vector.affected_input_name}'"
+        s = ''
+
+        if type
+            s << type.name
+        end
+
+        if vector
+            s << " in #{vector}"
+
+            if vector.affected_input_name
+                s << " input '#{vector.affected_input_name}'"
+            end
+        end
+
+        s
     end
 
     def revision=( rev )
@@ -197,12 +216,14 @@ class Issue < ActiveRecord::Base
     end
 
     def update_state( state, reviewed_by_revision = nil )
-        Issue.reorder('').where( digest: digest ).
-            update_all(
-            state:                   state,
-            reviewed_by_revision_id: reviewed_by_revision ?
-                       reviewed_by_revision.id : nil
-        )
+        # Inefficient but we need to trigger a PaperTrail.
+        Issue.reorder('').where( digest: digest ).each do |issue|
+            issue.update(
+                state:                   state,
+                reviewed_by_revision_id: reviewed_by_revision ?
+                                             reviewed_by_revision.id : nil
+            )
+        end
     end
 
     def get_sitemap_entry( options = {} )

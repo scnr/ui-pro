@@ -1,0 +1,24 @@
+#events {
+
+    tr.event-object_changes {
+        display: none;
+        border: none;
+
+        td {
+            border: none;
+        }
+    }
+
+    tr.event-with_object_changes {
+        cursor: pointer;
+    }
+
+    tr.event-item-destroyed {
+        color: #777777;
+
+        td:nth-child(3) {
+            //text-decoration: line-through;
+        }
+    }
+
+}

@@ -1,6 +1,11 @@
 class SiteRole < ActiveRecord::Base
+    include WithEvents
     include ProfileAttributes
     include ProfileRpcHelpers
+
+    has_paper_trail skip: [:created_at, :updated_at],
+                    # If this is a copy made by a revision don't bother.
+                    unless: Proc.new { |t| t.revision_id }
 
     serialize :login_form_parameters, Hash
 

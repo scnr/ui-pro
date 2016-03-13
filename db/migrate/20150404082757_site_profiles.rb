@@ -21,8 +21,8 @@ class SiteProfiles < ActiveRecord::Migration
             t.text     :http_cookies
             t.text     :http_request_headers
             t.integer  :http_request_concurrency
-            t.string   :http_authentication_username
-            t.string   :http_authentication_password
+            t.string   :http_authentication_username, default: ''
+            t.string   :http_authentication_password, default: ''
 
             t.boolean  :browser_cluster_ignore_images
             t.text     :browser_cluster_wait_for_elements

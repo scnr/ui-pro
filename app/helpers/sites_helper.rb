@@ -34,4 +34,8 @@ module SitesHelper
         end
     end
 
+    def site_profile_path( profile )
+        edit_site_path( profile.site_id )
+    end
+
 end

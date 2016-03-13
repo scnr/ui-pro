@@ -18,6 +18,10 @@ class Vector < ActiveRecord::Base
         )
     end
 
+    def to_s
+        kind.to_s.gsub( '_', ' ' ).sub( 'dom', 'DOM' ).sub( 'ui', 'UI' )
+    end
+
     def self.create_from_arachni( vector, options = {}  )
         h = {}
         [:action, :http_method, :seed, :inputs, :affected_input_name, :source,

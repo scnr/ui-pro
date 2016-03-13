@@ -69,6 +69,13 @@
                     <% end %>
                 </li>
             <% end %>
+
+          <li id="events-tab" class="<%= 'active' if sections['events'] %>">
+            <%= link_to params.merge( action: 'events' ).merge filter_params do %>
+                Events
+            <% end %>
+          </li>
+
         </ul>
 
         <div class="tab-content">
@@ -118,6 +125,11 @@
                 </div>
             <% end %>
 
+          <% if sections['events'] %>
+              <div class="tab-pane <%= 'active' if sections['events'] %>" id="events">
+                <%= render partial: 'shared/scan_results/events' %>
+              </div>
+          <% end %>
         </div>
     </div>
 </div>

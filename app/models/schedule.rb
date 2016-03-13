@@ -11,10 +11,14 @@ class DatetimeValidator < ActiveModel::EachValidator
 end
 
 class Schedule < ActiveRecord::Base
-    belongs_to :scan
+    include WithEvents
 
     FREQUENCY_BASES   = %w(start stop)
     FREQUENCY_FORMATS = %w(simple cron)
+
+    has_paper_trail skip: [:created_at, :updated_at]
+
+    belongs_to :scan
 
     validates_inclusion_of :frequency_base,   in: FREQUENCY_BASES, allow_nil: true
     validates_inclusion_of :frequency_format, in: FREQUENCY_FORMATS, allow_nil: true
@@ -160,14 +164,17 @@ class Schedule < ActiveRecord::Base
     end
 
     def to_s
-        s = ''
+        parts = []
+
         if self.start_at
-            s = "on #{I18n.localize( self.start_at )}"
+            parts << "on #{I18n.localize( self.start_at )}"
         end
 
-        return s if !recurring?
+        return parts.first.to_s if !recurring?
 
-        "#{s} - #{human_frequency}"
+        parts << human_frequency
+
+        parts.join( ' - ' )
     end
 
     def sanitize_start_at

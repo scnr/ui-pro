@@ -8,6 +8,12 @@ Bundler.require(*Rails.groups)
 
 module ArachniPro
     class Application < Rails::Application
+        # config.middleware.use StackProf::Middleware,
+        #                       enabled: true,
+        #                       mode: :cpu,
+        #                       interval: 1000,
+        #                       save_every: 5
+
         config.autoload_once_paths << "#{Rails.root.join('lib')}/system.rb"
         config.autoload_once_paths << "#{Rails.root.join('lib')}/system/"
 
@@ -17,6 +23,8 @@ module ArachniPro
         config.autoload_once_paths << "#{Rails.root.join('lib')}/settings.rb"
 
         config.autoload_paths << Rails.root.join('lib')
+
+        config.active_record.raise_in_transactional_callbacks = true
 
         config.generators do |g|
             g.test_framework :rspec,

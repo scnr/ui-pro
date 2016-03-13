@@ -9,7 +9,7 @@ class CreateRevisions < ActiveRecord::Migration
       t.text :error_messages
       t.string :seed
       t.string :status
-      t.boolean :timed_out
+      t.boolean :timed_out, default: false
       t.datetime :started_at
       t.datetime :stopped_at
 

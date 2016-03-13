@@ -174,6 +174,12 @@ module IssuesHelper
         string
     end
 
+    def issue_path( issue )
+        site_scan_revision_issue_path(
+            issue.site_id, issue.scan_id, issue.revision_id, issue
+        )
+    end
+
     extend self
 
 end

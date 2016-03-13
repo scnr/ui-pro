@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150814220113) do
+ActiveRecord::Schema.define(version: 20151011162206) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -307,7 +307,7 @@ ActiveRecord::Schema.define(version: 20150814220113) do
     t.text     "error_messages"
     t.string   "seed"
     t.string   "status"
-    t.boolean  "timed_out"
+    t.boolean  "timed_out",             default: false
     t.datetime "started_at"
     t.datetime "stopped_at"
     t.integer  "issues_count",          default: 0
@@ -325,7 +325,7 @@ ActiveRecord::Schema.define(version: 20150814220113) do
     t.text     "description"
     t.text     "path"
     t.string   "status"
-    t.boolean  "timed_out"
+    t.boolean  "timed_out",             default: false
     t.integer  "revisions_count",       default: 0
     t.integer  "integer",               default: 0
     t.integer  "issues_count",          default: 0
@@ -391,8 +391,8 @@ ActiveRecord::Schema.define(version: 20150814220113) do
     t.text     "http_cookies"
     t.text     "http_request_headers"
     t.integer  "http_request_concurrency"
-    t.string   "http_authentication_username"
-    t.string   "http_authentication_password"
+    t.string   "http_authentication_username",      default: ""
+    t.string   "http_authentication_password",      default: ""
     t.boolean  "browser_cluster_ignore_images"
     t.text     "browser_cluster_wait_for_elements"
     t.integer  "site_id"
@@ -514,5 +514,25 @@ ActiveRecord::Schema.define(version: 20150814220113) do
   end
 
   add_index "vectors", ["kind"], name: "index_vectors_on_kind", using: :btree
+
+  create_table "versions", force: :cascade do |t|
+    t.string   "item_type",      null: false
+    t.integer  "item_id",        null: false
+    t.string   "event",          null: false
+    t.integer  "site_id"
+    t.integer  "scan_id"
+    t.integer  "revision_id"
+    t.text     "object_to_s"
+    t.string   "whodunnit"
+    t.jsonb    "object"
+    t.datetime "created_at"
+    t.jsonb    "object_changes"
+  end
+
+  add_index "versions", ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id", using: :btree
+  add_index "versions", ["revision_id"], name: "index_versions_on_revision_id", using: :btree
+  add_index "versions", ["scan_id"], name: "index_versions_on_scan_id", using: :btree
+  add_index "versions", ["site_id"], name: "index_versions_on_site_id", using: :btree
+  add_index "versions", ["whodunnit"], name: "index_versions_on_whodunnit", using: :btree
 
 end

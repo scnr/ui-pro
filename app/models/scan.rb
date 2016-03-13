@@ -1,5 +1,9 @@
 class Scan < ActiveRecord::Base
+    include WithEvents
     include ScanStates
+
+    has_paper_trail ignore: [:status],
+                    track: %w(name description status timed_out)
 
     belongs_to :site, counter_cache: true
     belongs_to :site_role
@@ -7,7 +11,7 @@ class Scan < ActiveRecord::Base
     belongs_to :user_agent
 
     has_one :schedule, autosave: true, dependent: :destroy
-    accepts_nested_attributes_for :schedule
+    accepts_nested_attributes_for :schedule, update_only: true
 
     has_many :revisions, -> { order id: :desc }, dependent: :destroy
     has_many :issues, dependent: :destroy

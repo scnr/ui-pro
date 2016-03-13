@@ -1,0 +1,172 @@
+<%
+   depth = 0
+   %w(site scan revision).each do |k|
+       depth += 1 if params["#{k}_id"]
+   end
+%>
+
+<table class="table table-condensed table-hover">
+    <thead>
+        <tr>
+        <th>
+            Object type
+        </th>
+
+        <th>
+            Action
+        </th>
+
+        <th>
+            Affected object
+        </th>
+
+        <th>
+            Changed
+        </th>
+
+        <th>
+            By
+        </th>
+
+        <th>
+            Time
+        </th>
+        </tr>
+    </thead>
+
+    <% @events.each.with_index do |event, index|
+        if !event.item && event.event != 'destroy'
+            css_class = 'event-item-destroyed'
+        else
+            css_class = nil
+        end
+    %>
+        <tr
+            onclick="$('#event-object_changes-<%= index %>').toggle()"
+            class="<%= case event.event
+                       when 'create'
+                           'bg-success'
+
+                       when 'update'
+                           'bg-info event-with_object_changes'
+
+                       when 'destroy'
+                           'bg-danger'
+                   end %>
+
+                   <%= case event.item_type
+                           when 'Scan', 'Schedule'
+                               indentation = depth - 1
+
+                           when 'Revision'
+                               indentation = depth - 2
+
+                           when 'Issue'
+                               indentation = depth - 3
+
+                           else
+                               indentation = nil
+                       end
+
+                       if indentation
+                           "table-row-indented-level-#{indentation.abs}".html_safe
+                       end
+                    %>
+
+                       <%= css_class %>
+                   "
+        >
+
+            <td>
+                <% if event.item &&
+                    event.item_type.downcase.pluralize != params['controller'] %>
+                    <%=
+                        begin
+                            link_to event.item_type, polymorphic_path( event.item, action: :events )
+                        rescue NoMethodError
+                            event.item_type
+                        end
+                    %>
+                <% else %>
+                    <%= event.item_type %>
+                <% end %>
+            </td>
+
+            <td>
+                <%= event.event.capitalize %>
+            </td>
+
+            <td>
+                <%
+                   s = (event.item ? event.item.to_s : event.object_to_s)
+                   s = event.item_type if s.empty?
+                %>
+                <%= event.item ? link_to( s, event.item ) : s %>
+            </td>
+
+            <td>
+                <%= event.object_changes.keys.join( ', ' ) if event.event == 'update' %>
+            </td>
+
+            <td>
+                <% if event.whodunnit %>
+                    <%= event.whodunnit.to_i == current_user.id ?
+                            'You' : User.find( event.whodunnit ) %>
+                <% else %>
+                    System
+                <% end %>
+            </td>
+
+            <td>
+                <%= event.created_at %>
+            </td>
+        </tr>
+
+        <% if event.event == 'update' %>
+            <tr
+                class="event-object_changes bg-info <%= css_class %>"
+                id="event-object_changes-<%= index %>">
+                <td></td>
+                <td colspan="5">
+
+                    <table class="table table-condensed table-borderless">
+                        <thead>
+                        <tr>
+                            <th></th>
+                        <% event.object_changes.keys.each do |name| %>
+                            <th>
+                                <%= name %>
+                            </th>
+                        <% end %>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <th>
+                                From
+                            </th>
+                            <% event.object_changes.values.each do |(previous,_)| %>
+                                <td>
+                                    <%# ap( previous, plain: true ).html_safe %>
+                                    <pre><%= previous.to_s %></pre>
+                                </td>
+                            <% end %>
+                        </tr>
+                        <tr>
+                            <th>
+                                To
+                            </th>
+                            <% event.object_changes.values.each do |(_,updated)| %>
+                                <td>
+                                    <%# ap( updated, plain: true ).html_safe %>
+                                    <pre><%= updated.to_s %></pre>
+                                </td>
+                            <% end %>
+                        </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        <% end %>
+    <% end %>
+</table>

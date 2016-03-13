@@ -49,4 +49,8 @@ module SchedulesHelper
         (time - other).abs < NEARBY_RANGE
     end
 
+    def schedule_path( schedule )
+        edit_site_scan_path( schedule.scan.site_id, schedule.scan_id )
+    end
+
 end

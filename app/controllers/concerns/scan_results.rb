@@ -8,7 +8,9 @@ module ScanResults
 
     REVERT_MODELS = [ :site_profile, :site_role ]
 
-    SCAN_RESULT_SITE_ACTIONS     = [ :issues, :coverage, :reviews ]
+    DEFAULT_ACTION = :issues
+
+    SCAN_RESULT_SITE_ACTIONS     = [ :issues, :coverage, :reviews, :events ]
 
     SCAN_RESULT_SCAN_ACTIONS     =
         SCAN_RESULT_SITE_ACTIONS
@@ -19,6 +21,12 @@ module ScanResults
             [ :revert_configuration, :configuration, :live, :health, :errors ]
 
     SCAN_RESULT_ACTIONS          = SCAN_RESULT_REVISION_ACTIONS
+
+    SCAN_RESULT_SITE_ACTIONS_PER_CONTROLLER = {
+        sites:     SCAN_RESULT_SITE_ACTIONS,
+        scans:     SCAN_RESULT_SCAN_ACTIONS,
+        revisions: SCAN_RESULT_REVISION_ACTIONS
+    }
 
     def live
         from = nil
@@ -102,6 +110,12 @@ module ScanResults
         process_and_show
     end
 
+    def events
+        @events = prepare_events_data
+
+        process_and_show
+    end
+
     def configuration
         @configuration = prepare_configuration_data
         process_and_show
@@ -157,6 +171,10 @@ module ScanResults
         scan_results_coverage_owner.sitemap_entries.coverage
     end
 
+    def scan_results_events
+        scan_results_events_owner.events
+    end
+
     def scan_results_reviewed_issues
         # Reviewed issues don't really need further processing not are they
         # used to provide context for other areas, so we can do the filtering
@@ -195,6 +213,10 @@ module ScanResults
         }
     end
 
+    def prepare_events_data
+        scan_results_events
+    end
+
     def prepare_issue_data
         fail 'Not implemented'
     end
@@ -216,6 +238,10 @@ module ScanResults
     end
 
     def scan_results_reviews_owner
+        scan_results_owner
+    end
+
+    def scan_results_events_owner
         scan_results_owner
     end
 

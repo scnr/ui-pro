@@ -1,6 +1,15 @@
 class Site < ActiveRecord::Base
+    include WithEvents
+
     PROTOCOL_TYPES = %w(http https)
     FAVICONS_DIR   = "#{Rails.root}/public/site_favicons/"
+
+    has_paper_trail track: %w(max_parallel_scans)
+    children_events do
+        {
+            Schedule => scans.select(:id)
+        }
+    end
 
     enum protocol: [ :http, :https ]
 
@@ -9,7 +18,7 @@ class Site < ActiveRecord::Base
 
     has_one :profile, autosave: true, dependent: :destroy,
             foreign_key: 'site_id', class_name: 'SiteProfile'
-    accepts_nested_attributes_for :profile
+    accepts_nested_attributes_for :profile, update_only: true
 
     has_many :scans, dependent: :destroy
     has_many :schedules, through: :scans

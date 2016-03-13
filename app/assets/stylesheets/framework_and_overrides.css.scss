@@ -343,6 +343,18 @@ section {
     padding: 10px;
 }
 
+tr.table-row-indented-level-1 td:nth-child(1) {
+    padding-left: 40px;
+}
+
+tr.table-row-indented-level-2 td:nth-child(1) {
+    padding-left: 80px;
+}
+
+tr.table-row-indented-level-3 td:nth-child(1) {
+    padding-left: 120px;
+}
+
 .table-borderless > thead > tr > th,
 .table-borderless > thead > tr > td,
 .table-borderless > tbody > tr > th,

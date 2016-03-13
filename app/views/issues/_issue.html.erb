@@ -3,7 +3,7 @@
         <%= @issue.type.name %>
         <small>
             <% if @issue.active? %>
-                in <%= @issue.vector.kind %> input
+                in <%= @issue.vector %> input
                 <code><%= @issue.vector.affected_input_name %></code>
             <% end %>
 
