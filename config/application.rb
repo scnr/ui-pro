@@ -6,20 +6,6 @@ require 'rails/all'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-module ActiveRecord
-    module AttributeMethods
-        module TimeZoneConversion
-            class TimeZoneConverter
-
-                def set_time_zone_without_conversion(value)
-                    ::Time.zone.local_to_utc(value).try(:in_time_zone)
-                end
-
-            end
-        end
-    end
-end
-
 module ArachniPro
     class Application < Rails::Application
         config.autoload_once_paths << "#{Rails.root.join('lib')}/system.rb"
