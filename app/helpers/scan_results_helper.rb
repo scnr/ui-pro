@@ -1,5 +1,7 @@
 module ScanResultsHelper
 
+    VALID_FILTERS = Set.new(%w(type pages states severities))
+
     def process_issue_blocks
         @process_issue_blocks ||= []
     end
@@ -148,6 +150,7 @@ module ScanResultsHelper
             data[:scans]     = Set.new
             data[:revisions] = Set.new
         end
+
         process_issues_after_page_filter do |issue|
             if filter_pages?
                 data[:scans]     << issue.scan
@@ -370,15 +373,12 @@ module ScanResultsHelper
 
     def filter_params
         prepare_issue_filters
-        { filter: params[:filter].to_unsafe_h }
+        { filter: filters }
     end
 
     def filter_params_without_page
         prepare_issue_filters
-
-        np         = params[:filter].dup
-        np[:pages] = []
-        { filter: np }
+        { filter: filters.dup.merge( pages: [] ) }
     end
 
     def filter_issues_by_severity_and_state( issues )
@@ -448,7 +448,14 @@ module ScanResultsHelper
             includes( siblings: :scan )
     end
 
+    def filters
+        return {} if !params[:filter]
+        @filters ||= params[:filter].to_unsafe_h.select { |f| VALID_FILTERS.include? f }
+    end
+
     def prepare_issue_filters
+        params[:filter] = filters
+
         params[:filter]              ||= {}
         params[:filter][:type]       ||= 'include'
         params[:filter][:pages]      ||= []

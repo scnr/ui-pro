@@ -2,7 +2,6 @@
    sitemap            = data[:sitemap_with_issues]
    sitemap_data       = data[:sitemap_data]
 
-   filter             = params[:filter][:pages]
    total_max_severity = sitemap_data[:max_severity]
    total_issue_count  = sitemap_data[:issue_count]
 %>
@@ -10,7 +9,7 @@
 <ul class="sitemap">
     <li
         id="sitemap-entry-all"
-        class="bg-severity-<%= total_max_severity %> sitemap-entry <%= 'active' if filter.empty? %>"
+        class="bg-severity-<%= total_max_severity %> sitemap-entry <%= 'active' if !filter_pages? %>"
         title="<%= pluralize total_issue_count, 'issue' %> with a maximum severity of <%= total_max_severity %>."
     >
         <%= link_to "All #{pluralize sitemap.size, 'page'}", filter_params_without_page %>
@@ -23,7 +22,7 @@
     </li>
 
     <% sitemap.each do |url, data|
-        active       = filter.include?( data[:digest].to_s )
+        active       = page_id_in_filter?( data[:digest] )
         max_severity = data[:max_severity]
         issue_count  = data[:issue_count]
     %>
