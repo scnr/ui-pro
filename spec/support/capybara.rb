@@ -21,3 +21,7 @@ end
 
 # Capybara.javascript_driver = :poltergeist
 Capybara.javascript_driver = :webkit
+
+# We MUST specify a server other than WEBrick because it's a piece of shit and
+# will result in random failures.
+Capybara.server = :puma
