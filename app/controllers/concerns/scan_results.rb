@@ -1,6 +1,7 @@
 module ScanResults
     extend ActiveSupport::Concern
     include ScanResultsHelper
+    include RevisionsHelper
 
     included do
         before_action :set_counters, only: SCAN_RESULT_ACTIONS
@@ -144,16 +145,18 @@ module ScanResults
         end
 
         if current.update( attributes )
-            redirect_to :back, notice: 'Settings were successfully updated.'
+            redirect_back fallback_location: configuration_revision_path( @revision ),
+                          notice: 'Settings were successfully updated.'
         else
-            redirect_to :back, notice: 'Settings could not be updated.'
+            redirect_back fallback_location: configuration_revision_path( @revision ),
+                          notice: 'Settings could not be updated.'
         end
     end
 
     private
 
     def set_counters
-        @coverage_count = scan_results_coverage.count(:url, :code)
+        @coverage_count = scan_results_coverage.count(:url)
         @reviews_count  = filter_pages(
             scan_results_reviews_owner.reviewed_issues
         ).count

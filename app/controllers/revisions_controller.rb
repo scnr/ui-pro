@@ -2,7 +2,7 @@ class RevisionsController < ApplicationController
     include IssuesHelper
     include ScansHelper
 
-    before_filter :authenticate_user!
+    before_action :authenticate_user!
 
     before_action :set_scan
     before_action :set_revision

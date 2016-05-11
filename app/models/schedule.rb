@@ -6,6 +6,11 @@ class DatetimeValidator < ActiveModel::EachValidator
         raw_value ||= value
 
         return if raw_value.blank?
+
+        if raw_value.is_a? Hash
+            raw_value = "#{raw_value[1]}-#{raw_value[2]}-#{raw_value[3]} #{raw_value[4]}:#{raw_value[5]}".to_datetime
+        end
+
         raw_value.to_datetime rescue record.errors[attribute] << (options[:message] || 'must be a datetime.')
     end
 end

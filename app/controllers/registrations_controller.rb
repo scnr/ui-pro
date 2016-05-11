@@ -1,5 +1,5 @@
 class RegistrationsController < Devise::RegistrationsController
-    before_filter :enforce_limit, except: [:edit, :update]
+    before_action :enforce_limit, except: [:edit, :update]
 
     private
 

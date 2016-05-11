@@ -32,7 +32,7 @@ module ProfileAttributes
         ].each do |attr|
             next if !has_option?( attr )
 
-            validate "validate_#{attr}"
+            validate :"validate_#{attr}"
         end
 
         if has_option?( :plugins )

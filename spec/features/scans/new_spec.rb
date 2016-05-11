@@ -18,7 +18,7 @@ feature 'New scan page' do
     let(:user_agent) { FactoryGirl.create :user_agent }
     let(:other_user_agent) { FactoryGirl.create :user_agent }
 
-    let(:name) { 'name blahblah' }
+    let(:name) { "name blahblah #{rand(9999999)}" }
     let(:description) { 'description blahblah' }
     let(:path) { 'my-path' }
 
@@ -26,7 +26,8 @@ feature 'New scan page' do
         Warden.test_reset!
     end
 
-    before do
+    before :each do
+        site
         site_role
         user_agent
         other_user_agent

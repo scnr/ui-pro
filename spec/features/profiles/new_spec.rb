@@ -490,7 +490,7 @@ feature 'Profile new page' do
 
                         expect(Profile.last.plugins['proxy']).to eq ({
                             'port'             => '8282',
-                            'bind_address'     => '0.0.0.0',
+                            'bind_address'     => '127.0.0.1',
                             'session_token'    => '',
                             'timeout'          => '20000'
                         })
@@ -498,7 +498,7 @@ feature 'Profile new page' do
 
                     scenario 'can be set with options' do
                         fill_in 'profile_plugins_proxy_port', with: '8080'
-                        fill_in 'profile_plugins_proxy_bind_address', with: '127.0.0.1'
+                        fill_in 'profile_plugins_proxy_bind_address', with: '127.0.0.2'
                         check 'profile_plugins_proxy_ignore_responses'
                         fill_in 'profile_plugins_proxy_session_token', with: 'secret'
                         fill_in 'profile_plugins_proxy_timeout', with: '10'
@@ -506,7 +506,7 @@ feature 'Profile new page' do
 
                         expect(Profile.last.plugins['proxy']).to eq ({
                             'port'             => '8080',
-                            'bind_address'     => '127.0.0.1',
+                            'bind_address'     => '127.0.0.2',
                             'ignore_responses' => 'on',
                             'session_token'    => 'secret',
                             'timeout'          => '10'

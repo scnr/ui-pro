@@ -2,7 +2,7 @@ class UserAgentsController < ApplicationController
     include ProfilesControllerExportable
     include ProfilesControllerImportable
 
-    before_filter :authenticate_user!
+    before_action :authenticate_user!
 
     before_action :set_user_agent,
                   only: [:show, :edit, :copy, :update, :default, :destroy]

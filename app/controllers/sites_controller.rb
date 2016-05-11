@@ -1,7 +1,7 @@
 class SitesController < ApplicationController
     include SitesHelper
 
-    before_filter :authenticate_user!
+    before_action :authenticate_user!
 
     before_action :set_site, only: [:show, :edit, :update, :destroy] +
                                        ScanResults::SCAN_RESULT_ACTIONS

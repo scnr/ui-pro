@@ -3,7 +3,7 @@ class ScansController < ApplicationController
 
     STATES = [ :pause, :resume, :suspend, :restore, :abort ]
 
-    before_filter :authenticate_user!
+    before_action :authenticate_user!
 
     before_action :set_site
     before_action :set_scan, only: [:show, :repeat, :edit, :update, :destroy] +

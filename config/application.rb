@@ -6,14 +6,22 @@ require 'rails/all'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+module ActiveRecord
+    module AttributeMethods
+        module TimeZoneConversion
+            class TimeZoneConverter
+
+                def set_time_zone_without_conversion(value)
+                    ::Time.zone.local_to_utc(value).try(:in_time_zone)
+                end
+
+            end
+        end
+    end
+end
+
 module ArachniPro
     class Application < Rails::Application
-        # config.middleware.use StackProf::Middleware,
-        #                       enabled: true,
-        #                       mode: :cpu,
-        #                       interval: 1000,
-        #                       save_every: 5
-
         config.autoload_once_paths << "#{Rails.root.join('lib')}/system.rb"
         config.autoload_once_paths << "#{Rails.root.join('lib')}/system/"
 
@@ -21,6 +29,8 @@ module ArachniPro
         config.autoload_once_paths << "#{Rails.root.join('lib')}/scan_scheduler/"
 
         config.autoload_once_paths << "#{Rails.root.join('lib')}/settings.rb"
+
+        config.autoload_once_paths << "#{Rails.root.join('lib')}/patches/timezone.rb"
 
         config.autoload_paths << Rails.root.join('lib')
 

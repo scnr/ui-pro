@@ -370,7 +370,7 @@ module ScanResultsHelper
 
     def filter_params
         prepare_issue_filters
-        { filter: params[:filter] }
+        { filter: params[:filter].to_unsafe_h }
     end
 
     def filter_params_without_page
@@ -461,6 +461,7 @@ module ScanResultsHelper
             params[:filter][:states]     ||= []
             params[:filter][:severities] ||= []
         end
+
     end
 
 end

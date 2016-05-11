@@ -8,4 +8,8 @@ module RevisionsHelper
         events_site_scan_revision_path( revision.site, revision.scan, revision )
     end
 
+    def configuration_revision_path( revision )
+        configuration_site_scan_revision_path( revision.site, revision.scan, revision )
+    end
+
 end

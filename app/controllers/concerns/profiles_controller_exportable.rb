@@ -9,15 +9,15 @@ module ProfilesControllerExportable
             format.js { render mi }
             format.json do
                 set_download_header 'json'
-                render text: mi.export( JSON )
+                render body: mi.export( JSON )
             end
             format.yaml do
                 set_download_header 'yaml'
-                render text: mi.export( YAML )
+                render body: mi.export( YAML )
             end
             format.afp do
                 set_download_header 'afp'
-                render text: mi.to_rpc_options.to_yaml
+                render body: mi.to_rpc_options.to_yaml
             end
         end
     end

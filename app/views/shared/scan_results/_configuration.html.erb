@@ -18,8 +18,7 @@
         Found the perfect configuration of
 
         <% if site_profile_changed %>
-            <%= link_to 'site', '#!/configuration-site',
-                        target: '_blank' %>
+            <%= link_to 'site', '#!/configuration-site' %>
         <% end %>
 
         <% if site_profile_changed && site_role_changed %>
@@ -27,8 +26,7 @@
         <% end %>
 
         <% if site_role_changed %>
-            <%= link_to 'user role', '#!/configuration-site_role',
-                        target: '_blank' %>
+            <%= link_to 'user role', '#!/configuration-site_role' %>
         <% end %>
 
         settings?

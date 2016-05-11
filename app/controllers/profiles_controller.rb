@@ -2,8 +2,8 @@ class ProfilesController < ApplicationController
     include ProfilesControllerExportable
     include ProfilesControllerImportable
 
-    before_filter :authenticate_user!
-    before_filter :prepare_plugin_params
+    before_action :authenticate_user!
+    before_action :prepare_plugin_params
 
     before_action :set_profiles,      only: [:index, :default]
     before_action :set_profile,       only: [:show, :copy, :edit, :update, :default, :destroy]

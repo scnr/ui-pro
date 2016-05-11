@@ -4,6 +4,8 @@
        section = section.to_s
        sections[section] = params[:action].to_s == section
    end
+
+   params_h = params.to_h
 %>
 
 <div id="scan-results" class="row">
@@ -12,20 +14,20 @@
 
             <% if @revision %>
                 <li id="live-tab" class="<%= 'active' if sections['live'] %>">
-                    <%= link_to params.merge( action: 'live' ).merge filter_params do %>
+                    <%= link_to params_h.merge( action: 'live' ).merge filter_params do %>
                         Live
                     <% end %>
                 </li>
             <% end %>
 
             <li id="issues-tab" class="<%= 'active' if sections['issues'] %>">
-                <%= link_to params.merge( action: 'issues' ).merge filter_params do %>
+                <%= link_to params_h.merge( action: 'issues' ).merge filter_params do %>
                     Issues
                 <% end %>
             </li>
 
             <li id="coverage-tab" class="<%= 'active' if sections['coverage'] %>">
-                <%= link_to params.merge( action: 'coverage' ).merge filter_params do %>
+                <%= link_to params_h.merge( action: 'coverage' ).merge filter_params do %>
                     Coverage
 
                     <span class="badge">
@@ -36,7 +38,7 @@
 
             <% if @reviews_count > 0 %>
                 <li id="reviews-tab" class="<%= 'active' if sections['reviews'] %>">
-                    <%= link_to params.merge( action: 'reviews' ).merge filter_params do %>
+                    <%= link_to params_h.merge( action: 'reviews' ).merge filter_params do %>
                         Reviews
 
                         <span class="badge">
@@ -48,14 +50,14 @@
 
             <% if @revision %>
                 <li id="health-tab" class="<%= 'active' if sections['health'] %>">
-                    <%= link_to params.merge( action: 'health' ).merge filter_params do %>
+                    <%= link_to params_h.merge( action: 'health' ).merge filter_params do %>
                         Health
                     <% end %>
                 </li>
 
                 <% if !@revision.error_messages.blank? %>
                     <li id="errors-tab" class="<%= 'active' if sections['errors'] %>">
-                        <%= link_to params.merge( action: 'errors' ).merge filter_params do %>
+                        <%= link_to params_h.merge( action: 'errors' ).merge filter_params do %>
                             Errors
                         <% end %>
                     </li>
@@ -64,14 +66,14 @@
 
             <% if @revision %>
                 <li id="configuration-tab" class="<%= 'active' if sections['configuration'] %>">
-                    <%= link_to params.merge( action: 'configuration' ).merge filter_params do %>
+                    <%= link_to params_h.merge( action: 'configuration' ).merge filter_params do %>
                         Configuration
                     <% end %>
                 </li>
             <% end %>
 
           <li id="events-tab" class="<%= 'active' if sections['events'] %>">
-            <%= link_to params.merge( action: 'events' ).merge filter_params do %>
+            <%= link_to params_h.merge( action: 'events' ).merge filter_params do %>
                 Events
             <% end %>
           </li>

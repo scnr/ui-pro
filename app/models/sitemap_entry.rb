@@ -13,7 +13,7 @@ class SitemapEntry < ActiveRecord::Base
     end
     scope :with_issues, -> { joins(:issues).where.not( issues: { sitemap_entry_id: nil } ) }
     scope :without_issues, -> { joins(:issues).where( issues: { sitemap_entry_id: nil } ) }
-    default_scope { includes(:issues).order(:url).uniq }
+    default_scope { includes(:issues).order(:url).distinct }
 
     before_save :set_owners
     before_save :set_digest
