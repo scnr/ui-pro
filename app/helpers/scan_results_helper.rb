@@ -1,5 +1,6 @@
 module ScanResultsHelper
 
+    FILTER_KEY    = :filter
     VALID_FILTERS = Set.new(%w(type pages states severities))
 
     def process_issue_blocks
@@ -75,7 +76,7 @@ module ScanResultsHelper
         if filter_pages?
             @sitemap_entry =
                 @site.sitemap_entries.
-                    where( digest: params[:filter][:pages].first ).first
+                    where( digest: active_filters[:pages].first ).first
         end
 
         if filter_by_state_and_severity
@@ -372,13 +373,11 @@ module ScanResultsHelper
     end
 
     def filter_params
-        prepare_issue_filters
-        { filter: filters }
+        { FILTER_KEY => active_filters }
     end
 
     def filter_params_without_page
-        prepare_issue_filters
-        { filter: filters.dup.merge( pages: [] ) }
+        { FILTER_KEY => active_filters.merge( pages: [] ) }
     end
 
     def filter_issues_by_severity_and_state( issues )
@@ -386,52 +385,46 @@ module ScanResultsHelper
     end
 
     def filter_states( issues )
-        prepare_issue_filters
+        return issues if active_filters[:states].empty?
 
-        return issues if params[:filter][:states].empty?
-
-        if params[:filter][:type] == 'exclude'
-            issues.where.not( state: params[:filter][:states] )
+        if active_filters[:type] == 'exclude'
+            issues.where.not( state: active_filters[:states] )
         else
-            issues.where( state: params[:filter][:states] )
+            issues.where( state: active_filters[:states] )
         end
     end
 
     def filter_severities( issues )
-        prepare_issue_filters
+        return issues if active_filters[:severities].empty?
 
-        return issues if params[:filter][:severities].empty?
-
-        if params[:filter][:type] == 'exclude'
+        if active_filters[:type] == 'exclude'
             issues.where.not(
                 issue_type_severities: {
-                    name: params[:filter][:severities]
+                    name: active_filters[:severities]
                 }
             )
         else
             issues.where(
                 issue_type_severities: {
-                    name: params[:filter][:severities]
+                    name: active_filters[:severities]
                 }
             )
         end
     end
 
     def filter_pages?
-        prepare_issue_filters
-        params[:filter][:pages].any?
+        active_filters[:pages].any?
     end
 
     def page_id_in_filter?( page_id )
-        prepare_issue_filters
-        params[:filter][:pages].include? page_id.to_s
+        active_filters[:pages].include? page_id.to_s
     end
 
     def filter_pages( issues )
         return issues if !filter_pages?
 
         issues.includes( :sitemap_entry ).
-            where( 'sitemap_entries.digest IN (?)', params[:filter][:pages] )
+            where( 'sitemap_entries.digest IN (?)', active_filters[:pages] )
     end
 
     def preload_issue_associations( issues )
@@ -448,27 +441,30 @@ module ScanResultsHelper
             includes( siblings: :scan )
     end
 
-    def filters
-        return {} if !params[:filter]
-        @filters ||= params[:filter].to_unsafe_h.select { |f| VALID_FILTERS.include? f }
-    end
+    def active_filters
+        return @active_filters if @active_filters
 
-    def prepare_issue_filters
-        params[:filter] = filters
-
-        params[:filter]              ||= {}
-        params[:filter][:type]       ||= 'include'
-        params[:filter][:pages]      ||= []
-
-        if params[:filter][:type] == 'include'
-            params[:filter][:states]     ||= %w(trusted)
-            params[:filter][:severities] ||=
-                IssueTypeSeverity::SEVERITIES.map(&:to_s) - ['informational']
+        if params[FILTER_KEY]
+            @active_filters =
+                params.extract!(FILTER_KEY)[FILTER_KEY].to_unsafe_h.
+                    select { |f| VALID_FILTERS.include? f }
         else
-            params[:filter][:states]     ||= []
-            params[:filter][:severities] ||= []
+            @active_filters = {}
         end
 
+        @active_filters[:type]  ||= 'include'
+        @active_filters[:pages] ||= []
+
+        if @active_filters[:type] == 'include'
+            @active_filters[:states]     ||= %w(trusted)
+            @active_filters[:severities] ||=
+                IssueTypeSeverity::SEVERITIES.map(&:to_s) - ['informational']
+        else
+            @active_filters[:states]     ||= []
+            @active_filters[:severities] ||= []
+        end
+
+        @active_filters
     end
 
 end

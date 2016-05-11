@@ -1,8 +1,8 @@
 <%
-   pages      = params[:filter][:pages]
-   states     = params[:filter][:states]
-   severities = params[:filter][:severities]
-   type       = params[:filter][:type]
+   pages      = active_filters[:pages]
+   states     = active_filters[:states]
+   severities = active_filters[:severities]
+   type       = active_filters[:type]
 %>
 
 <div class="row">
