@@ -63,7 +63,7 @@ group :test do
     gem 'launchy'
     gem 'selenium-webdriver'
     gem 'factory_girl_rails'
-    gem 'rspec-rails', '3.5.0beta2'
+    gem 'rspec-rails', '3.5.0beta3'
 end
 
 group :development, :test do
