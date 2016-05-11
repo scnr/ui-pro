@@ -5,7 +5,18 @@ class Linux < Base
     # @return   [Integer]
     #   Amount of free RAM in bytes.
     def memory_free
-        _exec('free').split("\n")[2].split("\s").last.to_i * 1024
+        lines = _exec('free').split("\n")
+
+        # Old `free`.
+        if lines.size == 4
+            line = lines[2]
+
+        # New `free`.
+        else
+            line = lines[1]
+        end
+
+        line .split("\s").last.to_i * 1024
     end
 
     # @return   [Integer]

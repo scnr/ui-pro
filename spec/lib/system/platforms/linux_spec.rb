@@ -2,19 +2,37 @@ describe System::Platforms::Linux do
     subject { described_class.new }
 
     describe '#memory_free' do
-        let(:free) do
-            <<EOTXT
+        context 'when using the old free version' do
+            let(:free) do
+                <<EOTXT
              total       used       free     shared    buffers     cached
 Mem:      65950944   52624192   13326752     636772    1750496   33302772
 -/+ buffers/cache:   17570924   48380020
 Swap:            0          0          0
 EOTXT
+            end
+
+            it 'returns the amount of free memory' do
+                expect(subject).to receive(:_exec).with('free').and_return(free)
+                expect(subject.memory_free).to eq 49541140480
+            end
         end
 
-        it 'returns the amount of free memory' do
-            expect(subject).to receive(:_exec).with('free').and_return(free)
-            expect(subject.memory_free).to eq 49541140480
+        context 'when using the new free version' do
+            let(:free) do
+                <<EOTXT
+              total        used        free      shared  buff/cache   available
+Mem:       65949272    11368472    20853548      570212    33727252    48380020
+Swap:             0           0           0
+EOTXT
+            end
+
+            it 'returns the amount of free memory' do
+                expect(subject).to receive(:_exec).with('free').and_return(free)
+                expect(subject.memory_free).to eq 49541140480
+            end
         end
+
     end
 
     describe '#cpu_count' do
