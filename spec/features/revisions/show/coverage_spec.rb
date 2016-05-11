@@ -116,8 +116,8 @@ feature 'Revision coverage' do
         end
 
         scenario 'shows link to concurrency setting', js: true do
-            within help_alert do
-                click_link 'customize the site-wide scope'
+            new_window = window_opened_by { help_alert.click_link 'Customize the site-wide scope' }
+            within_window new_window do
                 expect( current_url ).to end_with "#{edit_site_path( site )}#!/scope"
             end
         end

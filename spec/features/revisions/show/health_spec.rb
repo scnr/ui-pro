@@ -40,8 +40,8 @@ feature 'Revision health' do
     let(:help_alert) { find '.alert-help' }
 
     scenario 'shows help alert', js: true do
-        within help_alert do
-            click_link 'adjust the HTTP request concurrency'
+        new_window = window_opened_by { help_alert.click_link 'adjust the HTTP request concurrency' }
+        within_window new_window do
             expect( current_url ).to end_with "#{edit_site_path( site )}#!/site_profile_attributes_http_request_concurrency"
         end
     end
