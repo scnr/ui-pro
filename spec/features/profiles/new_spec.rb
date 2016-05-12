@@ -352,6 +352,13 @@ feature 'Profile new page' do
 
                 FrameworkHelper.checks.each do |shortname, info|
                     feature info[:name] do
+                        let(:text) do
+                            find("#profile-checks-#{shortname}-container").text
+                        end
+                        let(:description) do
+                            find("##{shortname}-description").text.recode
+                        end
+
                         scenario 'can be set' do
                             check "profile_checks_#{shortname}"
                             submit
@@ -359,15 +366,19 @@ feature 'Profile new page' do
                             expect(Profile.last.checks).to include shortname
                         end
 
-                        scenario 'has description'
+                        scenario 'has description' do
+                            expect(description).to include ActionView::Base.full_sanitizer.sanitize(
+                                ApplicationHelper.md( info[:description] )
+                            ).gsub( /\s+/m, ' ' ).strip.recode
+                        end
 
                         scenario 'has version' do
-                            expect(find("#profile-checks-#{shortname}-container").text).to include info[:version]
+                            expect(text).to include info[:version]
                         end
 
                         scenario 'has authors' do
                             info[:authors].each do |author|
-                                expect(find("#profile-checks-#{shortname}-container").text).to include author
+                                expect(text).to include author
                             end
                         end
 
@@ -375,7 +386,7 @@ feature 'Profile new page' do
                             info[:platforms].each do |platform|
                                 fullname = FrameworkHelper.platform_fullname( platform )
 
-                                expect(find("#profile-checks-#{shortname}-container").text).to include fullname
+                                expect(text).to include fullname
                             end
                         end
                     end
