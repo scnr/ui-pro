@@ -343,11 +343,38 @@ feature 'Profile new page' do
             end
 
             feature 'Checks' do
-                feature 'can be searched' do
-                    scenario 'by name'
-                    scenario 'by description'
-                    scenario 'by platforms'
-                    scenario 'by combination'
+                feature 'can be searched', js: true do
+                    scenario 'by name' do
+                        expect(page).to have_selector( '.profile-checks', count: 65 )
+
+                        fill_in 'profile-checks-search', with: 'xss'
+
+                        expect(page).to have_selector( '.profile-checks', count: 7 )
+                    end
+
+                    scenario 'by description' do
+                        expect(page).to have_selector( '.profile-checks', count: 65 )
+
+                        fill_in 'profile-checks-search', with: 'vulnerability'
+
+                        expect(page).to have_selector( '.profile-checks', count: 7 )
+                    end
+
+                    scenario 'by platforms' do
+                        expect(page).to have_selector( '.profile-checks', count: 65 )
+
+                        fill_in 'profile-checks-search', with: 'php'
+
+                        expect(page).to have_selector( '.profile-checks', count: 5 )
+                    end
+
+                    scenario 'by combination' do
+                        expect(page).to have_selector( '.profile-checks', count: 65 )
+
+                        fill_in 'profile-checks-search', with: 'injection assess php'
+
+                        expect(page).to have_selector( '.profile-checks', count: 2 )
+                    end
                 end
 
                 FrameworkHelper.checks.each do |shortname, info|
