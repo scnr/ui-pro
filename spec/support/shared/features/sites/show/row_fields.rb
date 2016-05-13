@@ -52,10 +52,6 @@ shared_examples_for 'Site scan tables row fields' do
         end
     end
 
-    feature 'when the scan has no issues' do
-        scenario 'user sees maximum severity of issues for this scan'
-    end
-
     feature 'when the revision has no issues' do
         let(:max_severity) { scans.find('.revision-max-severity') }
 
@@ -64,7 +60,4 @@ shared_examples_for 'Site scan tables row fields' do
         end
     end
 
-    feature 'when the revision has no revision' do
-        scenario 'user sees maximum severity of issues for this revision'
-    end
 end
