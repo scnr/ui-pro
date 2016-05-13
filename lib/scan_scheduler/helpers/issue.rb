@@ -31,10 +31,6 @@ module Issue
 
             # We found a regression, obviously the issue isn't fixed as it just
             # reappeared, revert its state.
-            #
-            # TODO: Grep issues don't include the matched data in the digest,
-            # there can be a logged e-mail address which is then removed and the
-            # issue will be reverted just because another address was found.
             if issue.fixed?
                 issue.update_state ::Issue.state_from_native_issue( native ), revision
 
