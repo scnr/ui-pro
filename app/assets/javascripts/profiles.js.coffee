@@ -5,6 +5,8 @@
 searchChecks = ( val ) ->
     $(".profile-checks").show()
 
+    val = val.replace( /\(|\)/m, '' )
+
     if( val != '' )
         for token in val.split( /\s+/ )
             $(".profile-checks:not(:icontains(" + token + "))").hide()
