@@ -22,8 +22,8 @@ class SettingsController < ApplicationController
                 # The interface may need to perform certain operations too,
                 # so apply the settings to the global libs for the interface
                 # process.
-                Arachni::Options.update @settings.to_rpc_options
-                Arachni::HTTP::Client.reset
+                SCNR::Engine::Options.update @settings.to_rpc_options
+                SCNR::Engine::HTTP::Client.reset
 
                 format.html { render :edit }
                 format.json { render :show, status: :ok, location: @settings }

@@ -8,13 +8,13 @@ describe IssuePage do
     expect_it { to have_one(:dom).dependent(:destroy) }
     expect_it { to belong_to(:sitemap_entry).counter_cache(true) }
 
-    describe '.create_from_arachni' do
-        let(:arachni_page) do
+    describe '.create_from_engine' do
+        let(:engine_page) do
             Factory[:page]
         end
 
-        it "creates a #{described_class} from #{Arachni::Page}" do
-            page = described_class.create_from_arachni( arachni_page ).reload
+        it "creates a #{described_class} from #{SCNR::Engine::Page}" do
+            page = described_class.create_from_engine(engine_page).reload
             expect(page).to be_valid
 
             expect(page.request).to be_kind_of HttpRequest

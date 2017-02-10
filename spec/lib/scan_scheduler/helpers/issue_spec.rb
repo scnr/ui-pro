@@ -20,8 +20,8 @@ describe ScanScheduler::Helpers::Issue do
     end
 
     describe '#create_issue' do
-        it "delegates to #{Issue}.create_from_arachni" do
-            expect(Issue).to receive(:create_from_arachni).
+        it "delegates to #{Issue}.create_from_engine" do
+            expect(Issue).to receive(:create_from_engine).
                                  with( native_issue, revision: revision )
 
             subject.create_issue( revision, native_issue )
@@ -129,7 +129,7 @@ describe ScanScheduler::Helpers::Issue do
                 first_issue = report.issues[0]
 
                 rev2 = new_revision
-                Issue.create_from_arachni( first_issue, revision: rev2 )
+                Issue.create_from_engine( first_issue, revision: rev2 )
 
                 report.issues = [report.issues[0], report.issues[1]]
                 subject.import_issues_from_report(revision, report)
@@ -146,7 +146,7 @@ describe ScanScheduler::Helpers::Issue do
                     first_issue.remarks.clear
                     first_issue.add_remark 'author', 'text'
 
-                    Issue.create_from_arachni( first_issue, revision: revision )
+                    Issue.create_from_engine( first_issue, revision: revision )
 
                     report.issues[0].remarks.clear
                     report.issues[0].add_remark 'author2', 'text2'
@@ -170,7 +170,7 @@ describe ScanScheduler::Helpers::Issue do
 
                     first_issue.trusted = true
 
-                    Issue.create_from_arachni( first_issue, revision: revision )
+                    Issue.create_from_engine( first_issue, revision: revision )
                     expect(revision.issues.first.state).to eq 'trusted'
 
                     report.issues[0].trusted = false

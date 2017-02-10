@@ -11,18 +11,18 @@ describe IssuePageDomFunction do
         end
     end
 
-    describe '.create_from_arachni' do
-        let(:arachni_function) do
+    describe '.create_from_engine' do
+        let(:engine_function) do
             Factory[:called_function]
         end
 
-        it "creates a #{described_class} from #{Arachni::Browser::Javascript::TaintTracer::Frame::CalledFunction}" do
-            function = described_class.create_from_arachni( arachni_function ).reload
+        it "creates a #{described_class} from #{SCNR::Engine::Browser::Javascript::TaintTracer::Frame::CalledFunction}" do
+            function = described_class.create_from_engine(engine_function ).reload
             expect(function).to be_valid
 
-            expect(function.name).to eq arachni_function.name
-            expect(function.source).to eq arachni_function.source
-            expect(function.arguments).to eq arachni_function.arguments
+            expect(function.name).to eq engine_function.name
+            expect(function.source).to eq engine_function.source
+            expect(function.arguments).to eq engine_function.arguments
         end
     end
 

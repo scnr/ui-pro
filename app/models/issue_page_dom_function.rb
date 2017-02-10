@@ -13,7 +13,7 @@ class IssuePageDomFunction < ActiveRecord::Base
         source.match( /function\s*(.*?)\s*\{/m )[1]
     end
 
-    def self.create_from_arachni( function )
+    def self.create_from_engine( function )
         create(
             name:      function.name,
             source:    function.source,

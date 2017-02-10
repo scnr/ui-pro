@@ -9,7 +9,7 @@ FactoryGirl.define do
             'pname2' => 'pvalue2'
         })
         seed "/etc/passwd"
-        arachni_class "Arachni::Element::Form"
+        engine_class "SCNR::Engine::Element::Form"
         kind "form"
         action "http://test.com/"
         source "<form>stuff</form>"

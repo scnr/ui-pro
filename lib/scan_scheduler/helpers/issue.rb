@@ -8,10 +8,10 @@ module Issue
         reset_issue_state
     end
 
-    # Creates a `revision` DB {Issue} from a `native` {Arachni::Issue issue}.
+    # Creates a `revision` DB {Issue} from a `native` {SCNR::Engine::Issue issue}.
     #
     # @param    [Revision]  revision
-    # @param    [Arachni::Issue]  native
+    # @param    [SCNR::Engine::Issue]  native
     def create_issue( revision, native )
         log_debug_for revision, "Creating issue: #{native.unique_id} - #{native.digest}"
 
@@ -43,16 +43,16 @@ module Issue
             end
         end
 
-        ::Issue.create_from_arachni( native, options )
+        ::Issue.create_from_engine( native, options )
     end
 
-    # Updates the `revision`'s DB {Issue} with `native` {Arachni::Issue}'s data.
+    # Updates the `revision`'s DB {Issue} with `native` {SCNR::Engine::Issue}'s data.
     #
     # In this case, issue remarks and state are updated, so long as the state
     # has not ben set to either `false_positive` or `fixed` by the user.
     #
     # @param    [Revision]  revision
-    # @param    [Arachni::Issue]  native
+    # @param    [SCNR::Engine::Issue]  native
     def update_issue( revision, native )
         if !update_issue?( revision, native )
             log_debug_for revision, 'No need to update issue: ' +
@@ -134,7 +134,7 @@ module Issue
 
     def updatable_data_for( issue )
         @updatable_issue_data_per_digest[issue.digest] ||=
-            Arachni::Support::LookUp::HashSet.new
+            SCNR::Engine::Support::LookUp::Hash.new
     end
 
     def update_updatable_data_for( revision, issue )

@@ -339,7 +339,7 @@ EORUBY
             options
         end
 
-        it 'includes Arachni options' do
+        it 'includes Engine options' do
             expect(rpc_options).to eq({
                 'session' => {
                     'check_url'     => 'http://stuff/',

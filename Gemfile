@@ -1,24 +1,24 @@
 source 'https://rubygems.org'
 
-gem 'rails', '5.0.0rc1'
-gem 'sass-rails', '~> 5.0.3'
+gem 'rails', '5.0.1'
+gem 'sass-rails'
 gem 'closure-compiler'
-gem 'coffee-rails', '~> 4.1.0'
-gem 'jquery-rails'
-gem 'turbolinks'
-gem 'jbuilder', '~> 2.3.0'
-gem 'bootstrap-sass'
+gem 'coffee-rails'
+gem 'jquery-rails', '4.1.1'
+gem 'turbolinks', '2.5.3'
+gem 'jbuilder'
+gem 'bootstrap-sass', '3.3.6'
 gem 'font-awesome-rails'
 gem 'font-kit-rails'
-gem 'devise', github: 'plataformatec/devise'
+gem 'devise'
 # gem 'devise_security_extension', github: 'phatworx/devise_security_extension'
 gem 'simple_form'
 
 gem 'kramdown'
 gem 'loofah'
 
-gem 'd3-rails'
-gem 'c3-rails'
+gem 'd3-rails', '3.5.16'
+gem 'c3-rails', '0.4.11'
 
 gem 'ace-rails-ap'
 
@@ -47,7 +47,7 @@ group :development do
     gem 'spring'
     gem 'better_errors'
     gem 'binding_of_caller'
-    gem 'quiet_assets'
+    # gem 'quiet_assets'
     gem 'rails_layout'
     gem 'bullet'
     gem 'rails-footnotes'
@@ -63,7 +63,7 @@ group :test do
     gem 'launchy'
     gem 'selenium-webdriver'
     gem 'factory_girl_rails'
-    gem 'rspec-rails', '3.5.0beta3'
+    gem 'rspec-rails'
 end
 
 group :development, :test do
@@ -71,4 +71,4 @@ group :development, :test do
     gem 'awesome_print'
 end
 
-gem 'arachni', path: File.dirname( __FILE__ ) + '/../../arachni'
+gem 'scnr-engine', path: File.dirname( __FILE__ ) + '/../engine'

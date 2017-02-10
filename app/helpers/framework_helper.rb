@@ -15,7 +15,7 @@ module FrameworkHelper
 
     def framework( &block )
         fail 'This method requires a block.' if !block_given?
-        block.call ArachniFramework
+        block.call SCNREngineFramework
     end
 
     def valid_platforms( type = nil )
@@ -31,11 +31,11 @@ module FrameworkHelper
     end
 
     def platform_type_fullname( type )
-        Arachni::Platform::Manager::TYPES[type]
+        SCNR::Engine::Platform::Manager::TYPES[type]
     end
 
     def platform_shortnames
-        Arachni::Platform::Manager.valid
+        SCNR::Engine::Platform::Manager.valid
     end
 
     def platform_fullname( platform )
@@ -43,7 +43,7 @@ module FrameworkHelper
     end
 
     def platform_manager
-        @platform_manager ||= Arachni::Platform::Manager.new
+        @platform_manager ||= SCNR::Engine::Platform::Manager.new
     end
 
     def prepare_description( str )
@@ -94,7 +94,7 @@ module FrameworkHelper
                     h[name][:author]    = [ h[name][:author] ].flatten.map(&:strip)
                     h[name][:authors]   = h[name][:author]
 
-                    if manager[name] <= Arachni::Reporter::Base && manager[name].has_outfile?
+                    if manager[name] <= SCNR::Engine::Reporter::Base && manager[name].has_outfile?
                         h[name][:extension] = manager[name].outfile_option.default.split( '.', 2 ).last
                     end
                     h

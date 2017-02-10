@@ -28,7 +28,7 @@ describe Issue do
         end
     end
 
-    let(:arachni_issue) do
+    let(:engine_issue) do
         Factory[:issue]
     end
 
@@ -218,8 +218,8 @@ describe Issue do
 
     describe '#has_proofs?' do
         before do
-            subject.page = IssuePage.create_from_arachni( Factory[:page] )
-            subject.page.dom = IssuePageDom.create_from_arachni( Factory[:dom] )
+            subject.page = IssuePage.create_from_engine( Factory[:page] )
+            subject.page.dom = IssuePageDom.create_from_engine( Factory[:dom] )
             subject.page.dom.execution_flow_sinks = []
             subject.proof = ''
             subject.remarks = []
@@ -252,7 +252,7 @@ describe Issue do
         context 'when the page has execution flow sinks' do
             before do
                 subject.page.dom.execution_flow_sinks = [
-                    IssuePageDomExecutionFlowSink.create_from_arachni( Factory[:execution_flow] )
+                    IssuePageDomExecutionFlowSink.create_from_engine( Factory[:execution_flow] )
                 ]
             end
 
@@ -415,11 +415,11 @@ describe Issue do
         end
     end
 
-    describe '.create_from_arachni' do
+    describe '.create_from_engine' do
         let(:platform) do
             IssuePlatform.create(
-                shortname: arachni_issue.platform_name,
-                name:      arachni_issue.platform_name.to_s.upcase
+                shortname: engine_issue.platform_name,
+                name:      engine_issue.platform_name.to_s.upcase
             )
         end
 
@@ -427,9 +427,9 @@ describe Issue do
             platform
         end
 
-        it "creates a #{described_class} from #{Arachni::Issue}" do
-            issue = described_class.create_from_arachni(
-                arachni_issue,
+        it "creates a #{described_class} from #{SCNR::Engine::Issue}" do
+            issue = described_class.create_from_engine(
+                engine_issue,
                 revision: revision
             )
             expect(issue).to be_valid
@@ -454,8 +454,8 @@ describe Issue do
 
         context 'when :state is given' do
             it 'sets it' do
-                issue = described_class.create_from_arachni(
-                    arachni_issue,
+                issue = described_class.create_from_engine(
+                    engine_issue,
                     revision: revision,
                     state: 'fixed'
                 )
@@ -467,8 +467,8 @@ describe Issue do
     describe '.state_from_native_issue' do
         context 'when the issue is trusted' do
             let(:issue) do
-                arachni_issue.trusted = true
-                arachni_issue
+                engine_issue.trusted = true
+                engine_issue
             end
 
             it 'returns trusted' do
@@ -478,8 +478,8 @@ describe Issue do
 
         context 'when the issue is untrusted' do
             let(:issue) do
-                arachni_issue.trusted = false
-                arachni_issue
+                engine_issue.trusted = false
+                engine_issue
             end
 
             it 'returns trusted' do

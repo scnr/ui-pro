@@ -168,7 +168,7 @@ class SitesController < ApplicationController
     def validate_connectivity( site )
         return true if site.protocol.blank? || site.host.blank? || site.port.blank?
 
-        response = Arachni::HTTP::Client.get(
+        response = SCNR::Engine::HTTP::Client.get(
             "#{site.url}/favicon.ico",
             follow_location: true,
             mode:            :sync

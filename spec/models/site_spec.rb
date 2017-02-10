@@ -28,7 +28,7 @@ describe Site, type: :model do
             port:     1
         ).profile
 
-        SiteProfile.flatten( Arachni::Options.to_rpc_data ).each do |k, v|
+        SiteProfile.flatten( SCNR::Engine::Options.to_rpc_data ).each do |k, v|
             expect(profile.send(k)).to eq v
         end
     end

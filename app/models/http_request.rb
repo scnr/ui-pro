@@ -12,7 +12,7 @@ class HttpRequest < ActiveRecord::Base
         raw
     end
 
-    def self.create_from_arachni( request )
+    def self.create_from_engine( request )
         create(
             url:         request.url,
             http_method: request.method,

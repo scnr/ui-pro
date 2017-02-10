@@ -162,7 +162,7 @@ feature 'Site index page' do
 
     feature 'new site form' do
         before do
-            allow(Arachni::HTTP::Client).to receive(:get) do |url, options = {}|
+            allow(SCNR::Engine::HTTP::Client).to receive(:get) do |url, options = {}|
                 response.url = url if response
                 response
             end
@@ -178,7 +178,7 @@ feature 'Site index page' do
         end
 
         let(:response) do
-            Arachni::HTTP::Response.new(
+            SCNR::Engine::HTTP::Response.new(
                 url:     "#{url}/favicon.ico",
                 code:    200,
                 body:    'icon data',
@@ -246,7 +246,7 @@ feature 'Site index page' do
 
             context 'when no connection could be made' do
                 let(:response) do
-                    Arachni::HTTP::Response.new(
+                    SCNR::Engine::HTTP::Response.new(
                         url:            url,
                         code:           0,
                         return_message: 'Could not connect'

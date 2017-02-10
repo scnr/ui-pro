@@ -7,7 +7,7 @@ class HttpResponse < ActiveRecord::Base
         "#{raw_headers}#{body}".recode
     end
 
-    def self.create_from_arachni( response )
+    def self.create_from_engine( response )
         create(
             url:            response.url,
             code:           response.code,

@@ -101,14 +101,14 @@ RSpec::Core::MemoizedHelpers.module_eval do
     alias to_not should_not
 end
 
-# require 'arachni'
+# require 'scnr/engine'
 
-# arachni_root_dir = Gem::Specification.find_by_name( 'arachni' ).gem_dir
-arachni_root_dir = File.expand_path( "#{File.basename(__FILE__)}/../../../arachni" )
+# engine_root_dir = Gem::Specification.find_by_name( 'scnr-engine' ).gem_dir
+engine_root_dir = File.expand_path( "#{File.basename(__FILE__)}/../../../scnr/engine" )
 
-require_relative "#{arachni_root_dir}/lib/arachni"
+require_relative "#{engine_root_dir}/lib/scnr/engine"
 
-support_path     = "#{arachni_root_dir}/spec/support"
+support_path     = "#{engine_root_dir}/spec/support"
 
 require_relative "#{support_path}/lib/factory"
 Dir.glob( "#{support_path}/factories/**/*.rb" ).each { |f| require f }

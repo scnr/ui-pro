@@ -7,7 +7,7 @@ feature 'Issue page' do
     let(:digest) { rand(999999999) }
     let(:type) { FactoryGirl.create(:issue_type) }
     let(:issue) do
-        Issue.create_from_arachni(
+        Issue.create_from_engine(
             Factory[:issue],
             digest: digest,
             revision: revision,
@@ -19,7 +19,7 @@ feature 'Issue page' do
         )
     end
     let(:sibling) do
-        Issue.create_from_arachni(
+        Issue.create_from_engine(
             Factory[:issue],
             digest: digest,
             revision: revision,

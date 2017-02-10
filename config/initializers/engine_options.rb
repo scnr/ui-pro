@@ -9,13 +9,10 @@
 # if it means less stressing of the remote server, less resource utilization
 # and less chance of processing redundant workload.
 
-options = Arachni::Options
-
-# Dev defaults, for comparison with other branches and Pro vs CLI.
-options.audit.elements :forms, :links, :ui_forms, :ui_inputs
+options = SCNR::Engine::Options
 
 # Production defaults.
-# options.audit.elements :forms, :links, :cookies, :ui_forms, :ui_inputs
+options.audit.elements :forms, :links, :cookies, :ui_forms, :ui_inputs
 
 # We do this so that the values that will be used will appear in the UI.
 options.input.values = options.input.default_values.dup

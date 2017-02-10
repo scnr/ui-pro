@@ -6,11 +6,11 @@ class IssuePageDomExecutionFlowSink < ActiveRecord::Base
 
     serialize :data, Array
 
-    def self.create_from_arachni( sink )
+    def self.create_from_engine( sink )
         create(
             data:        sink.data,
             stackframes: sink.trace.map do |frame|
-                IssuePageDomStackFrame.create_from_arachni( frame )
+                IssuePageDomStackFrame.create_from_engine( frame )
             end
         )
     end

@@ -216,7 +216,7 @@ module ProfileAttributes
     def validate_session_check
         return if session_check_url.to_s.empty? && session_check_pattern.to_s.empty?
 
-        if (url = Arachni::URI( session_check_url )).to_s.empty? || !url.absolute?
+        if (url = SCNR::Engine::URI( session_check_url )).to_s.empty? || !url.absolute?
             errors.add :session_check_url, 'not a valid absolute URL'
         end
 
@@ -304,7 +304,7 @@ module ProfileAttributes
                         plugin, f.plugins[plugin],
                         (options || {}).reject { |k, v| v.empty? }
                     )
-                rescue Arachni::Component::Options::Error::Invalid => e
+                rescue SCNR::Engine::Component::Options::Error::Invalid => e
                     errors.add :plugins, e.to_s
                 end
             end

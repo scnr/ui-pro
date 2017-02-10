@@ -4,7 +4,7 @@ class CreateVectors < ActiveRecord::Migration
             t.text :default_inputs
             t.text :inputs
             t.text :seed
-            t.string :arachni_class
+            t.string :engine_class
             t.string :kind
             t.text :action
             t.text :source

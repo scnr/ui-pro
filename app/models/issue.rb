@@ -165,7 +165,7 @@ class Issue < ActiveRecord::Base
         issue.severity
     end
 
-    def self.create_from_arachni( issue, options = {} )
+    def self.create_from_engine( issue, options = {} )
         issue_remarks = []
         issue.remarks.each do |author, remarks|
             remarks.each do |remark|
@@ -180,9 +180,9 @@ class Issue < ActiveRecord::Base
             proof:          issue.proof,
             state:          options[:state] || state_from_native_issue( issue ),
             active:         issue.active?,
-            page:           IssuePage.create_from_arachni( issue.page ),
-            referring_page: IssuePage.create_from_arachni( issue.referring_page ),
-            vector:         Vector.create_from_arachni( issue.vector ),
+            page:           IssuePage.create_from_engine( issue.page ),
+            referring_page: IssuePage.create_from_engine( issue.referring_page ),
+            vector:         Vector.create_from_engine( issue.vector ),
             remarks:        issue_remarks,
             platform:       (IssuePlatform.find_by_shortname( issue.platform_name.to_s ) if issue.platform_name)
        }.merge(options))

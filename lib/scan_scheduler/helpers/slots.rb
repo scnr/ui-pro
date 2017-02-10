@@ -92,7 +92,7 @@ module Slots
         #
         # TODO: Better keep track of PIDs from the Scheduler, other PIDs may creep
         # in to the generalized Manager.
-        Arachni::Processes::Manager.pids.each do |pid|
+        SCNR::Engine::Processes::Manager.pids.each do |pid|
             remaining = slot_remaining_memory_for( pid )
 
             # Scan matched or exceeded its allocation, no adjustment necessary.

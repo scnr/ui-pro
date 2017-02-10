@@ -24,21 +24,21 @@ describe HttpRequest do
         end
     end
 
-    describe '.create_from_arachni' do
-        let(:arachni_request) do
+    describe '.create_from_engine' do
+        let(:engine_request) do
             Factory[:request]
         end
 
-        it "creates a #{described_class} from #{Arachni::HTTP::Request}" do
-            request = described_class.create_from_arachni( arachni_request ).reload
+        it "creates a #{described_class} from #{SCNR::Engine::HTTP::Request}" do
+            request = described_class.create_from_engine(engine_request ).reload
             expect(request).to be_valid
 
-            expect(request.url).to eq arachni_request.url
-            expect(request.http_method).to eq arachni_request.method.to_s.upcase
-            expect(request.parameters).to eq arachni_request.parameters
-            expect(request.body).to eq arachni_request.effective_body
-            expect(request.headers).to eq arachni_request.headers
-            expect(request.raw).to eq arachni_request.to_s
+            expect(request.url).to eq engine_request.url
+            expect(request.http_method).to eq engine_request.method.to_s.upcase
+            expect(request.parameters).to eq engine_request.parameters
+            expect(request.body).to eq engine_request.effective_body
+            expect(request.headers).to eq engine_request.headers
+            expect(request.raw).to eq engine_request.to_s
         end
     end
 

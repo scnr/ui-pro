@@ -147,7 +147,7 @@ describe ScanScheduler::Helpers::Slots do
 
                     expect(System.instance).to receive(:memory_free).and_return( subject.slot_memory_size * 2 - used_allocation )
 
-                    expect(Arachni::Processes::Manager.instance).to receive(:pids).and_return([123])
+                    expect(SCNR::Engine::Processes::Manager.instance).to receive(:pids).and_return([123])
                     expect(subject).to receive(:slot_remaining_memory_for).with(123).and_return( subject.slot_memory_size - used_allocation )
 
                     expect(subject.slot_unallocated_memory).to eq subject.slot_memory_size

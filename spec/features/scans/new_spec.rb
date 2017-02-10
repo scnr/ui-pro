@@ -133,7 +133,7 @@ feature 'New scan page' do
             select profile.name, from: 'scan_profile_id'
             select user_agent.name, from: 'scan_user_agent_id'
 
-            select '2016', from: 'scan_schedule_attributes_start_at_1i'
+            select '2017', from: 'scan_schedule_attributes_start_at_1i'
             select 'November', from: 'scan_schedule_attributes_start_at_2i'
             select '15', from: 'scan_schedule_attributes_start_at_3i'
             select '21', from: 'scan_schedule_attributes_start_at_4i'
@@ -161,7 +161,7 @@ feature 'New scan page' do
 
             schedule = scan.schedule
 
-            expect(schedule.start_at.to_s).to eq '2016-11-15 21:50:00 UTC'
+            expect(schedule.start_at.to_s).to eq '2017-11-15 21:50:00 UTC'
             expect(schedule.stop_after_hours).to eq 1.5
             expect(schedule.day_frequency).to eq 10
             expect(schedule.month_frequency).to eq 11

@@ -114,7 +114,7 @@ class Site < ActiveRecord::Base
 
     def ensure_profile
         self.profile ||= build_profile(
-            SiteProfile.flatten( Arachni::Options.to_rpc_data )
+            SiteProfile.flatten( SCNR::Engine::Options.to_rpc_data )
         )
     end
 

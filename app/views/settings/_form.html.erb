@@ -157,7 +157,7 @@
                 <div class="col-md-6">
                     <%= f.input :http_request_queue_size,
                                 label: 'Request queue size',
-                                placeholder: Arachni::Options.http.request_queue_size.to_s
+                                placeholder: SCNR::Engine::Options.http.request_queue_size.to_s
                     %>
                 </div>
                 <div class="col-md-6 input-help">
@@ -169,7 +169,7 @@
                 <div class="col-md-6">
                     <%= f.input :http_request_timeout,
                                 label: 'Request timeout',
-                                placeholder: Arachni::Options.http.request_timeout.to_s
+                                placeholder: SCNR::Engine::Options.http.request_timeout.to_s
                     %>
                 </div>
                 <div class="col-md-6 input-help">
@@ -181,7 +181,7 @@
                 <div class="col-md-6">
                     <%= f.input :http_request_redirect_limit,
                                 label: 'Redirect limit',
-                                placeholder: Arachni::Options.http.request_redirect_limit.to_s
+                                placeholder: SCNR::Engine::Options.http.request_redirect_limit.to_s
                     %>
                 </div>
                 <div class="col-md-6 input-help">
@@ -193,7 +193,7 @@
                 <div class="col-md-6">
                     <%= f.input :http_response_max_size,
                                 label: 'Maximum response size',
-                                placeholder: Arachni::Options.http.response_max_size.to_s
+                                placeholder: SCNR::Engine::Options.http.response_max_size.to_s
                     %>
                 </div>
                 <div class="col-md-6 input-help">
@@ -217,7 +217,7 @@
                 <div class="col-md-6">
                     <%= f.input :browser_cluster_pool_size,
                                 label: 'Processes',
-                                placeholder: Arachni::Options.browser_cluster.pool_size.to_s
+                                placeholder: SCNR::Engine::Options.browser_cluster.pool_size.to_s
                     %>
                 </div>
                 <div class="col-md-6 input-help">
@@ -229,7 +229,7 @@
                 <div class="col-md-6">
                     <%= f.input :browser_cluster_worker_time_to_live,
                                 label: 'Time to live',
-                                placeholder: Arachni::Options.browser_cluster.worker_time_to_live.to_s
+                                placeholder: SCNR::Engine::Options.browser_cluster.worker_time_to_live.to_s
                     %>
                 </div>
                 <div class="col-md-6 input-help">
@@ -241,7 +241,7 @@
                 <div class="col-md-6">
                     <%= f.input :browser_cluster_job_timeout,
                                 label: 'Timeout',
-                                placeholder: Arachni::Options.browser_cluster.job_timeout.to_s
+                                placeholder: SCNR::Engine::Options.browser_cluster.job_timeout.to_s
                     %>
                 </div>
                 <div class="col-md-6 input-help">

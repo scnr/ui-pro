@@ -16,9 +16,9 @@ user = User.create(
     password_confirmation: 'testtest'
 )
 
-ap arachni_defaults  = Profile.flatten( Arachni::Options.to_rpc_data )
+ap engine_defaults  = Profile.flatten( SCNR::Engine::Options.to_rpc_data )
 
-arachni_defaults.merge!(
+engine_defaults.merge!(
     name:        'Default',
     description: 'Sensible, default settings.',
     user:        user
@@ -27,7 +27,7 @@ arachni_defaults.merge!(
 # exit
 
 # puts 'SETTING UP DEFAULT PROFILES'
-# p = Profile.create! arachni_defaults.merge(
+# p = Profile.create! engine_defaults.merge(
 #                         name:        'Default',
 #                         description: 'Sensible, default settings.',
 #                         checks:      :all
@@ -35,16 +35,16 @@ arachni_defaults.merge!(
 # p.default!
 # puts 'Default settings created: ' << p.name
 
-Setting.create!( Setting.flatten( Arachni::Options.to_rpc_data ) )
+Setting.create!( Setting.flatten( SCNR::Engine::Options.to_rpc_data ) )
 
-all_checks_profile = Profile.create! arachni_defaults.merge(
+all_checks_profile = Profile.create! engine_defaults.merge(
     name:        'All checks',
     description: 'Scans for all available security issues.',
     checks:      FrameworkHelper.checks.keys
 )
 puts 'All checks profile created: ' << all_checks_profile.name
 
-p = Profile.create! arachni_defaults.merge(
+p = Profile.create! engine_defaults.merge(
     name:        'DB checks',
     description: 'Scans for database injection vulnerabilities.',
     checks:      %w(no_sql_injection no_sql_injection_differential sql_injection
@@ -52,7 +52,7 @@ p = Profile.create! arachni_defaults.merge(
 )
 puts 'SQLi profile created: ' << p.name
 
-p = Profile.create! arachni_defaults.merge(
+p = Profile.create! engine_defaults.merge(
     name:        'XSS checks',
     description: 'Scans for XSS issues.',
     checks:      %w(xss xss_dom xss_dom_script_context xss_event
@@ -60,7 +60,7 @@ p = Profile.create! arachni_defaults.merge(
 )
 puts 'XSS profile created: ' << p.name
 
-p = Profile.create! arachni_defaults.merge(
+p = Profile.create! engine_defaults.merge(
     name:        'Client-side checks',
     description: 'Scans for DOM issues like DOM XSS, unvalidated redirects etc.',
     checks:      %w(xss_dom xss_dom_script_context unvalidated_redirect_dom)
@@ -96,11 +96,11 @@ iphone_ua = UserAgent.create(
 )
 
 puts 'Creating platforms'
-Arachni::Platform::Manager::TYPES.each do |shortname, name|
+SCNR::Engine::Platform::Manager::TYPES.each do |shortname, name|
     IssuePlatformType.create( shortname: shortname, name: name )
 end
 
-Arachni::Platform::Manager::PLATFORM_NAMES.each do |shortname, name|
+SCNR::Engine::Platform::Manager::PLATFORM_NAMES.each do |shortname, name|
     type = FrameworkHelper.platform_manager.find_type( shortname )
     IssuePlatformType.find_by_shortname( type ).platforms.create( shortname: shortname, name: name )
 end
@@ -146,8 +146,8 @@ end
 #     port:     80,
 #
 #     profile_attributes: {
-#         http_request_concurrency: Arachni::Options.http.request_concurrency,
-#         input_values:             Arachni::Options.input.default_values.
+#         http_request_concurrency: SCNR::Engine::Options.http.request_concurrency,
+#         input_values:             SCNR::Engine::Options.input.default_values.
 #                                       map { |k, v| "#{k.source}=#{v}" }.join( "\n" )
 #     }
 # )
@@ -168,8 +168,8 @@ end
 #     port:     80,
 #
 #     profile_attributes: {
-#         http_request_concurrency: Arachni::Options.http.request_concurrency,
-#         input_values:             Arachni::Options.input.default_values.
+#         http_request_concurrency: SCNR::Engine::Options.http.request_concurrency,
+#         input_values:             SCNR::Engine::Options.input.default_values.
 #                                       map { |k, v| "#{k.source}=#{v}" }.join( "\n" )
 #     }
 # )
@@ -189,15 +189,15 @@ scans_size         = 4
 revisions_per_scan = 3
 
 sites = [
-    # '/home/zapotek/workspace/arachni/spec/support/fixtures/report.afr',
+    # '/home/zapotek/workspace/engine/spec/support/fixtures/report.afr',
     '/home/zapotek/Downloads/testhtml5.vulnweb.com.afr',
     '/home/zapotek/Downloads/testfire.net.afr'
 ]
 
 sites.each.with_index do |afr, si|
     sitemap    = nil
-    report     = Arachni::Report.load( afr )
-    parsed_url = Arachni::URI( report.url )
+    report     = SCNR::Engine::Report.load( afr )
+    parsed_url = SCNR::Engine::URI( report.url )
     issues     = report.issues.shuffle.chunk( scans_size * revisions_per_scan )
 
     puts 'Creating site'
@@ -207,8 +207,8 @@ sites.each.with_index do |afr, si|
         port:     parsed_url.port || 80,
 
         profile_attributes: {
-            http_request_concurrency: Arachni::Options.http.request_concurrency,
-            input_values:             Arachni::Options.input.default_values.
+            http_request_concurrency: SCNR::Engine::Options.http.request_concurrency,
+            input_values:             SCNR::Engine::Options.input.default_values.
                                         map { |k, v| "#{k.source}=#{v}" }.join( "\n" )
         }
     )
@@ -368,13 +368,13 @@ sites.each.with_index do |afr, si|
                             stopped_at: Time.now - 4000
                         )
 
-                        prev_scan_revision.issues.create_from_arachni(
+                        prev_scan_revision.issues.create_from_engine(
                             solo,
                             state: Issue::STATES.sample
                         )
                     end
 
-                    is = revision.issues.create_from_arachni(
+                    is = revision.issues.create_from_engine(
                         solo,
                         state: Issue::STATES.sample
                     )

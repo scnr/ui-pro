@@ -115,20 +115,20 @@ module IssuesHelper
     def highlight_http_request( request, issue, highlight )
         return if !highlight
 
-        case issue.vector.arachni_class.to_s
+        case issue.vector.engine_class.to_s
 
-            when 'Arachni::Element::LinkTemplate'
-                encoded = Arachni::URI( highlight ).to_s
+            when 'SCNR::Engine::Element::LinkTemplate'
+                encoded = SCNR::Engine::URI( highlight ).to_s
 
-            when 'Arachni::Element::JSON'
+            when 'SCNR::Engine::Element::JSON'
                 encoded = highlight.to_json[1..-2]
 
-            when 'Arachni::Element::XML'
+            when 'SCNR::Engine::Element::XML'
                 encoded = highlight
 
             else
-                encoded = issue.vector.arachni_class.respond_to?( :encode ) ?
-                    issue.vector.arachni_class.encode( highlight ) :
+                encoded = issue.vector.engine_class.respond_to?( :encode ) ?
+                    issue.vector.engine_class.encode( highlight ) :
                     highlight
         end
 

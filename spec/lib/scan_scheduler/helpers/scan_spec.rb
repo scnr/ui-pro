@@ -64,7 +64,7 @@ describe ScanScheduler::Helpers::Scan do
         }
     end
     let(:performance_snapshot_attributes) do
-        PerformanceSnapshot.arachni_to_attributes( statistics )
+        PerformanceSnapshot.engine_to_attributes( statistics )
     end
 
     def new_revision
@@ -581,11 +581,11 @@ describe ScanScheduler::Helpers::Scan do
         end
 
         it 'excludes non-fixed scan issues' do
-            fissue = Issue.create_from_arachni( native_issue, revision: other_revision )
+            fissue = Issue.create_from_engine( native_issue, revision: other_revision )
             fissue.state = 'fixed'
             fissue.save
 
-            issue = Issue.create_from_arachni( native_issue, revision: other_revision )
+            issue = Issue.create_from_engine( native_issue, revision: other_revision )
             issue.save
 
             expect(instance.service).to receive(:native_progress) do |options|
@@ -612,7 +612,7 @@ describe ScanScheduler::Helpers::Scan do
         end
 
         it 'excludes issues from previous revisions' do
-            Issue.create_from_arachni( native_issue, revision: revision )
+            Issue.create_from_engine( native_issue, revision: revision )
 
             expect(instance.service).to receive(:native_progress) do |options|
                 expect(options[:without][:issues]).to be_any

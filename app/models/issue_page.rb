@@ -11,11 +11,11 @@ class IssuePage < ActiveRecord::Base
     belongs_to :issue
     belongs_to :sitemap_entry, counter_cache: true
 
-    def self.create_from_arachni( page, options = {} )
+    def self.create_from_engine( page, options = {} )
         create({
-            dom:      IssuePageDom.create_from_arachni( page.dom ),
-            request:  HttpRequest.create_from_arachni( page.request ),
-            response: HttpResponse.create_from_arachni( page.response )
+            dom:      IssuePageDom.create_from_engine( page.dom ),
+            request:  HttpRequest.create_from_engine(page.request ),
+            response: HttpResponse.create_from_engine( page.response )
         }.merge(options))
     end
 end

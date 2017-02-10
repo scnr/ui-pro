@@ -24,67 +24,67 @@ describe Vector do
         end
     end
 
-    describe '.create_from_arachni' do
-        [Arachni::Element::Link, Arachni::Element::Link::DOM,
-         Arachni::Element::Form, Arachni::Element::Form::DOM,
-         Arachni::Element::LinkTemplate, Arachni::Element::LinkTemplate::DOM,
-         Arachni::Element::JSON, Arachni::Element::XML
+    describe '.create_from_engine' do
+        [SCNR::Engine::Element::Link, SCNR::Engine::Element::Link::DOM,
+         SCNR::Engine::Element::Form, SCNR::Engine::Element::Form::DOM,
+         SCNR::Engine::Element::LinkTemplate, SCNR::Engine::Element::LinkTemplate::DOM,
+         SCNR::Engine::Element::JSON, SCNR::Engine::Element::XML
         ].each do |klass|
             it "creates a #{described_class} from #{klass}" do
-                arachni_vector = Factory[klass.type]
-                vector = described_class.create_from_arachni( arachni_vector ).reload
+                engine_vector = Factory[klass.type]
+                vector = described_class.create_from_engine(engine_vector ).reload
                 expect(vector).to be_valid
 
-                expect(vector.action).to eq arachni_vector.action
-                expect(vector.seed).to eq arachni_vector.seed
-                expect(vector.affected_input_name).to eq arachni_vector.affected_input_name
-                expect(vector.inputs).to eq arachni_vector.inputs
-                expect(vector.default_inputs).to eq arachni_vector.default_inputs
-                expect(vector.source).to eq arachni_vector.source
-                expect(vector.http_method).to eq arachni_vector.http_method.to_s.upcase
-                expect(vector.arachni_class).to eq arachni_vector.class
-                expect(vector.kind).to eq arachni_vector.class.type
+                expect(vector.action).to eq engine_vector.action
+                expect(vector.seed).to eq engine_vector.seed
+                expect(vector.affected_input_name).to eq engine_vector.affected_input_name
+                expect(vector.inputs).to eq engine_vector.inputs
+                expect(vector.default_inputs).to eq engine_vector.default_inputs
+                expect(vector.source).to eq engine_vector.source
+                expect(vector.http_method).to eq engine_vector.http_method.to_s.upcase
+                expect(vector.engine_class).to eq engine_vector.class
+                expect(vector.kind).to eq engine_vector.class.type
             end
         end
 
-        [ Arachni::Element::Cookie, Arachni::Element::Cookie::DOM,
-         Arachni::Element::Header ].each do |klass|
+        [ SCNR::Engine::Element::Cookie, SCNR::Engine::Element::Cookie::DOM,
+         SCNR::Engine::Element::Header ].each do |klass|
             it "creates a #{described_class} from #{klass}" do
-                arachni_vector = Factory[klass.type]
-                vector = described_class.create_from_arachni( arachni_vector ).reload
+                engine_vector = Factory[klass.type]
+                vector = described_class.create_from_engine(engine_vector ).reload
                 expect(vector).to be_valid
 
-                expect(vector.action).to eq arachni_vector.action
-                expect(vector.seed).to eq arachni_vector.seed
-                expect(vector.affected_input_name).to eq arachni_vector.affected_input_name
-                expect(vector.inputs).to eq arachni_vector.inputs
-                expect(vector.default_inputs).to eq arachni_vector.default_inputs
-                expect(vector.http_method).to eq arachni_vector.http_method.to_s.upcase
-                expect(vector.arachni_class).to eq arachni_vector.class
-                expect(vector.kind).to eq arachni_vector.class.type
+                expect(vector.action).to eq engine_vector.action
+                expect(vector.seed).to eq engine_vector.seed
+                expect(vector.affected_input_name).to eq engine_vector.affected_input_name
+                expect(vector.inputs).to eq engine_vector.inputs
+                expect(vector.default_inputs).to eq engine_vector.default_inputs
+                expect(vector.http_method).to eq engine_vector.http_method.to_s.upcase
+                expect(vector.engine_class).to eq engine_vector.class
+                expect(vector.kind).to eq engine_vector.class.type
             end
         end
 
-        it "creates a #{described_class} from #{Arachni::Element::GenericDOM}" do
-            arachni_vector = Factory[Arachni::Element::GenericDOM.type]
-            vector = described_class.create_from_arachni( arachni_vector ).reload
+        it "creates a #{described_class} from #{SCNR::Engine::Element::GenericDOM}" do
+            engine_vector = Factory[SCNR::Engine::Element::GenericDOM.type]
+            vector = described_class.create_from_engine(engine_vector ).reload
             expect(vector).to be_valid
 
-            expect(vector.action).to eq arachni_vector.action
-            expect(vector.affected_input_name).to eq arachni_vector.affected_input_name
-            expect(vector.arachni_class).to eq arachni_vector.class
-            expect(vector.kind).to eq arachni_vector.class.type
+            expect(vector.action).to eq engine_vector.action
+            expect(vector.affected_input_name).to eq engine_vector.affected_input_name
+            expect(vector.engine_class).to eq engine_vector.class
+            expect(vector.kind).to eq engine_vector.class.type
         end
 
-        [Arachni::Element::Body, Arachni::Element::Server, Arachni::Element::Path].each do |klass|
+        [SCNR::Engine::Element::Body, SCNR::Engine::Element::Server, SCNR::Engine::Element::Path].each do |klass|
             it "creates a #{described_class} from #{klass}" do
-                arachni_vector = Factory[klass.type]
-                vector = described_class.create_from_arachni( arachni_vector ).reload
+                engine_vector = Factory[klass.type]
+                vector = described_class.create_from_engine(engine_vector ).reload
                 expect(vector).to be_valid
 
-                expect(vector.action).to eq arachni_vector.action
-                expect(vector.arachni_class).to eq arachni_vector.class
-                expect(vector.kind).to eq arachni_vector.class.type
+                expect(vector.action).to eq engine_vector.action
+                expect(vector.engine_class).to eq engine_vector.class
+                expect(vector.kind).to eq engine_vector.class.type
             end
         end
     end

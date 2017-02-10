@@ -70,7 +70,7 @@ class RevisionsController < ApplicationController
                 snapshot = snapshot.attributes
 
                 snapshot['duration'] =
-                    Arachni::Utilities.seconds_to_hms( snapshot['runtime'] )
+                    SCNR::Engine::Utilities.seconds_to_hms( snapshot['runtime'] )
 
                 snapshot['http_average_response_time'] =
                     snapshot['http_average_response_time'].round( 2 )
@@ -84,7 +84,7 @@ class RevisionsController < ApplicationController
 
         snapshot = @revision.performance_snapshot.attributes
         snapshot['duration'] =
-            Arachni::Utilities.seconds_to_hms( snapshot['runtime'] )
+            SCNR::Engine::Utilities.seconds_to_hms( snapshot['runtime'] )
         snapshot['http_average_response_time'] =
             snapshot['http_average_response_time'].round( 2 )
         snapshot['http_average_responses_per_second'] =

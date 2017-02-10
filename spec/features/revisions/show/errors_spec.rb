@@ -11,7 +11,7 @@ ENV:
 ---
 XDG_VTNR: '7'
 LC_PAPER: en_GR.UTF-8
-MANPATH: "/home/zapotek/.rvm/gems/ruby-2.2.3@arachni-pro/gems/kramdown-1.4.1/man:/usr/local/qt/doc/man"
+MANPATH: "/home/zapotek/.rvm/gems/ruby-2.3.1@scnr-pro/gems/kramdown-1.4.1/man:/usr/local/qt/doc/man"
 LC_ADDRESS: en_GR.UTF-8
 KDE_MULTIHEAD: 'false'
 XDG_SESSION_ID: c2
@@ -22,7 +22,7 @@ XDG_GREETER_DATA_DIR: "/var/lib/lightdm-data/zapotek"
 LC_MONETARY: en_GR.UTF-8
 COMP_WORDBREAKS: " \t\n\"'><;|&(:"
 SESSION: kde-plasma
-GEM_HOME: "/home/zapotek/.rvm/gems/ruby-2.2.3@arachni-pro"
+GEM_HOME: "/home/zapotek/.rvm/gems/ruby-2.3.1@scnr-pro"
 GPG_AGENT_INFO: "/tmp/gpg-87yCMK/S.gpg-agent:3125:1"
 TERM: xterm
 SHELL: "/bin/bash"
@@ -56,12 +56,12 @@ DEFAULTS_PATH: "/usr/share/gconf/kde-plasma.default.path"
 XDG_CONFIG_DIRS: "/etc/xdg/xdg-kde-plasma:/usr/share/upstart/xdg:/etc/xdg"
 rvm_prefix: "/home/zapotek"
 DESKTOP_SESSION: kde-plasma
-PATH: "/home/zapotek/.rvm/gems/ruby-2.2.3@arachni-pro/bin:/home/zapotek/.rvm/gems/ruby-2.2.3@global/bin:/home/zapotek/.rvm/rubies/ruby-2.2.3/bin:/home/zapotek/.rvm/bin:/usr/local/qt/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"
+PATH: "/home/zapotek/.rvm/gems/ruby-2.3.1@scnr-pro/bin:/home/zapotek/.rvm/gems/ruby-2.2.3@global/bin:/home/zapotek/.rvm/rubies/ruby-2.2.3/bin:/home/zapotek/.rvm/bin:/usr/local/qt/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"
 QT_QPA_PLATFORMTHEME: appmenu-qt5
 QT_IM_MODULE: ibus
 LC_IDENTIFICATION: en_GR.UTF-8
 JOB: dbus
-PWD: "/home/zapotek/workspace/arachni-security/pro"
+PWD: "/home/zapotek/workspace/sarosys/scnr/pro"
 XMODIFIERS: "@im=ibus"
 KONSOLE_DBUS_WINDOW: "/Windows/3"
 LANG: en_GR.UTF-8
@@ -88,7 +88,7 @@ XCURSOR_THEME: oxy-white
 UPSTART_INSTANCE: ''
 UPSTART_EVENTS: started xsession
 LOGNAME: zapotek
-GEM_PATH: "/home/zapotek/.rvm/gems/ruby-2.2.3@arachni-pro:/home/zapotek/.rvm/gems/ruby-2.2.3@global"
+GEM_PATH: "/home/zapotek/.rvm/gems/ruby-2.3.1@scnr-pro:/home/zapotek/.rvm/gems/ruby-2.2.3@global"
 QT4_IM_MODULE: ibus
 DBUS_SESSION_BUS_ADDRESS: unix:abstract=/tmp/dbus-SOgYnm9axN
 XDG_DATA_DIRS: "/usr/share:/usr/share/kde-plasma:/usr/local/share/:/usr/share/"
@@ -112,13 +112,13 @@ _system_name: Ubuntu
 TEXTDOMAINDIR: "/usr/share/locale/"
 XAUTHORITY: "/tmp/kde-zapotek/xauth-1000-_0"
 LC_NAME: en_GR.UTF-8
-_: "/home/zapotek/.rvm/gems/ruby-2.2.3@arachni-pro/bin/rails"
-_ORIGINAL_GEM_PATH: "/home/zapotek/.rvm/gems/ruby-2.2.3@arachni-pro:/home/zapotek/.rvm/gems/ruby-2.2.3@global"
-BUNDLE_GEMFILE: "/home/zapotek/workspace/arachni-security/pro/Gemfile"
-BUNDLE_BIN_PATH: "/home/zapotek/.rvm/gems/ruby-2.2.3@arachni-pro/gems/bundler-1.10.6/bin/bundle"
+_: "/home/zapotek/.rvm/gems/ruby-2.3.1@scnr-pro/bin/rails"
+_ORIGINAL_GEM_PATH: "/home/zapotek/.rvm/gems/ruby-2.3.1@scnr-pro:/home/zapotek/.rvm/gems/ruby-2.2.3@global"
+BUNDLE_GEMFILE: "/home/zapotek/workspace/sarosys/scnr/pro/Gemfile"
+BUNDLE_BIN_PATH: "/home/zapotek/.rvm/gems/ruby-2.3.1@scnr-pro/gems/bundler-1.10.6/bin/bundle"
 RUBYOPT: "-rbundler/setup"
-RUBYLIB: "/home/zapotek/.rvm/gems/ruby-2.2.3@arachni-pro/gems/bundler-1.10.6/lib"
-BUNDLE_ORIG_MANPATH: "/home/zapotek/.rvm/gems/ruby-2.2.3@arachni-pro/gems/kramdown-1.4.1/man:/usr/local/qt/doc/man"
+RUBYLIB: "/home/zapotek/.rvm/gems/ruby-2.3.1@scnr-pro/gems/bundler-1.10.6/lib"
+BUNDLE_ORIG_MANPATH: "/home/zapotek/.rvm/gems/ruby-2.3.1@scnr-pro/gems/kramdown-1.4.1/man:/usr/local/qt/doc/man"
 RACK_ENV: development
 RAILS_ENV: development
 --------------------------------------------------------------------------------
@@ -146,14 +146,14 @@ audit:
 input:
   values: {}
   default_values:
-    "(?i-mx:name)": arachni_name
-    "(?i-mx:user)": arachni_user
-    "(?i-mx:usr)": arachni_user
-    "(?i-mx:pass)": 5543!%arachni_secret
-    "(?i-mx:txt)": arachni_text
+    "(?i-mx:name)": scnr_engine_name
+    "(?i-mx:user)": scnr_engine_user
+    "(?i-mx:usr)": scnr_engine_user
+    "(?i-mx:pass)": 5543!%scnr_engine_secret
+    "(?i-mx:txt)": scnr_engine_text
     "(?i-mx:num)": '132'
     "(?i-mx:amount)": '100'
-    "(?i-mx:mail)": arachni@email.gr
+    "(?i-mx:mail)": scnr_engine@email.gr
     "(?i-mx:account)": '12'
     "(?i-mx:id)": '1'
   without_defaults: false

@@ -3,11 +3,11 @@ class IssuePageDomStackFrame < ActiveRecord::Base
     has_one    :function, as: :with_dom_function,
                class_name: 'IssuePageDomFunction', dependent: :destroy
 
-    def self.create_from_arachni( frame )
+    def self.create_from_engine( frame )
         create(
             url:      frame.url,
             line:     frame.line,
-            function: IssuePageDomFunction.create_from_arachni( frame.function )
+            function: IssuePageDomFunction.create_from_engine( frame.function )
         )
     end
 end

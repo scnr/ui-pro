@@ -6,13 +6,13 @@ describe IssuePageDom do
     expect_it { to have_many(:data_flow_sinks).dependent(:destroy) }
     expect_it { to have_many(:execution_flow_sinks).dependent(:destroy) }
 
-    describe '.create_from_arachni' do
-        let(:arachni_page_dom) do
+    describe '.create_from_engine' do
+        let(:engine_page_dom) do
             Factory[:dom]
         end
 
-        it "creates a #{described_class} from #{Arachni::Page::DOM}" do
-            dom = described_class.create_from_arachni( arachni_page_dom ).reload
+        it "creates a #{described_class} from #{SCNR::Engine::Page::DOM}" do
+            dom = described_class.create_from_engine(engine_page_dom).reload
             expect(dom).to be_valid
 
             expect(dom.transitions).to be_any

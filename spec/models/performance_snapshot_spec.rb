@@ -234,9 +234,9 @@ describe PerformanceSnapshot, type: :model do
         pending
     end
 
-    describe '.create_from_arachni' do
+    describe '.create_from_engine' do
         it' creates a model from RPC progress statistics' do
-            snapshot = described_class.create_from_arachni( statistics )
+            snapshot = described_class.create_from_engine(statistics )
 
             expect(snapshot.http_request_count).to eq statistics[:http][:request_count]
             expect(snapshot.http_response_count).to eq statistics[:http][:response_count]
@@ -251,9 +251,9 @@ describe PerformanceSnapshot, type: :model do
         end
     end
 
-    describe '.arachni_to_attributes' do
+    describe '.engine_to_attributes' do
         it' converts RPC progress statistics to model attributes' do
-            expect(described_class.arachni_to_attributes( statistics )).to eq(
+            expect(described_class.engine_to_attributes( statistics )).to eq(
                 http_request_count:                statistics[:http][:request_count],
                 http_response_count:               statistics[:http][:response_count],
                 http_time_out_count:               statistics[:http][:time_out_count],

@@ -45,7 +45,7 @@ module ProfilesControllerExportable
         [ "\n", "\r", '"' ].each { |k| name.gsub!( k, '' ) }
 
         headers['Content-Disposition'] =
-            "attachment; filename=\"Arachni Pro #{model_name} - #{name}.#{extension}\""
+            "attachment; filename=\"SCNR::Pro #{model_name} - #{name}.#{extension}\""
     end
 
 end

@@ -24,7 +24,7 @@ EXCLUDE_REPORTERS = [
 ]
 
 # Component loading isn't thread-safe so preload everything here.
-::ArachniFramework = Arachni::Framework.new
-::ArachniFramework.checks.load '*'
-::ArachniFramework.reporters.load ['*'] + EXCLUDE_REPORTERS.map { |p| "-#{p}" }
-::ArachniFramework.plugins.load ['*', '-default*'] + EXCLUDE_PLUGINS.map { |p| "-#{p}" }
+::SCNREngineFramework = SCNR::Engine::Framework.new
+::SCNREngineFramework.checks.load '*'
+::SCNREngineFramework.reporters.load ['*'] + EXCLUDE_REPORTERS.map { |p| "-#{p}" }
+::SCNREngineFramework.plugins.load ['*', '-default*'] + EXCLUDE_PLUGINS.map { |p| "-#{p}" }

@@ -12,7 +12,7 @@ class UserAgentsController < ApplicationController
     before_action :authorize_edit,    only: [:edit, :update]
     before_action :authorize_destroy, only: [:destroy]
 
-    PROFILE_EXPORT_PREFIX = 'Arachni Pro user agent'
+    PROFILE_EXPORT_PREFIX = 'SCNR::Pro user agent'
 
     respond_to :html
 

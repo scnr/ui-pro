@@ -7,7 +7,7 @@ class IssuePageDomTransition < ActiveRecord::Base
         super.to_sym
     end
 
-    def self.create_from_arachni( transition )
+    def self.create_from_engine( transition )
         create(
             element: transition.element.to_s,
             event:   transition.event,

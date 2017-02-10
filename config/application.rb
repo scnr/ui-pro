@@ -6,7 +6,8 @@ require 'rails/all'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-module ArachniPro
+module SCNR::UI
+module Pro
     class Application < Rails::Application
         config.autoload_once_paths << "#{Rails.root.join('lib')}/system.rb"
         config.autoload_once_paths << "#{Rails.root.join('lib')}/system/"
@@ -19,8 +20,6 @@ module ArachniPro
         config.autoload_once_paths << "#{Rails.root.join('lib')}/patches/timezone.rb"
 
         config.autoload_paths << Rails.root.join('lib')
-
-        config.active_record.raise_in_transactional_callbacks = true
 
         config.generators do |g|
             g.test_framework :rspec,
@@ -45,4 +44,5 @@ module ArachniPro
         # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
         # config.i18n.default_locale = :de
     end
+end
 end

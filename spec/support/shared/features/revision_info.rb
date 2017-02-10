@@ -63,7 +63,7 @@ shared_examples_for 'Revision info' do |options = {}|
                 end
 
                 scenario 'shows scan duration' do
-                    expect(revision_info).to have_content Arachni::Utilities.seconds_to_hms( revision.duration )
+                    expect(revision_info).to have_content SCNR::Engine::Utilities.seconds_to_hms( revision.duration )
                 end
 
                 feature 'when timed out' do
@@ -101,7 +101,7 @@ shared_examples_for 'Revision info' do |options = {}|
         if options[:extended]
             feature 'when showing extended data' do
                 scenario 'shows scan duration' do
-                    expect(revision_info).to have_content Arachni::Utilities.seconds_to_hms( revision.duration )
+                    expect(revision_info).to have_content SCNR::Engine::Utilities.seconds_to_hms( revision.duration )
                 end
 
                 feature 'and has a Schedule#stop_after_hours' do
@@ -117,11 +117,11 @@ shared_examples_for 'Revision info' do |options = {}|
                     end
 
                     scenario 'shows the value of the option' do
-                        expect(revision_info).to have_content Arachni::Utilities.seconds_to_hms( revision.scan.schedule.stop_after_hours.hours.to_i )
+                        expect(revision_info).to have_content SCNR::Engine::Utilities.seconds_to_hms( revision.scan.schedule.stop_after_hours.hours.to_i )
                     end
 
                     scenario 'shows remaining time' do
-                        expect(revision_info).to have_content Arachni::Utilities.seconds_to_hms( revision.scan.schedule.stop_after_hours.hours.to_i - revision.duration )
+                        expect(revision_info).to have_content SCNR::Engine::Utilities.seconds_to_hms( revision.scan.schedule.stop_after_hours.hours.to_i - revision.duration )
                     end
 
                     feature 'when Schedule#stop_suspend' do

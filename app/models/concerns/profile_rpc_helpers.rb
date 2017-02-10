@@ -76,7 +76,7 @@ module ProfileRpcHelpers
         def flatten( data )
             options = {}
             data.each do |name, value|
-                if Arachni::Options.group_classes.include?( name.to_sym )
+                if SCNR::Engine::Options.group_classes.include?( name.to_sym )
                     value.each do |k, v|
                         key = "#{name}_#{k}"
                         next if !attribute_names.include?( key.to_s )
@@ -133,6 +133,6 @@ module ProfileRpcHelpers
     end
 
     def find_group_option( name )
-        Arachni::Options.group_classes.keys.find { |n| name.start_with? "#{n}_" }
+        SCNR::Engine::Options.group_classes.keys.find { |n| name.start_with? "#{n}_" }
     end
 end

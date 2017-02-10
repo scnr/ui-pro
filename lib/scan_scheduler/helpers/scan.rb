@@ -467,7 +467,7 @@ module Scan
         progress_tracking_for( revision )[:last_performance_update] ||=
             PERFORMANCE_SNAPSHOT_CAPTURE_INTERVAL.ago
 
-        attributes = PerformanceSnapshot.arachni_to_attributes( statistics )
+        attributes = PerformanceSnapshot.engine_to_attributes( statistics )
 
         revision.performance_snapshot.update( attributes )
 
@@ -483,7 +483,7 @@ module Scan
         @progress_tracker[revision.id] ||= {
             issue_digests:    nil,
             coverage_entries: [],
-            sitemap:          Arachni::Support::LookUp::HashSet.new,
+            sitemap:          SCNR::Engine::Support::LookUp::Hash.new,
             error_lines:      0
         }
     end

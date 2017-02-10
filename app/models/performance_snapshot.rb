@@ -54,11 +54,11 @@ class PerformanceSnapshot < ActiveRecord::Base
         states.last
     end
 
-    def self.create_from_arachni( statistics )
-        create( arachni_to_attributes( statistics ) )
+    def self.create_from_engine( statistics )
+        create( engine_to_attributes( statistics ) )
     end
 
-    def self.arachni_to_attributes( statistics )
+    def self.engine_to_attributes( statistics )
         {
             http_request_count:                statistics[:http][:request_count],
             http_response_count:               statistics[:http][:response_count],

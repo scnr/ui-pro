@@ -391,18 +391,18 @@ describe Scan do
     describe '#rpc_options' do
         before :each do
             settings
-            Arachni::Options.reset
+            SCNR::Engine::Options.reset
         end
 
         let(:rpc_options) do
             subject.rpc_options.merge( 'authorized_by' => user.email )
         end
         let(:normalized_rpc_options) do
-            Arachni::Options.hash_to_rpc_data( rpc_options )
+            SCNR::Engine::Options.hash_to_rpc_data( rpc_options )
         end
 
         it 'returns RPC options' do
-            expect(normalized_rpc_options).to eq Arachni::Options.update( rpc_options ).to_rpc_data
+            expect(normalized_rpc_options).to eq SCNR::Engine::Options.update( rpc_options ).to_rpc_data
         end
 
         it 'merges the profile, site profile, user-agent and global settings' do

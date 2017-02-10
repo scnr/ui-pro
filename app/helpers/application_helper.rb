@@ -18,7 +18,7 @@ module ApplicationHelper
     end
 
     def seconds_to_hms( seconds )
-        Arachni::Utilities.seconds_to_hms seconds
+        SCNR::Engine::Utilities.seconds_to_hms seconds
     end
 
     def refreshable_partial( resource, options = {} )
@@ -82,7 +82,7 @@ module ApplicationHelper
     def url_without_scheme_host_port( url )
         url = url.dup
 
-        parsed = Arachni::URI( url )
+        parsed = SCNR::Engine::URI( url )
         scheme_host_and_port = "#{parsed.scheme}://#{parsed.host}"
         scheme_host_and_port << ":#{parsed.port}" if parsed.port
 

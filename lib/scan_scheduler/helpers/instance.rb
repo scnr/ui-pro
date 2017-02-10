@@ -27,7 +27,7 @@ module Instance
     #
     # @param    [Revision]  revision
     #
-    # @return   [Arachni::RPC::Client::Instance]
+    # @return   [SCNR::Engine::RPC::Client::Instance]
     def spawn_instance_for( revision, &block )
         log_info_for revision, 'Spawning instance.'
 
@@ -76,7 +76,7 @@ module Instance
     #
     # @param    [Revision]  revision
     #
-    # @return   [Arachni::RPC::Client::Instance]
+    # @return   [SCNR::Engine::RPC::Client::Instance]
     def instance_for( revision )
         if !@revision_id_to_instance_url[revision.id]
             fail Error::InstanceNotFound,
@@ -98,7 +98,7 @@ module Instance
     end
 
     def instances
-        Arachni::Processes::Instances
+        SCNR::Engine::Processes::Instances
     end
 
     # @private

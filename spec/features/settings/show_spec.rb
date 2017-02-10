@@ -28,8 +28,8 @@ feature 'Edit global settings' do
         end
 
         scenario 'it updates the global options' do
-            expect(Arachni::Options).to receive(:update).with(subject.to_rpc_options)
-            expect(Arachni::HTTP::Client).to receive(:reset)
+            expect(SCNR::Engine::Options).to receive(:update).with(subject.to_rpc_options)
+            expect(SCNR::Engine::HTTP::Client).to receive(:reset)
 
             submit
         end

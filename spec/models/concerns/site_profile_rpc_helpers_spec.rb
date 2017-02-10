@@ -7,13 +7,13 @@ describe ProfileRpcHelpers do
 
     describe '#to_rpc_options' do
         before :each do
-            Arachni::Options.reset
+            SCNR::Engine::Options.reset
         end
 
         let(:rpc_options) { subject.to_rpc_options }
 
         it 'returns RPC options' do
-            expect(Arachni::Options.hash_to_rpc_data( rpc_options )).to eq Arachni::Options.update( rpc_options ).to_rpc_data
+            expect(SCNR::Engine::Options.hash_to_rpc_data( rpc_options )).to eq SCNR::Engine::Options.update( rpc_options ).to_rpc_data
         end
 
         context 'when there are #scope_template_path_patterns' do

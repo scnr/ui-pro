@@ -12,9 +12,9 @@ class Vector < ActiveRecord::Base
         super m.to_s.upcase
     end
 
-    def arachni_class
-        Arachni::Element.const_get(
-            super.gsub( 'Arachni::Element::', '' ).split( '::' ).first.to_sym
+    def engine_class
+        SCNR::Engine::Element.const_get(
+            super.gsub( 'SCNR::Engine::Element::', '' ).split( '::' ).first.to_sym
         )
     end
 
@@ -22,15 +22,15 @@ class Vector < ActiveRecord::Base
         kind.to_s.gsub( '_', ' ' ).sub( 'dom', 'DOM' ).sub( 'ui', 'UI' )
     end
 
-    def self.create_from_arachni( vector, options = {}  )
+    def self.create_from_engine( vector, options = {}  )
         h = {}
         [:action, :http_method, :seed, :inputs, :affected_input_name, :source,
          :default_inputs].each do |attr|
             h[attr] = vector.send(attr) if vector.respond_to?( attr )
         end
 
-        h[:kind]          = vector.class.type
-        h[:arachni_class] = vector.class.to_s
+        h[:kind]         = vector.class.type
+        h[:engine_class] = vector.class.to_s
 
         create h.merge( options )
     end
