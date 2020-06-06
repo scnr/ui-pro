@@ -5,7 +5,7 @@
        sections[section] = params[:action].to_s == section
    end
 
-   params_h = params.to_h
+   params_h = params.permit.to_h
 %>
 
 <div id="scan-results" class="row">

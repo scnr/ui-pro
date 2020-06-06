@@ -520,13 +520,6 @@
                     Wait for elements to appear
                 <% end %>
 
-                <%= render layout: '/shared/scan_results/configuration/site_profile/th',
-                           locals: {
-                                   attribute: 'browser_cluster_ignore_images'
-                           } do %>
-                    Load images
-                <% end %>
-
             </tr>
             </thead>
 
@@ -552,14 +545,6 @@
                     <% else %>
                         None
                     <% end %>
-                <% end %>
-
-                <%= render layout: '/shared/scan_results/configuration/site_profile/td',
-                           locals: {
-                                   attribute: 'browser_cluster_ignore_images'
-                           } do |value| %>
-
-                    <%= value ? 'Disabled' : 'Enabled' %>
                 <% end %>
 
             </tr>

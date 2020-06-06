@@ -10,8 +10,7 @@ describe IssuePageDomStackFrame do
         end
 
         it "creates a #{described_class} from #{SCNR::Engine::Browser::Javascript::TaintTracer::Frame}" do
-            frame = described_class.create_from_engine(engine_stackframe).reload
-            expect(frame).to be_valid
+            frame = described_class.create_from_engine(engine_stackframe)
 
             expect(frame.url).to eq engine_stackframe.url
             expect(frame.line).to eq engine_stackframe.line

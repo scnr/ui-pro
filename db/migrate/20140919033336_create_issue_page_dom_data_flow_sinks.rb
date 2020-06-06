@@ -1,4 +1,4 @@
-class CreateIssuePageDomDataFlowSinks < ActiveRecord::Migration
+class CreateIssuePageDomDataFlowSinks < ActiveRecord::Migration[5.1]
     def change
         create_table :issue_page_dom_data_flow_sinks do |t|
             t.text :object

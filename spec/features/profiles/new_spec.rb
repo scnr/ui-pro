@@ -383,7 +383,7 @@ feature 'Profile new page' do
                             find("#profile-checks-#{shortname}-container").text
                         end
                         let(:description) do
-                            find("##{shortname}-description").text.recode
+                            find("##{shortname}-description").text
                         end
 
                         scenario 'can be set' do
@@ -394,9 +394,11 @@ feature 'Profile new page' do
                         end
 
                         scenario 'has description' do
-                            expect(description).to include ActionView::Base.full_sanitizer.sanitize(
+                            desc = ActionView::Base.full_sanitizer.sanitize(
                                 ApplicationHelper.md( info[:description] )
-                            ).gsub( /\s+/m, ' ' ).strip.recode
+                            ).gsub( /\s+/m, ' ' ).strip
+
+                            expect(description.gsub( /\s+/m, ' ' )).to include desc
                         end
 
                         scenario 'has version' do

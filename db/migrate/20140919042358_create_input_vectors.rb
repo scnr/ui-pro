@@ -1,8 +1,8 @@
-class CreateVectors < ActiveRecord::Migration
+class CreateInputVectors < ActiveRecord::Migration[5.1]
     def change
-        create_table :vectors do |t|
-            t.text :default_inputs
-            t.text :inputs
+        create_table :input_vectors do |t|
+            t.binary :default_inputs
+            t.binary :inputs
             t.text :seed
             t.string :engine_class
             t.string :kind
@@ -16,6 +16,6 @@ class CreateVectors < ActiveRecord::Migration
             t.timestamps
         end
 
-        add_index :vectors, :kind
+        add_index :input_vectors, :kind
     end
 end

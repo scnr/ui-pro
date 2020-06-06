@@ -1,4 +1,4 @@
-class CreateIssuePageDoms < ActiveRecord::Migration
+class CreateIssuePageDoms < ActiveRecord::Migration[5.1]
     def change
         create_table :issue_page_doms do |t|
             t.text :url

@@ -74,7 +74,7 @@ module IssuesHelper
 
     def highlight_seed( issue )
         code_highlight(
-            escape_control_characters( issue.vector.seed ),
+            escape_control_characters( issue.input_vector.seed ),
             issue.platform ? issue.platform.shortname : nil
         ).html_safe
     end
@@ -82,7 +82,7 @@ module IssuesHelper
     def highlight_vector_source( vector )
         s = code_highlight(
             vector_source_prettify( vector ),
-            vector_type_to_source_type( @issue.vector.kind ),
+            vector_type_to_source_type( @issue.input_vector.kind ),
             line_numbers: true,
             anchor_id:    'input_vector-source'
         )
@@ -91,7 +91,7 @@ module IssuesHelper
     end
 
     def vector_source_prettify( vector )
-        source = @issue.vector.source
+        source = @issue.input_vector.source
 
         case vector.kind
             when :json
@@ -115,7 +115,7 @@ module IssuesHelper
     def highlight_http_request( request, issue, highlight )
         return if !highlight
 
-        case issue.vector.engine_class.to_s
+        case issue.input_vector.engine_class.to_s
 
             when 'SCNR::Engine::Element::LinkTemplate'
                 encoded = SCNR::Engine::URI( highlight ).to_s
@@ -127,8 +127,8 @@ module IssuesHelper
                 encoded = highlight
 
             else
-                encoded = issue.vector.engine_class.respond_to?( :encode ) ?
-                    issue.vector.engine_class.encode( highlight ) :
+                encoded = issue.input_vector.engine_class.respond_to?( :encode ) ?
+                    issue.input_vector.engine_class.encode( highlight ) :
                     highlight
         end
 

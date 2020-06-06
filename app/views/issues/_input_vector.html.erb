@@ -1,6 +1,6 @@
-<% if !@issue.vector.source.to_s.empty? %>
+<% if !@issue.input_vector.source.to_s.empty? %>
     <div class="source">
-        <%= code_highlight( @issue.vector.source ) %>
+        <%= code_highlight( @issue.input_vector.source ) %>
     </div>
 <% end %>
 
@@ -15,14 +15,14 @@
                 <th>Type</th>
 
                 <% if @issue.active? %>
-                    <% if !@issue.vector.http_method.to_s.empty? %>
+                    <% if !@issue.input_vector.http_method.to_s.empty? %>
                     <th>
                         HTTP method
                     </th>
                     <% end %>
 
                     <th>
-                        <%= [:xml, :json].include?( @issue.vector.kind ) ? 'Location' : 'Name' %>
+                        <%= [:xml, :json].include?( @issue.input_vector.kind ) ? 'Location' : 'Name' %>
                     </th>
                 <% end %>
 
@@ -31,14 +31,14 @@
             </tr>
         </thead>
         <tr>
-            <td><code><%= @issue.vector.kind %></code></td>
+            <td><code><%= @issue.input_vector.kind %></code></td>
 
             <% if @issue.active? %>
-                <% if !@issue.vector.http_method.to_s.empty? %>
-                <td><%= @issue.vector.http_method %></td>
+                <% if !@issue.input_vector.http_method.to_s.empty? %>
+                <td><%= @issue.input_vector.http_method %></td>
                 <% end %>
 
-                <td><code><%= @issue.vector.affected_input_name %></code></td>
+                <td><code><%= @issue.input_vector.affected_input_name %></code></td>
             <% end %>
 
             <td>
@@ -47,7 +47,7 @@
                                               display_path_only: true %>
             </td>
             <td>
-                <%= link_to_url_with_external external: @issue.vector.action,
+                <%= link_to_url_with_external external: @issue.input_vector.action,
                                               internal: '#',
                                               display_path_only: true %>
             </td>
@@ -55,7 +55,7 @@
     </table>
 </div>
 
-<% if @issue.vector.default_inputs.any? && @issue.vector.inputs.any? %>
+<% if @issue.input_vector.default_inputs.any? && @issue.input_vector.inputs.any? %>
     <div class="input_vector-values">
         <table class="table table-condensed">
             <thead>
@@ -67,8 +67,8 @@
                 <tr>
                     <td>
                         <%= render '/shared/hash',
-                                   object: @issue.vector.default_inputs,
-                                   highlight: @issue.vector.affected_input_name,
+                                   object: @issue.input_vector.default_inputs,
+                                   highlight: @issue.input_vector.affected_input_name,
                                    code: true
                         %>
                     </td>

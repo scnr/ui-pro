@@ -34,7 +34,7 @@ shared_examples_for 'Issue reviews' do |options = {}|
             type:           type,
             page:           FactoryGirl.create(:issue_page),
             referring_page: FactoryGirl.create(:issue_page),
-            vector:         FactoryGirl.create(:vector).
+            input_vector:         FactoryGirl.create(:input_vector).
                                 tap { |v| v.action = sitemap_entry.url },
             sitemap_entry:  sitemap_entry,
             digest:         rand(99999999999999),

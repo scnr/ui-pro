@@ -2,6 +2,8 @@
 
 FactoryGirl.define do
     factory :issue_type do
+        to_create { |instance| instance.save( validate: false ) }
+
         name { "XSS #{rand(9999)}" }
         check_shortname { "xss_#{rand(9999)}" }
         description "XSS vuln."

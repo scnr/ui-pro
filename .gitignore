@@ -81,3 +81,12 @@ pickle-email-*.html
 /config/component_cache/*.yml
 /reports/*
 /public/site_favicons/*
+
+/public/packs
+/public/packs-test
+/node_modules
+/yarn-error.log
+yarn-debug.log*
+.yarn-integrity
+
+/config/master.key

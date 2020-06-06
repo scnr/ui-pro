@@ -1,4 +1,4 @@
-class CreateHttpResponses < ActiveRecord::Migration
+class CreateHttpResponses < ActiveRecord::Migration[5.1]
     def change
         create_table :http_responses do |t|
             t.text :url

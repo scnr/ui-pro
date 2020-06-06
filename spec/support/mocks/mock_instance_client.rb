@@ -3,11 +3,12 @@ class MockInstanceClient
         @url ||= "localhost:#{rand(99999999)}"
     end
 
-    def service
-        @service ||= MockInstanceClientService.new
-    end
-
     def options
         @options ||= MockInstanceClientOptions.new
     end
+
+    def method_missing( sym, *args, &block )
+        (@service ||= MockInstanceClientService.new).send( sym, *args, &block )
+    end
+
 end

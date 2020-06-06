@@ -9,8 +9,7 @@ describe IssuePageDomTransition do
         end
 
         it "creates a #{described_class} from #{SCNR::Engine::Page::DOM::Transition}" do
-            transition = described_class.create_from_engine(engine_transition).reload
-            expect(transition).to be_valid
+            transition = described_class.create_from_engine(engine_transition)
 
             expect(transition.element).to eq engine_transition.element.to_s
             expect(transition.event).to eq engine_transition.event

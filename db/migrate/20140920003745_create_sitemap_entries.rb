@@ -1,12 +1,12 @@
-class CreateSitemapEntries < ActiveRecord::Migration
+class CreateSitemapEntries < ActiveRecord::Migration[5.1]
     def change
         create_table :sitemap_entries do |t|
             t.boolean :coverage
             t.text :url
             t.integer :code
-            t.integer :issues_count, :integer, default: 0
-            t.integer :issue_pages_count, :integer, default: 0
-            t.integer :vectors_count, :integer, default: 0
+            t.integer :issues_count, default: 0
+            t.integer :issue_pages_count, default: 0
+            t.integer :input_vectors_count, default: 0
 
             t.bigint :digest, index: true
 

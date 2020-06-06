@@ -1,4 +1,4 @@
-class CreateIssuePageDomFunctions < ActiveRecord::Migration
+class CreateIssuePageDomFunctions < ActiveRecord::Migration[5.1]
     def change
         create_table :issue_page_dom_functions do |t|
             t.binary :source

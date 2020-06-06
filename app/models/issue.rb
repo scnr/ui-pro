@@ -6,31 +6,33 @@ class Issue < ActiveRecord::Base
 
     has_paper_trail track: %w(state)
 
-    belongs_to :revision, counter_cache: true
+    belongs_to :revision, counter_cache: true, optional: true
     belongs_to :reviewed_by_revision, class_name: 'Revision',
-               foreign_key: 'reviewed_by_revision_id'
+               foreign_key: 'reviewed_by_revision_id', optional: true
 
-    belongs_to :site, counter_cache: true
-    belongs_to :scan, counter_cache: true
+    belongs_to :site, counter_cache: true, optional: true
+    belongs_to :scan, counter_cache: true, optional: true
 
     has_many :siblings, class_name: 'Issue', foreign_key: :digest,
              primary_key: :digest
 
     belongs_to :page, class_name: 'IssuePage', foreign_key: 'issue_page_id',
-               dependent: :destroy
+               dependent: :destroy, optional: true
 
     belongs_to :referring_page, class_name: 'IssuePage',
-               foreign_key: 'referring_issue_page_id', dependent: :destroy
+               foreign_key: 'referring_issue_page_id', dependent: :destroy,
+               optional: true
 
-    belongs_to :type, class_name: 'IssueType', foreign_key: 'issue_type_id'
+    belongs_to :type, class_name: 'IssueType', foreign_key: 'issue_type_id',
+                optional: true
     has_one :severity, through: :type
 
-    belongs_to :sitemap_entry, counter_cache: true
+    belongs_to :sitemap_entry, counter_cache: true, optional: true
 
     belongs_to :platform, class_name: 'IssuePlatform',
-               foreign_key: 'issue_platform_id'
+               foreign_key: 'issue_platform_id', optional: true
 
-    has_one  :vector, dependent: :destroy
+    has_one  :input_vector, dependent: :destroy
     has_many :remarks, class_name: 'IssueRemark', foreign_key: 'issue_id',
                 dependent: :destroy
 
@@ -58,7 +60,7 @@ class Issue < ActiveRecord::Base
     scope :reviewed,    -> { where.not reviewed_by_revision: nil }
 
     default_scope do
-        includes(:type).includes(:vector).by_severity.
+        includes(:type).includes(:input_vector).by_severity.
             order('issue_types.name asc').order( state_order_sql )
     end
 
@@ -94,11 +96,11 @@ class Issue < ActiveRecord::Base
             s << type.name
         end
 
-        if vector
-            s << " in #{vector}"
+        if input_vector
+            s << " in #{input_vector}"
 
-            if vector.affected_input_name
-                s << " input '#{vector.affected_input_name}'"
+            if input_vector.affected_input_name
+                s << " input '#{input_vector.affected_input_name}'"
             end
         end
 
@@ -182,7 +184,7 @@ class Issue < ActiveRecord::Base
             active:         issue.active?,
             page:           IssuePage.create_from_engine( issue.page ),
             referring_page: IssuePage.create_from_engine( issue.referring_page ),
-            vector:         Vector.create_from_engine( issue.vector ),
+            input_vector:         InputVector.create_from_engine( issue.vector ),
             remarks:        issue_remarks,
             platform:       (IssuePlatform.find_by_shortname( issue.platform_name.to_s ) if issue.platform_name)
        }.merge(options))
@@ -199,13 +201,13 @@ class Issue < ActiveRecord::Base
         )
         issue.referring_page.save
 
-        issue.vector.sitemap_entry = issue.get_sitemap_entry(
-            url:  issue.vector.action,
+        issue.input_vector.sitemap_entry = issue.get_sitemap_entry(
+            url:  issue.input_vector.action,
             code: issue.page.response.code
         )
-        issue.vector.save
+        issue.input_vector.save
 
-        issue.sitemap_entry = issue.vector.sitemap_entry
+        issue.sitemap_entry = issue.input_vector.sitemap_entry
         issue.save
 
         issue

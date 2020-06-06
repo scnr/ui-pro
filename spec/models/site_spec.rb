@@ -1,5 +1,5 @@
 describe Site, type: :model do
-    subject { @site = FactoryGirl.create(:site, user: user) }
+    subject { @site = FactoryGirl.create(:site, user: user ) }
     let(:scan) { FactoryGirl.create :scan, site: subject }
     let(:other_scan) { FactoryGirl.create :scan, site: subject }
     let(:user) { FactoryGirl.create :user }
@@ -25,7 +25,8 @@ describe Site, type: :model do
         profile = described_class.create(
             protocol: 'http',
             host:     "test#{rand(99999)}.com",
-            port:     1
+            port:     1,
+            user: FactoryGirl.create( :user )
         ).profile
 
         SiteProfile.flatten( SCNR::Engine::Options.to_rpc_data ).each do |k, v|
@@ -44,8 +45,7 @@ describe Site, type: :model do
 
                     it 'is invalid' do
                         subject.max_parallel_scans = 3
-
-                        expect(subject).to be_invalid
+                        subject.save
                         expect(subject.errors).to include :max_parallel_scans
                     end
                 end
@@ -53,8 +53,7 @@ describe Site, type: :model do
                 context 'when the value is 0' do
                     it 'is invalid' do
                         subject.max_parallel_scans = 0
-
-                        expect(subject).to be_invalid
+                        subject.save
                         expect(subject.errors).to include :max_parallel_scans
                     end
                 end
@@ -62,8 +61,7 @@ describe Site, type: :model do
                 context 'when the value is less than 0' do
                     it 'is invalid' do
                         subject.max_parallel_scans = -1
-
-                        expect(subject).to be_invalid
+                        subject.save
                         expect(subject.errors).to include :max_parallel_scans
                     end
                 end
@@ -77,8 +75,8 @@ describe Site, type: :model do
 
                 it 'is valid' do
                     subject.max_parallel_scans = 3000000
-
-                    expect(subject).to be_valid
+                    subject.save
+                    expect(subject.errors[:max_parallel_scans]).to be_empty
                 end
             end
         end
@@ -88,7 +86,7 @@ describe Site, type: :model do
                 it 'is accepted' do
                     subject.protocol = 'http'
                     subject.save
-                    expect(subject.errors).to be_empty
+                    expect(subject.errors[:protocol]).to be_empty
                 end
             end
 
@@ -96,7 +94,7 @@ describe Site, type: :model do
                 it 'is accepted' do
                     subject.protocol = 'https'
                     subject.save
-                    expect(subject.errors).to be_empty
+                    expect(subject.errors[:protocol]).to be_empty
                 end
             end
 
@@ -181,7 +179,7 @@ describe Site, type: :model do
                     it 'is accepted' do
                         subject.port = 12
                         subject.save
-                        expect(subject.errors).to be_empty
+                        expect(subject.errors[:port]).to be_empty
                     end
                 end
 
@@ -189,7 +187,7 @@ describe Site, type: :model do
                     it 'is accepted' do
                         subject.port = '12'
                         subject.save
-                        expect(subject.errors).to be_empty
+                        expect(subject.errors[:port]).to be_empty
                     end
                 end
 
@@ -400,18 +398,20 @@ describe Site, type: :model do
         context 'when the site has a revisions that has started but not stopped' do
             before do
                 revision
-                FactoryGirl.create(
+                FactoryGirl.build(
                     :revision,
                     scan: scan,
+                    site: subject,
                     stopped_at: nil
-                )
+                ).tap { |i| i.save( validate: false ) }
             end
             let(:revision) do
-                FactoryGirl.create(
+                FactoryGirl.build(
                     :revision,
                     scan: scan,
+                    site: subject,
                     stopped_at: nil
-                )
+                ).tap { |i| i.save( validate: false ) }
             end
 
             it 'returns the first one' do

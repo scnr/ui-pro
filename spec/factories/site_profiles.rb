@@ -2,6 +2,8 @@
 
 FactoryGirl.define do
     factory :site_profile do
+        to_create { |instance| instance.save( validate: false ) }
+
         scope_template_path_patterns([
             'redundant',
             'other-redundant'
@@ -30,7 +32,7 @@ FactoryGirl.define do
         scope_url_rewrites(
             'articles\/[\w-]+\/(\d+)' => 'articles.php?id=\1'
         )
-        http_request_concurrency 20
+        http_request_concurrency 14
         scope_include_subdomains false
         scope_auto_redundant_paths 100
         scope_exclude_path_patterns [
@@ -42,7 +44,6 @@ FactoryGirl.define do
         scope_https_only false
         http_authentication_username "johny"
         http_authentication_password "secret"
-        browser_cluster_ignore_images true
         browser_cluster_wait_for_elements({
             'stuff' => '#myElement'
         })

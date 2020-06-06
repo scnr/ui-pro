@@ -29,18 +29,14 @@ module ProfileRpcHelpers
         :audit_parameter_values,
 
         :browser_cluster_wait_for_elements,
-        :browser_cluster_screen_height,
-        :browser_cluster_screen_width,
         :browser_cluster_pool_size,
         :browser_cluster_job_timeout,
         :browser_cluster_worker_time_to_live,
-        :browser_cluster_ignore_images,
 
         :http_authentication_password,
         :http_authentication_username,
         :http_cookies,
         :http_request_headers,
-        :http_user_agent,
         :http_request_queue_size,
         :http_request_concurrency,
         :http_request_redirect_limit,
@@ -69,7 +65,11 @@ module ProfileRpcHelpers
         :http_response_max_size,
 
         :session_check_pattern,
-        :session_check_url
+        :session_check_url,
+
+        :device_screen_height,
+        :device_screen_width,
+        :device_user_agent
     ]
 
     module ClassMethods

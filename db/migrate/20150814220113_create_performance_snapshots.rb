@@ -1,4 +1,4 @@
-class CreatePerformanceSnapshots < ActiveRecord::Migration
+class CreatePerformanceSnapshots < ActiveRecord::Migration[5.1]
     def change
         create_table :performance_snapshots do |t|
             t.integer :http_request_count

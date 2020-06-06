@@ -1,4 +1,4 @@
-class CreateIssuePlatformTypes < ActiveRecord::Migration
+class CreateIssuePlatformTypes < ActiveRecord::Migration[5.1]
     def change
         create_table :issue_platform_types do |t|
             t.string :shortname

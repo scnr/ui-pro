@@ -1,7 +1,7 @@
 class HttpResponse < ActiveRecord::Base
-    belongs_to :responsable, polymorphic: true
+    belongs_to :responsable, polymorphic: true, optional: true
 
-    serialize :headers, Hash
+    serialize :headers, CustomSerializer # Hash
 
     def to_s
         "#{raw_headers}#{body}".recode

@@ -2,9 +2,9 @@
     <h1>
         <%= @issue.type.name %>
         <small>
-            <% if @issue.vector.affected_input_name %>
-                in <%= @issue.vector %> input
-                <code><%= @issue.vector.affected_input_name %></code>
+            <% if @issue.input_vector.affected_input_name %>
+                in <%= @issue.input_vector %> input
+                <code><%= @issue.input_vector.affected_input_name %></code>
             <% end %>
 
             at
@@ -19,10 +19,10 @@
             %>
             pointing to
             <%= link_to_url_with_external(
-                    external: @issue.vector.action,
+                    external: @issue.input_vector.action,
                     internal: site_path(
                         @site,
-                        sitemap_entry_url( issue.vector.sitemap_entry )
+                        sitemap_entry_url( issue.input_vector.sitemap_entry )
                     ),
                     display_path_only: true
                 )

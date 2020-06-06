@@ -62,7 +62,7 @@
                         <th></th>
                     <% end %>
 
-                    <% if issue.vector.affected_input_name %>
+                    <% if issue.input_vector.affected_input_name %>
                         <th>Type</th>
                         <th>Name</th>
                     <% end %>
@@ -93,20 +93,20 @@
                     </td>
                 <% end %>
 
-                <% if issue.vector.affected_input_name %>
+                <% if issue.input_vector.affected_input_name %>
                     <td id="<%= id %>-issue-<%= issue.digest %>-vector-kind">
-                        <code><%= issue.vector.kind %></code>
+                        <code><%= issue.input_vector.kind %></code>
                     </td>
 
                     <td id="<%= id %>-issue-<%= issue.digest %>-affected_input_name">
-                        <code><%= issue.vector.affected_input_name %></code>
+                        <code><%= issue.input_vector.affected_input_name %></code>
                     </td>
                 <% end %>
 
                 <% if !@sitemap_entry %>
                     <td id="<%= id %>-issue-<%= issue.digest %>-vector-action">
                         <%= link_to_url_with_external(
-                                external: issue.vector.action,
+                                external: issue.input_vector.action,
                                 internal: sitemap_entry_url( issue.sitemap_entry ),
                                 display_path_only: true
                             )

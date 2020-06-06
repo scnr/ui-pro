@@ -8,8 +8,8 @@ class IssuePage < ActiveRecord::Base
     has_one :dom,      class_name: 'IssuePageDom',
             dependent: :destroy
 
-    belongs_to :issue
-    belongs_to :sitemap_entry, counter_cache: true
+    belongs_to :issue, optional: true
+    belongs_to :sitemap_entry, counter_cache: true, optional: true
 
     def self.create_from_engine( page, options = {} )
         create({

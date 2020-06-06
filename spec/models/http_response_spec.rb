@@ -17,8 +17,7 @@ describe HttpResponse do
         end
 
         it "creates a #{described_class} from #{SCNR::Engine::HTTP::Response}" do
-            response = described_class.create_from_engine(engine_response).reload
-            expect(response).to be_valid
+            response = described_class.create_from_engine( engine_response )
 
             expect(response.url).to eq engine_response.url
             expect(response.code).to eq engine_response.code

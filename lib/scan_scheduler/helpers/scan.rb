@@ -21,7 +21,7 @@ module Scan
     def pause( revision )
         log_info_for revision, 'Pausing'
 
-        instance_for( revision ).service.pause do |r|
+        instance_for( revision ).pause do |r|
             log_info_for revision, 'Paused'
 
             handle_if_rpc_error( revision, r )
@@ -34,7 +34,7 @@ module Scan
     def resume( revision )
         log_info_for revision, 'Resuming'
 
-        instance_for( revision ).service.resume do |r|
+        instance_for( revision ).resume do |r|
             log_info_for revision, 'Resumed'
 
             handle_if_rpc_error( revision, r )
@@ -57,7 +57,7 @@ module Scan
         )
 
         spawn_instance_for( revision ) do |instance|
-            instance.service.restore( revision.snapshot_path ) do |r|
+            instance.restore( revision.snapshot_path ) do |r|
                 log_info_for revision, 'Restoring'
 
                 FileUtils.rm( revision.snapshot_path )
@@ -79,7 +79,7 @@ module Scan
 
         instance = instance_for( revision )
 
-        instance.service.suspend do |r|
+        instance.suspend do |r|
             log_info_for revision, 'Suspended, grabbing snapshot path.'
             handle_if_rpc_error( revision, r )
         end
@@ -174,7 +174,7 @@ module Scan
         log_info_for revision, 'Created revision.'
 
         spawn_instance_for( revision ) do |instance|
-            instance.service.scan( revision.rpc_options ) do |response|
+            instance.scan( revision.rpc_options ) do |response|
                 next if handle_if_rpc_error( revision, response )
 
                 monitor( revision )
@@ -243,7 +243,7 @@ module Scan
             revision.scan.issues.where.not( state: 'fixed' ).digests
 
         # With errors and live sitemap.
-        instance.service.native_progress(
+        instance.native_progress(
             with:    {
                 issues:  true,
                 sitemap: progress_tracking_for( revision )[:coverage_entries].size,
@@ -269,12 +269,12 @@ module Scan
             return
         end
 
-        ap progress
-        ap progress[:busy]
-        ap progress[:status]
-        ap progress[:statistics]
-        ap progress[:messages]
-        ap progress[:sitemap]
+        # ap progress
+        # ap progress[:busy]
+        # ap progress[:status]
+        # ap progress[:statistics]
+        # ap progress[:messages]
+        # ap progress[:sitemap]
 
         log_debug_for revision, "Busy:   #{progress[:busy]}"
         log_debug_for revision, "Status: #{progress[:status]}"
@@ -350,7 +350,7 @@ module Scan
 
         # Special case...
         if progress[:status] == :suspended
-            instance.service.snapshot_path do |path|
+            instance.snapshot_path do |path|
                 next if handle_if_rpc_error( revision, path )
 
                 log_info_for revision, "Suspended, got snapshot path: #{path}"
@@ -407,10 +407,10 @@ module Scan
         log_info_for revision, 'Grabbing report'
 
         instance = instance_for( revision )
-        instance.service.native_abort_and_report do |report|
+        instance.native_abort_and_report do |report|
             log_info_for revision, 'Got report'
 
-            report_path = "#{REPORT_DIR}/#{revision.id}.afr"
+            report_path = "#{REPORT_DIR}/#{revision.id}.ser"
             report.save( report_path )
 
             log_info_for revision, "Saved report at: #{report_path}"
@@ -483,7 +483,7 @@ module Scan
         @progress_tracker[revision.id] ||= {
             issue_digests:    nil,
             coverage_entries: [],
-            sitemap:          SCNR::Engine::Support::LookUp::Hash.new,
+            sitemap:          ::Set.new,
             error_lines:      0
         }
     end

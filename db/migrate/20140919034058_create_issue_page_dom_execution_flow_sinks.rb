@@ -1,4 +1,4 @@
-class CreateIssuePageDomExecutionFlowSinks < ActiveRecord::Migration
+class CreateIssuePageDomExecutionFlowSinks < ActiveRecord::Migration[5.1]
     def change
         create_table :issue_page_dom_execution_flow_sinks do |t|
             t.binary :data

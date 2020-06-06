@@ -22,14 +22,14 @@ module Features
             issue.referring_page.sitemap_entry = page_sitemap_entry
             issue.referring_page.save
 
-            vector_sitemap_entry   = site.sitemap_entries.find_by_url( issue.vector.action )
+            vector_sitemap_entry   = site.sitemap_entries.find_by_url( issue.input_vector.action )
             vector_sitemap_entry ||= site.sitemap_entries.create(
-                url:      issue.vector.action,
+                url:      issue.input_vector.action,
                 code:     issue.page.response.code,
                 revision: revision
             )
-            issue.vector.sitemap_entry = vector_sitemap_entry
-            issue.vector.save
+            issue.input_vector.sitemap_entry = vector_sitemap_entry
+            issue.input_vector.save
 
             issue.sitemap_entry = vector_sitemap_entry
             issue.save

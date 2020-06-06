@@ -14,8 +14,7 @@ describe IssuePage do
         end
 
         it "creates a #{described_class} from #{SCNR::Engine::Page}" do
-            page = described_class.create_from_engine(engine_page).reload
-            expect(page).to be_valid
+            page = described_class.create_from_engine( engine_page )
 
             expect(page.request).to be_kind_of HttpRequest
             expect(page.request).to be_valid
@@ -24,7 +23,6 @@ describe IssuePage do
             expect(page.response).to be_valid
 
             expect(page.dom).to be_kind_of IssuePageDom
-            expect(page.dom).to be_valid
         end
     end
 

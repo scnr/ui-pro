@@ -7,10 +7,10 @@ class SiteRole < ActiveRecord::Base
                     # If this is a copy made by a revision don't bother.
                     unless: Proc.new { |t| t.revision_id }
 
-    serialize :login_form_parameters, Hash
+    serialize :login_form_parameters, CustomSerializer # Hash
 
-    belongs_to :site
-    belongs_to :revision
+    belongs_to :site, optional: true
+    belongs_to :revision, optional: true
 
     has_many   :scans, -> { order id: :desc }
     has_many   :revisions, through: :scans
@@ -44,6 +44,8 @@ class SiteRole < ActiveRecord::Base
     validate :validate_login_script_code_syntax
     validate :validate_session_check_pattern
 
+    after_initialize :ensure_login_form_parameters
+
     def self.guest
         where( login_type: 'none' ).first
     end
@@ -62,7 +64,7 @@ class SiteRole < ActiveRecord::Base
         if login_type == 'form'
             rpc_options.merge!(
                 'plugins' => {
-                    'autologin' => {
+                    'login_form' => {
                         'url'        => login_form_url,
                         'parameters' => login_form_parameters.
                             map { |k, v| "#{k}=#{v}" }.join('&'),
@@ -138,4 +140,9 @@ class SiteRole < ActiveRecord::Base
         "#{Dir.tmpdir}/#{self.class}-#{login_script_code.to_s.persistent_hash}" <<
             '-login_script_code.rb'
     end
+
+    def ensure_login_form_parameters
+        self.login_form_parameters ||= {}
+    end
+
 end

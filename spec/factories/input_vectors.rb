@@ -1,5 +1,7 @@
 FactoryGirl.define do
-    factory :vector do
+    factory :input_vector do
+        to_create { |instance| instance.save( validate: false ) }
+
         default_inputs({
             'pname1' => 'pvalue1',
             'pname2' => 'pvalue2'

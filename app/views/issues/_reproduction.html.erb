@@ -6,14 +6,14 @@
     </div>
 <% end %>
 
-<% if issue.active? && issue.vector.inputs.any? %>
+<% if issue.active? && issue.input_vector.inputs.any? %>
     <div id="reproduction-inputs">
         In order to reproduce the issue please submit the
         <a href="#!/input_vector">input vector</a> with the following values:
 
         <%= render '/shared/hash',
-                   object: issue.vector.inputs,
-                   highlight: issue.vector.affected_input_name,
+                   object: issue.input_vector.inputs,
+                   highlight: issue.input_vector.affected_input_name,
                    code: true
         %>
     </div>
@@ -32,6 +32,6 @@
     </div>
 <% else %>
     <div id="reproduction-request">
-        <pre class="highlight-container code-container"><%= highlight_http_request( issue.page.request.to_s, issue, issue.vector.seed.to_s ) || issue.page.request %></pre>
+        <pre class="highlight-container code-container"><%= highlight_http_request( issue.page.request.to_s, issue, issue.input_vector.seed.to_s ) || issue.page.request %></pre>
     </div>
 <% end %>

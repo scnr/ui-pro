@@ -1,8 +1,8 @@
-class Vector < ActiveRecord::Base
-    belongs_to :sitemap_entry, counter_cache: true
+class InputVector < ActiveRecord::Base
+    belongs_to :sitemap_entry, counter_cache: true, optional: true
 
-    serialize :inputs,         Hash
-    serialize :default_inputs, Hash
+    serialize :inputs,         CustomSerializer # Hash
+    serialize :default_inputs, CustomSerializer # Hash
 
     def kind
         super.to_sym

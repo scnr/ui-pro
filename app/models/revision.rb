@@ -4,13 +4,13 @@ class Revision < ActiveRecord::Base
 
     has_paper_trail track: %w(status timed_out)
 
-    serialize :rpc_options, Hash
+    serialize :rpc_options, CustomSerializer # Hash
 
     has_one  :performance_snapshot, dependent: :destroy,
              foreign_key: 'revision_current_id'
 
-    belongs_to :scan, counter_cache: true
-    belongs_to :site, counter_cache: true
+    belongs_to :scan, counter_cache: true, optional: true
+    belongs_to :site, counter_cache: true, optional: true
 
     # Copies of site settings and role at the time the revision was created.
     # These can change over time so keep a frozen copy.
@@ -27,10 +27,13 @@ class Revision < ActiveRecord::Base
 
     validates_presence_of :scan
 
+    after_initialize :ensure_rpc_options
+
     before_create :ensure_performance_snapshot
 
+    before_validation :set_site
+
     before_save :set_index
-    before_save :set_site
     before_save :set_rpc_options
     before_save :copy_site_profile
     before_save :copy_site_role
@@ -120,4 +123,9 @@ class Revision < ActiveRecord::Base
     def ensure_performance_snapshot
         self.performance_snapshot ||= build_performance_snapshot
     end
+
+    def ensure_rpc_options
+        self.rpc_options ||= {}
+    end
+
 end

@@ -21,7 +21,7 @@
                         Request
                     </h5>
 
-                    <pre class="highlight-container code-container"><%= highlight_http_request( page.request.to_s, issue, issue.vector.seed ) || page.request %></pre>
+                    <pre class="highlight-container code-container"><%= highlight_http_request( page.request.to_s, issue, issue.input_vector.seed ) || page.request %></pre>
                 </div>
             <% end %>
 

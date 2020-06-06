@@ -1,4 +1,4 @@
-class CreateIssueRemarks < ActiveRecord::Migration
+class CreateIssueRemarks < ActiveRecord::Migration[5.1]
     def change
         create_table :issue_remarks do |t|
             t.string :author

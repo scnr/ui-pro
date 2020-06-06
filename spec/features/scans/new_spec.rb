@@ -133,11 +133,15 @@ feature 'New scan page' do
             select profile.name, from: 'scan_profile_id'
             select user_agent.name, from: 'scan_user_agent_id'
 
-            select '2017', from: 'scan_schedule_attributes_start_at_1i'
-            select 'November', from: 'scan_schedule_attributes_start_at_2i'
-            select '15', from: 'scan_schedule_attributes_start_at_3i'
-            select '21', from: 'scan_schedule_attributes_start_at_4i'
-            select '50', from: 'scan_schedule_attributes_start_at_5i'
+            time = Time.now + 99999
+
+            select time.year, from: 'scan_schedule_attributes_start_at_1i'
+            select (time + 0.month).strftime("%B"), from: 'scan_schedule_attributes_start_at_2i'
+            select time.day, from: 'scan_schedule_attributes_start_at_3i'
+            select time.hour, from: 'scan_schedule_attributes_start_at_4i'
+            min = time.min.to_s
+            min = min.size < 2 ? "0#{min}" : min
+            select min, from: 'scan_schedule_attributes_start_at_5i'
 
             fill_in 'scan_schedule_attributes_stop_after_hours', with: 1.5
             select 10, from: 'scan_schedule_attributes_day_frequency'
@@ -161,7 +165,7 @@ feature 'New scan page' do
 
             schedule = scan.schedule
 
-            expect(schedule.start_at.to_s).to eq '2017-11-15 21:50:00 UTC'
+            expect(schedule.start_at).to eq time.beginning_of_minute
             expect(schedule.stop_after_hours).to eq 1.5
             expect(schedule.day_frequency).to eq 10
             expect(schedule.month_frequency).to eq 11
@@ -175,18 +179,20 @@ feature 'New scan page' do
             FactoryGirl.create :profile, name: 'Other user profile'
             visit new_site_scan_path( site )
 
-            expect(page).to have_select 'scan_profile_id', [profile.name, other_profile.name]
+            expect(page).to have_select 'scan_profile_id',
+                                        options: [profile.name, other_profile.name]
         end
 
         scenario 'user sees user-agents in select box' do
-            expect(page).to have_select 'scan_user_agent_id', [user_agent.name, other_user_agent.name]
+            expect(page).to have_select 'scan_user_agent_id',
+                                        options: [user_agent.name, other_user_agent.name]
         end
 
         feature 'when the name is missing' do
             scenario 'user sees an error' do
                 click_button 'Create'
 
-                expect(find(:div, '.scan_name.has-error')).to be_truthy
+                expect(find('.scan_name.has-error')).to be_truthy
             end
         end
 
@@ -197,7 +203,7 @@ feature 'New scan page' do
 
                 click_button 'Create'
 
-                expect(find(:div, '.scan_schedule_stop_after_hours.has-error')).to be_truthy
+                expect(find('.scan_schedule_stop_after_hours.has-error')).to be_truthy
             end
         end
 
@@ -246,10 +252,10 @@ feature 'New scan page' do
                     click_button 'Create'
                     sleep 1
 
-                    scan = site.scans.last
+                    scan = site.scans.where( name: name ).first
 
                     expect(scan).to be_scheduled
-                    expect(scan).to be_due
+                    expect(scan.schedule).to be_due
                 end
             end
 
@@ -264,7 +270,7 @@ feature 'New scan page' do
                     sleep 1
                 end
 
-                let(:start_at) { (Time.now + 1000).utc }
+                let(:start_at) { Time.now + 1000 }
                 let(:revision) { schedule_preview.find('#revision-1') }
                 let(:nearby_scans) { revision.find '.nearby-scans' }
 
@@ -277,7 +283,7 @@ feature 'New scan page' do
                 end
 
                 scenario 'shows the start-at hour' do
-                    expect(revision).to have_content start_at.strftime( '%H' )
+                    expect(revision).to have_content start_at.day
                 end
 
                 scenario 'shows the start-at minute' do
@@ -296,7 +302,7 @@ feature 'New scan page' do
                     expect(revision).to have_content start_at.strftime( '%B' )
                 end
 
-                scenario 'shows the start-at day month' do
+                scenario 'shows the start-at day year' do
                     expect(revision).to have_content start_at.year
                 end
 

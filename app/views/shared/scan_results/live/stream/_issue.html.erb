@@ -8,16 +8,16 @@
     <%= issue.type.name %>
 </a>
 
-<% if issue.vector.affected_input_name %>
+<% if issue.input_vector.affected_input_name %>
     in
-    <code><%= issue.vector.kind %></code> input
-    <code><%= issue.vector.affected_input_name %></code>
+    <code><%= issue.input_vector.kind %></code> input
+    <code><%= issue.input_vector.affected_input_name %></code>
 <% end %>
 
 at
 
 <%= link_to_url_with_external(
-            external: issue.vector.action,
+            external: issue.input_vector.action,
             internal: sitemap_entry_url( issue.sitemap_entry ),
             display_path_only: true
     )

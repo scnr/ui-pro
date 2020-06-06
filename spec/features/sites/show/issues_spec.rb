@@ -92,7 +92,7 @@ feature 'Site' do
                             type:           type,
                             page:           FactoryGirl.create(:issue_page),
                             referring_page: FactoryGirl.create(:issue_page),
-                            vector:         FactoryGirl.create(:vector).
+                            input_vector:         FactoryGirl.create(:input_vector).
                                                 tap { |v| v.action = sitemap_entry.url },
                             sitemap_entry:  sitemap_entry,
                             digest:         rand(99999999999999),
@@ -108,7 +108,7 @@ feature 'Site' do
             let(:severities) { @severities.values }
 
             # feature 'when filtering' do
-            #     let(:sitemap_entry) { site.issues.first.vector.sitemap_entry}
+            #     let(:sitemap_entry) { site.issues.first.input_vector.sitemap_entry}
             #     let(:path) { URI(sitemap_entry.url).path }
             #
             #     states = ['Trusted', 'untrusted', 'false positive', 'fixed']
@@ -221,7 +221,7 @@ feature 'Site' do
             #                             type:           IssueType.first,
             #                             page:           FactoryGirl.create(:issue_page),
             #                             referring_page: FactoryGirl.create(:issue_page),
-            #                             vector:         FactoryGirl.create(:vector).
+            #                             input_vector:         FactoryGirl.create(:input_vector).
             #                                                 tap { |v| v.action = sitemap_entry.url },
             #                             sitemap_entry:  sitemap_entry,
             #                             digest:         rand(99999999999999),
@@ -305,7 +305,7 @@ feature 'Site' do
             #                             type:           @types[s],
             #                             page:           FactoryGirl.create(:issue_page),
             #                             referring_page: FactoryGirl.create(:issue_page),
-            #                             vector:         FactoryGirl.create(:vector).
+            #                             input_vector:         FactoryGirl.create(:input_vector).
             #                                                 tap { |v| v.action = sitemap_entry.url },
             #                             sitemap_entry:  sitemap_entry,
             #                             digest:         rand(99999999999999),
@@ -426,7 +426,7 @@ feature 'Site' do
             #                             type:           issue.type,
             #                             page:           FactoryGirl.create(:issue_page),
             #                             referring_page: FactoryGirl.create(:issue_page),
-            #                             vector:         FactoryGirl.create(:vector).
+            #                             input_vector:         FactoryGirl.create(:input_vector).
             #                                                 tap { |v| v.action = issue.sitemap_entry.url },
             #                             sitemap_entry:  issue.sitemap_entry,
             #                             digest:         issue.digest,
@@ -467,7 +467,7 @@ feature 'Site' do
             #
             #             scenario 'user sees vector type' do
             #                 site.issues.each do |issue|
-            #                     expect(issues.find("#summary-issue-#{issue.digest}")).to have_content issue.vector.kind
+            #                     expect(issues.find("#summary-issue-#{issue.digest}")).to have_content issue.input_vector.kind
             #                 end
             #             end
             #
@@ -482,19 +482,19 @@ feature 'Site' do
             #                         type:           types.first,
             #                         page:           FactoryGirl.create(:issue_page),
             #                         referring_page: FactoryGirl.create(:issue_page),
-            #                         vector:         FactoryGirl.create(:vector, affected_input_name: 'stuff'),
+            #                         input_vector:         FactoryGirl.create(:input_vector, affected_input_name: 'stuff'),
             #                         sitemap_entry:  site.sitemap_entries.first,
             #                         digest:         rand(99999999999999),
             #                         state:          'trusted'
             #                     )
             #
-            #                     issue.referring_page.dom.url = "#{issue.vector.action}/2"
+            #                     issue.referring_page.dom.url = "#{issue.input_vector.action}/2"
             #                     issue.referring_page.dom.save
             #                     set_sitemap_entries issue
             #                 end
             #
             #                 scenario 'user sees vector action URL without scheme, host and port' do
-            #                     url = ApplicationHelper.url_without_scheme_host_port( issue.vector.action )
+            #                     url = ApplicationHelper.url_without_scheme_host_port( issue.input_vector.action )
             #                     expect(issues.find("#summary-issue-#{issue.digest}")).to have_content url
             #                 end
             #             end
@@ -510,7 +510,7 @@ feature 'Site' do
             #                         type:           types.first,
             #                         page:           FactoryGirl.create(:issue_page),
             #                         referring_page: FactoryGirl.create(:issue_page),
-            #                         vector:         FactoryGirl.create(:vector, affected_input_name: 'stuff'),
+            #                         input_vector:         FactoryGirl.create(:input_vector, affected_input_name: 'stuff'),
             #                         sitemap_entry:  site.sitemap_entries.first,
             #                         digest:         rand(99999999999999),
             #                         state:          'trusted'
@@ -518,7 +518,7 @@ feature 'Site' do
             #                 end
             #
             #                 scenario 'it includes input info' do
-            #                     expect(issues.find("#summary-issue-#{issue.digest}")).to have_content issue.vector.affected_input_name
+            #                     expect(issues.find("#summary-issue-#{issue.digest}")).to have_content issue.input_vector.affected_input_name
             #                 end
             #             end
             #
@@ -533,7 +533,7 @@ feature 'Site' do
             #                         type:           types.first,
             #                         page:           FactoryGirl.create(:issue_page),
             #                         referring_page: FactoryGirl.create(:issue_page),
-            #                         vector:         FactoryGirl.create(:vector, affected_input_name: nil),
+            #                         input_vector:         FactoryGirl.create(:input_vector, affected_input_name: nil),
             #                         sitemap_entry:  site.sitemap_entries.first,
             #                         digest:         rand(99999999999999),
             #                         state:          'trusted'

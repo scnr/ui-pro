@@ -9,7 +9,7 @@ describe Issue do
     expect_it { to belong_to :type }
     expect_it { to belong_to :platform }
     expect_it { to have_one :severity  }
-    expect_it { to have_one(:vector).dependent(:destroy) }
+    expect_it { to have_one(:input_vector).dependent(:destroy) }
     expect_it { to have_many(:remarks).dependent(:destroy) }
 
     expect_it { to validate_presence_of :state }
@@ -176,7 +176,7 @@ describe Issue do
                 state: 'trusted',
                 revision: revision,
                 digest: 1
-            )
+            ).errors.messages
 
             type.issues.create(
                 state: 'trusted',
@@ -281,18 +281,32 @@ describe Issue do
         end
 
         let(:sibling) do
+            sitemap_entry = FactoryGirl.create(:sitemap_entry)
+
             type.issues.create(
                 state: 'trusted',
                 revision: revision,
-                digest: digest
+                digest: digest,
+                page: FactoryGirl.create(:issue_page),
+                referring_page: FactoryGirl.create(:issue_page),
+                platform: FactoryGirl.create(:issue_platform),
+                sitemap_entry: sitemap_entry,
+                reviewed_by_revision: sitemap_entry.revision
             )
         end
 
         subject do
+            sitemap_entry = FactoryGirl.create(:sitemap_entry)
+
             type.issues.create(
                 state: 'trusted',
                 revision: revision,
-                digest: digest
+                digest: digest,
+                page: FactoryGirl.create(:issue_page),
+                referring_page: FactoryGirl.create(:issue_page),
+                platform: IssuePlatform.first || FactoryGirl.create(:issue_platform),
+                sitemap_entry: sitemap_entry,
+                reviewed_by_revision: sitemap_entry.revision
             )
         end
 
@@ -410,7 +424,7 @@ describe Issue do
 
             unique_revisions = described_class.unique_revisions
 
-            expect(unique_revisions).to be_kind_of Revision::ActiveRecord_Relation
+            expect(unique_revisions.class.to_s).to eq 'Revision::ActiveRecord_Relation'
             expect(unique_revisions.pluck(:id).sort).to eq [r1.id, r2.id, r3.id].sort
         end
     end
@@ -440,8 +454,8 @@ describe Issue do
             expect(issue.referring_page).to be_kind_of IssuePage
             expect(issue.referring_page).to be_valid
 
-            expect(issue.vector).to be_kind_of Vector
-            expect(issue.vector).to be_valid
+            expect(issue.input_vector).to be_kind_of InputVector
+            expect(issue.input_vector).to be_valid
 
             expect(issue.platform).to eq platform
 

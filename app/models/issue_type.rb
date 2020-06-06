@@ -1,6 +1,6 @@
 class IssueType < ActiveRecord::Base
     belongs_to :severity, class_name: 'IssueTypeSeverity',
-             foreign_key: 'issue_type_severity_id'
+             foreign_key: 'issue_type_severity_id', optional: true
 
     has_and_belongs_to_many :tags, class_name: 'IssueTypeTag',
              foreign_key: 'issue_type_tag_id',

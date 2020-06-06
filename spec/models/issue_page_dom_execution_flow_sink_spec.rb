@@ -10,8 +10,7 @@ describe IssuePageDomExecutionFlowSink do
         end
 
         it "creates a #{described_class} from #{SCNR::Engine::Browser::Javascript::TaintTracer::Sink::ExecutionFlow}" do
-            sink = described_class.create_from_engine(engine_execution_flow_sink).reload
-            expect(sink).to be_valid
+            sink = described_class.create_from_engine(engine_execution_flow_sink)
 
             sink.stackframes.each do |frame|
                 expect(frame).to be_kind_of IssuePageDomStackFrame

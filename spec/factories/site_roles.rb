@@ -1,5 +1,7 @@
 FactoryGirl.define do
     factory :site_role do
+        to_create { |instance| instance.save( validate: false ) }
+
         name { "MyString - #{rand 99999}" }
         description "MyText"
         session_check_url 'http://stuff/'

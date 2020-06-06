@@ -48,7 +48,7 @@
             </td>
             <td>
                 <table class="table table-condensed table-borderless table-transition-options">
-                    <% if (url = transition.options[:url]) %>
+                    <% if (url = transition.options['url']) %>
                         <tr>
                             <th>URL</th>
                             <td>
@@ -57,7 +57,7 @@
                         </tr>
                     <% end %>
 
-                    <% if (cookies = transition.options[:cookies] || {}).any? %>
+                    <% if (cookies = transition.options['cookies'] || {}).any? %>
                         <tr>
                             <th>Cookies</th>
                         </tr>
@@ -72,7 +72,7 @@
                         </tr>
                     <% end %>
 
-                    <% if (inputs = transition.options[:inputs] || {}).any? %>
+                    <% if (inputs = transition.options['inputs'] || {}).any? %>
                         <tr>
                             <th>Inputs</th>
                         </tr>
@@ -83,7 +83,7 @@
                         </tr>
                     <% end %>
 
-                    <% if (value = transition.options[:value])  %>
+                    <% if (value = transition.options['value'])  %>
                         <tr>
                             <th>Value</th>
                             <td>

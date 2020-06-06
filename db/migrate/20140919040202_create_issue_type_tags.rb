@@ -1,4 +1,4 @@
-class CreateIssueTypeTags < ActiveRecord::Migration
+class CreateIssueTypeTags < ActiveRecord::Migration[5.1]
     def change
         create_table :issue_type_tags do |t|
             t.string :name

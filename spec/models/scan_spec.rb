@@ -429,7 +429,7 @@ describe Scan do
             )
 
             options['url'] = subject.url
-            options['plugins']['autologin'] = {
+            options['plugins']['login_form'] = {
                 'url'        => subject.site_role.site.url,
                 'parameters' => 'username=joe&password=secret',
                 'check'      => 'logout.php'

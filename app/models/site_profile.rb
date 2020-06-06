@@ -9,8 +9,8 @@ class SiteProfile < ActiveRecord::Base
                     # If this is a copy made by a revision don't bother.
                     unless: Proc.new { |t| t.revision_id }
 
-    belongs_to :site
-    belongs_to :revision
+    belongs_to :site, optional: true
+    belongs_to :revision, optional: true
 
     def to_s
         "Settings for #{site}"

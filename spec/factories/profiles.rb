@@ -2,6 +2,8 @@
 
 FactoryGirl.define do
     factory :profile do
+        to_create { |instance| instance.save( validate: false ) }
+
         default false
         name { "MyString #{rand(99999)}" }
         description "This is my profile!"

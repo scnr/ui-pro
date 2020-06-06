@@ -1,4 +1,4 @@
-class CreateIssueTypeSeverities < ActiveRecord::Migration
+class CreateIssueTypeSeverities < ActiveRecord::Migration[5.1]
     def change
         create_table :issue_type_severities do |t|
             t.string :name

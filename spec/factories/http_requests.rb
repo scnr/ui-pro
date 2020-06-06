@@ -2,6 +2,8 @@
 
 FactoryGirl.define do
     factory :http_request do
+        to_create { |instance| instance.save( validate: false ) }
+
         url "http://127.0.0.2:4567/stuff?pname=pvalue"
         http_method :post
         parameters({})

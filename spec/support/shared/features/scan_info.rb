@@ -36,7 +36,7 @@ shared_examples_for 'Scan info' do |options = {}|
                     scan_info_refresh
                 end
 
-                let(:start_at) { (Time.now + 1000).utc }
+                let(:start_at) { Time.now + 1000 }
 
                 scenario 'shows it' do
                     expect(schedule_info).to have_content "runs on #{I18n.l( start_at )}"

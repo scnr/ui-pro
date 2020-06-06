@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe Vector do
-    subject { FactoryGirl.create :vector }
+describe InputVector do
+    subject { FactoryGirl.create :input_vector }
 
     expect_it { to belong_to(:sitemap_entry).counter_cache(true) }
 
@@ -32,8 +32,7 @@ describe Vector do
         ].each do |klass|
             it "creates a #{described_class} from #{klass}" do
                 engine_vector = Factory[klass.type]
-                vector = described_class.create_from_engine(engine_vector ).reload
-                expect(vector).to be_valid
+                vector = described_class.create_from_engine(engine_vector )
 
                 expect(vector.action).to eq engine_vector.action
                 expect(vector.seed).to eq engine_vector.seed
@@ -51,8 +50,7 @@ describe Vector do
          SCNR::Engine::Element::Header ].each do |klass|
             it "creates a #{described_class} from #{klass}" do
                 engine_vector = Factory[klass.type]
-                vector = described_class.create_from_engine(engine_vector ).reload
-                expect(vector).to be_valid
+                vector = described_class.create_from_engine(engine_vector )
 
                 expect(vector.action).to eq engine_vector.action
                 expect(vector.seed).to eq engine_vector.seed
@@ -67,8 +65,7 @@ describe Vector do
 
         it "creates a #{described_class} from #{SCNR::Engine::Element::GenericDOM}" do
             engine_vector = Factory[SCNR::Engine::Element::GenericDOM.type]
-            vector = described_class.create_from_engine(engine_vector ).reload
-            expect(vector).to be_valid
+            vector = described_class.create_from_engine(engine_vector )
 
             expect(vector.action).to eq engine_vector.action
             expect(vector.affected_input_name).to eq engine_vector.affected_input_name
@@ -79,8 +76,7 @@ describe Vector do
         [SCNR::Engine::Element::Body, SCNR::Engine::Element::Server, SCNR::Engine::Element::Path].each do |klass|
             it "creates a #{described_class} from #{klass}" do
                 engine_vector = Factory[klass.type]
-                vector = described_class.create_from_engine(engine_vector ).reload
-                expect(vector).to be_valid
+                vector = described_class.create_from_engine(engine_vector )
 
                 expect(vector.action).to eq engine_vector.action
                 expect(vector.engine_class).to eq engine_vector.class

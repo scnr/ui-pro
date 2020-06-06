@@ -1,8 +1,8 @@
 class HttpRequest < ActiveRecord::Base
-    belongs_to :requestable, polymorphic: true
+    belongs_to :requestable, polymorphic: true, optional: true
 
-    serialize :headers,    Hash
-    serialize :parameters, Hash
+    serialize :headers,    CustomSerializer # Hash
+    serialize :parameters, CustomSerializer # Hash
 
     def http_method=( m )
         super m.to_s.upcase

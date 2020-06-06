@@ -16,7 +16,7 @@ user = User.create(
     password_confirmation: 'testtest'
 )
 
-ap engine_defaults  = Profile.flatten( SCNR::Engine::Options.to_rpc_data )
+engine_defaults  = Profile.flatten( SCNR::Engine::Options.to_rpc_data )
 
 engine_defaults.merge!(
     name:        'Default',
@@ -36,6 +36,11 @@ engine_defaults.merge!(
 # puts 'Default settings created: ' << p.name
 
 Setting.create!( Setting.flatten( SCNR::Engine::Options.to_rpc_data ) )
+
+user.sites.create(
+    protocol: 'http',
+    host:     'testhtml5.vulnweb.com'
+)
 
 all_checks_profile = Profile.create! engine_defaults.merge(
     name:        'All checks',

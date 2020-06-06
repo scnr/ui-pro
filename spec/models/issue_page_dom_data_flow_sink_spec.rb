@@ -11,8 +11,7 @@ describe IssuePageDomDataFlowSink do
         end
 
         it "creates a #{described_class} from #{SCNR::Engine::Browser::Javascript::TaintTracer::Sink::DataFlow}" do
-            sink = described_class.create_from_engine(engine_data_flow_sink).reload
-            expect(sink).to be_valid
+            sink = described_class.create_from_engine(engine_data_flow_sink)
 
             expect(sink.object).to eq engine_data_flow_sink.object
             expect(sink.tainted_argument_index).to eq engine_data_flow_sink.tainted_argument_index

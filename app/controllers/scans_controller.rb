@@ -73,7 +73,9 @@ class ScansController < ApplicationController
     # PATCH/PUT /scans/1.json
     def update
         respond_to do |format|
-            if @scan.update(scan_params)
+            if @scan.update( scan_params )
+                ap @scan.profile.name
+
                 format.html { redirect_to [@site, @scan], notice: 'Scan was successfully updated.' }
                 format.json { render :show, status: :ok, location: @scan }
             else
@@ -88,7 +90,7 @@ class ScansController < ApplicationController
     STATES.each do |state|
         define_method state do
             ScanScheduler.instance.send( state, @scan.last_revision )
-            redirect_to :back
+            redirect_back fallback_location: root_path
         end
     end
 
@@ -166,6 +168,8 @@ class ScansController < ApplicationController
             :site_role_id,
             :profile_id,
             :user_agent_id,
+            :site_id,
+            :id,
             :mark_missing_issues_fixed,
             {
                 schedule_attributes: permitted_schedule_attributes

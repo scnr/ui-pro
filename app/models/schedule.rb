@@ -23,7 +23,7 @@ class Schedule < ActiveRecord::Base
 
     has_paper_trail skip: [:created_at, :updated_at]
 
-    belongs_to :scan
+    belongs_to :scan, optional: true
 
     validates_inclusion_of :frequency_base,   in: FREQUENCY_BASES, allow_nil: true
     validates_inclusion_of :frequency_format, in: FREQUENCY_FORMATS, allow_nil: true

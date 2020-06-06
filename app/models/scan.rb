@@ -5,10 +5,10 @@ class Scan < ActiveRecord::Base
     has_paper_trail ignore: [:status],
                     track: %w(name description status timed_out)
 
-    belongs_to :site, counter_cache: true
-    belongs_to :site_role
-    belongs_to :profile
-    belongs_to :user_agent
+    belongs_to :site, counter_cache: true, optional: true
+    belongs_to :site_role, optional: true
+    belongs_to :profile, optional: true
+    belongs_to :user_agent, optional: true
 
     has_one :schedule, autosave: true, dependent: :destroy
     accepts_nested_attributes_for :schedule, update_only: true

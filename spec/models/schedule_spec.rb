@@ -670,7 +670,7 @@ describe Schedule do
     end
 
     describe '#schedule_next' do
-        let(:started_at) { Time.now.utc - 1000 }
+        let(:started_at) { Time.now - 1000 }
         let(:stopped_at) { started_at + 3500 }
 
         before do

@@ -793,13 +793,6 @@ feature 'Site profile form' do
                     end
                 end
             end
-
-            scenario 'can set Do not load images' do
-                check 'Do not load images'
-                submit
-
-                expect(profile.browser_cluster_ignore_images).to be true
-            end
         end
     end
 end

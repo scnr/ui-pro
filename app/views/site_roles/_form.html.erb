@@ -122,11 +122,11 @@
                         <ul class="nav nav-tabs" role="tablist">
                             <li role="presentation"
                                 class="<%= 'active' if !@site_role.login_type || @site_role.login_type == 'form' %>">
-                                <a href="#!/form" role="tab">Form</a>
+                                <a href="#!/form" data-turbolinks="false" role="tab">Form</a>
                             </li>
 
                             <li role="presentation" class="<%= 'active' if @site_role.login_type == 'script' %>">
-                                <a href="#!/script" role="tab" >Script</a>
+                                <a href="#!/script"  data-turbolinks="false" role="tab" >Script</a>
                             </li>
                         </ul>
 
@@ -159,7 +159,7 @@
                                 <%= f.input :login_form_url, as: :string, label: false,
                                             placeholder: "URL (Example: #{@site.url}/login)" %>
 
-                                <%= f.input :login_form_parameters, label: false,
+                                <%= f.text_area :login_form_parameters, label: false,
                                             placeholder: 'Parameters (Example: user=admin and passwd=secret)',
                                             input_html: {
                                                     value: @site_role.login_form_parameters.

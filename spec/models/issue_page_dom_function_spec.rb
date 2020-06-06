@@ -17,8 +17,7 @@ describe IssuePageDomFunction do
         end
 
         it "creates a #{described_class} from #{SCNR::Engine::Browser::Javascript::TaintTracer::Frame::CalledFunction}" do
-            function = described_class.create_from_engine(engine_function ).reload
-            expect(function).to be_valid
+            function = described_class.create_from_engine(engine_function )
 
             expect(function.name).to eq engine_function.name
             expect(function.source).to eq engine_function.source

@@ -1,4 +1,4 @@
-class CreateUserAgents < ActiveRecord::Migration
+class CreateUserAgents < ActiveRecord::Migration[5.1]
     def change
         create_table :user_agents do |t|
             t.boolean :default

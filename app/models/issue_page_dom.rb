@@ -1,5 +1,6 @@
 class IssuePageDom < ActiveRecord::Base
-    belongs_to :page, class_name: 'IssuePage', foreign_key: 'issue_page_id'
+    belongs_to :page, class_name: 'IssuePage', foreign_key: 'issue_page_id',
+               optional: true
 
     has_many :transitions,          class_name: 'IssuePageDomTransition',
              dependent: :destroy

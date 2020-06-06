@@ -73,7 +73,7 @@ class IssuesController < ApplicationController
         # data_flow_sinks.
         @issue = @revision.issues.includes(:sitemap_entry).
             includes( reviewed_by_revision: :scan ).
-            includes( vector: :sitemap_entry ).
+            includes( input_vector: :sitemap_entry ).
             includes(:platform).includes(:remarks).
             includes( page: page_preloads ).
             includes( referring_page: page_preloads ).

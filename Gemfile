@@ -1,11 +1,11 @@
 source 'https://rubygems.org'
 
-gem 'rails', '5.0.1'
+gem 'rails', '6.0.3.1'
 gem 'sass-rails'
 gem 'closure-compiler'
 gem 'coffee-rails'
 gem 'jquery-rails', '4.1.1'
-gem 'turbolinks', '2.5.3'
+gem 'turbolinks'#, '2.5.3'
 gem 'jbuilder'
 gem 'bootstrap-sass', '3.3.6'
 gem 'font-awesome-rails'
@@ -14,6 +14,7 @@ gem 'devise'
 # gem 'devise_security_extension', github: 'phatworx/devise_security_extension'
 gem 'simple_form'
 
+gem "webpacker"
 gem 'kramdown'
 gem 'loofah'
 
@@ -36,7 +37,7 @@ gem 'vmstat'
 gem 'sys-proctable'
 
 # Audit trail
-gem 'paper_trail', '~> 4.0.0'
+gem 'paper_trail'#, '~> 4.0.0'
 
 group :doc do
     gem 'sdoc', '~> 0.4.0'
@@ -50,7 +51,7 @@ group :development do
     # gem 'quiet_assets'
     gem 'rails_layout'
     gem 'bullet'
-    gem 'rails-footnotes'
+    # gem 'rails-footnotes'
 end
 
 group :test do
@@ -71,4 +72,5 @@ group :development, :test do
     gem 'awesome_print'
 end
 
+gem 'ethon', github: 'typhoeus/ethon', branch: 'thread-safe-easy-handle-cleanup'
 gem 'scnr-engine', path: File.dirname( __FILE__ ) + '/../engine'

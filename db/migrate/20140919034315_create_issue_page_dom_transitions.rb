@@ -1,4 +1,4 @@
-class CreateIssuePageDomTransitions < ActiveRecord::Migration
+class CreateIssuePageDomTransitions < ActiveRecord::Migration[5.1]
     def change
         create_table :issue_page_dom_transitions do |t|
             t.binary :element

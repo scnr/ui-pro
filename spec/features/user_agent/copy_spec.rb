@@ -46,7 +46,7 @@ feature 'User agent copy page', :devise do
             end
 
             scenario 'sees the user-agent form pre-filled' do
-                expect(find(:input, '#user_agent_name').value).to eq subject.name
+                expect(find('#user_agent_name').value).to eq subject.name
             end
 
             scenario 'creates a new user-agent', js: true do

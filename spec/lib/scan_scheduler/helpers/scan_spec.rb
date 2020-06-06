@@ -96,7 +96,7 @@ describe ScanScheduler::Helpers::Scan do
 
     describe '#suspend' do
         it 'suspends the scan' do
-            expect(instance.service).to receive(:suspend)
+            expect(instance).to receive(:suspend)
             subject.suspend( revision )
         end
     end
@@ -233,7 +233,7 @@ describe ScanScheduler::Helpers::Scan do
 
     describe '#pause' do
         it 'pauses the scan' do
-            expect(instance.service).to receive(:pause)
+            expect(instance).to receive(:pause)
             subject.pause( revision )
         end
 
@@ -247,7 +247,7 @@ describe ScanScheduler::Helpers::Scan do
 
     describe '#resume' do
         it 'resumes the scan' do
-            expect(instance.service).to receive(:resume)
+            expect(instance).to receive(:resume)
             subject.resume( revision )
         end
 
@@ -568,12 +568,12 @@ describe ScanScheduler::Helpers::Scan do
         end
 
         it 'polls for progress' do
-            expect(instance.service).to receive(:native_progress)
+            expect(instance).to receive(:native_progress)
             subject.update( revision ) {}
         end
 
         it 'includes issues' do
-            expect(instance.service).to receive(:native_progress) do |options|
+            expect(instance).to receive(:native_progress) do |options|
                 expect(options[:with]).to include :issues
             end
 
@@ -588,7 +588,7 @@ describe ScanScheduler::Helpers::Scan do
             issue = Issue.create_from_engine( native_issue, revision: other_revision )
             issue.save
 
-            expect(instance.service).to receive(:native_progress) do |options|
+            expect(instance).to receive(:native_progress) do |options|
                 expect(options[:without][:issues]).to eq [issue.digest]
             end
 
@@ -596,7 +596,7 @@ describe ScanScheduler::Helpers::Scan do
         end
 
         it 'includes errors' do
-            expect(instance.service).to receive(:native_progress) do |options|
+            expect(instance).to receive(:native_progress) do |options|
                 expect(options[:with]).to include :errors
             end
 
@@ -604,7 +604,7 @@ describe ScanScheduler::Helpers::Scan do
         end
 
         it 'includes sitemap entries' do
-            expect(instance.service).to receive(:native_progress) do |options|
+            expect(instance).to receive(:native_progress) do |options|
                 expect(options[:with]).to include :sitemap
             end
 
@@ -614,7 +614,7 @@ describe ScanScheduler::Helpers::Scan do
         it 'excludes issues from previous revisions' do
             Issue.create_from_engine( native_issue, revision: revision )
 
-            expect(instance.service).to receive(:native_progress) do |options|
+            expect(instance).to receive(:native_progress) do |options|
                 expect(options[:without][:issues]).to be_any
                 expect(options[:without][:issues]).to eq scan.issues.digests
             end
@@ -626,7 +626,7 @@ describe ScanScheduler::Helpers::Scan do
             progress = { busy: true }
 
             expect(subject).to receive(:handle_progress_active).with(revision, progress)
-            allow(instance.service).to receive(:native_progress) do |_, &block|
+            allow(instance).to receive(:native_progress) do |_, &block|
                 block.call progress
             end
 
@@ -635,7 +635,7 @@ describe ScanScheduler::Helpers::Scan do
 
         context 'subsequent calls' do
             it 'exclude seen sitemap entries' do
-                expect(instance.service).to receive(:native_progress) do |_, &block|
+                expect(instance).to receive(:native_progress) do |_, &block|
                     block.call(
                         busy:   true,
                         issues: [],
@@ -649,14 +649,14 @@ describe ScanScheduler::Helpers::Scan do
                 end
                 subject.update( revision ) {}
 
-                expect(instance.service).to receive(:native_progress) do |options|
+                expect(instance).to receive(:native_progress) do |options|
                     expect(options[:with][:sitemap]).to eq 2
                 end
                 subject.update( revision ) {}
             end
 
             it 'exclude seen errors' do
-                expect(instance.service).to receive(:native_progress) do |_, &block|
+                expect(instance).to receive(:native_progress) do |_, &block|
                     block.call(
                         busy:   true,
                         issues: [],
@@ -670,14 +670,14 @@ describe ScanScheduler::Helpers::Scan do
                 end
                 subject.update( revision ) {}
 
-                expect(instance.service).to receive(:native_progress) do |options|
+                expect(instance).to receive(:native_progress) do |options|
                     expect(options[:with][:errors]).to eq 2
                 end
                 subject.update( revision ) {}
             end
 
             it 'exclude seen issues' do
-                expect(instance.service).to receive(:native_progress) do |_, &block|
+                expect(instance).to receive(:native_progress) do |_, &block|
                     block.call(
                         busy:   true,
                         issues: [native_issue],
@@ -688,7 +688,7 @@ describe ScanScheduler::Helpers::Scan do
                 end
                 subject.update( revision ) {}
 
-                expect(instance.service).to receive(:native_progress) do |options|
+                expect(instance).to receive(:native_progress) do |options|
                     expect(options[:without][:issues]).to include native_issue.digest
                 end
                 subject.update( revision ) {}
@@ -1027,7 +1027,7 @@ describe ScanScheduler::Helpers::Scan do
         end
 
         before do
-            expect(instance.service).to receive(:native_abort_and_report) do |_, &block|
+            expect(instance).to receive(:native_abort_and_report) do |_, &block|
                 block.call report
             end
         end

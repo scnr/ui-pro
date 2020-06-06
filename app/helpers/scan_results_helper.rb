@@ -264,7 +264,7 @@ module ScanResultsHelper
     end
 
     def update_sitemap_data( data, issue )
-        data[issue.vector.action] ||= {
+        data[issue.input_vector.action] ||= {
             internal:     sitemap_entry_url( issue.sitemap_entry.digest ),
 
             # Issues are sorted by severity first, the first one will be the max.
@@ -274,10 +274,10 @@ module ScanResultsHelper
             seen:         Set.new
         }
 
-        return if data[issue.vector.action][:seen].include? issue.digest
-        data[issue.vector.action][:seen] << issue.digest
+        return if data[issue.input_vector.action][:seen].include? issue.digest
+        data[issue.input_vector.action][:seen] << issue.digest
 
-        data[issue.vector.action][:issue_count] += 1
+        data[issue.input_vector.action][:issue_count] += 1
     end
 
     def update_chart_data( data, issue )
@@ -348,7 +348,7 @@ module ScanResultsHelper
         }
 
         if ScanResults::SCAN_RESULT_ACTIONS.include?( params[:action].to_sym )
-            route[:action] = params[:action]
+             route[:action] = params.permit(:action)[:action]
         else
             route[:action] = options[:action] || 'issues'
         end
@@ -431,7 +431,7 @@ module ScanResultsHelper
         issues.
             includes( :scan ).
             includes( :type ).
-            includes( :vector ).
+            includes( :input_vector ).
             includes( :severity ).
             includes( :sitemap_entry ).
             includes( revision: { scan: [:profile] } ).

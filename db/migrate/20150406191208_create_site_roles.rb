@@ -1,4 +1,4 @@
-class CreateSiteRoles < ActiveRecord::Migration
+class CreateSiteRoles < ActiveRecord::Migration[5.1]
     def change
         create_table :site_roles do |t|
             t.belongs_to :site
@@ -17,7 +17,7 @@ class CreateSiteRoles < ActiveRecord::Migration
             t.string :login_type
 
             t.text   :login_form_url
-            t.text   :login_form_parameters
+            t.binary :login_form_parameters
 
             t.text   :login_script_code
 

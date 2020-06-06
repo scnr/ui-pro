@@ -77,31 +77,35 @@ feature 'Edit scan page' do
         expect(find('h1').text).to match scan.name
     end
 
-    scenario 'user can change the schedule' do
+    scenario 'user can set the schedule' do
         fill_in 'scan_name', with: name
         fill_in 'scan_description', with: description
         select site_role.name, from: 'scan_site_role_id'
         select profile.name, from: 'scan_profile_id'
         select user_agent.name, from: 'scan_user_agent_id'
 
-        select '2017', from: 'scan_schedule_attributes_start_at_1i'
-        select 'November', from: 'scan_schedule_attributes_start_at_2i'
-        select '15', from: 'scan_schedule_attributes_start_at_3i'
-        select '21', from: 'scan_schedule_attributes_start_at_4i'
-        select '50', from: 'scan_schedule_attributes_start_at_5i'
+        time = Time.now + 99999
+
+        select time.year, from: 'scan_schedule_attributes_start_at_1i'
+        select (time + 0.month).strftime("%B"), from: 'scan_schedule_attributes_start_at_2i'
+        select time.day, from: 'scan_schedule_attributes_start_at_3i'
+        select time.hour, from: 'scan_schedule_attributes_start_at_4i'
+        min = time.min.to_s
+        min = min.size < 2 ? "0#{min}" : min
+        select min, from: 'scan_schedule_attributes_start_at_5i'
 
         fill_in 'scan_schedule_attributes_stop_after_hours', with: 1.5
         select 10, from: 'scan_schedule_attributes_day_frequency'
         select 11, from: 'scan_schedule_attributes_month_frequency'
-        check 'Suspend instead of aborting'
 
+        check 'Suspend instead of aborting'
         select 'stop', from: 'scan_schedule_attributes_frequency_base'
 
         click_button 'Update'
 
         expect(page).to have_content 'Scan was successfully updated.'
 
-        scan = site.scans.last.reload
+        scan = site.scans.last
 
         expect(scan.name).to eq name
         expect(scan.description).to eq description
@@ -111,12 +115,12 @@ feature 'Edit scan page' do
 
         schedule = scan.schedule
 
-        expect(schedule.start_at.to_s).to eq '2017-11-15 21:50:00 UTC'
+        expect(schedule.start_at).to eq time.beginning_of_minute
         expect(schedule.stop_after_hours).to eq 1.5
         expect(schedule.day_frequency).to eq 10
         expect(schedule.month_frequency).to eq 11
-        expect(schedule.stop_suspend).to be_truthy
         expect(schedule.frequency_base).to eq 'stop'
+        expect(schedule.stop_suspend).to be_truthy
 
         expect(scan).to be_scheduled
     end

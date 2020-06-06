@@ -1,10 +1,10 @@
 class SitemapEntry < ActiveRecord::Base
-    belongs_to :site, counter_cache: true
-    belongs_to :scan, counter_cache: true
-    belongs_to :revision, counter_cache: true
+    belongs_to :site, counter_cache: true, optional: true
+    belongs_to :scan, counter_cache: true, optional: true
+    belongs_to :revision, counter_cache: true, optional: true
 
     has_many :issues
-    has_many :vectors
+    has_many :input_vectors
     has_many :pages, class_name: 'IssuePage', foreign_key: 'sitemap_entry_id'
 
     scope :coverage, -> do

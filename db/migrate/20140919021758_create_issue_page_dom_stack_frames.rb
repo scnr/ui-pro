@@ -1,4 +1,4 @@
-class CreateIssuePageDomStackFrames < ActiveRecord::Migration
+class CreateIssuePageDomStackFrames < ActiveRecord::Migration[5.1]
     def change
         create_table :issue_page_dom_stack_frames do |t|
             t.integer :line

@@ -51,7 +51,7 @@ feature 'Profile copy page', :devise do
             end
 
             scenario 'sees the profile form pre-filled' do
-                expect(find(:input, '#profile_name').value).to eq subject.name
+                expect(find('#profile_name').value).to eq subject.name
             end
 
             scenario 'creates a new profile', js: true do

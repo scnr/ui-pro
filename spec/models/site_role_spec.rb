@@ -378,9 +378,9 @@ EORUBY
                     subject.login_type = 'form'
                 end
 
-                it 'configures the autologin plugin' do
+                it 'configures the login_form plugin' do
                     expect(rpc_options).to eq ({
-                        'autologin' => {
+                        'login_form' => {
                             'url'        => subject.site.url,
                             'parameters' => 'username=joe&password=secret',
                             'check'      => 'logout.php'

@@ -59,14 +59,6 @@ function ace_editor( id ) {
     return editor;
 }
 
-function loading(){
-    $('#loading').show();
-}
-
-function loaded(){
-    $('#loading').hide();
-}
-
 function goTo( location ){
     // Restore the last open tab from the URL fragment.
     if( !location || location.length <= 0 ) return;
@@ -200,20 +192,15 @@ $(document).ready( function( $ ) {
     setup();
 });
 
-$(document).on( 'page:fetch', function( $ ) {
-    loading();
-});
-
-$(document).on( 'page:load', function( $ ) {
+$(document).on( 'turbolinks:load', function( $ ) {
     setup();
 });
 
 $(document).ajaxStop( function() {
-    loaded();
     setup();
 });
 
-$(window).bind( "page:restore", function () {
+$(window).bind( 'page:restore', function () {
     loaded();
     setup();
 });

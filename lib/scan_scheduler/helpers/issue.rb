@@ -133,8 +133,7 @@ module Issue
     private
 
     def updatable_data_for( issue )
-        @updatable_issue_data_per_digest[issue.digest] ||=
-            SCNR::Engine::Support::LookUp::Hash.new
+        @updatable_issue_data_per_digest[issue.digest] ||= ::Set.new
     end
 
     def update_updatable_data_for( revision, issue )

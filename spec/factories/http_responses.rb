@@ -1,5 +1,7 @@
 FactoryGirl.define do
     factory :http_response do
+        to_create { |instance| instance.save( validate: false ) }
+
         url 'http://test.com/stuff?pname=pvalue'
         code 404
         ip_address '127.0.0.2'

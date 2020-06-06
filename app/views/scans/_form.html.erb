@@ -34,13 +34,15 @@
             <%= f.association :profile,
                               disabled: @scan.revisions.any?,
                               collection: current_user.profiles,
-                              selected: current_user.profiles.default
+                              selected: @scan.profile ? @scan.profile.id :
+                                            current_user.profiles.default.try(:id)
             %>
 
             <%= f.association :user_agent,
                               disabled: @scan.revisions.any?,
                               collection: UserAgent.all,
-                              selected: UserAgent.default
+                              selected: @scan.user_agent ? @scan.user_agent.id :
+                                            UserAgent.default
             %>
         </div>
     </div>
@@ -59,7 +61,7 @@
                                  include_blank: true,
                                  start_year: Date.today.year,
                                  end_year: Date.today.year + 2,
-                                 default: Time.now,
+                                 selected: Time.now,
                                  hint: 'A time in the past will be replaced ' +
                                         'with now.'
                     %>

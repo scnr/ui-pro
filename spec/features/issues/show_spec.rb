@@ -32,7 +32,7 @@ feature 'Issue page' do
     let(:other_scan) { FactoryGirl.create :scan, site: site, profile: FactoryGirl.create(:profile) }
     let(:scan) { FactoryGirl.create :scan, site: site, profile: FactoryGirl.create(:profile) }
     let(:site) { FactoryGirl.create :site }
-    let(:vector) { issue.vector }
+    let(:input_vector) { issue.input_vector }
 
     def refresh
         visit site_scan_revision_issue_path( site, scan, revision, issue )
@@ -94,15 +94,15 @@ feature 'Issue page' do
                 end
 
                 scenario 'vector type' do
-                    expect(heading).to have_content issue.vector.kind
+                    expect(heading).to have_content issue.input_vector.kind
                 end
 
                 scenario 'affected input name' do
-                    expect(heading).to have_content issue.vector.affected_input_name
+                    expect(heading).to have_content issue.input_vector.affected_input_name
                 end
 
                 scenario 'vector action link' do
-                    expect(heading).to have_xpath "//a[@href='#{issue.vector.action}']"
+                    expect(heading).to have_xpath "//a[@href='#{issue.input_vector.action}']"
                 end
 
                 scenario 'preferring page link' do
@@ -276,42 +276,42 @@ feature 'Issue page' do
     end
 
     feature 'input vector' do
-        let(:input_vector) { find '#input_vector' }
+        let(:input_vector_div) { find '#input_vector' }
 
         feature 'when the input vector has no source' do
             before do
-                vector.source = nil
-                vector.save
+                input_vector.source = nil
+                input_vector.save
 
                 refresh
             end
 
             scenario 'it does not show it' do
-                expect(input_vector).to_not have_css '.source'
+                expect(input_vector_div).to_not have_css '.source'
             end
         end
 
         feature 'when the input vector has source' do
-            let(:source) { input_vector.find('.source') }
+            let(:source) { input_vector_div.find('.source') }
 
             before do
-                vector.source = '<form></form>'
-                vector.save
+                input_vector.source = '<form></form>'
+                input_vector.save
 
                 refresh
             end
 
             scenario 'it highlights it' do
                 expect(source).to have_css '.CodeRay'
-                expect(source).to have_content vector.source
+                expect(source).to have_content input_vector.source
             end
         end
 
         feature 'info' do
-            let(:info) { input_vector.find '.input_vector-info' }
+            let(:info) { input_vector_div.find '.input_vector-info' }
 
             scenario 'has vector type' do
-                expect(info).to have_content vector.kind
+                expect(info).to have_content input_vector.kind
             end
 
             feature 'when the issue is active' do
@@ -323,7 +323,7 @@ feature 'Issue page' do
                 end
 
                 scenario 'has HTTP method' do
-                    expect(info).to have_content vector.http_method
+                    expect(info).to have_content input_vector.http_method
                 end
             end
 
@@ -336,7 +336,7 @@ feature 'Issue page' do
                 end
 
                 scenario 'has HTTP method' do
-                    expect(info).to_not have_content vector.http_method
+                    expect(info).to_not have_content input_vector.http_method
                 end
             end
 
@@ -345,25 +345,25 @@ feature 'Issue page' do
             end
 
             scenario 'has vector action' do
-                expect(info).to have_xpath "//a[@href='#{vector.action}']"
+                expect(info).to have_xpath "//a[@href='#{input_vector.action}']"
             end
         end
 
         feature 'when it has inputs' do
             before do
-                vector.default_inputs = {
+                input_vector.default_inputs = {
                     'myname'  => 'my value',
                     'myname1' => 'my value2'
                 }
-                vector.save
+                input_vector.save
 
                 refresh
             end
 
-            let(:values) { input_vector.find '.input_vector-values .table-hash' }
+            let(:values) { input_vector_div.find '.input_vector-values .table-hash' }
 
             scenario 'it shows values' do
-                vector.default_inputs.each do |k, v|
+                input_vector.default_inputs.each do |k, v|
                     expect(values).to have_content k
                     expect(values).to have_content v
                 end
@@ -371,8 +371,8 @@ feature 'Issue page' do
 
             feature 'when the issue has an affected input name' do
                 before do
-                    vector.affected_input_name = 'myname'
-                    vector.save
+                    input_vector.affected_input_name = 'myname'
+                    input_vector.save
 
                     refresh
                 end
@@ -391,14 +391,14 @@ feature 'Issue page' do
 
         feature 'when it has no inputs' do
             before do
-                vector.default_inputs = {}
-                vector.save
+                input_vector.default_inputs = {}
+                input_vector.save
 
                 refresh
             end
 
             scenario 'it does not show values' do
-                expect(input_vector).to_not have_css '.input_vector-values'
+                expect(input_vector_div).to_not have_css '.input_vector-values'
             end
         end
     end
@@ -435,11 +435,11 @@ feature 'Issue page' do
 
             feature 'and has inputs' do
                 before do
-                    vector.inputs = {
+                    input_vector.inputs = {
                         'myname'  => 'my value',
                         'myname1' => 'my value2'
                     }
-                    vector.save
+                    input_vector.save
 
                     refresh
                 end
@@ -447,7 +447,7 @@ feature 'Issue page' do
                 let(:values){ reproduction.find( '#reproduction-inputs .table-hash' ) }
 
                 scenario 'it shows values' do
-                    vector.inputs.each do |k, v|
+                    input_vector.inputs.each do |k, v|
                         expect(values).to have_content k
                         expect(values).to have_content v
                     end
@@ -455,8 +455,8 @@ feature 'Issue page' do
 
                 feature 'when the issue has an affected input name' do
                     before do
-                        vector.affected_input_name = 'myname'
-                        vector.save
+                        input_vector.affected_input_name = 'myname'
+                        input_vector.save
 
                         refresh
                     end
@@ -475,8 +475,8 @@ feature 'Issue page' do
 
             feature 'and has no inputs' do
                 before do
-                    vector.inputs = {}
-                    vector.save
+                    input_vector.inputs = {}
+                    input_vector.save
 
                     refresh
                 end
@@ -527,16 +527,16 @@ feature 'Issue page' do
             end
 
             feature 'when a transition has option' do
-                scenario ':url' do
+                scenario 'url' do
                     transition = dom_transitions[0]
                     row        = transitions.find( '.table-transitions > tbody > tr:nth-of-type(1)' )
                     options    = row.find( 'table.table-transition-options > tr:nth-of-type(1)' )
 
                     expect(options.find('th')).to have_content 'URL'
-                    expect(options.find('td')).to have_content transition.options[:url]
+                    expect(options.find('td')).to have_content transition.options['url']
                 end
 
-                scenario ':cookies' do
+                scenario 'cookies' do
                     transition = dom_transitions[0]
                     row        = transitions.find( '.table-transitions > tbody > tr:nth-of-type(1)' )
                     options    = row.find( 'table.table-transition-options' )
@@ -545,22 +545,22 @@ feature 'Issue page' do
 
                     cookies_table = options.find('tr:nth-of-type(3) td table')
 
-                    transition.options[:cookies].each do |k, v|
+                    transition.options['cookies'].each do |k, v|
                         expect(cookies_table).to have_content k
                         expect(cookies_table).to have_content v
                     end
                 end
 
-                scenario ':input' do
+                scenario 'value' do
                     transition = dom_transitions[2]
                     row        = transitions.find( '.table-transitions > tbody > tr:nth-of-type(2)' )
                     options    = row.find( 'table.table-transition-options > tr:nth-of-type(1)' )
 
                     expect(options.find('th')).to have_content 'Value'
-                    expect(options.find('td')).to have_content transition.options[:value]
+                    expect(options.find('td')).to have_content transition.options['value'].strip
                 end
 
-                scenario ':inputs' do
+                scenario 'inputs' do
                     transition = dom_transitions[3]
                     row        = transitions.find( '.table-transitions > tbody > tr:nth-of-type(3)' )
                     options    = row.find( 'table.table-transition-options' )
@@ -569,9 +569,9 @@ feature 'Issue page' do
 
                     inputs_table = options.find('tr:nth-of-type(2) td table')
 
-                    transition.options[:inputs].each do |k, v|
-                        expect(inputs_table).to have_content k
-                        expect(inputs_table).to have_content v
+                    transition.options['inputs'].each do |k, v|
+                        expect(inputs_table).to have_content k.strip
+                        expect(inputs_table).to have_content v.strip
                     end
                 end
             end
@@ -589,8 +589,8 @@ feature 'Issue page' do
                 issue.page.request.raw = 'stuff goes here'
                 issue.page.request.save
 
-                issue.vector.seed = nil
-                issue.vector.save
+                issue.input_vector.seed = nil
+                issue.input_vector.save
 
                 refresh
             end
@@ -607,14 +607,14 @@ feature 'Issue page' do
 
             feature 'when the request includes the seed' do
                 before do
-                    issue.vector.seed = 'goes'
-                    issue.vector.save
+                    issue.input_vector.seed = 'goes'
+                    issue.input_vector.save
 
                     refresh
                 end
 
                 scenario 'it highlights it' do
-                    expect(request.find('.highlight')).to have_content issue.vector.seed
+                    expect(request.find('.highlight')).to have_content issue.input_vector.seed
                 end
             end
         end
@@ -945,14 +945,14 @@ feature 'Issue page' do
 
                     feature 'when it includes the vector seed' do
                         before do
-                            issue.vector.seed = 'stuff'
-                            issue.vector.save
+                            issue.input_vector.seed = 'stuff'
+                            issue.input_vector.save
 
                             refresh
                         end
 
                         scenario 'it highlights it' do
-                            expect(request.find('.highlight')).to have_content issue.vector.seed
+                            expect(request.find('.highlight')).to have_content issue.input_vector.seed
                         end
                     end
                 end
@@ -1044,11 +1044,11 @@ EOHTML
                             end
 
                             scenario 'it displays the response body' do
-                                expect(initial).to have_content issue.page.response.body
+                                expect(initial.native.to_s.gsub( /\s/, '')).to have_content issue.page.response.body.gsub( /\s/, '')
                             end
 
                             scenario 'it displays the page DOM body' do
-                                expect(final).to have_content issue.page.dom.body
+                                expect(final.native.to_s.gsub( /\s/, '')).to have_content issue.page.dom.body.gsub( /\s/, '')
                             end
 
                             scenario 'it displays a diff' do

@@ -1,4 +1,4 @@
-class CreateSitesUsers < ActiveRecord::Migration
+class CreateSitesUsers < ActiveRecord::Migration[5.1]
     def change
         create_table :sites_users, id: false do |t|
             t.references :site
@@ -6,6 +6,5 @@ class CreateSitesUsers < ActiveRecord::Migration
         end
 
         add_index :sites_users, [:site_id, :user_id]
-        add_index :sites_users, :user_id
     end
 end

@@ -1,7 +1,9 @@
 class IssuePageDomTransition < ActiveRecord::Base
-    serialize :options, Hash
+    serialize :options, CustomSerializer # Hash
 
-    belongs_to :dom, class_name: 'IssuePageDom', foreign_key: 'issue_page_dom_id'
+    belongs_to :dom, class_name: 'IssuePageDom',
+               foreign_key: 'issue_page_dom_id',
+               optional: true
 
     def event
         super.to_sym

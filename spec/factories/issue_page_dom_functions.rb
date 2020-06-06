@@ -1,5 +1,7 @@
 FactoryGirl.define do
     factory :issue_page_dom_function do
+        to_create { |instance| instance.save( validate: false ) }
+
         source "function decodeURI() {
     [native code]
 }"

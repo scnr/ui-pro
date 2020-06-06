@@ -13,7 +13,7 @@ class Site < ActiveRecord::Base
 
     enum protocol: [ :http, :https ]
 
-    belongs_to :user
+    belongs_to :user, optional: true
     has_and_belongs_to_many :users
 
     has_one :profile, autosave: true, dependent: :destroy,

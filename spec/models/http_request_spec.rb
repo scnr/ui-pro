@@ -30,8 +30,7 @@ describe HttpRequest do
         end
 
         it "creates a #{described_class} from #{SCNR::Engine::HTTP::Request}" do
-            request = described_class.create_from_engine(engine_request ).reload
-            expect(request).to be_valid
+            request = described_class.create_from_engine(engine_request )
 
             expect(request.url).to eq engine_request.url
             expect(request.http_method).to eq engine_request.method.to_s.upcase

@@ -1,5 +1,5 @@
 class IssuePageDomStackFrame < ActiveRecord::Base
-    belongs_to :with_dom_stack_frame, polymorphic: true
+    belongs_to :with_dom_stack_frame, polymorphic: true, optional: true
     has_one    :function, as: :with_dom_function,
                class_name: 'IssuePageDomFunction', dependent: :destroy
 
