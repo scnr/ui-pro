@@ -328,15 +328,19 @@ module Scan
 
         progress_tracking_for( revision )[:error_lines] += progress[:errors].size
 
-        # Add a newline at the end if we have any errors.
-        if progress[:errors].any?
-            progress[:errors] << ''
+        update = {}
+        if revision.status != progress[:status].to_s
+            update[:status] = progress[:status]
         end
 
-        revision.update(
-            status:         progress[:status],
-            error_messages: "#{revision.error_messages}#{progress[:errors].join( "\n" )}"
-        )
+        # Add a newline at the end if we have any errors.
+        if progress[:errors].any?
+            update[:error_messages] = "#{revision.error_messages}#{progress[:errors].join( "\n" )}\n"
+        end
+
+        return if update.empty?
+
+        revision.update( update )
     end
 
     def handle_progress_inactive( revision, progress )
@@ -424,7 +428,7 @@ module Scan
 
             finish( revision )
 
-            if status
+            if status && revision.status != status
                 revision.status = status
                 revision.save
 
