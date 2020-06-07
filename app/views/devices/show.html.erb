@@ -1,0 +1,28 @@
+<%
+   title @device.name
+   breadcrumb_add 'Devices', devices_path
+%>
+
+<% add_to_sidebar do %>
+    <%= render partial: 'sidebar', locals: { submit: false } %>
+<% end %>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="page-header">
+            <h1>
+                <%= @device.name %>
+            </h1>
+
+            <div class="lead">
+                <%= @device.device_user_agent %>
+
+                <br/>
+                <small>
+                    <%= @device.device_width %>x<%= @device.device_height %>
+                    <%= @device.device_touch ? 'touch interface.' : nil %>
+                </small>
+            </div>
+        </div>
+    </div>
+</div>

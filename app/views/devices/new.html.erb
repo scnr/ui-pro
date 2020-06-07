@@ -1,0 +1,16 @@
+<%
+   title params[:action].capitalize
+   breadcrumb_add 'Devices', devices_path
+
+   if params[:action] == 'copy'
+       breadcrumb_add @device.name, device_path( params[:id] )
+   end
+%>
+
+<% add_to_sidebar do %>
+    <%= render partial: 'sidebar', locals: { submit: true } %>
+<% end %>
+
+<h1>New device</h1>
+
+<%= render 'form' %>

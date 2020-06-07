@@ -74,7 +74,7 @@ http_request_redirect_limit: 'Limits the amount of total redirects to be followe
 http_response_max_size:
     description: 'Maximum size of acceptable remote resources (in bytes).'
     notice: 'Large responses (in the MB range) can greatly increase memory consumption, you can use this option as a safeguard.'
-http_user_agent: 'User-agent string to be used for browser identification.'
+device_user_agent: 'User-agent string to be used for browser identification.'
 http_request_timeout: 'HTTP request timeout (in milliseconds).'
 
 session_check_pattern: >
@@ -97,7 +97,7 @@ browser_cluster_ignore_images:
     If images don't play a part in the functionality of the web application it's
     better to enable this option. Doing so will result in a faster scan and
     less bandwidth usage.
-browser_cluster_screen_width: ''
-browser_cluster_screen_height: ''
+device_width: ''
+device_height: ''
 
 max_parallel_scans: 'Maximum number of active scans at any given time.'

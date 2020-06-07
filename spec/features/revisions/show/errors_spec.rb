@@ -125,7 +125,7 @@ RAILS_ENV: development
 OPTIONS:
 ---
 http:
-  user_agent: Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0
+  device_user_agent: Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0
   request_timeout: 10000
   request_redirect_limit: 5
   request_concurrency: 20
@@ -166,8 +166,8 @@ browser_cluster:
   job_timeout: 25
   worker_time_to_live: 100
   ignore_images: false
-  screen_width: 1200
-  screen_height: 1600
+  device_width: 1200
+  device_height: 1600
 scope:
   redundant_path_patterns: {}
   dom_depth_limit: 5

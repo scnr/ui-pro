@@ -1,0 +1,66 @@
+<table id="table" class="table table-hover table-striped table-condensed">
+    <thead>
+    <tr>
+        <th>Default</th>
+        <th>Name</th>
+        <th>Identification</th>
+        <th>Resolution</th>
+        <th>Touch interface</th>
+        <th>Scans</th>
+        <th></th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <% @devices.each do |device| %>
+        <tr>
+            <td>
+                <%= simple_form_for device,
+                                    url: default_device_path( device ),
+                                    method: :patch, remote: true,
+                                    html: { onsubmit: 'loading();' } do %>
+                    <input type="radio"
+                           class="make-default"
+                           onclick="$(this).submit()"
+                           name="id_<%= device.id %>"
+                           id="id_<%= device.id %>"
+                           autocomplete="off"
+                           <%= 'checked="checked"'.html_safe if device.default? %>
+                           <%= 'disabled' if device.default? %>
+                    >
+                <% end %>
+            </td>
+
+            <td>
+                <%= link_to device.name, device %>
+            </td>
+
+            <td>
+                <%= device.device_user_agent %>
+            </td>
+
+            <td>
+                <%= device.device_width %>x<%= device.device_height %>
+            </td>
+
+            <td>
+              <input type="checkbox"
+                     name="id_<%= device.id %>"
+                     id="id_<%= device.id %>"
+                     autocomplete="off"
+                     <%= 'checked="checked"'.html_safe if device.device_touch %>
+                     disabled
+              >
+            </td>
+
+            <td>
+                <%= device.scans.size %>
+            </td>
+
+            <td>
+                <%= render 'actions', device: device %>
+            </td>
+        </tr>
+    <% end %>
+    </tbody>
+</table>

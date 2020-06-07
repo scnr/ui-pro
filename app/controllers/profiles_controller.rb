@@ -84,7 +84,7 @@ class ProfilesController < ApplicationController
 
         raise ActionController::RoutingError.new( 'Profile not found.' ) if !@profile
 
-        @scans = @profile.scans.includes(:schedule).includes(:user_agent).
+        @scans = @profile.scans.includes(:schedule).includes(:device).
             includes(:site_role).includes(:profile).includes(:revisions)
     end
 

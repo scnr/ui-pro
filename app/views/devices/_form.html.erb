@@ -1,0 +1,69 @@
+<%= simple_form_for @device, html: { class: 'device-form' } do |f| %>
+    <%= f.error_notification %>
+
+    <% if @device.scans.any? %>
+        <div class="row">
+            <div class="col-md-12">
+                <h2>
+                    <%= @device.scans.size %> associated
+                    <%= 'scan'.pluralize @device.scans.size %>
+                </h2>
+
+                <ol>
+                    <% @device.scans.each do |scan| %>
+                        <li>
+                            <%= link_to scan.name, [scan.site, scan] %> of
+                            <%= link_to scan.site, scan.site %>
+                        </li>
+                    <% end %>
+                </ol>
+            </div>
+        </div>
+    <% end %>
+
+    <div class="row">
+        <div class="col-md-6">
+            <%= f.input :name %>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <%= f.input :device_user_agent, as: :string,
+                        label: 'Identification string'
+            %>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <%= f.input :device_width,
+                        label: 'Screen width'
+            %>
+        </div>
+        <div class="col-md-6">
+            <%= messages_for( :device_width ) %>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <%= f.input :device_height,
+                        label: 'Screen height'
+            %>
+        </div>
+        <div class="col-md-6">
+            <%= messages_for( :device_height ) %>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+          <%= f.input :device_touch,
+                  label: 'Touch interface'
+          %>
+        </div>
+        <div class="col-md-6">
+            <%= messages_for( :device_height ) %>
+        </div>
+    </div>
+
+<% end %>

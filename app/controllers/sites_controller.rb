@@ -106,7 +106,7 @@ class SitesController < ApplicationController
     end
 
     def set_scans
-        @scans = @site.scans.includes(:schedule).includes(:user_agent).
+        @scans = @site.scans.includes(:schedule).includes(:device).
             includes(:site_role).includes(:profile).includes(:revisions)
 
         prepare_site_sidebar_data

@@ -1,0 +1,15 @@
+<%
+   title 'Edit'
+   breadcrumb_add 'Devices', devices_path
+   breadcrumb_add @device, device_path( @device )
+%>
+
+<% add_to_sidebar do %>
+    <%= render partial: 'sidebar', locals: { submit: true } %>
+<% end %>
+
+<h1>
+    Editing <%= link_to @device, device_path(@device) %> device
+</h1>
+
+<%= render 'form' %>

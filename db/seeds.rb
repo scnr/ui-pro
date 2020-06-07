@@ -72,32 +72,40 @@ p = Profile.create! engine_defaults.merge(
     )
 puts 'Client-side profile created: ' << p.name
 
-firefox_ua = UserAgent.create(
-    name:                          'Firefox 36.0',
-    http_user_agent:               'Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0',
-    browser_cluster_screen_width:  1200,
-    browser_cluster_screen_height: 1600
+firefox_ua = Device.create(
+    name:          'Firefox 36.0',
+    device_user_agent:    'Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0',
+    device_width:  1200,
+    device_height: 1600,
+    device_touch:  false,
+    device_pixel_ratio:   1.0
 )
 
-ie_ua = UserAgent.create(
-    name:                          'Internet Explorer 11.0',
-    http_user_agent:               'Mozilla/5.0 (compatible, MSIE 11, Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko',
-    browser_cluster_screen_width:  1200,
-    browser_cluster_screen_height: 1600
+ie_ua = Device.create(
+    name:          'Internet Explorer 11.0',
+    device_user_agent:    'Mozilla/5.0 (compatible, MSIE 11, Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko',
+    device_width:  1200,
+    device_height: 1600,
+    device_touch:  false,
+    device_pixel_ratio:   1.0
 )
 
-ipad_ua = UserAgent.create(
-    name:                          'iPad (portrait)',
-    http_user_agent:               'Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10',
-    browser_cluster_screen_width:  768,
-    browser_cluster_screen_height: 1024
+ipad_ua = Device.create(
+    name:          'iPad (portrait)',
+    device_user_agent:    'Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10',
+    device_width:  768,
+    device_height: 1024,
+    device_touch:  true,
+    device_pixel_ratio:   1.0
 )
 
-iphone_ua = UserAgent.create(
-    name:                          'iPhone (portrait)',
-    http_user_agent:               'Mozilla/5.0 (iPhone; CPU iPhone OS 6_1_4 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10B350 Safari/8536.25',
-    browser_cluster_screen_width:  320,
-    browser_cluster_screen_height: 480
+iphone_ua = Device.create(
+    name:          'iPhone (portrait)',
+    device_user_agent:    'Mozilla/5.0 (iPhone; CPU iPhone OS 6_1_4 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10B350 Safari/8536.25',
+    device_width:  320,
+    device_height: 480,
+    device_touch:  true,
+    device_pixel_ratio:   1.0
 )
 
 puts 'Creating platforms'
@@ -160,7 +168,7 @@ end
 # site.scans.create(
 #     profile:             all_checks_profile,
 #     site_role:           site.roles.first,
-#     user_agent:          user_agent,
+#     device_user_agent:          device_user_agent,
 #     name:                site.url,
 #     schedule_attributes: {
 #         start_at: Time.now
@@ -181,7 +189,7 @@ end
 # site.scans.create(
 #     profile:             all_checks_profile,
 #     site_role:           site.roles.first,
-#     user_agent:          user_agent,
+#     device_user_agent:          device_user_agent,
 #     name:                site.url,
 #     schedule_attributes: {
 #         start_at: Time.now
@@ -256,7 +264,7 @@ sites.each.with_index do |afr, si|
         site.scans.create(
             profile:             p,
             site_role:           site.roles[i % site.roles.size],
-            user_agent:          user_agent,
+            device:               device,
             name:                "my scheduled scan #{scan_id}",
             schedule_attributes: {
                 start_at: Time.now + 3600
@@ -266,7 +274,7 @@ sites.each.with_index do |afr, si|
         site.scans.create(
             profile:             p,
             site_role:           site.roles[i % site.roles.size],
-            user_agent:          user_agent,
+            device:              device,
             name:                "my scheduled scan #{scan_id}",
             schedule_attributes: {
                 day_frequency:   10,
@@ -277,7 +285,7 @@ sites.each.with_index do |afr, si|
         site.scans.create(
             profile:             p,
             site_role:           site.roles[i % site.roles.size],
-            user_agent:          user_agent,
+            device:              device,
             name:                "my scheduled scan #{scan_id}",
             schedule_attributes: {
                 day_frequency:    1,
@@ -288,7 +296,7 @@ sites.each.with_index do |afr, si|
         site.scans.create(
             profile:             p,
             site_role:           site.roles[i % site.roles.size],
-            user_agent:          user_agent,
+            device:              device,
             name:                "my scheduled scan #{scan_id}",
             schedule_attributes: {
                 start_at:         Time.now + 3600,
@@ -301,7 +309,7 @@ sites.each.with_index do |afr, si|
         s = site.scans.create(
             profile:             p,
             site_role:           site.roles[i % site.roles.size],
-            user_agent:          user_agent,
+            device:              device,
             name:                "my scheduled scan #{scan_id}",
             schedule_attributes: {
                 day_frequency:    1,
@@ -321,7 +329,7 @@ sites.each.with_index do |afr, si|
         scan = site.scans.create(
             profile:     p,
             site_role:   site.roles[i % site.roles.size],
-            user_agent:  user_agent,
+            device:      device,
             name:        "my scan #{scan_id}",
             description: 'my description'
         )

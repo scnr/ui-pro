@@ -132,13 +132,13 @@ class ScansController < ApplicationController
 
         raise ActionController::RoutingError.new( 'Site not found.' ) if !@site
 
-        @scans = @site.scans.includes(:schedule).includes(:user_agent).
+        @scans = @site.scans.includes(:schedule).includes(:device).
             includes(:site_role).includes(:profile).includes(:revisions)
     end
 
     # Use callbacks to share common setup or constraints between actions.
     def set_scan
-        @scan = @site.scans.includes(:schedule).includes(:user_agent).
+        @scan = @site.scans.includes(:schedule).includes(:device).
             includes(:site_role).includes(:profile).includes(:revisions).
             find( params[:id] )
 
@@ -167,7 +167,7 @@ class ScansController < ApplicationController
             :path,
             :site_role_id,
             :profile_id,
-            :user_agent_id,
+            :device_id,
             :site_id,
             :id,
             :mark_missing_issues_fixed,

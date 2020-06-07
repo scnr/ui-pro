@@ -5,7 +5,7 @@
 form.scan-form {
 
     label {
-        padding-right: 10px
+        padding-right: 10px;
     }
 
     input.boolean {
@@ -20,7 +20,7 @@ form.scan-form {
     .scan_path, #scan_path,
     .scan_site_role, #scan_site_role_id,
     .scan_profile, #scan_profile_id,
-    .scan_user_agent, #scan_user_agent_id,
+    .scan_device, #scan_device_id,
     .scan_description, #scan_description {
         width: 100%;
     }
@@ -30,23 +30,23 @@ form.scan-form {
     }
 
     #scan_schedule_attributes_start_at_1i {
-        width: 100px
+        width: 100px;
     }
 
     #scan_schedule_attributes_start_at_2i {
-        width: 100px
+        width: 100px;
     }
 
     #scan_schedule_attributes_start_at_3i {
-        width: 100px
+        width: 100px;
     }
 
     #scan_schedule_attributes_start_at_4i {
-        width: 100px
+        width: 100px;
     }
 
     #scan_schedule_attributes_start_at_5i {
-        width: 100px
+        width: 100px;
     }
 
     #scan_schedule_attributes_stop_after_hours {
@@ -60,7 +60,7 @@ form.scan-form {
 }
 
 #scan-info {
-    padding-bottom: 10px
+    padding-bottom: 10px;
 }
 
 #scan-data {

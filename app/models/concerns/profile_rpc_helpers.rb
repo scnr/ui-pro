@@ -67,9 +67,11 @@ module ProfileRpcHelpers
         :session_check_pattern,
         :session_check_url,
 
-        :device_screen_height,
-        :device_screen_width,
-        :device_user_agent
+        :device_height,
+        :device_width,
+        :device_user_agent,
+        :device_touch,
+        :device_pixel_ratio
     ]
 
     module ClassMethods

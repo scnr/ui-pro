@@ -1,0 +1,20 @@
+<% if submit %>
+    <button class="btn btn-default btn-primary"
+            onclick="$('.device-form').submit()">
+
+        <%= @device.id ? 'Update' : 'Create' %>
+    </button>
+<% else %>
+    <%= render 'actions', device: @device %>
+<% end %>
+
+<hr/>
+
+<% if @device %>
+    <%= render partial: 'shared/sidebar_scans',
+               locals: {
+                       scans:      @scans,
+                       with_site:  true,
+                       with_count: true
+               } %>
+<% end %>

@@ -8,7 +8,7 @@ class Scan < ActiveRecord::Base
     belongs_to :site, counter_cache: true, optional: true
     belongs_to :site_role, optional: true
     belongs_to :profile, optional: true
-    belongs_to :user_agent, optional: true
+    belongs_to :device, optional: true
 
     has_one :schedule, autosave: true, dependent: :destroy
     accepts_nested_attributes_for :schedule, update_only: true
@@ -26,7 +26,7 @@ class Scan < ActiveRecord::Base
     validates_presence_of   :site
     validates_presence_of   :site_role
     validates_presence_of   :profile
-    validates_presence_of   :user_agent
+    validates_presence_of   :device
 
     # All scans should start with a schedule, which should be destroyed just
     # before they run.
@@ -96,7 +96,7 @@ class Scan < ActiveRecord::Base
             profile_rpc_options['scope'].delete( 'exclude_content_patterns' ) || []
 
         options.deep_merge!( profile_rpc_options )
-        options.deep_merge!( user_agent.to_rpc_options )
+        options.deep_merge!( device.to_rpc_options )
         options.deep_merge!( Settings.to_rpc_options )
 
         site_role_rpc_options = site_role.to_rpc_options
