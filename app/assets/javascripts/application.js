@@ -196,11 +196,16 @@ $(window).bind( 'hashchange', function () {
     openFromWindowLocation();
 });
 
-$(document).ready( function( $ ) {
-    setup();
+$(document).on( 'turbolinks:before-visit', function() {
+    loading();
+});
+
+$(document).ajaxStart( function() {
+    loading();
 });
 
 $(document).on( 'turbolinks:load', function( $ ) {
+    loaded();
     setup();
 });
 
@@ -209,7 +214,6 @@ $(document).ajaxStop( function() {
     setup();
 });
 
-$(window).bind( 'page:restore', function () {
-    loaded();
+$(document).ready( function( $ ) {
     setup();
 });
