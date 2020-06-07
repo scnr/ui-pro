@@ -1,10 +1,11 @@
 class Revision < ActiveRecord::Base
+    include WithCustomSerializer
     include WithEvents
     include RevisionStates
 
-    has_paper_trail track: %w(status timed_out)
+    events track: %w(status timed_out)
 
-    serialize :rpc_options, CustomSerializer # Hash
+    custom_serialize :rpc_options, Hash
 
     has_one  :performance_snapshot, dependent: :destroy,
              foreign_key: 'revision_current_id'
@@ -26,8 +27,6 @@ class Revision < ActiveRecord::Base
     has_many :performance_snapshots, -> { order id: :asc }, dependent: :destroy
 
     validates_presence_of :scan
-
-    after_initialize :ensure_rpc_options
 
     before_create :ensure_performance_snapshot
 
@@ -122,10 +121,6 @@ class Revision < ActiveRecord::Base
 
     def ensure_performance_snapshot
         self.performance_snapshot ||= build_performance_snapshot
-    end
-
-    def ensure_rpc_options
-        self.rpc_options ||= {}
     end
 
 end

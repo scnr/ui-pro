@@ -1,4 +1,6 @@
 class IssuePageDomExecutionFlowSink < ActiveRecord::Base
+    include WithCustomSerializer
+
     belongs_to :dom, class_name: 'IssuePageDom',
                foreign_key: 'issue_page_dom_id',
                optional: true
@@ -6,7 +8,7 @@ class IssuePageDomExecutionFlowSink < ActiveRecord::Base
     has_many :stackframes, as: :with_dom_stack_frame,
              class_name: 'IssuePageDomStackFrame', dependent: :destroy
 
-    serialize :data, CustomSerializer # Array
+    custom_serialize :data, Array
 
     def self.create_from_engine( sink )
         create(

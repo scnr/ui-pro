@@ -1,8 +1,10 @@
 class InputVector < ActiveRecord::Base
+    include WithCustomSerializer
+
     belongs_to :sitemap_entry, counter_cache: true, optional: true
 
-    serialize :inputs,         CustomSerializer # Hash
-    serialize :default_inputs, CustomSerializer # Hash
+    custom_serialize :inputs,         Hash
+    custom_serialize :default_inputs, Hash
 
     def kind
         super.to_sym

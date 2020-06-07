@@ -2,7 +2,7 @@ class Scan < ActiveRecord::Base
     include WithEvents
     include ScanStates
 
-    has_paper_trail ignore: [:status],
+    events ignore: [:status],
                     track: %w(name description status timed_out)
 
     belongs_to :site, counter_cache: true, optional: true

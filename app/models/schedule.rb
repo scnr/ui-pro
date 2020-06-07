@@ -21,7 +21,7 @@ class Schedule < ActiveRecord::Base
     FREQUENCY_BASES   = %w(start stop)
     FREQUENCY_FORMATS = %w(simple cron)
 
-    has_paper_trail skip: [:created_at, :updated_at]
+    events skip: [:created_at, :updated_at]
 
     belongs_to :scan, optional: true
 

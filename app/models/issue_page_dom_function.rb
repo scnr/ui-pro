@@ -1,7 +1,9 @@
 class IssuePageDomFunction < ActiveRecord::Base
+    include WithCustomSerializer
+
     belongs_to :with_dom_function, polymorphic: true, optional: true
 
-    serialize :arguments, CustomSerializer # Array
+    custom_serialize :arguments, Array
 
     def signature_arguments
         return [] if !signature

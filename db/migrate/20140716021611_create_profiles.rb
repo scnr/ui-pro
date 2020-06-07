@@ -7,8 +7,8 @@ class CreateProfiles < ActiveRecord::Migration[5.1]
             t.string   "name"
             t.text     "description"
 
-            t.text     "checks"
-            t.text     "plugins"
+            t.binary     "checks"
+            t.binary     "plugins"
 
             t.boolean  "audit_links"
             t.boolean  "audit_forms"
@@ -22,15 +22,15 @@ class CreateProfiles < ActiveRecord::Migration[5.1]
             t.boolean  "audit_parameter_names"
             t.boolean  "audit_with_extra_parameter"
             t.boolean  "audit_with_both_http_methods"
-            t.text     "audit_exclude_vector_patterns"
-            t.text     "audit_include_vector_patterns"
+            t.binary     "audit_exclude_vector_patterns"
+            t.binary     "audit_include_vector_patterns"
 
             t.integer  "scope_page_limit"
-            t.text     "scope_exclude_path_patterns"
-            t.text     "scope_exclude_content_patterns"
+            t.binary     "scope_exclude_path_patterns"
+            t.binary     "scope_exclude_content_patterns"
             t.boolean  "scope_exclude_binaries"
-            t.text     "scope_include_path_patterns"
-            t.text     "scope_restrict_paths"
+            t.binary     "scope_include_path_patterns"
+            t.binary     "scope_restrict_paths"
             t.integer  "scope_dom_depth_limit"
             t.integer  "scope_directory_depth_limit"
 

@@ -4,7 +4,7 @@ class Site < ActiveRecord::Base
     PROTOCOL_TYPES = %w(http https)
     FAVICONS_DIR   = "#{Rails.root}/public/site_favicons/"
 
-    has_paper_trail track: %w(max_parallel_scans)
+    events track: %w(max_parallel_scans)
     children_events do
         {
             Schedule => scans.select(:id)

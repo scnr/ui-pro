@@ -5,13 +5,13 @@ module WithEvents
 
     module ClassMethods
 
-        def has_paper_trail( options = {} )
+        def events( options = {} )
             options[:skip] ||= []
             if (track = options[:track])
                 options[:skip] |= column_names.select { |k| !track.include? k }
             end
 
-            super options.merge(
+            has_paper_trail options.merge(
                  meta: {
                      site_id:     :event_site_id,
                      scan_id:     :event_scan_id,

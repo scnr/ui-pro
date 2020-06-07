@@ -1,9 +1,10 @@
 class Setting < ActiveRecord::Base
+    include WithCustomSerializer
     include WithEvents
     include ProfileRpcHelpers
     include ProfileAttributes
 
-    has_paper_trail
+    events
 
     validates :max_parallel_scans, numericality: { greater_than: 0 },
               allow_nil: true

@@ -1,4 +1,5 @@
 class Device < ActiveRecord::Base
+    include WithCustomSerializer
     include WithEvents
     include ProfileRpcHelpers
     include ProfileAttributes
@@ -6,7 +7,7 @@ class Device < ActiveRecord::Base
     include ProfileExport
     include ProfileDefaultHelpers
 
-    has_paper_trail
+    events
 
     has_many :scans, -> { order id: :desc }
     has_many :revisions, through: :scans

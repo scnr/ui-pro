@@ -12,7 +12,7 @@ class CreateSiteRoles < ActiveRecord::Migration[5.1]
             t.text   :session_check_url
             t.text   :session_check_pattern
 
-            t.text   :scope_exclude_path_patterns
+            t.binary   :scope_exclude_path_patterns
 
             t.string :login_type
 

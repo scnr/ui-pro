@@ -71,7 +71,7 @@ module ProfileAttributes
         }.each do |attr, type|
             next if !has_option?( attr )
 
-            serialize attr, type
+            custom_serialize attr, type
         end
 
         %w(scope_restrict_paths scope_extend_paths).each do |m|

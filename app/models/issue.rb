@@ -4,7 +4,7 @@ class Issue < ActiveRecord::Base
     DEFAULT_STATES = 'trusted'
     STATES         = %w(trusted untrusted false_positive fixed)
 
-    has_paper_trail track: %w(state)
+    events track: %w(state)
 
     belongs_to :revision, counter_cache: true, optional: true
     belongs_to :reviewed_by_revision, class_name: 'Revision',

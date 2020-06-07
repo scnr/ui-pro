@@ -1,4 +1,5 @@
 class Profile < ActiveRecord::Base
+    include WithCustomSerializer
     include WithEvents
     include ProfileRpcHelpers
     include ProfileAttributes
@@ -6,7 +7,7 @@ class Profile < ActiveRecord::Base
     include ProfileExport
     include ProfileDefaultHelpers
 
-    has_paper_trail
+    events
 
     belongs_to :user
     has_many   :scans, -> { order id: :desc }

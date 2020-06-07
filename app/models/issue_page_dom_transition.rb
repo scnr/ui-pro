@@ -1,5 +1,7 @@
 class IssuePageDomTransition < ActiveRecord::Base
-    serialize :options, CustomSerializer # Hash
+    include WithCustomSerializer
+
+    custom_serialize :options, Hash
 
     belongs_to :dom, class_name: 'IssuePageDom',
                foreign_key: 'issue_page_dom_id',
