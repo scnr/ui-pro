@@ -11,11 +11,13 @@
  * file per style scope.
  *
  *= require font-kit-rails/open-sans
- *= require font-awesome
  *= require c3
  *= require_tree .
  *= require_self
  */
+
+@import "font-awesome-sprockets";
+@import "font-awesome";
 
 .fa .badge, .c3 .tick, .c3-legend-item {
     font-family: "Open Sans", sans-serif;
