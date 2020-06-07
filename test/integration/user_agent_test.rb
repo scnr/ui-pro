@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class UserAgentTest < ActionDispatch::IntegrationTest
+class DeviceTest < ActionDispatch::IntegrationTest
   # test "the truth" do
   #   assert true
   # end

@@ -1,0 +1,37 @@
+<% title 'Devices' %>
+
+<div class="page-header">
+    <h1>
+        Devices
+
+        <%= link_to new_device_path, title: 'New user agent',
+                    class: 'btn btn-xs btn-primary' do %>
+            <i class="fa fa-plus"></i>
+        <% end %>
+
+        <a href="#device-import" title="Import"
+           role="button" class="btn btn-xs btn-inverse" data-toggle="modal">
+            <i class="fa fa-upload"></i>
+        </a>
+    </h1>
+
+    <div class="lead">
+        Maintain and (re-)use user agent configurations in order to emulate
+        scans from multiple devices.
+    </div>
+
+    <p class="alert alert-info">
+        <i class="fa fa-info-circle"></i>
+
+        Once a user agent has been used for a scan it will no longer be editable.
+    </p>
+</div>
+
+<%= render partial: '/shared/profile_import', locals: {
+        type:       'device',
+        import_url: import_devices_url
+} %>
+
+<div id="user-agent-table">
+    <%= render partial: 'table' %>
+</div>

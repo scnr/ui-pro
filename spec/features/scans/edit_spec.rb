@@ -20,8 +20,8 @@ feature 'Edit scan page' do
     let(:other_site_role) { FactoryGirl.create :site_role, name: 'Other stuff', site: site }
     let(:profile) { FactoryGirl.create :profile, name: 'Stuff' }
     let(:other_profile) { FactoryGirl.create :profile, name: 'Other stuff' }
-    let(:user_agent) { FactoryGirl.create :user_agent }
-    let(:other_user_agent) { FactoryGirl.create :user_agent }
+    let(:device) { FactoryGirl.create :device }
+    let(:other_device) { FactoryGirl.create :device }
 
     let(:name) { 'name blahblah' }
     let(:description) { 'description blahblah' }
@@ -36,7 +36,7 @@ feature 'Edit scan page' do
 
     before do
         site_role
-        user_agent
+        device
         login_as user, scope: :user
         refresh
     end
@@ -82,7 +82,7 @@ feature 'Edit scan page' do
         fill_in 'scan_description', with: description
         select site_role.name, from: 'scan_site_role_id'
         select profile.name, from: 'scan_profile_id'
-        select user_agent.name, from: 'scan_user_agent_id'
+        select device.name, from: 'scan_device_id'
 
         time = Time.now + 99999
 
@@ -109,7 +109,7 @@ feature 'Edit scan page' do
 
         expect(scan.name).to eq name
         expect(scan.description).to eq description
-        expect(scan.user_agent).to eq user_agent
+        expect(scan.device).to eq device
         expect(scan.site_role).to eq site_role
         expect(scan.profile).to eq profile
 
@@ -172,7 +172,7 @@ feature 'Edit scan page' do
         end
 
         scenario 'user cannot change the user agent' do
-            expect(page).to have_css '#scan_user_agent_id.disabled'
+            expect(page).to have_css '#scan_device_id.disabled'
         end
     end
 

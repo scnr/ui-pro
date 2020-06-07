@@ -5,7 +5,7 @@ FactoryGirl.define do
         name { "MyString #{rand(99999)}" }
         description 'MyText'
         profile { FactoryGirl.create( :profile, name: "MyString #{rand(99999)}" ) }
-        user_agent { FactoryGirl.create( :user_agent, name: "MyString #{rand(99999)}" ) }
+        device { FactoryGirl.create( :device, name: "MyString #{rand(99999)}" ) }
         site_role { FactoryGirl.create( :site_role ) }
     end
 end

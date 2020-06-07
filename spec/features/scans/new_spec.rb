@@ -15,8 +15,8 @@ feature 'New scan page' do
     let(:other_site_role) { FactoryGirl.create :site_role, name: 'Other stuff', site: site }
     let(:profile) { FactoryGirl.create :profile, name: 'Stuff' }
     let(:other_profile) { FactoryGirl.create :profile, name: 'Other stuff' }
-    let(:user_agent) { FactoryGirl.create :user_agent }
-    let(:other_user_agent) { FactoryGirl.create :user_agent }
+    let(:device) { FactoryGirl.create :device }
+    let(:other_device) { FactoryGirl.create :device }
 
     let(:name) { "name blahblah #{rand(9999999)}" }
     let(:description) { 'description blahblah' }
@@ -29,8 +29,8 @@ feature 'New scan page' do
     before :each do
         site
         site_role
-        user_agent
-        other_user_agent
+        device
+        other_device
 
         login_as user, scope: :user
         visit new_site_scan_path( site )
@@ -76,7 +76,7 @@ feature 'New scan page' do
             fill_in 'scan_path', with: path
             select site_role.name, from: 'scan_site_role_id'
             select profile.name, from: 'scan_profile_id'
-            select user_agent.name, from: 'scan_user_agent_id'
+            select device.name, from: 'scan_device_id'
 
             click_button 'Create'
 
@@ -87,7 +87,7 @@ feature 'New scan page' do
             expect(scan.name).to eq name
             expect(scan.description).to eq description
             expect(scan.path).to eq "/#{path}"
-            expect(scan.user_agent).to eq user_agent
+            expect(scan.device).to eq device
             expect(scan.site_role).to eq site_role
             expect(scan.profile).to eq profile
         end
@@ -131,7 +131,7 @@ feature 'New scan page' do
             fill_in 'scan_description', with: description
             select site_role.name, from: 'scan_site_role_id'
             select profile.name, from: 'scan_profile_id'
-            select user_agent.name, from: 'scan_user_agent_id'
+            select device.name, from: 'scan_device_id'
 
             time = Time.now + 99999
 
@@ -159,7 +159,7 @@ feature 'New scan page' do
 
             expect(scan.name).to eq name
             expect(scan.description).to eq description
-            expect(scan.user_agent).to eq user_agent
+            expect(scan.device).to eq device
             expect(scan.site_role).to eq site_role
             expect(scan.profile).to eq profile
 
@@ -184,8 +184,8 @@ feature 'New scan page' do
         end
 
         scenario 'user sees user-agents in select box' do
-            expect(page).to have_select 'scan_user_agent_id',
-                                        options: [user_agent.name, other_user_agent.name]
+            expect(page).to have_select 'scan_device_id',
+                                        options: [device.name, other_device.name]
         end
 
         feature 'when the name is missing' do
@@ -213,7 +213,7 @@ feature 'New scan page' do
                     fill_in 'scan_name', with: name
                     select site_role.name, from: 'scan_site_role_id'
                     select profile.name, from: 'scan_profile_id'
-                    select user_agent.name, from: 'scan_user_agent_id'
+                    select device.name, from: 'scan_device_id'
 
                     select '', from: 'scan_schedule_attributes_start_at_1i'
                     select '', from: 'scan_schedule_attributes_start_at_2i'
@@ -247,7 +247,7 @@ feature 'New scan page' do
                     fill_in 'scan_name', with: name
                     select site_role.name, from: 'scan_site_role_id'
                     select profile.name, from: 'scan_profile_id'
-                    select user_agent.name, from: 'scan_user_agent_id'
+                    select device.name, from: 'scan_device_id'
 
                     click_button 'Create'
                     sleep 1

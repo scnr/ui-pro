@@ -11,7 +11,7 @@ shared_examples_for 'Scan info' do |options = {}|
     end
 
     scenario 'links to the user agent' do
-        expect(scan_info).to have_xpath "a[@href='#{user_agent_path( scan.user_agent )}']"
+        expect(scan_info).to have_xpath "a[@href='#{device_path( scan.device )}']"
     end
 
     scenario 'links to the site role' do

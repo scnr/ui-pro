@@ -38,11 +38,11 @@
                                             current_user.profiles.default.try(:id)
             %>
 
-            <%= f.association :user_agent,
+            <%= f.association :device,
                               disabled: @scan.revisions.any?,
-                              collection: UserAgent.all,
-                              selected: @scan.user_agent ? @scan.user_agent.id :
-                                            UserAgent.default
+                              collection: Device.all,
+                              selected: @scan.device ? @scan.device.id :
+                                            Device.default
             %>
         </div>
     </div>

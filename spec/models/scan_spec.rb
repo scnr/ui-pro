@@ -11,8 +11,8 @@ describe Scan do
 
     expect_it { to belong_to :site }
     expect_it { to belong_to :profile }
-    expect_it { to belong_to :user_agent }
-    expect_it { to validate_presence_of :user_agent }
+    expect_it { to belong_to :device }
+    expect_it { to validate_presence_of :device }
     expect_it { to have_one(:schedule).dependent(:destroy).autosave(true) }
     expect_it { to have_many(:revisions).dependent(:destroy) }
     expect_it { to have_many(:issues).dependent(:destroy) }
@@ -409,7 +409,7 @@ describe Scan do
             options = subject.profile.to_rpc_options.
                 merge( 'authorized_by' => user.email ).
                 deep_merge( site.profile.to_rpc_options ).
-                deep_merge( subject.user_agent.to_rpc_options ).
+                deep_merge( subject.device.to_rpc_options ).
                 deep_merge( settings.to_rpc_options )
 
             options['scope'].delete( 'exclude_path_patterns' )

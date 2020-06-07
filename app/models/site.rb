@@ -80,7 +80,7 @@ class Site < ActiveRecord::Base
     end
 
     def last_revision
-        # revisions.includes(scan: [:schedule, :user_agent, :site_role, :profile]).order( id: :desc ).first
+        # revisions.includes(scan: [:schedule, :device, :site_role, :profile]).order( id: :desc ).first
         revisions.order( id: :desc ).first
     end
 

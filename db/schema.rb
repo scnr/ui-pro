@@ -15,6 +15,18 @@ ActiveRecord::Schema.define(version: 2020_06_04_212259) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "devices", force: :cascade do |t|
+    t.boolean "default"
+    t.string "name"
+    t.text "device_user_agent"
+    t.integer "device_width"
+    t.integer "device_height"
+    t.boolean "device_touch"
+    t.float "device_pixel_ratio"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "http_requests", force: :cascade do |t|
     t.text "url"
     t.string "http_method"
@@ -331,15 +343,15 @@ ActiveRecord::Schema.define(version: 2020_06_04_212259) do
     t.integer "issues_count", default: 0
     t.integer "sitemap_entries_count", default: 0
     t.bigint "site_id"
-    t.bigint "user_agent_id"
+    t.bigint "device_id"
     t.bigint "site_role_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "profile_id"
+    t.index ["device_id"], name: "index_scans_on_device_id"
     t.index ["profile_id"], name: "index_scans_on_profile_id"
     t.index ["site_id"], name: "index_scans_on_site_id"
     t.index ["site_role_id"], name: "index_scans_on_site_role_id"
-    t.index ["user_agent_id"], name: "index_scans_on_user_agent_id"
   end
 
   create_table "schedules", force: :cascade do |t|
@@ -462,16 +474,6 @@ ActiveRecord::Schema.define(version: 2020_06_04_212259) do
     t.index ["site_id", "user_id"], name: "index_sites_users_on_site_id_and_user_id"
     t.index ["site_id"], name: "index_sites_users_on_site_id"
     t.index ["user_id"], name: "index_sites_users_on_user_id"
-  end
-
-  create_table "user_agents", force: :cascade do |t|
-    t.boolean "default"
-    t.string "name"
-    t.text "http_user_agent"
-    t.integer "browser_cluster_screen_width"
-    t.integer "browser_cluster_screen_height"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|

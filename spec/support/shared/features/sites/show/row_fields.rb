@@ -15,8 +15,8 @@ shared_examples_for 'Site scan tables row fields' do
     end
 
     scenario 'user sees user agent' do
-        expect(scans).to have_content scan.user_agent
-        expect(scans).to have_xpath "//a[@href='#{user_agent_path( scan.user_agent )}']"
+        expect(scans).to have_content scan.device
+        expect(scans).to have_xpath "//a[@href='#{device_path( scan.device )}']"
     end
 
     scenario 'user sees site role' do

@@ -52,7 +52,7 @@ Rails.application.routes.draw do
 
     resources :settings
 
-    resources :user_agents do
+    resources :devices do
         post  :import,  on: :collection
         patch :default, on: :member
         get   :copy,    on: :member

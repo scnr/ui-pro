@@ -44,6 +44,7 @@ module ProfileAttributes
             validate :validate_session_check
         end
 
+        # TODO: Use CustomSerializer
         {
             plugins:                        Hash,
             checks:                         Array,
