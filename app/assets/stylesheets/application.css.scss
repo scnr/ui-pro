@@ -10,14 +10,13 @@
  * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
  * file per style scope.
  *
- *= require font-kit-rails/open-sans
- *= require c3
- *= require_tree .
- *= require_self
  */
 
 @import "font-awesome-sprockets";
 @import "font-awesome";
+@import "font-kit-rails/open-sans";
+@import "c3";
+@import "**/*";
 
 .fa .badge, .c3 .tick, .c3-legend-item {
     font-family: "Open Sans", sans-serif;
