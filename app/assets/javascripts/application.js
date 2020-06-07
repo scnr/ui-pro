@@ -22,6 +22,14 @@
 //= require ace/mode-ruby
 //= require_tree .
 
+function loading(){
+    $('#loading').show();
+}
+
+function loaded(){
+    $('#loading').hide();
+}
+
 jQuery.fn.reverse = [].reverse;
 jQuery.fn.exists = function(){ return this.length > 0; };
 
@@ -197,6 +205,7 @@ $(document).on( 'turbolinks:load', function( $ ) {
 });
 
 $(document).ajaxStop( function() {
+    loaded();
     setup();
 });
 
