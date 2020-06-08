@@ -68,6 +68,7 @@
 
                     <%= f.input :scope_exclude_path_patterns, label: false,
                                 placeholder: 'Log-out exclusion patterns (Example: logout)',
+                                as: :text,
                                 input_html: { value: @site_role.scope_exclude_path_patterns.join( "\n" ) }%>
 
                     <%= messages_for( :scope_exclude_path_patterns ) %>

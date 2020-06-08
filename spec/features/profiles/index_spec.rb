@@ -62,11 +62,11 @@ feature 'Profile index page' do
                 expect(page.body).to eq profile.export( YAML )
             end
 
-            scenario 'AFR' do
+            scenario 'SEP' do
                 find_button('profile-export-button').click
-                click_link 'AFP (Suitable for the CLI interface.)'
+                click_link 'SEP (Suitable for the CLI interface.)'
 
-                expect(page.body).to eq profile.to_rpc_options.to_yaml
+                expect(page.body).to eq profile.to_scanner_options.to_yaml
             end
         end
 
@@ -74,7 +74,7 @@ feature 'Profile index page' do
             let(:file) do
                 file = Tempfile.new( described_class.to_s )
 
-                serialized = (serializer == :afr ? profile.to_rpc_options.to_yaml :
+                serialized = (serializer == :sep ? profile.to_scanner_options.to_yaml :
                     profile.export( serializer ))
 
                 file.write serialized
@@ -112,8 +112,8 @@ feature 'Profile index page' do
                 end
             end
 
-            feature 'AFR' do
-                let(:serializer) { :afr }
+            feature 'SEP' do
+                let(:serializer) { :sep }
 
                 scenario 'fills in the form' do
                     find(:xpath, "//a[@href='#profile-import']").click

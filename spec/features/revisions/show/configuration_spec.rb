@@ -335,8 +335,8 @@ feature 'Revision coverage' do
             feature 'Template patterns' do
                 before do
                     revision.site_profile.scope_template_path_patterns = [
-                        /redundant 1/,
-                        /redundant 2/
+                        /redundant 1/.source,
+                        /redundant 2/.source
                     ]
                     revision.site_profile.save
 
@@ -361,7 +361,7 @@ feature 'Revision coverage' do
                 feature 'when not empty' do
                     scenario 'it lists them' do
                         revision.site_profile.scope_template_path_patterns.each do |pattern|
-                            expect(snapshot).to have_content pattern.source
+                            expect(snapshot).to have_content pattern
                         end
                     end
                 end
@@ -383,8 +383,8 @@ feature 'Revision coverage' do
                 feature 'when different from the snapshot' do
                     before do
                         site.profile.scope_template_path_patterns = [
-                            /redundant 2/,
-                            /redundant 3/
+                            /redundant 2/.source,
+                            /redundant 3/.source
                         ]
                         site.profile.save
 
@@ -401,7 +401,7 @@ feature 'Revision coverage' do
 
                     scenario 'it lists current ones' do
                         site.profile.scope_template_path_patterns.each do |pattern|
-                            expect(current).to have_content pattern.source
+                            expect(current).to have_content pattern
                         end
                     end
 
@@ -432,8 +432,8 @@ feature 'Revision coverage' do
             feature 'Exclusion patterns' do
                 before do
                     revision.site_profile.scope_exclude_path_patterns = [
-                        /pattern 1/,
-                        /pattern 2/
+                        'pattern 1',
+                        'pattern 2'
                     ]
                     revision.site_profile.save
 
@@ -458,7 +458,7 @@ feature 'Revision coverage' do
                 feature 'when not empty' do
                     scenario 'it lists them' do
                         revision.site_profile.scope_exclude_path_patterns.each do |pattern|
-                            expect(snapshot).to have_content pattern.source
+                            expect(snapshot).to have_content pattern
                         end
                     end
                 end
@@ -480,8 +480,8 @@ feature 'Revision coverage' do
                 feature 'when different from the snapshot' do
                     before do
                         site.profile.scope_exclude_path_patterns = [
-                            /pattern 2/,
-                            /pattern 3/
+                            'pattern 2',
+                            /pattern 3/.source
                         ]
                         site.profile.save
 
@@ -498,7 +498,7 @@ feature 'Revision coverage' do
 
                     scenario 'it lists current ones' do
                         site.profile.scope_exclude_path_patterns.each do |pattern|
-                            expect(current).to have_content pattern.source
+                            expect(current).to have_content pattern
                         end
                     end
 
@@ -529,8 +529,8 @@ feature 'Revision coverage' do
             feature 'Content exclusion patterns' do
                 before do
                     revision.site_profile.scope_exclude_content_patterns = [
-                        /pattern 1/,
-                        /pattern 2/
+                        'pattern 1',
+                        'pattern 2'
                     ]
                     revision.site_profile.save
 
@@ -555,7 +555,7 @@ feature 'Revision coverage' do
                 feature 'when not empty' do
                     scenario 'it lists them' do
                         revision.site_profile.scope_exclude_content_patterns.each do |pattern|
-                            expect(snapshot).to have_content pattern.source
+                            expect(snapshot).to have_content pattern
                         end
                     end
                 end
@@ -577,8 +577,8 @@ feature 'Revision coverage' do
                 feature 'when different from the snapshot' do
                     before do
                         site.profile.scope_exclude_content_patterns = [
-                            /pattern 2/,
-                            /pattern 3/
+                            'pattern 2',
+                            /pattern 3/.source
                         ]
                         site.profile.save
 
@@ -595,7 +595,7 @@ feature 'Revision coverage' do
 
                     scenario 'it lists current ones' do
                         site.profile.scope_exclude_content_patterns.each do |pattern|
-                            expect(current).to have_content pattern.source
+                            expect(current).to have_content pattern
                         end
                     end
 
@@ -839,8 +839,8 @@ feature 'Revision coverage' do
             feature 'Custom inputs' do
                 before do
                     revision.site_profile.audit_link_templates = [
-                        /input1\/(?<input1>\w+)\/input2\/(?<input2>\w+)/,
-                        /input3\/(?<input3>\w+)\/input4\/(?<input4>\w+)/
+                        /input1\/(?<input1>\w+)\/input2\/(?<input2>\w+)/.source,
+                        /input3\/(?<input3>\w+)\/input4\/(?<input4>\w+)/.source
                     ]
                     revision.site_profile.save
 
@@ -865,7 +865,7 @@ feature 'Revision coverage' do
                 feature 'when not empty' do
                     scenario 'it lists them' do
                         revision.site_profile.audit_link_templates.each do |pattern|
-                            expect(snapshot).to have_content pattern.source
+                            expect(snapshot).to have_content pattern
                         end
                     end
                 end
@@ -887,8 +887,8 @@ feature 'Revision coverage' do
                 feature 'when different from the snapshot' do
                     before do
                         site.profile.audit_link_templates = [
-                            /input5\/(?<input5>\w+)\/input6\/(?<input6>\w+)/,
-                            /input7\/(?<input7>\w+)\/input8\/(?<input8>\w+)/
+                            /input5\/(?<input5>\w+)\/input6\/(?<input6>\w+)/.source,
+                            /input7\/(?<input7>\w+)\/input8\/(?<input8>\w+)/.source
                         ]
                         site.profile.save
 
@@ -905,7 +905,7 @@ feature 'Revision coverage' do
 
                     scenario 'it lists current ones' do
                         site.profile.audit_link_templates.each do |pattern|
-                            expect(current).to have_content pattern.source
+                            expect(current).to have_content pattern
                         end
                     end
 
@@ -1848,8 +1848,8 @@ feature 'Revision coverage' do
             feature 'Logout exclusion patterns' do
                 before do
                     revision.site_role.scope_exclude_path_patterns = [
-                        /pattern 1/,
-                        /pattern 2/
+                        'pattern 1',
+                        'pattern 2'
                     ]
                     revision.site_role.save
 
@@ -1860,7 +1860,7 @@ feature 'Revision coverage' do
 
                 scenario 'it lists them' do
                     revision.site_role.scope_exclude_path_patterns.each do |pattern|
-                        expect(snapshot).to have_content pattern.source
+                        expect(snapshot).to have_content pattern
                     end
                 end
 
@@ -1881,8 +1881,8 @@ feature 'Revision coverage' do
                 feature 'when different from the snapshot' do
                     before do
                         scan.site_role.scope_exclude_path_patterns = [
-                            /pattern 2/,
-                            /pattern 3/
+                            'pattern 2',
+                            'pattern 3'
                         ]
                         scan.site_role.save
 
@@ -1899,7 +1899,7 @@ feature 'Revision coverage' do
 
                     scenario 'it lists current ones' do
                         scan.site_role.scope_exclude_path_patterns.each do |pattern|
-                            expect(current).to have_content pattern.source
+                            expect(current).to have_content pattern
                         end
                     end
 

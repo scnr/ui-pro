@@ -106,6 +106,7 @@
                     <%= f.input :scope_include_path_patterns,
                                 label: 'Path inclusion patterns',
                                 placeholder: 'Include all resources',
+                                as: :text,
                                 input_html: { value: @profile.scope_include_path_patterns.join( "\n" ) } %>
                 </div>
                 <div class="col-md-6 textarea-help">
@@ -118,6 +119,7 @@
                 <div class="col-md-6">
                     <%= f.input :scope_exclude_path_patterns,
                                 label: 'Path exclusion patterns',
+                                as: :text,
                                 placeholder: 'Do not exclude any resources',
                                 input_html: { value: @profile.scope_exclude_path_patterns.join( "\n" ) } %>
                 </div>
@@ -152,22 +154,10 @@
 
                 <div class="row">
                     <div class="col-md-6">
-                        <%= f.input :scope_restrict_paths,
-                                    label: 'Restrict paths',
-                                    placeholder: 'Use paths discovered by the crawl',
-                                    input_html: { value: @profile.scope_restrict_paths.join( "\n" ) } %>
-                    </div>
-                    <div class="col-md-6 textarea-help">
-                        <%= messages_for( :scope_restrict_paths ) %>
-                        <p class="help-block">Input each path in its own line.</p>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6">
                         <%= f.input :scope_exclude_content_patterns,
                                     label: 'Content exclusion patterns',
                                     placeholder: 'Include all pages',
+                                    as: :text,
                                     input_html: {
                                             value: @profile.scope_exclude_content_patterns.join( "\n" )
                                     } %>
@@ -306,6 +296,7 @@
                     <div class="col-md-6">
                         <%= f.input :audit_include_vector_patterns,
                                     label: 'Parameter inclusion patterns',
+                                    as: :text,
                                     placeholder: 'Include all parameters',
                                     input_html: { value: @profile.audit_include_vector_patterns.join( "\n" ) } %>
                     </div>
@@ -319,6 +310,7 @@
                     <div class="col-md-6">
                         <%= f.input :audit_exclude_vector_patterns,
                                     label: 'Parameter exclusion patterns',
+                                    as: :text,
                                     placeholder: 'Do not exclude any parameters',
                                     input_html: { value: @profile.audit_exclude_vector_patterns.join( "\n" ) } %>
                     </div>

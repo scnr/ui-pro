@@ -37,11 +37,6 @@ engine_defaults.merge!(
 
 Setting.create!( Setting.flatten( SCNR::Engine::Options.to_rpc_data ) )
 
-user.sites.create(
-    protocol: 'http',
-    host:     'testhtml5.vulnweb.com'
-)
-
 all_checks_profile = Profile.create! engine_defaults.merge(
     name:        'All checks',
     description: 'Scans for all available security issues.',
@@ -153,18 +148,17 @@ FrameworkHelper.framework do |f|
     end
 end
 
-# site = user.sites.create(
-#     protocol: 'http',
-#     host:     'testhtml5.vulnweb.com',
-#     port:     80,
-#
-#     profile_attributes: {
-#         http_request_concurrency: SCNR::Engine::Options.http.request_concurrency,
-#         input_values:             SCNR::Engine::Options.input.default_values.
-#                                       map { |k, v| "#{k.source}=#{v}" }.join( "\n" )
-#     }
-# )
-#
+site = user.sites.create!(
+    protocol: 'http',
+    host:     'testhtml5.vulnweb.com',
+    port:     80,
+
+    profile_attributes: {
+        http_request_concurrency: SCNR::Engine::Options.http.request_concurrency,
+        input_values:             { 'test' => 'val' }
+    }
+)
+
 # site.scans.create(
 #     profile:             all_checks_profile,
 #     site_role:           site.roles.first,

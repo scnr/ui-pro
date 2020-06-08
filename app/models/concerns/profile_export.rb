@@ -5,17 +5,17 @@ module ProfileExport
     extend ActiveSupport::Concern
 
     def export( serializer = YAML )
-        profile_hash = to_rpc_options
+        profile_hash = self.to_scanner_options
 
-        if has_option? :name
+        if respond_to? :name
             profile_hash[:name] = name
         end
 
-        if has_option? :description
+        if respond_to? :description
             profile_hash[:description] = description
         end
 
-        profile_hash = profile_hash.stringify_keys
+        profile_hash.stringify_keys!
         if serializer == JSON
             JSON.pretty_generate profile_hash
         else

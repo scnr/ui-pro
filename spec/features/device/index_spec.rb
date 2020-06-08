@@ -1,7 +1,7 @@
 include Warden::Test::Helpers
 Warden.test_mode!
 
-feature 'User agent index page' do
+feature 'Device index page' do
 
     let(:user) { FactoryGirl.create :user }
     let(:admin) { FactoryGirl.create :user, :admin, email: 'ff@ff.cc' }
@@ -60,11 +60,11 @@ feature 'User agent index page' do
                 expect(page.body).to eq device.export( YAML )
             end
 
-            scenario 'AFR' do
+            scenario 'SEP' do
                 find_button('device-export-button').click
-                click_link 'AFP (Suitable for the CLI interface.)'
+                click_link 'SEP (Suitable for the CLI interface.)'
 
-                expect(page.body).to eq device.to_rpc_options.to_yaml
+                expect(page.body).to eq device.to_scanner_options.to_yaml
             end
         end
 
@@ -72,7 +72,7 @@ feature 'User agent index page' do
             let(:file) do
                 file = Tempfile.new( described_class.to_s )
 
-                serialized = (serializer == :afr ? device.to_rpc_options.to_yaml :
+                serialized = (serializer == :sep ? device.to_scanner_options.to_yaml :
                     device.export( serializer ))
 
                 file.write serialized
@@ -110,15 +110,15 @@ feature 'User agent index page' do
                 end
             end
 
-            feature 'AFR' do
-                let(:serializer) { :afr }
+            feature 'SEP' do
+                let(:serializer) { :sep }
 
                 scenario 'fills in the form' do
                     find(:xpath, "//a[@href='#device-import']").click
                     find('#device_file').set file.path
                     click_button 'Import'
 
-                    expect(find('input#device_name').value).to eq File.basename( file.path )
+                    expect(find('input#device_device_user_agent').value).to eq device.device_user_agent
                 end
             end
         end

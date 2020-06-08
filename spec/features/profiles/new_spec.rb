@@ -203,15 +203,6 @@ feature 'Profile new page' do
                             end
                         end
                     end
-
-                    scenario 'can set Restrict paths' do
-                        fill_in 'Restrict paths', with: "test\ntest2"
-                        submit
-
-                        expect(Profile.last.scope_restrict_paths).to eq [
-                            'test', 'test2'
-                        ]
-                    end
                 end
             end
 

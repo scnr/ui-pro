@@ -406,16 +406,16 @@ describe Scan do
         end
 
         it 'merges the profile, site profile, user-agent and global settings' do
-            options = subject.profile.to_rpc_options.
+            options = subject.profile.to_scanner_options.
                 merge( 'authorized_by' => user.email ).
-                deep_merge( site.profile.to_rpc_options ).
-                deep_merge( subject.device.to_rpc_options ).
-                deep_merge( settings.to_rpc_options )
+                deep_merge( site.profile.to_scanner_options ).
+                deep_merge( subject.device.to_scanner_options ).
+                deep_merge( settings.to_scanner_options )
 
             options['scope'].delete( 'exclude_path_patterns' )
             options['scope'].delete( 'exclude_content_patterns' )
 
-            options['session'] = subject.site_role.to_rpc_options['session']
+            options['session'] = subject.site_role.to_scanner_options['session']
 
             expect(rpc_options['scope'].delete( 'exclude_path_patterns' ).sort).to eq(
                 (subject.profile.scope_exclude_path_patterns |

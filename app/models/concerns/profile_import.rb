@@ -15,11 +15,11 @@ module ProfileImport
 
             return if !data.is_a?( Hash )
 
-            if has_option? :name
+            if self.column_names.include? :name
                 data['name'] ||= file.original_filename
             end
 
-            if has_option? :description
+            if self.column_names.include? :description
                 data['description'] ||= "Imported from '#{file.original_filename}'."
             end
 

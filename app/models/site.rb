@@ -31,10 +31,6 @@ class Site < ActiveRecord::Base
 
     has_many :sitemap_entries, dependent: :destroy
 
-    # Validate it's not greater than the global one.
-    validates :max_parallel_scans, numericality: { greater_than: 0 }
-    validate  :validate_max_parallel_scans
-
     validates_presence_of :protocol
 
     validates_presence_of   :host
@@ -126,11 +122,4 @@ class Site < ActiveRecord::Base
         )
     end
 
-    def validate_max_parallel_scans
-        global = Settings.max_parallel_scans
-        return if !global || max_parallel_scans <= global
-
-        errors.add :max_parallel_scans,
-                   "cannot be greater than the global setting of #{global}"
-    end
 end

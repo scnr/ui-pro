@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ProfileAttributes do
+describe 'ProfileAttributes' do
     subject { FactoryGirl.create :profile, user: user }
     let(:other) { FactoryGirl.create :profile, user: user }
     let(:user) { FactoryGirl.create :user }

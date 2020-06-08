@@ -1,13 +1,19 @@
 class Device < ActiveRecord::Base
     include WithCustomSerializer
     include WithEvents
-    include ProfileRpcHelpers
-    include ProfileAttributes
+    include WithScannerOptions
     include ProfileImport
     include ProfileExport
     include ProfileDefaultHelpers
 
     events
+    set_scanner_options(
+        device_user_agent:   String,
+        device_width:        Integer,
+        device_height:       Integer,
+        device_pixel_ratio:  Float,
+        device_touch:        :bool
+    )
 
     has_many :scans, -> { order id: :desc }
     has_many :revisions, through: :scans

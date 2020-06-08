@@ -28,7 +28,7 @@ feature 'Edit global settings' do
         end
 
         scenario 'it updates the global options' do
-            expect(SCNR::Engine::Options).to receive(:update).with(subject.to_rpc_options)
+            expect(SCNR::Engine::Options).to receive(:update).with(subject.to_scanner_options)
             expect(SCNR::Engine::HTTP::Client).to receive(:reset)
 
             submit
@@ -116,7 +116,7 @@ feature 'Edit global settings' do
 
                     feature 'when the value is less than an equivalent site setting' do
                         before do
-                            site.max_parallel_scans = 2
+                            site.profile.max_parallel_scans = 2
                             site.save
                         end
 
@@ -124,7 +124,7 @@ feature 'Edit global settings' do
                             fill_in 'Maximum parallel scans', with: 1
                             submit
 
-                            expect(find('div.setting_max_parallel_scans.has-error')).to have_content "#{site.url} has a limit of #{site.max_parallel_scans}"
+                            expect(find('div.setting_max_parallel_scans.has-error')).to have_content "#{site.url} has a limit of #{site.profile.max_parallel_scans}"
                         end
                     end
 

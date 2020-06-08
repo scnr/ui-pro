@@ -3,8 +3,9 @@ class SitesController < ApplicationController
 
     before_action :authenticate_user!
 
-    before_action :set_site, only: [:show, :edit, :update, :destroy] +
+    before_action :set_site, only: [:show, :edit, :destroy] +
                                        ScanResults::SCAN_RESULT_ACTIONS
+    before_action :set_site_profile, only: [:show, :edit, :destroy]
     before_action :set_scans, only: ScanResults::SCAN_RESULT_ACTIONS
 
     include ScanResults
@@ -33,7 +34,7 @@ class SitesController < ApplicationController
     # POST /sites
     # POST /sites.json
     def create
-        @site = Site.new(site_params)
+        @site = Site.new( site_params )
         @site.user = current_user
 
         respond_to do |format|
@@ -44,37 +45,6 @@ class SitesController < ApplicationController
                 set_sites
 
                 format.html { render :index }
-                format.json { render json: @site.errors, status: :unprocessable_entity }
-            end
-        end
-    end
-
-    # PATCH/PUT /sites/1
-    # PATCH/PUT /sites/1.json
-    def update
-        pre = @site.profile.to_rpc_options
-
-        respond_to do |format|
-            if @site.update( site_profile_params )
-
-                if pre != @site.profile.to_rpc_options && params[:apply] == '1'
-                    @site.revisions.active.each do |revision|
-                        if revision.site_profile.to_rpc_options ==
-                            @site.profile.to_rpc_options
-                            next
-                        end
-
-                        ScanScheduler.rescope( revision )
-                    end
-                end
-
-                format.html do
-                    redirect_to edit_site_url(@site),
-                                notice: 'Site settings were successfully updated.'
-                end
-                format.json { render :show, status: :ok, location: @site }
-            else
-                format.html { render :edit }
                 format.json { render json: @site.errors, status: :unprocessable_entity }
             end
         end
@@ -98,7 +68,10 @@ class SitesController < ApplicationController
         @site = current_user.sites.find_by_id( params[:id] )
 
         raise ActionController::RoutingError.new( 'Site not found.' ) if !@site
+    end
 
+    def set_site_profile
+        @site_profile = @site.profile
     end
 
     def set_sites
@@ -110,44 +83,6 @@ class SitesController < ApplicationController
             includes(:site_role).includes(:profile).includes(:revisions)
 
         prepare_site_sidebar_data
-    end
-
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def site_params
-        params.require(:site).permit(*[ :protocol, :host, :port ])
-    end
-
-    def site_profile_params
-        params.require(:site).permit(*[
-            :max_parallel_scans,
-
-            profile_attributes: [
-                { platforms: [] },
-                :no_fingerprinting,
-
-                :input_values,
-
-                :http_cookies,
-                :http_request_headers,
-                :http_request_concurrency,
-                :http_authentication_username,
-                :http_authentication_password,
-
-                :scope_exclude_file_extensions,
-                :scope_exclude_path_patterns,
-                :scope_exclude_content_patterns,
-                :scope_extend_paths,
-                :scope_template_path_patterns,
-                :scope_auto_redundant_paths,
-                :scope_url_rewrites,
-                :scope_https_only,
-
-                :audit_link_templates,
-
-                :browser_cluster_wait_for_elements
-            ]
-        ])
-
     end
 
     def scan_results_owner
@@ -189,6 +124,11 @@ class SitesController < ApplicationController
         end
 
         true
+    end
+
+    # Never trust parameters from the scary internet, only allow the white list through.
+    def site_params
+        params.require(:site).permit(*[ :protocol, :host, :port ])
     end
 
 end

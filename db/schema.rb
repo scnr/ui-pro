@@ -297,7 +297,6 @@ ActiveRecord::Schema.define(version: 2020_06_04_212259) do
     t.binary "scope_exclude_content_patterns"
     t.boolean "scope_exclude_binaries"
     t.binary "scope_include_path_patterns"
-    t.binary "scope_restrict_paths"
     t.integer "scope_dom_depth_limit"
     t.integer "scope_directory_depth_limit"
     t.datetime "created_at", null: false
@@ -387,6 +386,7 @@ ActiveRecord::Schema.define(version: 2020_06_04_212259) do
   end
 
   create_table "site_profiles", force: :cascade do |t|
+    t.integer "max_parallel_scans", default: 1
     t.binary "platforms"
     t.boolean "no_fingerprinting"
     t.binary "input_values"
@@ -460,7 +460,6 @@ ActiveRecord::Schema.define(version: 2020_06_04_212259) do
     t.integer "revisions_count", default: 0
     t.integer "issues_count", default: 0
     t.integer "sitemap_entries_count", default: 0
-    t.integer "max_parallel_scans", default: 1
     t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

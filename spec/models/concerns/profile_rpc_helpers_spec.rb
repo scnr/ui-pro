@@ -1,16 +1,16 @@
 require 'spec_helper'
 
-describe ProfileRpcHelpers do
+describe 'ProfileRpcHelpers' do
     subject { FactoryGirl.create :profile, user: user }
     let(:other) { FactoryGirl.create :profile, user: user }
     let(:user) { FactoryGirl.create :user }
 
-    describe '#to_rpc_options' do
+    describe '#to_scanner_options' do
         before :each do
             SCNR::Engine::Options.reset
         end
 
-        let(:rpc_options) { subject.to_rpc_options }
+        let(:rpc_options) { subject.to_scanner_options }
 
         it 'returns RPC options' do
             expect(SCNR::Engine::Options.hash_to_rpc_data( rpc_options )).to eq SCNR::Engine::Options.update( rpc_options ).to_rpc_data

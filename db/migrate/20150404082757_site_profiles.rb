@@ -1,6 +1,7 @@
 class SiteProfiles < ActiveRecord::Migration[5.1]
     def change
         create_table :site_profiles do |t|
+            t.integer  :max_parallel_scans, default: 1
             t.binary     :platforms
             t.boolean  :no_fingerprinting
 

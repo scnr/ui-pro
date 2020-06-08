@@ -4,6 +4,7 @@ FactoryGirl.define do
     factory :site_profile do
         to_create { |instance| instance.save( validate: false ) }
 
+        max_parallel_scans 1
         scope_template_path_patterns([
             'redundant',
             'other-redundant'

@@ -332,9 +332,9 @@ EORUBY
         end
     end
 
-    describe '#to_rpc_options' do
+    describe '#to_scanner_options' do
         let(:rpc_options) do
-            options = subject.to_rpc_options
+            options = subject.to_scanner_options
             options.delete 'plugins'
             options
         end
@@ -356,7 +356,7 @@ EORUBY
 
         context 'when #login_type is' do
             let(:rpc_options) do
-                subject.to_rpc_options['plugins']
+                subject.to_scanner_options['plugins']
             end
 
             describe 'script' do

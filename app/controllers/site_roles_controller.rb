@@ -1,4 +1,6 @@
 class SiteRolesController < ApplicationController
+    include ControllerWithScannerOptions
+
     before_action :authenticate_user!
 
     before_action :set_site
@@ -24,21 +26,21 @@ class SiteRolesController < ApplicationController
     end
 
     def create
-        @site_role = SiteRole.new(site_role_params)
+        @site_role = SiteRole.new( parsed_params )
         @site_role.site = @site
 
         if @site_role.save
             flash[:notice] = 'Site role was successfully created.'
             render :show
         else
-            render :edit
+            render :new
         end
     end
 
     def update
         fail 'Cannot update Guest role.' if @site_role.guest?
 
-        if @site_role.update(site_role_params)
+        if @site_role.update( parsed_params )
             flash[:notice] = 'Site role was successfully updated.'
             render :show
         else
@@ -73,22 +75,32 @@ class SiteRolesController < ApplicationController
         @site_roles = @site.roles.order( id: :asc )
     end
 
-    def site_role_params
-        params.require(:site_role).permit(
+    def permitted_attributes
+        super | [
             :name,
             :description,
-
-            :session_check_url,
-            :session_check_pattern,
-
-            :scope_exclude_path_patterns,
-
             :login_type,
 
             :login_form_url,
             :login_form_parameters,
 
             :login_script_code
-        )
+        ]
+    end
+
+    def permitted_parsed_attributes
+        super | [{ login_form_parameters: {} }]
+    end
+
+    def parsed_params
+        pp  = super
+
+        if permitted_params[:login_form_parameters]
+            pp[:login_form_parameters] = parse_lsv_to_hash(
+                permitted_params[:login_form_parameters]
+            )
+        end
+
+        pp
     end
 end

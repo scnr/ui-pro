@@ -2,7 +2,7 @@ class ScanScheduler
 module Helpers
 module Scan
 
-    # Location for storing AFR reports.
+    # Location for storing SEP reports.
     #
     # Names will be in the format of `<Revision#id>.afr`.
     REPORT_DIR = "#{Rails.root}/reports/"
@@ -136,7 +136,7 @@ module Scan
             end
 
             site = scan.site
-            if site.max_parallel_scans <= active_instance_count_for_site( site )
+            if site.profile.max_parallel_scans <= active_instance_count_for_site( site )
                 log_info ' -- Site limit has been reached.'
                 next
             end

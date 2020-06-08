@@ -9,7 +9,7 @@ describe ProfileImport do
         let(:file) do
             file = Tempfile.new( Profile.to_s )
 
-            serialized = (serializer == :afr ? subject.to_rpc_options.to_yaml :
+            serialized = (serializer == :sep ? subject.to_scanner_options.to_yaml :
                 subject.export( serializer ))
 
             file.write serialized
@@ -48,7 +48,7 @@ describe ProfileImport do
                 it 'loads it' do
                     expect(imported.name).to eq subject.name
                     expect(imported.description).to eq subject.description
-                    expect(imported.to_rpc_options).to eq subject.to_rpc_options
+                    expect(imported.to_scanner_options).to eq subject.to_scanner_options
                 end
             end
 
@@ -58,17 +58,17 @@ describe ProfileImport do
                 it 'loads it' do
                     expect(imported.name).to eq subject.name
                     expect(imported.description).to eq subject.description
-                    expect(imported.to_rpc_options).to eq subject.to_rpc_options
+                    expect(imported.to_scanner_options).to eq subject.to_scanner_options
                 end
             end
 
-            context 'AFR' do
-                let(:serializer) { :afr }
+            context 'SEP' do
+                let(:serializer) { :sep }
 
                 it 'loads it' do
                     expect(imported.name).to eq File.basename( file.path )
                     expect(imported.description).to start_with 'Imported from'
-                    expect(imported.to_rpc_options).to eq subject.to_rpc_options
+                    expect(imported.to_scanner_options).to eq subject.to_scanner_options
                 end
             end
         end

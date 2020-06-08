@@ -1,12 +1,17 @@
 class SiteRole < ActiveRecord::Base
     include WithCustomSerializer
     include WithEvents
-    include ProfileAttributes
-    include ProfileRpcHelpers
+    include WithScannerOptions
 
     events skip: [:created_at, :updated_at],
                     # If this is a copy made by a revision don't bother.
                     unless: Proc.new { |t| t.revision_id }
+
+    set_scanner_options(
+        session_check_url:              String,
+        session_check_pattern:          String,
+        scope_exclude_path_patterns:    { type: Array,  validate: :patterns, format: :lsv }
+    )
 
     custom_serialize :login_form_parameters, Hash
 
@@ -49,13 +54,7 @@ class SiteRole < ActiveRecord::Base
         where( login_type: 'none' ).first
     end
 
-    %w(login_form_parameters).each do |m|
-        define_method "#{m}=" do |string_or_hash|
-            super self.class.string_list_to_hash( string_or_hash, '=' )
-        end
-    end
-
-    def to_rpc_options
+    def to_scanner_options
         return {} if login_type == 'none'
 
         rpc_options = super
@@ -132,7 +131,7 @@ class SiteRole < ActiveRecord::Base
     end
 
     def validate_session_check_pattern
-        check_pattern( session_check_pattern, :session_check_pattern )
+        check_pattern( self, :session_check_pattern, session_check_pattern )
     end
 
     def create_login_script_code_tempfile_path

@@ -1,8 +1,8 @@
 <%
-   site_profile_changed = @revision.site_profile.to_rpc_options != @revision.site.profile.to_rpc_options
+   site_profile_changed = @revision.site_profile.to_scanner_options != @revision.site.profile.to_scanner_options
 
    site_role_changed    = !@scan.site_role.guest? &&
-           @revision.site_role.to_rpc_options != @scan.site_role.to_rpc_options
+           @revision.site_role.to_scanner_options != @scan.site_role.to_scanner_options
 
    changed              = site_profile_changed || site_role_changed
 %>

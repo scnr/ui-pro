@@ -54,11 +54,11 @@ feature 'Device page', :devise do
                     expect(page.body).to eq subject.export( YAML )
                 end
 
-                scenario 'AFR' do
+                scenario 'SEP' do
                     find_button('device-export-button').click
-                    click_link 'AFP (Suitable for the CLI interface.)'
+                    click_link 'SEP (Suitable for the CLI interface.)'
 
-                    expect(page.body).to eq subject.to_rpc_options.to_yaml
+                    expect(page.body).to eq subject.to_scanner_options.to_yaml
                 end
             end
 

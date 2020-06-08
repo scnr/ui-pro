@@ -1,9 +1,9 @@
 class ProfilesController < ApplicationController
     include ProfilesControllerExportable
     include ProfilesControllerImportable
+    include ControllerWithScannerOptions
 
     before_action :authenticate_user!
-    before_action :prepare_plugin_params
 
     before_action :set_profiles,      only: [:index, :default]
     before_action :set_profile,       only: [:show, :copy, :edit, :update, :default, :destroy]
@@ -33,7 +33,7 @@ class ProfilesController < ApplicationController
     # POST /profiles
     # POST /profiles.json
     def create
-        @profile = current_user.profiles.new(profile_params)
+        @profile = current_user.profiles.new( parsed_params )
 
         respond_to do |format|
             if @profile.save
@@ -50,7 +50,7 @@ class ProfilesController < ApplicationController
     # PATCH/PUT /profiles/1.json
     def update
         respond_to do |format|
-            if @profile.update(profile_params)
+            if @profile.update( parsed_params )
                 format.html { redirect_to @profile, notice: 'Profile was successfully updated.' }
                 format.json { render :show, status: :ok, location: @profile }
             else
@@ -88,6 +88,48 @@ class ProfilesController < ApplicationController
             includes(:site_role).includes(:profile).includes(:revisions)
     end
 
+    def parsed_params
+        parsed = super
+
+        if params[:profile][:selected_plugins]
+            selected_plugins = {}
+            (params[:profile][:selected_plugins] || []).each do |plugin|
+                selected_plugins[plugin] = params[:profile][:plugins][plugin]
+            end
+
+            params[:profile].delete( :selected_plugins )
+            parsed[:plugins] = selected_plugins
+        else
+            parsed[:plugins] = {}
+        end
+
+        parsed.permit( permitted_parsed_attributes )
+    end
+
+    def permitted_attributes
+        attributes = super
+
+        attributes << :name
+        attributes << :description
+
+        plugins_with_options = []
+        plugins_with_info = ::FrameworkHelper.plugins
+        plugins_with_info.each do |name, info|
+            plugins_with_options << (info[:options] ?
+                                         { name => info[:options].map( &:name ) } : name)
+        end
+
+        attributes.delete :plugins
+        attributes << { plugins: plugins_with_options }
+
+        attributes.delete :checks
+        attributes << { checks: [] }
+
+        attributes << :selected_plugins
+
+        attributes
+    end
+
     def set_profiles
         @profiles = current_user.profiles.order( id: :asc )
     end
@@ -100,71 +142,6 @@ class ProfilesController < ApplicationController
     def authorize_destroy
         return if @profile.scans.empty?
         redirect_to @profile, error: 'Cannot delete a profile that has associated scans.'
-    end
-
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def profile_params
-        params.require( :profile ).permit( *permitted_attributes )
-    end
-
-    def permitted_attributes
-        self.class.permitted_attributes
-    end
-    def self.permitted_attributes
-        plugins_with_options = []
-        plugins_with_info = ::FrameworkHelper.plugins
-        plugins_with_info.each do |name, info|
-            plugins_with_options << (info[:options] ?
-                { name => info[:options].map( &:name ) } : name)
-        end
-
-        [
-            :name,
-            :description,
-
-            { checks:    [] },
-            { plugins:   plugins_with_options },
-
-            :audit_links,
-            :audit_forms,
-            :audit_cookies,
-            :audit_cookies_extensively,
-            :audit_headers,
-            :audit_jsons,
-            :audit_xmls,
-            :audit_ui_forms,
-            :audit_ui_inputs,
-            :audit_parameter_names,
-            :audit_with_extra_parameter,
-            :audit_with_both_http_methods,
-            :audit_exclude_vector_patterns,
-            :audit_include_vector_patterns,
-
-            :scope_page_limit,
-            :scope_restrict_paths,
-            :scope_include_path_patterns,
-            :scope_exclude_path_patterns,
-            :scope_exclude_content_patterns,
-            :scope_directory_depth_limit,
-            :scope_dom_depth_limit,
-            :scope_exclude_binaries
-        ]
-    end
-
-    def prepare_plugin_params
-        return if !params[:profile]
-
-        if params[:profile][:selected_plugins]
-            selected_plugins = {}
-            (params[:profile][:selected_plugins] || []).each do |plugin|
-                selected_plugins[plugin] = params[:profile][:plugins][plugin]
-            end
-
-            params[:profile][:plugins] = selected_plugins
-            params[:profile].delete( :selected_plugins )
-        else
-            params[:profile][:plugins] = {}
-        end
     end
 
 end

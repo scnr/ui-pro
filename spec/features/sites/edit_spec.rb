@@ -130,7 +130,7 @@ feature 'Site profile form' do
                     fill_in 'Maximum parallel scans', with: 1
                     submit
 
-                    expect(site.reload.max_parallel_scans).to eq 1
+                    expect(site.profile.max_parallel_scans).to eq 1
                 end
 
                 feature 'when its value is greater than the global setting' do
@@ -138,7 +138,7 @@ feature 'Site profile form' do
                         fill_in 'Maximum parallel scans', with: 10
                         submit
 
-                        expect(find('div.site_max_parallel_scans.has-error')).to have_content "cannot be greater than the global setting of #{settings.max_parallel_scans}"
+                        expect(find('div.site_profile_max_parallel_scans.has-error')).to have_content "cannot be greater than the global setting of #{settings.max_parallel_scans}"
                     end
                 end
 
@@ -147,7 +147,7 @@ feature 'Site profile form' do
                         fill_in 'Maximum parallel scans', with: 0
                         submit
 
-                        expect(find('div.site_max_parallel_scans.has-error')).to have_content 'must be greater than 0'
+                        expect(find('div.site_profile_max_parallel_scans.has-error')).to have_content 'must be greater than 0'
                     end
                 end
 
@@ -156,7 +156,7 @@ feature 'Site profile form' do
                         fill_in 'Maximum parallel scans', with: -1
                         submit
 
-                        expect(find('div.site_max_parallel_scans.has-error')).to have_content 'must be greater than 0'
+                        expect(find('div.site_profile_max_parallel_scans.has-error')).to have_content 'must be greater than 0'
                     end
                 end
             end
@@ -186,8 +186,8 @@ feature 'Site profile form' do
 
             feature 'URL rewrite rules' do
                 scenario 'can be set' do
-                    rules = "/articles\/[\w-]+\/(\d+)/:articles.php?id=\\1\n"
-                    rules << "/photos\/[\w-]+\/(\d+)/:photos.php?id=\\1"
+                    rules = "/articles\/[\w-]+\/(\d+)/=articles.php?id=\\1\n"
+                    rules << "/photos\/[\w-]+\/(\d+)/=photos.php?id=\\1"
 
                     fill_in 'URL rewrite rules', with: rules
                     submit
@@ -200,7 +200,7 @@ feature 'Site profile form' do
 
                 feature 'when missing captures' do
                     scenario 'shows error' do
-                        rules = "/articles\/[\w-]+\/\d+/:articles.php?id=\1\n"
+                        rules = "/articles\/[\w-]+\/\d+/=articles.php?id=\1\n"
 
                         fill_in 'URL rewrite rules', with: rules
                         submit
@@ -211,7 +211,7 @@ feature 'Site profile form' do
 
                 feature 'when missing substitutions' do
                     scenario 'shows error' do
-                        rules = "/articles\/[\w-]+\/(\d+)/:articles.php?id=\n"
+                        rules = "/articles\/[\w-]+\/(\d+)/=articles.php?id=\n"
 
                         fill_in 'URL rewrite rules', with: rules
                         submit
@@ -222,7 +222,7 @@ feature 'Site profile form' do
 
                 feature 'when pattern is empty' do
                     scenario 'shows error' do
-                        rules = ":articles.php?id=\1\n"
+                        rules = "=articles.php?id=\1\n"
 
                         fill_in 'URL rewrite rules', with: rules
                         submit
@@ -233,7 +233,7 @@ feature 'Site profile form' do
 
                 feature 'when substitution is empty' do
                     scenario 'shows error' do
-                        rules = "/articles\/[\w-]+\/(\d+)/:"
+                        rules = "/articles\/[\w-]+\/(\d+)/="
 
                         fill_in 'URL rewrite rules', with: rules
                         submit
@@ -244,7 +244,7 @@ feature 'Site profile form' do
 
                 feature 'when given invalid pattern' do
                     scenario 'shows error' do
-                        rules = "/(articles\/[\w-]+\/(\d+)/:\1"
+                        rules = "/(articles\/[\w-]+\/(\d+)/=\1"
 
                         fill_in 'URL rewrite rules', with: rules
                         submit
@@ -754,8 +754,8 @@ feature 'Site profile form' do
         feature 'Browser' do
             feature 'Wait for elements to appear' do
                 scenario 'can be set' do
-                    rules = "stuff:#myElement\n"
-                    rules << 'blah:#myOtherElement'
+                    rules = "stuff=#myElement\n"
+                    rules << 'blah=#myOtherElement'
 
                     fill_in 'Wait for elements to appear', with: rules
                     submit
@@ -768,16 +768,16 @@ feature 'Site profile form' do
 
                 feature 'when missing the pattern' do
                     scenario 'shows error' do
-                        fill_in 'Wait for elements to appear', with: ':2'
+                        fill_in 'Wait for elements to appear', with: '=2'
                         submit
 
                         expect(find('.site_profile_browser_cluster_wait_for_elements.has-error').text).to include 'pattern cannot be empty'
                     end
                 end
 
-                feature 'when missing the counter' do
+                feature 'when missing the element' do
                     scenario 'shows error' do
-                        fill_in 'Wait for elements to appear', with: 'stuff:'
+                        fill_in 'Wait for elements to appear', with: 'stuff='
                         submit
 
                         expect(find('.site_profile_browser_cluster_wait_for_elements.has-error').text).to include 'is missing a CSS selector'
@@ -786,7 +786,7 @@ feature 'Site profile form' do
 
                 feature 'when given invalid pattern' do
                     scenario 'shows error' do
-                        fill_in 'Wait for elements to appear', with: '(stuff:#myElement'
+                        fill_in 'Wait for elements to appear', with: '(stuff=#myElement'
                         submit
 
                         expect(find('.site_profile_browser_cluster_wait_for_elements.has-error').text).to include 'invalid pattern'

@@ -30,7 +30,6 @@ class CreateProfiles < ActiveRecord::Migration[5.1]
             t.binary     "scope_exclude_content_patterns"
             t.boolean  "scope_exclude_binaries"
             t.binary     "scope_include_path_patterns"
-            t.binary     "scope_restrict_paths"
             t.integer  "scope_dom_depth_limit"
             t.integer  "scope_directory_depth_limit"
 

@@ -1,15 +1,15 @@
 <%= render partial: '/sites/profile/confirm_rescope' %>
 
-<%= simple_form_for @site, html: { class: 'profile-form' } do |pf| %>
-    <%= pf.error_notification %>
+<%= simple_form_for @site_profile, html: { class: 'profile-form' } do |f| %>
+    <%= f.error_notification %>
 
-    <% if pf.error_notification %>
+    <% if f.error_notification %>
         <div>
             <ul>
                 <% @site.profile.errors.messages.each do |attribute, messages| %>
                     <li>
                         <%= link_to attribute.to_s.humanize,
-                                    "#site_profile_attributes_#{attribute}",
+                                    "#site_profile_#{attribute}",
                                     class: 'scroll' %>
                         <% if messages.size == 1 %>
                             <%= messages.first %>
@@ -38,7 +38,7 @@
 
             <div class="row">
                 <div class="col-md-6">
-                    <%= pf.input :max_parallel_scans,
+                    <%= f.input :max_parallel_scans,
                                 label: 'Maximum parallel scans'
                     %>
                 </div>
@@ -57,7 +57,6 @@
 
     <hr/>
 
-    <%= pf.simple_fields_for :profile do |f| %>
     <div id="platforms">
         <fieldset>
             <h2 id="platforms-h">
@@ -151,6 +150,7 @@
                 <div class="col-md-6">
                     <%= f.input :scope_exclude_file_extensions,
                                 label: 'Exclude file extensions',
+                                as: :text,
                                 placeholder: 'Process all resources identically',
                                 input_html: {
                                         value: @site.profile.scope_exclude_file_extensions.join( ' ' )
@@ -165,6 +165,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <%= f.input :scope_template_path_patterns,
+                                as: :text,
                                 label: 'Path template patterns',
                                 placeholder: 'Process all resources identically',
                                 input_html: {
@@ -180,6 +181,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <%= f.input :scope_exclude_path_patterns,
+                                as: :text,
                                 label: 'Path exclusion patterns',
                                 placeholder: 'Do not exclude any resources',
                                 input_html: { value: @site.profile.scope_exclude_path_patterns.join( "\n" ) } %>
@@ -193,6 +195,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <%= f.input :scope_auto_redundant_paths,
+                                as: :text,
                                 label: 'Parameter redundancy limit',
                                 placeholder: 'Infinite' %>
                 </div>
@@ -214,6 +217,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <%= f.input :scope_extend_paths,
+                                    as: :text,
                                     label: 'Extend paths',
                                     placeholder: 'Only use paths discovered by the crawl',
                                     input_html: { value: @site.profile.scope_extend_paths.join( "\n" ) } %>
@@ -227,6 +231,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <%= f.input :scope_exclude_content_patterns,
+                                    as: :text,
                                     label: 'Content exclusion patterns',
                                     placeholder: 'Include all pages',
                                     input_html: {
@@ -254,6 +259,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <%= f.input :audit_link_templates,
+                                as: :text,
                                 label: 'Custom inputs',
                                 placeholder: 'Custom inputs not necessary',
                                 input_html: { value: @site.profile.audit_link_templates.join( "\n" ) } %>
@@ -271,6 +277,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <%= f.input :scope_url_rewrites,
+                                as: :text,
                                 label: 'URL rewrite rules',
                                 placeholder: 'No URL rewriting',
                                 input_html: {
@@ -294,6 +301,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <%= f.input :input_values,
+                                as: :text,
                                 label: 'Fill-in values',
                                 placeholder: 'No need for special values',
                                 input_html: {
@@ -350,6 +358,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <%= f.input :http_cookies,
+                                as: :text,
                                 label: 'Cookies',
                                 placeholder: 'No need for special cookies',
                                 input_html: {
@@ -376,6 +385,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <%= f.input :http_request_headers,
+                                as: :text,
                                 label: 'Headers',
                                 placeholder: 'No need for special headers',
                                 input_html: {
@@ -421,11 +431,12 @@
             <div class="row">
                 <div class="col-md-6">
                     <%= f.input :browser_cluster_wait_for_elements,
+                                as: :text,
                                 label: 'Wait for elements to appear',
                                 placeholder: 'No need for special rules regarding the ready-state of pages',
                                 input_html: {
                                         value: @site.profile.browser_cluster_wait_for_elements.
-                                                       map { |k, v| "#{k}:#{v}" }.join( "\n" )
+                                                       map { |k, v| "#{k}=#{v}" }.join( "\n" )
                                 }
                     %>
                 </div>
@@ -433,7 +444,7 @@
                     <%= messages_for( :browser_cluster_wait_for_elements ) %>
                     <div class="help-block">
                         <p>
-                            Rules take the format of <kbd>pattern:css</kbd>,
+                            Rules take the format of <kbd>pattern=css</kbd>,
                             input each rule in its own line.
                         </p>
 
@@ -442,7 +453,7 @@
                             of <code>myElement</code> to appear when visiting a page
                             whose URL includes the string <code>withElement</code>
                             (like: <code>http://test.com/blah#withElement</code>)
-                            you can use: <code>withElement:#myElement</code>
+                            you can use: <code>withElement=#myElement</code>
                         </p>
 
                         <p>
@@ -455,20 +466,19 @@
                         <p>
                             In this case, in order to wait for an element with an ID
                             attribute of <code>myElement</code> when the URL has no
-                            hash (<code>#</code>) part, use: <code>^((?!#).)*$:#myElement</code>
+                            hash (<code>#</code>) part, use: <code>^((?!#).)*$=#myElement</code>
                         </p>
                     </div>
                 </div>
             </div>
         </fieldset>
     </div>
-    <% end %>
 
     <div class="hide">
-        <%= pf.input :apply, as: :fake %>
+        <%= f.input :apply, as: :fake %>
     </div>
 
     <div class="form-actions">
-        <%= pf.button :submit, class: 'hide' %>
+        <%= f.button :submit, class: 'hide' %>
     </div>
 <% end %>

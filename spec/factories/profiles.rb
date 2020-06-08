@@ -23,10 +23,10 @@ FactoryGirl.define do
         scope_include_path_patterns [
             'username', 'id'
         ]
-        scope_restrict_paths [
-            'only-include-me',
-            'only-include-me-too'
-        ]
+        # scope_restrict_paths [
+        #     'only-include-me',
+        #     'only-include-me-too'
+        # ]
         audit_include_vector_patterns [
             'search', 'username'
         ]

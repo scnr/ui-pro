@@ -96,27 +96,6 @@
             </div>
         </div>
 
-        <div id="scope_restrict_paths" class="row">
-            <div class="col-md-6">
-                <strong>Restrict paths:</strong>
-
-                <% if profile.scope_restrict_paths.empty? %>
-                    Use paths discovered by the crawl.
-                <% else %>
-                    <ol>
-                        <% profile.scope_restrict_paths.each do |path| %>
-                            <li>
-                                <%= path %>
-                            </li>
-                        <% end %>
-                    </ol>
-                <% end %>
-            </div>
-            <div class="col-md-6">
-                <%= messages_for( :scope_restrict_paths ) %>
-            </div>
-        </div>
-
         <div id="scope_exclude_content_patterns" class="row">
             <div class="col-md-6">
                 <strong>Content exclusion patterns:</strong>

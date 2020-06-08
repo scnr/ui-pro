@@ -8,7 +8,6 @@ class CreateSites < ActiveRecord::Migration[5.1]
             t.integer :revisions_count,  default: 0
             t.integer :issues_count, default: 0
             t.integer :sitemap_entries_count, default: 0
-            t.integer  :max_parallel_scans, default: 1
 
             t.belongs_to :user, index: true
 
