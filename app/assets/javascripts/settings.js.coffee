@@ -25,5 +25,5 @@ setup = () ->
     if $('#edit_setting_1').exists()
         form_setup()
 
-$(document).on 'page:load', setup
+$(document).on 'turbolinks:load', setup
 jQuery setup

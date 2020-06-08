@@ -53,5 +53,5 @@ setup = () ->
     if $('.scan-form').exists()
         form_setup()
 
-$(document).on 'page:load', setup
+$(document).on 'turbolinks:load', setup
 jQuery setup

@@ -205,6 +205,6 @@ setup = () ->
     $('#site_protocol').change ->
         $('#site_port').val( `$('#site_protocol').val() == 'http' ? 80 : 443` )
 
-$(document).on 'page:load', setup
+$(document).on 'turbolinks:load', setup
 jQuery setup
 
