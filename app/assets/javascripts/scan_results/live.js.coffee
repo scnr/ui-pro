@@ -43,8 +43,12 @@ clear_feed = () ->
     $('#live-stream').html('')
 
 setup_feed = () ->
+    if window.liveIntervalID
+        clearInterval( window.liveIntervalID )
+        window.liveIntervalID = null
+
     update_feed( true )
-    window.setInterval( update_feed, 1000 )
+    window.liveIntervalID = window.setInterval( update_feed, 1000 )
 
 setup = () ->
     if $('#live-stream').is(':visible')
@@ -56,5 +60,5 @@ setup = () ->
     $('#clear-updates').click ->
         clear_feed()
 
-$(document).on 'page:load', setup
+$(document).on 'turbolinks:load', setup
 jQuery setup

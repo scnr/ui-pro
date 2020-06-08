@@ -20,6 +20,7 @@
 //= require ace/worker-html
 //= require ace/theme-monokai
 //= require ace/mode-ruby
+//= require scan_results/live.js
 //= require_tree .
 
 function loading(){
