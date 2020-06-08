@@ -1,3 +1,3 @@
-# if defined?( Rails::Server )
-#     ScanScheduler.start
-# end
+if defined?( Rails::Server )
+    ScanScheduler.start
+end
