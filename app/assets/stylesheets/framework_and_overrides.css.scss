@@ -22,6 +22,11 @@ img {
   margin: 0 auto;
 }
 
+hr {
+  //@extend .img-responsive;
+  margin: 0 auto;
+}
+
 .navbar-nav > li > a {
   padding-top:    10px !important;
   padding-bottom: 10px !important;

@@ -27,8 +27,8 @@ module Issue
             digest: native.digest,
             state:  %w(fixed false_positive)
         ).first
-        if issue
 
+        if issue
             # We found a regression, obviously the issue isn't fixed as it just
             # reappeared, revert its state.
             if issue.fixed?
@@ -122,7 +122,7 @@ module Issue
             state:    'fixed'
         ).update_all(
             state:                   'fixed',
-            reviewed_by_revision_id: revision
+            reviewed_by_revision_id: revision.id
         )
     end
 

@@ -371,7 +371,7 @@ module Scan
                 revision,
                 # Don't mark issues as fixed if they're missing from a rescoped
                 # scan, issues may be missing due to the scope reduction.
-                mark_issues_fixed: revision.index == 1 || !revision.previous.rescoped?,
+                mark_issues_fixed: revision.index > 1 && !revision.previous.rescoped?,
                 status:            'completed'
             )
         end
