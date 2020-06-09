@@ -11,8 +11,6 @@
 
 <div class="revision-info">
     <% if revision.active? %>
-        <i class="fa fa-spin fa-circle-o-notch"></i>
-
         <% if !hide_revision_name %>
             <% if hide_scan_name %>
                 <%= link_to revision,
@@ -30,8 +28,9 @@
         on
 
         <% if extended %>
-            <%= l revision.started_at %>;
-            running for
+            <%= l revision.started_at %>.
+            <br/>
+            Duration:
             <%= seconds_to_hms revision.duration %>
 
             <% if (stop_after_hours = schedule.stop_after_hours) %>
@@ -57,16 +56,17 @@
         <% if extended %>
             <%= hide_revision_name ? 'Started' : 'started' %>
 
-            on <%= l revision.started_at %>;
-            <%= revision.status %>
+            on <%= l revision.started_at %>.
+            <br/>
+            <%= revision.status.capitalize %>
 
             <% if revision.timed_out? %>
                 (due to time out)
             <% end %>
 
-            on <%= l revision.stopped_at %>
-            &mdash;
-            <%= seconds_to_hms revision.duration %>.
+            on <%= l revision.stopped_at %>.
+            <br/>
+            Duration: <%= seconds_to_hms revision.duration %>
         <% else %>
             <%= hide_revision_name ? revision.status.capitalize : revision.status %>
             on <%= l revision.stopped_at %>.

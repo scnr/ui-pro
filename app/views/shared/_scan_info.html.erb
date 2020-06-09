@@ -5,7 +5,7 @@
 <div class="scan-info">
     Using <%= link_to scan.profile, profile_path( scan.profile ) %>
     from <%= link_to scan.device, device_path( scan.device ) %>
-    as <%= link_to scan.site_role, site_role_path( scan.site, scan.site_role ) %>
+    as <%= link_to scan.site_role, site_role_path( scan.site, scan.site_role ) %>.
 
     <% if !hide_schedule %>
         <%= render_schedule scan.schedule %>

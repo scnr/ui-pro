@@ -60,7 +60,7 @@ module IssuesHelper
                 'exclamation-circle'
 
             when 'fixed'
-                'remove'
+                'times-circle'
         end
     end
 

@@ -31,4 +31,14 @@
     <% end %>
 
     <%= render partial: '/scans/buttons', locals: { scan: @scan } %>
+
+    <div class="help-block" id="scan-info-details">
+        <%= render partial: '/shared/scan_info', locals: {
+            scan: @scan
+        } %>
+    </div>
+
+    <div class="description help-block">
+        <%= md @scan.description %>
+    </div>
 </div>

@@ -10,29 +10,4 @@
     <%= render partial: 'sidebar' %>
 <% end %>
 
-<div class="row" id="scan-info">
-    <div class="col-md-12">
-        <%= render partial: 'shared/scan_heading' %>
-
-        <div class="description">
-            <%= md @scan.description %>
-        </div>
-
-        <div class="help-block" id="scan-info-details">
-            <%= render partial: '/shared/scan_info', locals: {
-                    scan: @scan
-            } %>
-
-            <% if lr = @scan.last_revision %>
-                <%= render partial: '/shared/revision_info', locals: {
-                        scan:           @scan,
-                        revision:       lr,
-                        hide_scan_name: true,
-                        extended:       true
-                } %>
-            <% end %>
-        </div>
-    </div>
-</div>
-
 <%= render 'shared/scan_results' %>
