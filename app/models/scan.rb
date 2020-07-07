@@ -117,6 +117,12 @@ class Scan < ActiveRecord::Base
 
         options.merge!( 'authorized_by' => site.user.email )
 
+        FrameworkHelper.framework do |framework|
+            framework.plugins.default.each do |plugin|
+                options['plugins'][plugin.to_s] ||= {}
+            end
+        end
+
         options['url'] = url
 
         options
