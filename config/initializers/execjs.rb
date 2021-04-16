@@ -3,7 +3,7 @@ module ExecJS
 module Encoding
     def encode( string )
         super string
-    rescue Encoding::UndefinedConversionError
+    rescue ::Encoding::UndefinedConversionError
         string.recode
     end
 end

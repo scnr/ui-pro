@@ -73,5 +73,5 @@ group :development, :test do
     gem 'awesome_print'
 end
 
-gem 'ethon', github: 'typhoeus/ethon', branch: 'thread-safe-easy-handle-cleanup'
+# gem 'ethon', github: 'typhoeus/ethon', branch: 'thread-safe-easy-handle-cleanup'
 gem 'scnr-engine', path: File.dirname( __FILE__ ) + '/../engine'

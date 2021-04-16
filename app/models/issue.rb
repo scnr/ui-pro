@@ -61,7 +61,7 @@ class Issue < ActiveRecord::Base
 
     default_scope do
         includes(:type).includes(:input_vector).by_severity.
-            order('issue_types.name asc').order( state_order_sql )
+            order( Arel.sql( 'issue_types.name asc') ).order( state_order_sql )
     end
 
     def has_proofs?
@@ -152,6 +152,8 @@ class Issue < ActiveRecord::Base
             ret << " WHEN issues.state = '#{p}' THEN #{i}"
         end
         ret << ' END'
+
+        Arel.sql( ret )
     end
 
     def self.unique_revisions

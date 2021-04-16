@@ -16,6 +16,8 @@ class IssueTypeSeverity < ActiveRecord::Base
             ret << " WHEN issue_type_severities.name = '#{p}' THEN #{i}"
         end
         ret << ' END'
+
+        Arel.sql( ret )
     end
 
     def to_s
