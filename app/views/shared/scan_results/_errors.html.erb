@@ -1,7 +1,3 @@
-<%
-   errors = @revision.error_messages.split( /^-+/ ).last
-%>
-
 <% if @revision.failed? %>
     <p class="alert alert-danger">
         The errors may have caused the scan to fail.
@@ -16,4 +12,4 @@
     </p>
 <% end %>
 
-<pre><%= errors %></pre>
+<pre><%= @revision.error_messages %></pre>
