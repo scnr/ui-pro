@@ -24,7 +24,7 @@ EXCLUDE_REPORTERS = [
 ]
 
 # Component loading isn't thread-safe so preload everything here.
-::SCNREngineFramework = SCNR::Engine::Framework.new
+::SCNREngineFramework = SCNR::Engine::Framework.unsafe
 ::SCNREngineFramework.checks.load '*'
 ::SCNREngineFramework.reporters.load ['*'] + EXCLUDE_REPORTERS.map { |p| "-#{p}" }
 ::SCNREngineFramework.plugins.load ['*', '-default*'] + EXCLUDE_PLUGINS.map { |p| "-#{p}" }
