@@ -5,7 +5,7 @@ class ScanScheduler
     include Singleton
 
     # Interval (in seconds) for checking for due scans and progress monitoring.
-    TICK = 1
+    TICK = 5
 
     class Error < RuntimeError
         class AlreadyRunning < Error
