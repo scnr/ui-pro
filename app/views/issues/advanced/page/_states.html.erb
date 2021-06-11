@@ -13,7 +13,7 @@
             This is the original HTTP response body.
         </p>
 
-        <%= code_highlight page.response.body, :html,
+        <%= code_highlight normalize_html( page.response.body ), :html,
                            line_numbers: true,
                            anchor_id:    "#{id}-initial"
         %>
@@ -34,7 +34,7 @@
             transitions.
         </p>
 
-        <%= code_highlight page.dom.body, :html,
+        <%= code_highlight normalize_html( page.dom.body ), :html,
                            line_numbers: true,
                            anchor_id:    "#{id}-final"
         %>

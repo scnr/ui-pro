@@ -1,5 +1,11 @@
 module IssuesHelper
 
+    def normalize_html( html )
+        doc = Nokogiri::HTML( html )
+        doc.xpath( '//@data-scnr-engine-id' ).remove
+        doc.to_html
+    end
+
     def data_dump( data )
         ap = AwesomePrint::Inspector.new( plain: true, html: true )
         "<pre class='data-dump'>#{ap.awesome( data )}</pre>".html_safe

@@ -1,7 +1,7 @@
 <%
    diff = html_diff(
-           CodeRay.scan( page.response.body, :html ).html.lines.to_a.join,
-           CodeRay.scan( "#{page.dom.body}\n", :html ).html.lines.to_a.join
+           CodeRay.scan( normalize_html( page.response.body ), :html ).html.lines.to_a.join,
+           CodeRay.scan( "#{normalize_html( page.dom.body )}\n", :html ).html.lines.to_a.join
    ).to_a
 %>
 <div class="code-container diff-container">
