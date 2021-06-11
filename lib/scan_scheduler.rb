@@ -1,5 +1,4 @@
-require 'arachni/rpc'
-require 'scnr/engine/processes'
+require 'scnr/application'
 
 class ScanScheduler
     include Singleton

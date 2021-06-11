@@ -57,7 +57,7 @@ end
 
 group :test do
     gem 'shoulda'
-    gem 'capybara-webkit'
+    # gem 'capybara-webkit'
     # gem 'poltergeist'
     gem 'capybara'
     gem 'database_cleaner'
@@ -75,3 +75,5 @@ end
 
 # gem 'ethon', github: 'typhoeus/ethon', branch: 'thread-safe-easy-handle-cleanup'
 gem 'scnr-engine', path: File.dirname( __FILE__ ) + '/../engine'
+gem 'scnr-application', path: '../application'
+gem 'cuboid', path: '../../cuboid/'

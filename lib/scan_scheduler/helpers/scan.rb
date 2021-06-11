@@ -21,7 +21,7 @@ module Scan
     def pause( revision )
         log_info_for revision, 'Pausing'
 
-        instance_for( revision ).pause do |r|
+        instance_for( revision ).pause! do |r|
             log_info_for revision, 'Paused'
 
             handle_if_rpc_error( revision, r )
@@ -34,7 +34,7 @@ module Scan
     def resume( revision )
         log_info_for revision, 'Resuming'
 
-        instance_for( revision ).resume do |r|
+        instance_for( revision ).resume! do |r|
             log_info_for revision, 'Resumed'
 
             handle_if_rpc_error( revision, r )
@@ -57,7 +57,7 @@ module Scan
         )
 
         spawn_instance_for( revision ) do |instance|
-            instance.restore( revision.snapshot_path ) do |r|
+            instance.restore!( revision.snapshot_path ) do |r|
                 log_info_for revision, 'Restoring'
 
                 FileUtils.rm( revision.snapshot_path )
@@ -79,7 +79,7 @@ module Scan
 
         instance = instance_for( revision )
 
-        instance.suspend do |r|
+        instance.suspend! do |r|
             log_info_for revision, 'Suspended, grabbing snapshot path.'
             handle_if_rpc_error( revision, r )
         end
@@ -174,7 +174,7 @@ module Scan
         log_info_for revision, 'Created revision.'
 
         spawn_instance_for( revision ) do |instance|
-            instance.scan( revision.rpc_options ) do |response|
+            instance.run( revision.rpc_options ) do |response|
                 next if handle_if_rpc_error( revision, response )
 
                 monitor( revision )
@@ -243,7 +243,7 @@ module Scan
             revision.scan.issues.where.not( state: 'fixed' ).digests
 
         # With errors and live sitemap.
-        instance.native_progress(
+        instance.scan.progress(
             with:    {
                 issues:  true,
                 sitemap: progress_tracking_for( revision )[:coverage_entries].size,
@@ -257,7 +257,7 @@ module Scan
             # missing issues from previous revisions as fixed.
             without: { issues: progress_tracking_for( revision )[:issue_digests] },
         ) do |progress|
-            handle_progress( revision, progress )
+            handle_progress( revision, progress.my_symbolize_keys )
         end
     end
 
@@ -317,6 +317,8 @@ module Scan
 
         progress_tracking_for( revision )[:issue_digests] ||= []
         progress[:issues].each do |issue|
+            issue = SCNR::Engine::Issue.from_rpc_data( issue )
+
             progress_tracking_for( revision )[:issue_digests] << issue.digest
 
             create_issue( revision, issue )
@@ -353,7 +355,7 @@ module Scan
         end
 
         # Special case...
-        if progress[:status] == :suspended
+        if progress[:status] == 'suspended'
             instance.snapshot_path do |path|
                 next if handle_if_rpc_error( revision, path )
 
@@ -411,7 +413,9 @@ module Scan
         log_info_for revision, 'Grabbing report'
 
         instance = instance_for( revision )
-        instance.native_abort_and_report do |report|
+        instance.abort_and_generate_report do |report|
+            report = report.data
+
             log_info_for revision, 'Got report'
 
             report_path = "#{REPORT_DIR}/#{revision.id}.ser"

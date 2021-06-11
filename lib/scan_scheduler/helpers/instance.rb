@@ -36,7 +36,7 @@ module Instance
         increment_active_instance_count_for_site revision.site
 
         # Don't fork, we don't want the entire Rails env.
-        instances.spawn fork: false do |instance|
+        application.spawn :instance do |instance|
             log_info_for revision, "Spawned instance at #{instance.url}"
 
             @revision_id_to_instance_url[revision.id] = instance.url
@@ -84,7 +84,7 @@ module Instance
         end
 
         # Connections are actually cached.
-        instances.connect( @revision_id_to_instance_url[revision.id] )
+        application.connect( url: @revision_id_to_instance_url[revision.id] )
     end
 
     # Returns the URL of the instance assigned to `revision`.
@@ -97,8 +97,12 @@ module Instance
         @revision_id_to_instance_url[revision.id]
     end
 
+    def application
+        SCNR::Application
+    end
+
     def instances
-        SCNR::Engine::Processes::Instances
+        Cuboid::Processes::Instances
     end
 
     # @private
