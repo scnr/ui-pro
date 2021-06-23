@@ -108,7 +108,7 @@ module Slots
     # @return   [Integer]
     #   Amount of memory (in bytes) to allocate to each scan.
     def slot_memory_size
-        (Settings.browser_cluster_pool_size * SLOT_BROWSER_SIZE) +
+        (Settings.dom_pool_size * SLOT_BROWSER_SIZE) +
             SLOT_INSTANCE_SIZE
     end
 

@@ -1541,7 +1541,7 @@ feature 'Revision coverage' do
         feature 'Browser' do
             feature 'Wait for elements to appear' do
                 before do
-                    revision.site_profile.browser_cluster_wait_for_elements = {
+                    revision.site_profile.dom_wait_for_elements = {
                         '^((?!#).)*$' => '#myElement'
                     }
                     revision.site_profile.save
@@ -1549,11 +1549,11 @@ feature 'Revision coverage' do
                     refresh
                 end
 
-                let(:attribute) { 'browser_cluster_wait_for_elements' }
+                let(:attribute) { 'dom_wait_for_elements' }
 
                 feature 'when empty' do
                     before do
-                        revision.site_profile.browser_cluster_wait_for_elements = {}
+                        revision.site_profile.dom_wait_for_elements = {}
                         revision.site_profile.save
 
                         refresh
@@ -1566,7 +1566,7 @@ feature 'Revision coverage' do
 
                 feature 'when not empty' do
                     scenario 'it lists them' do
-                        revision.site_profile.browser_cluster_wait_for_elements.each do |pattern, css|
+                        revision.site_profile.dom_wait_for_elements.each do |pattern, css|
                             expect(snapshot).to have_content "#{pattern} => #{css}"
                         end
                     end
@@ -1574,8 +1574,8 @@ feature 'Revision coverage' do
 
                 feature 'when identical to the snapshot' do
                     before do
-                        site.profile.browser_cluster_wait_for_elements =
-                            revision.site_profile.browser_cluster_wait_for_elements
+                        site.profile.dom_wait_for_elements =
+                            revision.site_profile.dom_wait_for_elements
                         site.profile.save
 
                         refresh
@@ -1588,7 +1588,7 @@ feature 'Revision coverage' do
 
                 feature 'when different from the snapshot' do
                     before do
-                        site.profile.browser_cluster_wait_for_elements = {
+                        site.profile.dom_wait_for_elements = {
                             '^((?!#).)*$' => '#myElement2'
                         }
                         site.profile.save
@@ -1605,7 +1605,7 @@ feature 'Revision coverage' do
                     end
 
                     scenario 'it lists current ones' do
-                        site.profile.browser_cluster_wait_for_elements.each do |pattern, css|
+                        site.profile.dom_wait_for_elements.each do |pattern, css|
                             expect(current).to have_content "#{pattern} => #{css}"
                         end
                     end
@@ -1623,13 +1623,13 @@ feature 'Revision coverage' do
                     end
 
                     scenario 'Revert button sets Site options to Revision options' do
-                        expect(site.profile.browser_cluster_wait_for_elements).to_not eq revision.site_profile.browser_cluster_wait_for_elements
+                        expect(site.profile.dom_wait_for_elements).to_not eq revision.site_profile.dom_wait_for_elements
 
                         within heading do
                             click_link 'Revert'
                         end
 
-                        expect(site.profile.reload.browser_cluster_wait_for_elements).to eq revision.site_profile.browser_cluster_wait_for_elements
+                        expect(site.profile.reload.dom_wait_for_elements).to eq revision.site_profile.dom_wait_for_elements
                     end
                 end
             end

@@ -10,9 +10,9 @@ class CreateSettings < ActiveRecord::Migration[5.1]
             t.string   :http_proxy_username
             t.string   :http_proxy_password
 
-            t.integer  :browser_cluster_pool_size
-            t.integer  :browser_cluster_job_timeout
-            t.integer  :browser_cluster_worker_time_to_live
+            t.integer  :dom_pool_size
+            t.integer  :dom_job_timeout
+            t.integer  :dom_worker_time_to_live
 
             t.integer  :max_parallel_scans
 

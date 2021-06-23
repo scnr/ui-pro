@@ -18773,7 +18773,7 @@ form.scan-form #scan_schedule_attributes_stop_after_hours {
 .profile-form #site_profile_attributes_scope_url_rewrites,
 .profile-form #site_profile_attributes_http_cookies,
 .profile-form #site_profile_attributes_http_request_headers,
-.profile-form #site_profile_attributes_browser_cluster_wait_for_elements {
+.profile-form #site_profile_attributes_dom_wait_for_elements {
   width: 100%;
   height: 150px;
 }

@@ -215,37 +215,37 @@
 
             <div class="row">
                 <div class="col-md-6">
-                    <%= f.input :browser_cluster_pool_size,
+                    <%= f.input :dom_pool_size,
                                 label: 'Processes',
-                                placeholder: SCNR::Engine::Options.browser_cluster.pool_size.to_s
+                                placeholder: SCNR::Engine::Options.dom.pool_size.to_s
                     %>
                 </div>
                 <div class="col-md-6 input-help">
-                    <%= messages_for( :browser_cluster_pool_size ) %>
+                    <%= messages_for( :dom_pool_size ) %>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-6">
-                    <%= f.input :browser_cluster_worker_time_to_live,
+                    <%= f.input :dom_worker_time_to_live,
                                 label: 'Time to live',
-                                placeholder: SCNR::Engine::Options.browser_cluster.worker_time_to_live.to_s
+                                placeholder: SCNR::Engine::Options.dom.worker_time_to_live.to_s
                     %>
                 </div>
                 <div class="col-md-6 input-help">
-                    <%= messages_for( :browser_cluster_worker_time_to_live ) %>
+                    <%= messages_for( :dom_worker_time_to_live ) %>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-6">
-                    <%= f.input :browser_cluster_job_timeout,
+                    <%= f.input :dom_job_timeout,
                                 label: 'Timeout',
-                                placeholder: SCNR::Engine::Options.browser_cluster.job_timeout.to_s
+                                placeholder: SCNR::Engine::Options.dom.job_timeout.to_s
                     %>
                 </div>
                 <div class="col-md-6 input-help">
-                    <%= messages_for( :browser_cluster_job_timeout ) %>
+                    <%= messages_for( :dom_job_timeout ) %>
                 </div>
             </div>
 

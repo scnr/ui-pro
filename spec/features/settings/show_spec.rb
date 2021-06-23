@@ -212,21 +212,21 @@ feature 'Edit global settings' do
                     fill_in 'Processes', with: 10
                     submit
 
-                    expect(subject.browser_cluster_pool_size).to eq 10
+                    expect(subject.dom_pool_size).to eq 10
                 end
 
                 scenario 'can set Time to live' do
                     fill_in 'Time to live', with: 10
                     submit
 
-                    expect(subject.browser_cluster_worker_time_to_live).to eq 10
+                    expect(subject.dom_worker_time_to_live).to eq 10
                 end
 
                 scenario 'can set Timeout' do
                     fill_in 'Timeout', with: 10
                     submit
 
-                    expect(subject.browser_cluster_job_timeout).to eq 10
+                    expect(subject.dom_job_timeout).to eq 10
                 end
             end
         end

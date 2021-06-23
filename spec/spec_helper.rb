@@ -86,9 +86,9 @@ RSpec.configure do |config|
             http_request_redirect_limit:         5,
             http_response_max_size:              200_000,
 
-            browser_cluster_pool_size:           6,
-            browser_cluster_job_timeout:         10,
-            browser_cluster_worker_time_to_live: 100,
+            dom_pool_size:           6,
+            dom_job_timeout:         10,
+            dom_worker_time_to_live: 100,
 
             max_parallel_scans:                  5
         )

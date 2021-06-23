@@ -515,7 +515,7 @@
 
                 <%= render layout: '/shared/scan_results/configuration/site_profile/th',
                            locals: {
-                                   attribute: 'browser_cluster_wait_for_elements'
+                                   attribute: 'dom_wait_for_elements'
                            } do %>
                     Wait for elements to appear
                 <% end %>
@@ -528,7 +528,7 @@
 
                 <%= render layout: '/shared/scan_results/configuration/site_profile/td',
                            locals: {
-                                   attribute: 'browser_cluster_wait_for_elements'
+                                   attribute: 'dom_wait_for_elements'
                            } do |value| %>
 
                     <% if value.any? %>

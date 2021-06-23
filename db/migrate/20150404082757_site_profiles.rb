@@ -25,7 +25,7 @@ class SiteProfiles < ActiveRecord::Migration[5.1]
             t.string   :http_authentication_username, default: ''
             t.string   :http_authentication_password, default: ''
 
-            t.binary     :browser_cluster_wait_for_elements
+            t.binary     :dom_wait_for_elements
 
             t.belongs_to :site, index: true
 

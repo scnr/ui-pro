@@ -104,7 +104,7 @@ describe ScanScheduler::Helpers::Slots do
 
     describe '#slots_memory_free' do
         before do
-            settings.browser_cluster_pool_size = 6
+            settings.dom_pool_size = 6
             settings.save
         end
 
@@ -126,7 +126,7 @@ describe ScanScheduler::Helpers::Slots do
 
     describe '#slot_unallocated_memory' do
         before do
-            settings.browser_cluster_pool_size = 6
+            settings.dom_pool_size = 6
             settings.save
         end
 
@@ -165,7 +165,7 @@ describe ScanScheduler::Helpers::Slots do
 
     describe '#slot_memory_size' do
         before do
-            settings.browser_cluster_pool_size = 6
+            settings.dom_pool_size = 6
             settings.save
         end
 
@@ -173,16 +173,16 @@ describe ScanScheduler::Helpers::Slots do
             expect((subject.slot_memory_size / 1024.0 / 1024.0 / 1024.0).round).to eq 2
         end
 
-        context 'when Settings#browser_cluster_pool_size is adjusted' do
+        context 'when Settings#dom_pool_size is adjusted' do
             before do
-                settings.browser_cluster_pool_size = 6
+                settings.dom_pool_size = 6
                 settings.save
             end
 
             it 'adjusts the size' do
                 prev = subject.slot_memory_size
 
-                settings.browser_cluster_pool_size = 4
+                settings.dom_pool_size = 4
                 settings.save
 
                 expect(subject.slot_memory_size).to eq( prev - (2 * described_class::SLOT_BROWSER_SIZE) )

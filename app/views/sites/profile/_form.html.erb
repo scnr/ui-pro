@@ -430,18 +430,18 @@
 
             <div class="row">
                 <div class="col-md-6">
-                    <%= f.input :browser_cluster_wait_for_elements,
+                    <%= f.input :dom_wait_for_elements,
                                 as: :text,
                                 label: 'Wait for elements to appear',
                                 placeholder: 'No need for special rules regarding the ready-state of pages',
                                 input_html: {
-                                        value: @site.profile.browser_cluster_wait_for_elements.
+                                        value: @site.profile.dom_wait_for_elements.
                                                        map { |k, v| "#{k}=#{v}" }.join( "\n" )
                                 }
                     %>
                 </div>
                 <div class="col-md-6 textarea-help">
-                    <%= messages_for( :browser_cluster_wait_for_elements ) %>
+                    <%= messages_for( :dom_wait_for_elements ) %>
                     <div class="help-block">
                         <p>
                             Rules take the format of <kbd>pattern=css</kbd>,

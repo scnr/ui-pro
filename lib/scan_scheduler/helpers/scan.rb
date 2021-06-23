@@ -114,7 +114,7 @@ module Scan
         # Don't even bother...
         if slots <= 0
             log_info 'No available slots.'
-            return
+            # return
         end
 
         # Don't use #limit here to only grab the amount of scans for available
@@ -132,7 +132,7 @@ module Scan
 
             if slots <= 0
                 log_info ' -- No available slots.'
-                return
+                # return
             end
 
             site = scan.site
@@ -283,7 +283,7 @@ module Scan
             revision.update( seed: progress[:seed] )
         end
 
-        if progress[:busy]
+        if progress[:running]
             handle_progress_active( revision, progress )
         else
             handle_progress_inactive( revision, progress )

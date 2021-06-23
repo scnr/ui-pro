@@ -2,8 +2,8 @@
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# This file is the source Rails uses to define your schema when running `rails
-# db:schema:load`. When creating a new database, `rails db:schema:load` tends to
+# This file is the source Rails uses to define your schema when running `bin/rails
+# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
 # be faster and is potentially less error prone than running all of your
 # migrations from scratch. Old migrations may fail to apply correctly if those
 # migrations use external dependencies or application code.
@@ -38,7 +38,7 @@ ActiveRecord::Schema.define(version: 2020_06_04_212259) do
     t.bigint "requestable_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["requestable_type", "requestable_id"], name: "index_http_requests_on_requestable_type_and_requestable_id"
+    t.index ["requestable_type", "requestable_id"], name: "index_http_requests_on_requestable"
     t.index ["url"], name: "index_http_requests_on_url"
   end
 
@@ -56,7 +56,7 @@ ActiveRecord::Schema.define(version: 2020_06_04_212259) do
     t.bigint "responsable_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["responsable_type", "responsable_id"], name: "index_http_responses_on_responsable_type_and_responsable_id"
+    t.index ["responsable_type", "responsable_id"], name: "index_http_responses_on_responsable"
     t.index ["url"], name: "index_http_responses_on_url"
   end
 
@@ -377,9 +377,9 @@ ActiveRecord::Schema.define(version: 2020_06_04_212259) do
     t.integer "http_proxy_port"
     t.string "http_proxy_username"
     t.string "http_proxy_password"
-    t.integer "browser_cluster_pool_size"
-    t.integer "browser_cluster_job_timeout"
-    t.integer "browser_cluster_worker_time_to_live"
+    t.integer "dom_pool_size"
+    t.integer "dom_job_timeout"
+    t.integer "dom_worker_time_to_live"
     t.integer "max_parallel_scans"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -405,7 +405,7 @@ ActiveRecord::Schema.define(version: 2020_06_04_212259) do
     t.integer "http_request_concurrency"
     t.string "http_authentication_username", default: ""
     t.string "http_authentication_password", default: ""
-    t.binary "browser_cluster_wait_for_elements"
+    t.binary "dom_wait_for_elements"
     t.bigint "site_id"
     t.bigint "revision_id"
     t.datetime "created_at", null: false

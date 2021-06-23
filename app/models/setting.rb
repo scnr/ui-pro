@@ -14,9 +14,9 @@ class Setting < ActiveRecord::Base
         http_proxy_username:            String,
         http_proxy_password:            String,
 
-        browser_cluster_pool_size:              Integer,
-        browser_cluster_job_timeout:            Integer,
-        browser_cluster_worker_time_to_live:    Integer
+        dom_pool_size:              Integer,
+        dom_job_timeout:            Integer,
+        dom_worker_time_to_live:    Integer
     )
 
     validates :max_parallel_scans, numericality: { greater_than: 0 },

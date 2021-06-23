@@ -760,7 +760,7 @@ feature 'Site profile form' do
                     fill_in 'Wait for elements to appear', with: rules
                     submit
 
-                    expect(profile.browser_cluster_wait_for_elements).to eq ({
+                    expect(profile.dom_wait_for_elements).to eq ({
                         'stuff' => '#myElement',
                         'blah'  => '#myOtherElement'
                     })
@@ -771,7 +771,7 @@ feature 'Site profile form' do
                         fill_in 'Wait for elements to appear', with: '=2'
                         submit
 
-                        expect(find('.site_profile_browser_cluster_wait_for_elements.has-error').text).to include 'pattern cannot be empty'
+                        expect(find('.site_profile_dom_wait_for_elements.has-error').text).to include 'pattern cannot be empty'
                     end
                 end
 
@@ -780,7 +780,7 @@ feature 'Site profile form' do
                         fill_in 'Wait for elements to appear', with: 'stuff='
                         submit
 
-                        expect(find('.site_profile_browser_cluster_wait_for_elements.has-error').text).to include 'is missing a CSS selector'
+                        expect(find('.site_profile_dom_wait_for_elements.has-error').text).to include 'is missing a CSS selector'
                     end
                 end
 
@@ -789,7 +789,7 @@ feature 'Site profile form' do
                         fill_in 'Wait for elements to appear', with: '(stuff=#myElement'
                         submit
 
-                        expect(find('.site_profile_browser_cluster_wait_for_elements.has-error').text).to include 'invalid pattern'
+                        expect(find('.site_profile_dom_wait_for_elements.has-error').text).to include 'invalid pattern'
                     end
                 end
             end

@@ -36,7 +36,7 @@ class SiteProfile < ActiveRecord::Base
         http_authentication_username:   String,
         http_authentication_password:   String,
 
-        browser_cluster_wait_for_elements:  { type: Hash, validate: true, format: :lsv }
+        dom_wait_for_elements:  { type: Hash, validate: true, format: :lsv }
     )
 
     # Validate it's not greater than the global one.
@@ -136,16 +136,16 @@ class SiteProfile < ActiveRecord::Base
         end
     end
 
-    def validate_browser_cluster_wait_for_elements
-        browser_cluster_wait_for_elements.each do |pattern, css|
+    def validate_dom_wait_for_elements
+        dom_wait_for_elements.each do |pattern, css|
             if pattern.empty?
-                errors.add :browser_cluster_wait_for_elements, 'pattern cannot be empty'
+                errors.add :dom_wait_for_elements, 'pattern cannot be empty'
             end
 
-            check_pattern( self, :browser_cluster_wait_for_elements, pattern )
+            check_pattern( self, :dom_wait_for_elements, pattern )
 
             if css.to_s.strip.empty?
-                errors.add :browser_cluster_wait_for_elements,
+                errors.add :dom_wait_for_elements,
                            "rule '#{pattern}' is missing a CSS selector"
             end
         end

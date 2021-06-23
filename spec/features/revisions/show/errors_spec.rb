@@ -160,7 +160,7 @@ input:
   force: false
 datastore:
   token: 06a636e8c48bf2b0d4fbf054f4bb7e16
-browser_cluster:
+dom:
   wait_for_elements: {}
   pool_size: 6
   job_timeout: 25

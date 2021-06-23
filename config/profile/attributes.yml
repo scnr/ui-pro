@@ -86,13 +86,13 @@ session_check_url: >
   When requested, the contents of HTTP response body must be matched by the
   check pattern.
 
-browser_cluster_wait_for_elements: >
+dom_wait_for_elements: >
   Waits for elements matching the given CSS selectors to appear, when visiting
   a page whose URL matches the given patterns.
-browser_cluster_pool_size: 'Amount of browser workers to keep in the pool and put to work.'
-browser_cluster_job_timeout: 'Maximum allowed time for each job in seconds.'
-browser_cluster_worker_time_to_live: 'Time-to-live of each browser (before re-spawning) counted in jobs.'
-browser_cluster_ignore_images:
+dom_pool_size: 'Amount of browser workers to keep in the pool and put to work.'
+dom_job_timeout: 'Maximum allowed time for each job in seconds.'
+dom_worker_time_to_live: 'Time-to-live of each browser (before re-spawning) counted in jobs.'
+dom_ignore_images:
   notice: >
     If images don't play a part in the functionality of the web application it's
     better to enable this option. Doing so will result in a faster scan and
