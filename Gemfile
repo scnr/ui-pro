@@ -73,7 +73,21 @@ group :development, :test do
     gem 'awesome_print'
 end
 
-gem 'scnr-engine', path: File.dirname( __FILE__ ) + '/../engine'
-gem 'scnr-application', path: '../application'
-gem 'cuboid', path: '../../qadron/cuboid/'
-gem 'dsel', path: '../../qadron/dsel/'
+gem 'nokogiri', github: 'sparklemotion/nokogiri'
+gem 'ethon',    github: 'typhoeus/ethon', branch: 'thread-safe-easy-handle-cleanup'
+
+if File.exist? '../../../qadron/dsel'
+    gem 'dsel', path: '../../../qadron/dsel'
+end
+
+if File.exist? '../../../qadron/cuboid'
+    gem 'cuboid', path: '../../../qadron/cuboid'
+end
+
+if File.exist? '../application'
+    gem 'scnr-application', path: '../application'
+end
+
+if File.exist? '../engine'
+    gem 'scnr-engine', path: '../engine'
+end
