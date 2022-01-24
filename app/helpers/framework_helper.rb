@@ -103,12 +103,12 @@ module FrameworkHelper
 
             components = Hash[components.sort]
 
-            File.open( path, 'w' ) do |f|
-                f.write components.to_yaml
+            File.open( path, 'wb' ) do |f|
+                f.write Marshal.dump( components )
             end
         end
 
-        YAML.load( IO.read( path ) )
+        Marshal.load( IO.read( path ) )
     end
 
     extend self
