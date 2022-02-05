@@ -160,13 +160,14 @@
                                 <%= f.input :login_form_url, as: :string, label: false,
                                             placeholder: "URL (Example: #{@site.url}/login)" %>
 
-                                <%= f.text_area :login_form_parameters, label: false,
+                                <%= f.input :login_form_parameters, label: false,
                                             placeholder: 'Parameters (Example: user=admin and passwd=secret)',
+                                            as: :text,
                                             input_html: {
-                                                    value: @site_role.login_form_parameters.
-                                                                   map { |k, v| "#{k}=#{v}" }.join( "\n" )
+                                                    value: @site_role.login_form_parameters.map { |k, v| "#{k}=#{v}" }.join( "\n" )
                                             }
                                 %>
+
                                 <p class="help-block">
                                     Parameters take the format of <kbd>name=value</kbd>,
                                     input each pair in its own line.
