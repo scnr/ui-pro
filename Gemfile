@@ -15,7 +15,10 @@ gem 'devise'
 # gem 'devise_security_extension', github: 'phatworx/devise_security_extension'
 gem 'simple_form'
 
-gem "webpacker"
+gem 'oj'
+gem 'oj_mimic_json'
+
+gem 'webpacker'
 gem 'kramdown'
 gem 'loofah'
 
