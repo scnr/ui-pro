@@ -60,5 +60,4 @@ setup = () ->
     $('#clear-updates').click ->
         clear_feed()
 
-$(document).on 'turbolinks:load', setup
 jQuery setup

@@ -51,14 +51,14 @@
 
                 <ul class="nav nav-tabs">
                     <li class="active">
-                        <a data-turbolinks="false" href="<%= id_to_location id %>/data_flow_sinks/<%= i %>/inspect/arguments">
+                        <a href="<%= id_to_location id %>/data_flow_sinks/<%= i %>/inspect/arguments">
                             Arguments
                         </a>
                     </li>
 
                     <% if !sink.function.source.to_s.empty? %>
                         <li>
-                            <a data-turbolinks="false" href="<%= id_to_location id %>/data_flow_sinks/<%= i %>/inspect/source">
+                            <a href="<%= id_to_location id %>/data_flow_sinks/<%= i %>/inspect/source">
                                 Source
                             </a>
                         </li>
@@ -66,7 +66,7 @@
 
                     <% if sink.stackframes.any? %>
                         <li>
-                            <a data-turbolinks="false" href="<%= id_to_location id %>/data_flow_sinks/<%= i %>/inspect/stacktrace">
+                            <a href="<%= id_to_location id %>/data_flow_sinks/<%= i %>/inspect/stacktrace">
                                 Stacktrace
                             </a>
                         </li>

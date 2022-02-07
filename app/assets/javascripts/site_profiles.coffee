@@ -23,5 +23,4 @@ setup = () ->
         $('.profile-form #apply').val( 1 )
         $('.profile-form').submit()
 
-$(document).on 'turbolinks:load', setup
 jQuery setup

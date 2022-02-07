@@ -26,5 +26,4 @@ setup = () ->
         false
 
 
-$(document).on 'turbolinks:load', setup
 jQuery setup

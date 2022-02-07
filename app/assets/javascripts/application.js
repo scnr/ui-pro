@@ -12,7 +12,6 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require turbolinks
 //= require bootstrap
 //= require d3
 //= require c3
@@ -197,17 +196,8 @@ $(window).bind( 'hashchange', function () {
     openFromWindowLocation();
 });
 
-$(document).on( 'turbolinks:before-visit', function() {
-    loading();
-});
-
 $(document).ajaxStart( function() {
     loading();
-});
-
-$(document).on( 'turbolinks:load', function( $ ) {
-    loaded();
-    setup();
 });
 
 $(document).ajaxStop( function() {

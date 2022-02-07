@@ -4,11 +4,9 @@ gem 'rails', '6.0.3.1'
 gem 'sass-rails'
 gem 'closure-compiler'
 gem 'coffee-rails'
-gem 'jquery-rails'#, '4.1.1'
-gem 'turbolinks'#, '2.5.3'
+gem 'jquery-rails'
 gem 'jbuilder'
 gem 'bootstrap-sass', '3.3.6'
-# gem 'bootstrap', '~> 4.4.0'
 gem 'font-awesome-sass'
 gem 'font-kit-rails'
 gem 'devise'
@@ -76,7 +74,7 @@ group :development, :test do
     gem 'awesome_print'
 end
 
-gem 'nokogiri', github: 'sparklemotion/nokogiri'
+gem 'nokogiri', github: 'sparklemotion/nokogiri', branch: 'main'
 gem 'ethon',    github: 'typhoeus/ethon', branch: 'thread-safe-easy-handle-cleanup'
 
 if File.exist? '../../../qadron/dsel'

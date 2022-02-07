@@ -7,5 +7,4 @@ setup = () ->
         $('.coverage-bar').click ->
             window.location = '#!/coverage/' + $(this).data('location')
 
-$(document).on 'turbolinks:load', setup
 jQuery setup

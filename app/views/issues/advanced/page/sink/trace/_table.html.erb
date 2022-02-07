@@ -32,7 +32,7 @@
         <tr id="<%= id %>-<%= i %>">
             <th>
                 <strong>
-                    <a data-turbolinks="false" href="<%= id_to_location id %>/<%= i %>">
+                    <a href="<%= id_to_location id %>/<%= i %>">
                         <%= i %>
                     </a>
                 </strong>
@@ -43,7 +43,7 @@
                 </td>
                 <td>
                     <% if frame.line.to_i > 0 && frame.url == page.dom.url %>
-                        <a data-turbolinks="false" href="<%= id_to_location "advanced_affected_page_dom_processing-final-#{frame.line}" %>">
+                        <a href="<%= id_to_location "advanced_affected_page_dom_processing-final-#{frame.line}" %>">
                             <%= frame.line %>
                         </a>
                     <% else %>
@@ -86,7 +86,7 @@
                         <% has_active = true %>
 
                         <li class="active">
-                            <a data-turbolinks="false" href="<%= id_to_location id %>/<%= i %>/inspect/arguments">
+                            <a href="<%= id_to_location id %>/<%= i %>/inspect/arguments">
                                 Arguments
                             </a>
                         </li>
@@ -94,7 +94,7 @@
 
                     <% if with_source %>
                         <li <%= 'class="active"' if !has_active %>>
-                            <a data-turbolinks="false" href="<%= id_to_location id %>/<%= i %>/inspect/source">
+                            <a href="<%= id_to_location id %>/<%= i %>/inspect/source">
                                 Source
                             </a>
                         </li>
