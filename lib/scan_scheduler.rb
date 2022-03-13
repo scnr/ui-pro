@@ -78,9 +78,9 @@ class ScanScheduler
         !!@task
     end
 
-    # @return   [Raktor]
+    # @return   [Raktr]
     def reactor
-        Raktor.global
+        Raktr.global
     end
 
     def reset
