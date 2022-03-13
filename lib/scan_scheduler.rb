@@ -78,9 +78,9 @@ class ScanScheduler
         !!@task
     end
 
-    # @return   [Arachni::Reactor]
+    # @return   [Raktor]
     def reactor
-        Arachni::Reactor.global
+        Raktor.global
     end
 
     def reset
