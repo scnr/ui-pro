@@ -1,6 +1,6 @@
 class System
 module Platforms
-class OSX < Base
+class Osx < Base
 
     # @return   [Integer]
     #   Amount of free RAM in bytes.
