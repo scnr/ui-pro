@@ -413,7 +413,7 @@ module Scan
         log_info_for revision, 'Grabbing report'
 
         instance = instance_for( revision )
-        instance.abort_and_generate_report do |report|
+        instance.generate_report do |report|
             report = report.data
 
             log_info_for revision, 'Got report'
