@@ -1,5 +1,5 @@
 <%
-    rendered = render( partial: '/shared/scan_results/live/stream.html' ).strip.html_safe
+    rendered = render( partial: 'shared/scan_results/live/stream', formats: :html ).strip.html_safe
 %>
 
 <% if !rendered.empty?
