@@ -4,7 +4,8 @@
 </div>
 
 <script>
-    <%= render partial: 'shared/scan_results/issues/chart_load_data.js',
+    <%= render partial: 'shared/scan_results/issues/chart_load_data',
+        formats: :js,
         locals: {
             data: data
         } %>

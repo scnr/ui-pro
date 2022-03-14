@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '6.1.5'
+gem 'rails', '7.0.2.3'
 gem 'sass-rails'
 gem 'closure-compiler'
 gem 'coffee-rails'
