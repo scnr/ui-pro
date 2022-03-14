@@ -13,9 +13,9 @@ class IssueType < ActiveRecord::Base
 
     scope :by_severity, -> do
         includes(:severity).joins(:severity).
-            order( IssueTypeSeverity.order_sql ).order(name: :asc)
+          order( IssueTypeSeverity.order_sql ).order(name: :asc)
     end
-    default_scope { by_severity }
+    # default_scope { by_severity }
 
     def cwe_url
         return if !cwe
