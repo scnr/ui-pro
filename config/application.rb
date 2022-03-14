@@ -10,19 +10,8 @@ module SCNR::UI
 module Pro
     class Application < Rails::Application
         config.load_defaults 6.0
-        config.autoloader = :classic
 
-        config.autoload_once_paths << "#{Rails.root.join('lib')}/system.rb"
-        config.autoload_once_paths << "#{Rails.root.join('lib')}/system/"
-
-        config.autoload_once_paths << "#{Rails.root.join('lib')}/scan_scheduler.rb"
-        config.autoload_once_paths << "#{Rails.root.join('lib')}/scan_scheduler/"
-
-        config.autoload_once_paths << "#{Rails.root.join('lib')}/settings.rb"
-
-        config.autoload_once_paths << "#{Rails.root.join('lib')}/patches/timezone.rb"
-
-        config.autoload_paths << Rails.root.join('lib')
+        config.autoload_once_paths << Rails.root.join('lib')
 
         config.generators do |g|
             g.test_framework :rspec,
