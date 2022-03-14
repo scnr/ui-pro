@@ -11,7 +11,6 @@
 // about supported directives.
 //
 //= require jquery
-//= require jquery_ujs
 //= require bootstrap
 //= require d3
 //= require c3
@@ -196,12 +195,12 @@ $(window).bind( 'hashchange', function () {
     openFromWindowLocation();
 });
 
-$(document).ajaxStart( function() {
-    loading();
-});
+// $(document).ajaxStart( function() {
+//     loading();
+// });
 
 $(document).ajaxStop( function() {
-    loaded();
+    // loaded();
     setup();
 });
 
