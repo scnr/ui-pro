@@ -77,12 +77,16 @@ end
 gem 'nokogiri', github: 'sparklemotion/nokogiri', branch: 'main'
 gem 'ethon',    github: 'typhoeus/ethon', branch: 'thread-safe-easy-handle-cleanup'
 
-if File.exist? '../../../qadron/dsel'
-    gem 'dsel', path: '../../../qadron/dsel'
+if File.exist? '../../qadron/dsel'
+    gem 'dsel', path: '../../qadron/dsel'
 end
 
-if File.exist? '../../../qadron/cuboid'
-    gem 'cuboid', path: '../../../qadron/cuboid'
+if File.exist? '../../qadron/toq'
+    gem 'toq', path: '../../qadron/toq'
+end
+
+if File.exist? '../../qadron/cuboid'
+    gem 'cuboid', path: '../../qadron/cuboid'
 end
 
 if File.exist? '../application'
