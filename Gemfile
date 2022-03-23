@@ -41,6 +41,8 @@ gem 'sys-proctable'
 # Audit trail
 gem 'paper_trail'#, '~> 4.0.0'
 
+gem 'turbo-rails'
+
 group :doc do
     gem 'sdoc', '~> 0.4.0'
 end
@@ -96,3 +98,6 @@ end
 if File.exist? '../engine'
     gem 'scnr-engine', path: '../engine'
 end
+
+# Use Redis for Action Cable
+gem "redis", "~> 4.0"

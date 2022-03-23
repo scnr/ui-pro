@@ -1,9 +1,9 @@
 <%= link_to [scan.site, scan],
             title: 'Delete scan',
-            method: :delete,
             class: 'btn btn-sm btn-danger',
             data: {
-                    confirm: 'Deleting this scan will destroy all associated' +
+              turbo_method: :delete,
+              turbo_confirm: 'Deleting this scan will destroy all associated' +
                                      ' revisions and issues, are you sure?'
             } do %>
     <i class="fa fa-trash"></i>

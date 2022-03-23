@@ -14,9 +14,11 @@
    end
 %>
 <%= link_to repeat_site_scan_path( scan.site, scan ),
-            method: :post,
             title: 'Repeat scan ASAP',
-            data: { confirm: msg },
+            data: {
+              turbo_method: :post,
+              turbo_confirm: msg
+            },
             class: 'btn btn-sm btn-success' do %>
     <i class="fas fa-redo"></i>
 <% end %>
