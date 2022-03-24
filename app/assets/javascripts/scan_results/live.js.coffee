@@ -1,16 +1,3 @@
-window.ticks = 0
-
-window.start_live_stream_clock = ( duration ) ->
-    set_live_stream_clock( duration )
-    setInterval( tick_live_stream_clock, 1000, duration )
-
-tick_live_stream_clock = ( duration ) ->
-    window.ticks += 1
-    set_live_stream_clock( (parseInt( duration, 10 ) + window.ticks).toString() )
-
-set_live_stream_clock = ( duration ) ->
-    $('#live-stream-clock').html( duration.toHHMMSS() )
-
 acknowledge = (e) ->
     $(e).removeClass( 'pulsating' )
 
@@ -51,6 +38,7 @@ setup_feed = () ->
     window.liveIntervalID = window.setInterval( update_feed, 1000 )
 
 setup = () ->
+    merge_feed()
     if $('#live-stream').is(':visible')
         setup_feed()
     $('#acknowledge-all').click ->
@@ -61,3 +49,4 @@ setup = () ->
         clear_feed()
 
 jQuery setup
+$(document).on( "turbo:load", setup )

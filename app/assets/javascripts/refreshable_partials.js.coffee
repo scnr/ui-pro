@@ -10,8 +10,8 @@ initializeRefreshablePartials = ->
             else
                 e.html( data )
 
-pageReady = ->
+setup = ->
     initializeRefreshablePartials()
 
-$(document).ready( pageReady )
-$(document).on( 'page:load', pageReady )
+$(document).ready( setup )
+$(document).on( "turbo:load", setup );

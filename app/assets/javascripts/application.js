@@ -195,15 +195,12 @@ $(window).bind( 'hashchange', function () {
     openFromWindowLocation();
 });
 
-// $(document).ajaxStart( function() {
-//     loading();
-// });
-
 $(document).ajaxStop( function() {
-    // loaded();
     setup();
 });
 
 $(document).ready( function( $ ) {
     setup();
 });
+
+$(document).on( "turbo:load", setup );

@@ -24,3 +24,4 @@ setup = () ->
         $('.profile-form').submit()
 
 jQuery setup
+$(document).on( "turbo:load", setup )

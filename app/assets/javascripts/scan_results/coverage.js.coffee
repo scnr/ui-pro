@@ -8,3 +8,4 @@ setup = () ->
             window.location = '#!/coverage/' + $(this).data('location')
 
 jQuery setup
+$(document).on( "turbo:load", setup )

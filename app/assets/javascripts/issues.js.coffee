@@ -5,9 +5,5 @@ setup = ->
 
 jQuery ->
     setup()
-$(document).on 'page:fetch', ->
-    setup()
-$(document).on 'page:load', ->
-    setup()
-$(document).on 'page:restore', ->
-    setup()
+
+$(document).on( "turbo:load", setup );

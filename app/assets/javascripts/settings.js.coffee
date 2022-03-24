@@ -26,3 +26,4 @@ setup = () ->
         form_setup()
 
 jQuery setup
+$(document).on( "turbo:load", setup )
