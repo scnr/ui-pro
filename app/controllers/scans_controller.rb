@@ -74,8 +74,6 @@ class ScansController < ApplicationController
     def update
         respond_to do |format|
             if @scan.update( scan_params )
-                ap @scan.profile.name
-
                 format.html { redirect_to [@site, @scan], notice: 'Scan was successfully updated.' }
                 format.json { render :show, status: :ok, location: @scan }
             else
@@ -90,7 +88,7 @@ class ScansController < ApplicationController
     STATES.each do |state|
         define_method state do
             ScanScheduler.instance.send( state, @scan.last_revision )
-            redirect_back fallback_location: root_path
+            redirect_back fallback_location: root_path, status: 303
         end
     end
 
@@ -100,7 +98,7 @@ class ScansController < ApplicationController
         @scan.destroy
 
         respond_to do |format|
-            format.html { redirect_to site_scans_url, notice: 'Scan was successfully destroyed.' }
+            format.html { redirect_to site_scans_url, status: 303, notice: 'Scan was successfully destroyed.' }
             format.json { head :no_content }
         end
     end
