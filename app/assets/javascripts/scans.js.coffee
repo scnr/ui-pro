@@ -52,7 +52,6 @@ form_setup = () ->
 setup = () ->
     if $('.scan-form').exists()
         form_setup()
-        console.log( 1 )
 
 jQuery setup
 $(document).on( "turbo:load", setup )
