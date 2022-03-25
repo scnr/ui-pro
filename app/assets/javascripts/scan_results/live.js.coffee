@@ -35,7 +35,7 @@ setup_feed = () ->
         window.liveIntervalID = null
 
     update_feed( true )
-    window.liveIntervalID = window.setInterval( update_feed, 1000 )
+    window.liveIntervalID = window.setInterval( update_feed, 2500 )
 
 setup = () ->
     merge_feed()
@@ -48,5 +48,4 @@ setup = () ->
     $('#clear-updates').click ->
         clear_feed()
 
-jQuery setup
 $(document).on( "turbo:load", setup )

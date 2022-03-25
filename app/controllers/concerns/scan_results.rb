@@ -42,8 +42,7 @@ module ScanResults
 
         respond_to do |format|
             format.html do
-                perform_issue_processing
-                render 'show'
+                process_and_show
             end
 
             format.js do
@@ -73,20 +72,16 @@ module ScanResults
     def apply_time_range( relation, from, to, attribute = :created_at )
         return relation if !from || !to
 
-        # return relation
-
         relation.where( attribute => (from..to) )
     end
 
     def issues
         @issues_summary = prepare_issue_data
-
         process_and_show
     end
 
     def coverage
         @coverage = prepare_coverage_data
-
         process_and_show
     end
 
@@ -98,7 +93,6 @@ module ScanResults
 
     def health
         @health = prepare_health_data
-
         process_and_show
     end
 
@@ -113,7 +107,6 @@ module ScanResults
 
     def events
         @events = prepare_events_data
-
         process_and_show
     end
 
@@ -198,7 +191,12 @@ module ScanResults
     def process_and_show
         perform_issue_processing
 
-        render 'show'
+        if params[:partial]
+            render partial: '/shared/scan_results',
+                   format: :html
+        else
+            render 'show'
+        end
     end
 
     def prepare_coverage_data

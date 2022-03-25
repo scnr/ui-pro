@@ -174,6 +174,37 @@ function setupScroll(){
     });
 }
 
+var updatePage = (function () {
+    var scrollPosition;
+
+    function reload () {
+        if(
+            window.location.pathname.endsWith( '/live' ) ||
+            $( 'input' ).is(':visible')
+        ) { return }
+
+        scrollPosition = [window.scrollX, window.scrollY];
+        Turbo.visit( window.location.toString(), { action: 'replace' } );
+    }
+
+    $(document).on( 'turbo:load', function () {
+        if( scrollPosition ) {
+            setTimeout( () => {
+                window.scrollTo.apply( window, scrollPosition );
+                scrollPosition = null;
+            });
+        }
+    });
+
+    return reload
+})()
+
+function setupPageUpdate() {
+    if( !window.updatePageInterval )
+        window.updatePageInterval = window.setInterval( updatePage, 2500 )
+}
+
+
 function setup() {
     // Init all tooltips.
     $('[data-toggle="tooltip"]').tooltip();
@@ -181,6 +212,7 @@ function setup() {
     $('a[data-toggle="tab"]').on('shown.bs.tab', setupScroll);
 
     setupScroll();
+    setupPageUpdate();
 }
 
 jQuery(function ($) {

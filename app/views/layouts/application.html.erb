@@ -7,6 +7,9 @@
         <%= "#{title_breadcrumbs} - " if !title_breadcrumbs.empty? %>
         SCNR::Pro
     </title>
+
+<!--    <meta name="turbo-cache-control" content="no-cache">-->
+    <meta name="turbo-cache-control" content="no-preview">
     <meta name="description" content="<%= content_for?(:description) ? yield(:description) : 'SCNR Pro' %>">
     <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= javascript_include_tag 'application' %>
@@ -43,7 +46,7 @@
             %>
         <% end %>
 
-        <div class="col-md-<%= size %> <%= offset %>">
+        <div id="content" class="col-md-<%= size %> <%= offset %>">
             <%= render 'layouts/messages' %>
             <%= yield %>
         </div>

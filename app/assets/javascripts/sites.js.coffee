@@ -11,6 +11,10 @@ removeHighlight = (selector) ->
 window.generateIssuesChart = () ->
     c3.generate
         bindto: '#chart-issues',
+        legend:
+            show: false
+        transition:
+            duration: 0
         size:
             height: 250
         data:

@@ -8,130 +8,128 @@
    params_h = params.permit.to_h
 %>
 
-<div id="scan-results" class="row">
-    <div class="col-md-12">
-        <ul class="nav nav-tabs">
+<div class="col-md-12">
+    <ul class="nav nav-tabs">
 
-            <% if @revision %>
-                <li id="live-tab" class="<%= 'active' if sections['live'] %>">
-                    <%= link_to params_h.merge( action: 'live' ).merge filter_params do %>
-                        Live
-                    <% end %>
-                </li>
-            <% end %>
-
-            <li id="issues-tab" class="<%= 'active' if sections['issues'] %>">
-                <%= link_to params_h.merge( action: 'issues' ).merge filter_params do %>
-                    Issues
+        <% if @revision %>
+            <li id="live-tab" class="<%= 'active' if sections['live'] %>">
+                <%= link_to params_h.merge( action: 'live' ).merge filter_params do %>
+                    Live
                 <% end %>
             </li>
+        <% end %>
 
-            <li id="coverage-tab" class="<%= 'active' if sections['coverage'] %>">
-                <%= link_to params_h.merge( action: 'coverage' ).merge filter_params do %>
-                    Coverage
+        <li id="issues-tab" class="<%= 'active' if sections['issues'] %>">
+            <%= link_to params_h.merge( action: 'issues' ).merge filter_params do %>
+                Issues
+            <% end %>
+        </li>
+
+        <li id="coverage-tab" class="<%= 'active' if sections['coverage'] %>">
+            <%= link_to params_h.merge( action: 'coverage' ).merge filter_params do %>
+                Coverage
+
+                <span class="badge">
+                    <%= @coverage_count %>
+                </span>
+            <% end %>
+        </li>
+
+        <% if @reviews_count > 0 %>
+            <li id="reviews-tab" class="<%= 'active' if sections['reviews'] %>">
+                <%= link_to params_h.merge( action: 'reviews' ).merge filter_params do %>
+                    Reviews
 
                     <span class="badge">
-                        <%= @coverage_count %>
+                        <%= @reviews_count %>
                     </span>
                 <% end %>
             </li>
+        <% end %>
 
-            <% if @reviews_count > 0 %>
-                <li id="reviews-tab" class="<%= 'active' if sections['reviews'] %>">
-                    <%= link_to params_h.merge( action: 'reviews' ).merge filter_params do %>
-                        Reviews
-
-                        <span class="badge">
-                            <%= @reviews_count %>
-                        </span>
-                    <% end %>
-                </li>
-            <% end %>
-
-            <% if @revision %>
-                <li id="health-tab" class="<%= 'active' if sections['health'] %>">
-                    <%= link_to params_h.merge( action: 'health' ).merge filter_params do %>
-                        Health
-                    <% end %>
-                </li>
-
-                <% if !@revision.error_messages.blank? %>
-                    <li id="errors-tab" class="<%= 'active' if sections['errors'] %>">
-                        <%= link_to params_h.merge( action: 'errors' ).merge filter_params do %>
-                            Errors
-                        <% end %>
-                    </li>
+        <% if @revision %>
+            <li id="health-tab" class="<%= 'active' if sections['health'] %>">
+                <%= link_to params_h.merge( action: 'health' ).merge filter_params do %>
+                    Health
                 <% end %>
-            <% end %>
+            </li>
 
-            <% if @revision %>
-                <li id="configuration-tab" class="<%= 'active' if sections['configuration'] %>">
-                    <%= link_to params_h.merge( action: 'configuration' ).merge filter_params do %>
-                        Configuration
+            <% if !@revision.error_messages.blank? %>
+                <li id="errors-tab" class="<%= 'active' if sections['errors'] %>">
+                    <%= link_to params_h.merge( action: 'errors' ).merge filter_params do %>
+                        Errors
                     <% end %>
                 </li>
             <% end %>
+        <% end %>
 
-          <li id="events-tab" class="<%= 'active' if sections['events'] %>">
-            <%= link_to params_h.merge( action: 'events' ).merge filter_params do %>
-                Events
-            <% end %>
-          </li>
+        <% if @revision %>
+            <li id="configuration-tab" class="<%= 'active' if sections['configuration'] %>">
+                <%= link_to params_h.merge( action: 'configuration' ).merge filter_params do %>
+                    Configuration
+                <% end %>
+            </li>
+        <% end %>
 
-        </ul>
+      <li id="events-tab" class="<%= 'active' if sections['events'] %>">
+        <%= link_to params_h.merge( action: 'events' ).merge filter_params do %>
+            Events
+        <% end %>
+      </li>
 
-        <div class="tab-content">
-            <% if sections['live'] %>
-                <div class="tab-pane <%= 'active' if sections['live'] %>" id="live">
-                    <%= render partial: 'shared/scan_results/live', locals: {
-                        data: @live
-                    } %>
-                </div>
-            <% end %>
+    </ul>
 
-            <% if sections['issues'] %>
-                <div class="tab-pane <%= 'active' if sections['issues'] %>" id="issues">
-                    <%= render partial: 'shared/scan_results/issues', locals: {
-                        data: @issues_summary
-                    } %>
-                </div>
-            <% end %>
+    <div class="tab-content">
+        <% if sections['live'] %>
+            <div class="tab-pane <%= 'active' if sections['live'] %>" id="live">
+                <%= render partial: 'shared/scan_results/live', locals: {
+                    data: @live
+                } %>
+            </div>
+        <% end %>
 
-            <% if sections['coverage'] %>
-                <div class="tab-pane <%= 'active' if sections['coverage'] %>" id="coverage">
-                    <%= render partial: 'shared/scan_results/coverage' %>
-                </div>
-            <% end %>
+        <% if sections['issues'] %>
+            <div class="tab-pane <%= 'active' if sections['issues'] %>" id="issues">
+                <%= render partial: 'shared/scan_results/issues', locals: {
+                    data: @issues_summary
+                } %>
+            </div>
+        <% end %>
 
-            <% if @reviews_count > 0 && sections['reviews'] %>
-                <div class="tab-pane <%= 'active' if sections['reviews'] %>" id="reviews">
-                    <%= render partial: 'shared/scan_results/reviews' %>
-                </div>
-            <% end %>
+        <% if sections['coverage'] %>
+            <div class="tab-pane <%= 'active' if sections['coverage'] %>" id="coverage">
+                <%= render partial: 'shared/scan_results/coverage' %>
+            </div>
+        <% end %>
 
-            <% if sections['health'] %>
-                <div class="tab-pane <%= 'active' if sections['health'] %>" id="health">
-                    <%= render partial: 'shared/scan_results/health' %>
-                </div>
-            <% end %>
+        <% if @reviews_count > 0 && sections['reviews'] %>
+            <div class="tab-pane <%= 'active' if sections['reviews'] %>" id="reviews">
+                <%= render partial: 'shared/scan_results/reviews' %>
+            </div>
+        <% end %>
 
-            <% if sections['errors'] %>
-                <div class="tab-pane <%= 'active' if sections['errors'] %>" id="errors">
-                    <%= render partial: 'shared/scan_results/errors' %>
-                </div>
-            <% end %>
+        <% if sections['health'] %>
+            <div class="tab-pane <%= 'active' if sections['health'] %>" id="health">
+                <%= render partial: 'shared/scan_results/health' %>
+            </div>
+        <% end %>
 
-            <% if sections['configuration'] %>
-                <div class="tab-pane <%= 'active' if sections['configuration'] %>" id="configuration">
-                    <%= render partial: 'shared/scan_results/configuration' %>
-                </div>
-            <% end %>
+        <% if sections['errors'] %>
+            <div class="tab-pane <%= 'active' if sections['errors'] %>" id="errors">
+                <%= render partial: 'shared/scan_results/errors' %>
+            </div>
+        <% end %>
 
-          <% if sections['events'] %>
-              <div class="tab-pane <%= 'active' if sections['events'] %>" id="events">
-                <%= render partial: 'shared/scan_results/events' %>
-              </div>
-          <% end %>
-        </div>
+        <% if sections['configuration'] %>
+            <div class="tab-pane <%= 'active' if sections['configuration'] %>" id="configuration">
+                <%= render partial: 'shared/scan_results/configuration' %>
+            </div>
+        <% end %>
+
+      <% if sections['events'] %>
+          <div class="tab-pane <%= 'active' if sections['events'] %>" id="events">
+            <%= render partial: 'shared/scan_results/events' %>
+          </div>
+      <% end %>
     </div>
 </div>
