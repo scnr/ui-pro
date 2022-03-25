@@ -117,9 +117,7 @@ module Issue
         # Mark issues of previous revisions as fixed if they're not logged by
         # this revision.
         revision.scan.issues.reorder('').where.not(
-            revision: revision,
-            digest:   issue_digests,
-            state:    'fixed'
+            digest: issue_digests
         ).update_all(
             state:                   'fixed',
             reviewed_by_revision_id: revision.id
