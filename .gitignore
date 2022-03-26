@@ -80,6 +80,7 @@ pickle-email-*.html
 
 /config/component_cache/*.yml
 /reports/*
+/snapshots/*
 /public/site_favicons/*
 
 /public/packs
