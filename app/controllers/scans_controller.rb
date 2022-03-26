@@ -57,6 +57,7 @@ class ScansController < ApplicationController
 
     def repeat
         @scan.schedule.start_at = Time.now
+        @scan.status            = nil
 
         respond_to do |format|
             if @scan.save
