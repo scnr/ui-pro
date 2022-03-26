@@ -80,7 +80,7 @@ class ScanScheduler
 
     # @return   [Raktr]
     def reactor
-        Raktr.global
+        @reactor ||= Raktr.new
     end
 
     def reset
