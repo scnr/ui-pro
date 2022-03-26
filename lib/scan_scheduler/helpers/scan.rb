@@ -276,8 +276,8 @@ module Scan
         # ap progress[:messages]
         # ap progress[:sitemap]
 
-        log_debug_for revision, "Busy:   #{progress[:busy]}"
-        log_debug_for revision, "Status: #{progress[:status]}"
+        log_debug_for revision, "Running: #{progress[:running]}"
+        log_debug_for revision, "Status:  #{progress[:status]}"
 
         if !revision.seed
             revision.update( seed: progress[:seed] )
