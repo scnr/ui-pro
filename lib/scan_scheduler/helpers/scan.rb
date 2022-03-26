@@ -60,8 +60,6 @@ module Scan
             instance.restore!( revision.snapshot_path ) do |r|
                 log_info_for revision, 'Restoring'
 
-                FileUtils.rm( revision.snapshot_path )
-
                 next if handle_if_rpc_error( revision, r )
 
                 monitor( revision )
