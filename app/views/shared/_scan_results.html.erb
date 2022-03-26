@@ -28,10 +28,6 @@
         <li id="coverage-tab" class="<%= 'active' if sections['coverage'] %>">
             <%= link_to params_h.merge( action: 'coverage' ).merge filter_params do %>
                 Coverage
-
-                <span class="badge">
-                    <%= @coverage_count %>
-                </span>
             <% end %>
         </li>
 
