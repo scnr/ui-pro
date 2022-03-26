@@ -260,12 +260,12 @@ module Scan
     end
 
     def handle_progress( revision, progress )
-        log_info_for revision, 'Got progress.'
-
         if progress.rpc_exception?
             handle_rpc_error( revision, progress )
             return
         end
+
+        log_info_for revision, 'Got progress.'
 
         # ap progress
         # ap progress[:busy]
@@ -417,15 +417,19 @@ module Scan
             log_info_for revision, 'Got report'
 
             report_path = "#{REPORT_DIR}/#{revision.id}.ser"
-            report.save( report_path )
+            begin
+                report.save( report_path )
 
-            log_info_for revision, "Saved report at: #{report_path}"
+                log_info_for revision, "Saved report at: #{report_path}"
 
-            import_issues_from_report( revision, report )
-            import_coverage_from_report( revision, report )
+                import_issues_from_report( revision, report )
+                import_coverage_from_report( revision, report )
 
-            if mark_issues_fixed && revision.scan.revisions.size > 1
-                mark_other_issues_fixed( revision, report.issues.map(&:digest) )
+                if mark_issues_fixed && revision.scan.revisions.size > 1
+                    mark_other_issues_fixed( revision, report.issues.map(&:digest) )
+                end
+            rescue => e
+                log_exception_for( revision, e )
             end
 
             finish( revision )
