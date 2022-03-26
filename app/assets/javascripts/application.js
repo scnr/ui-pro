@@ -185,6 +185,7 @@ var updatePage = (function () {
 
         scrollPosition = [window.scrollX, window.scrollY];
         Turbo.visit( window.location.toString(), { action: 'replace' } );
+        return true;
     }
 
     $(document).on( 'turbo:load', function () {
@@ -201,7 +202,7 @@ var updatePage = (function () {
 
 function setupPageUpdate() {
     if( !window.updatePageInterval )
-        window.updatePageInterval = window.setInterval( updatePage, 2500 )
+        window.updatePageInterval = window.setInterval( updatePage, 5000 )
 }
 
 

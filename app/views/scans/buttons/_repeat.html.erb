@@ -15,6 +15,7 @@
 %>
 <%= link_to repeat_site_scan_path( scan.site, scan ),
             title: 'Repeat scan ASAP',
+            onclick: 'updatePage();',
             data: {
               turbo_method: :post,
               turbo_confirm: msg

@@ -1,5 +1,6 @@
 <%= link_to pause_site_scan_path( scan.site, scan ),
             title: 'Pause scan',
+            onclick: 'updatePage();',
             data: {
               turbo_method: :patch,
               turbo_confirm: 'Are you sure you want to pause the scan?'
