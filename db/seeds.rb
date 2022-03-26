@@ -152,11 +152,6 @@ site = user.sites.create!(
     protocol: 'http',
     host:     'testhtml5.vulnweb.com',
     port:     80,
-
-    profile_attributes: {
-        http_request_concurrency: SCNR::Engine::Options.http.request_concurrency,
-        input_values:             { 'test' => 'val' }
-    }
 )
 
 # site.scans.create(
@@ -212,12 +207,6 @@ sites.each.with_index do |afr, si|
         protocol: parsed_url.scheme,
         host:     parsed_url.host,
         port:     parsed_url.port || 80,
-
-        profile_attributes: {
-            http_request_concurrency: SCNR::Engine::Options.http.request_concurrency,
-            input_values:             SCNR::Engine::Options.input.default_values.
-                                        map { |k, v| "#{k.source}=#{v}" }.join( "\n" )
-        }
     )
 
     site.roles.create(

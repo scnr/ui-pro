@@ -5,6 +5,8 @@ class SiteProfile < ActiveRecord::Base
     include ProfileImport
     include ProfileExport
 
+    before_save :default_values
+
     events skip: [:created_at, :updated_at],
                     # If this is a copy made by a revision don't bother.
                     unless: Proc.new { |t| t.revision_id }
@@ -51,6 +53,20 @@ class SiteProfile < ActiveRecord::Base
     end
 
     private
+
+    def default_values
+        self.http_request_concurrency      ||=
+          SCNR::Engine::Options.http.request_concurrency
+
+        self.scope_exclude_file_extensions ||=
+          SCNR::Engine::Options.scope.exclude_file_extensions.to_a
+
+        self.scope_auto_redundant_paths    ||=
+          SCNR::Engine::Options.scope.auto_redundant_paths
+
+        self.input_values                  ||=
+          Hash[SCNR::Engine::Options.input.class::DEFAULT_VALUES.map { |k, v| [k.source, v] }]
+    end
 
     def validate_max_parallel_scans
         global = Settings.max_parallel_scans
