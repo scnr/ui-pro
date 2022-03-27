@@ -1,5 +1,6 @@
 class IssuesController < ApplicationController
     before_action :authenticate_user!
+    protect_from_forgery except: :update
 
     before_action :set_site
     before_action :set_scan
@@ -16,7 +17,7 @@ class IssuesController < ApplicationController
     def update
         respond_to do |format|
             if @issue.update_state( issue_params[:state] )
-                format.html { redirect_to @issue, notice: 'Issue was successfully updated.' }
+                format.html { redirect_back fallback_location: root_path, notice: 'Issue was successfully updated.' }
                 format.json { render :show, status: :ok, location: @issue }
                 format.js { head :ok }
             else
