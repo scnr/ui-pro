@@ -1,8 +1,17 @@
-<%# add navigation links to this file %>
-
 <% if user_signed_in? %>
-    <li><%= link_to 'Sites', sites_path %></li>
-    <li><%= link_to 'Profiles', profiles_path %></li>
-    <li><%= link_to 'Devices', devices_path %></li>
-    <li><%= link_to 'Settings', settings_path %></li>
+    <li class="<%= "active" if request.url.include?( sites_path ) || current_page?( root_path ) %>">
+        <%= link_to 'Sites', sites_path %>
+    </li>
+
+    <li class="<%= "active" if current_page?( profiles_path ) %>">
+        <%= link_to 'Profiles', profiles_path %>
+    </li>
+
+    <li class="<%= "active" if current_page?( devices_path ) %>">
+        <%= link_to 'Devices', devices_path %>
+    </li>
+
+    <li class="<%= "active" if current_page?( settings_path ) %>">
+        <%= link_to 'Settings', settings_path %>
+    </li>
 <% end %>
