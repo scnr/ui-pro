@@ -11,7 +11,7 @@
 <% if @sites.any? %>
 <div id="sites">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-12" data-refreshable-partial="<%= table_sites_path %>">
             <%= render 'table', sites: @sites %>
         </div>
     </div>

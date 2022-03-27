@@ -61,7 +61,7 @@
                 <% if site.being_scanned? %>
                     <% has_something = true %>
                     <%= link_to [site, site.last_revision.scan, site.last_revision] do %>
-                        <i class="fa fa-spin fa-circle-o-notch"></i>
+                        <i class="fas fa-spinner fa-spin"></i>
                     <% end %>
                 <% end %>
 

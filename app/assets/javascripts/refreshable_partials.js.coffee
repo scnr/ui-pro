@@ -3,15 +3,15 @@ initializeRefreshablePartials = ->
         e   = $(e)
         url = e.data('refreshable-partial')
 
-        dispatcher.bind 'refreshable-partial://' + e.data('refreshable-partial'), (data) ->
-#            console.log data
+        $.get url, (data) ->
             if url.endsWith( '.js' )
                 eval( data );
             else
                 e.html( data )
 
 setup = ->
-    initializeRefreshablePartials()
+    if !window.refreshablePartials
+        window.refreshablePartials = setInterval( initializeRefreshablePartials, 5000 )
 
 $(document).ready( setup )
 $(document).on( "turbo:load", setup );

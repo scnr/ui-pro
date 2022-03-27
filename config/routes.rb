@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     resources :sites do
         resources :site_profiles, as: 'profiles', path: 'profiles', only: [:update]
 
+        get :table, on: :collection
         patch :edit, to: "site_profiles#update"
 
         ScanResults::SCAN_RESULT_SITE_ACTIONS.each do |action|

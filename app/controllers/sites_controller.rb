@@ -17,6 +17,13 @@ class SitesController < ApplicationController
         @site = Site.new
     end
 
+    def table
+        set_sites
+        @site = Site.new
+
+        render partial: "/sites/table", locals: { sites: @sites }
+    end
+
     def edit
     end
 
