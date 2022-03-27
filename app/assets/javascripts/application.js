@@ -180,6 +180,7 @@ var updatePage = (function () {
     function reload () {
         if(
             window.location.pathname.endsWith( '/live' ) ||
+            window.location.pathname.includes( '/issues/' ) ||
             $( 'input' ).is(':visible')
         ) { return }
 
