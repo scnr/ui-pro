@@ -80,20 +80,30 @@ gem 'ethon',    github: 'typhoeus/ethon', branch: 'thread-safe-easy-handle-clean
 
 if File.exist? '../../qadron/dsel'
     gem 'dsel', path: '../../qadron/dsel'
+else
+    gem 'dsel'
 end
 
 if File.exist? '../../qadron/toq'
     gem 'toq', path: '../../qadron/toq'
+else
+    gem 'toq'
 end
 
 if File.exist? '../../qadron/cuboid'
     gem 'cuboid', path: '../../qadron/cuboid'
+else
+    gem 'cuboid'
 end
 
 if File.exist? '../application'
     gem 'scnr-application', path: '../application'
+else
+    gem 'scnr-application'
 end
 
 if File.exist? '../engine'
     gem 'scnr-engine', path: '../engine'
+else
+    gem 'scnr-engine'
 end

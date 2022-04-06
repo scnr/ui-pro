@@ -404,7 +404,7 @@ GEM
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
     strscan (3.0.1)
-    sys-proctable (1.1.5-universal-aix5)
+    sys-proctable (1.1.5-universal-aix-5)
     thermite (0.13.0)
       minitar (~> 0.5)
       rake (>= 10)
@@ -461,6 +461,7 @@ DEPENDENCIES
   devise
   diffy
   dotiw
+  dsel
   ethon!
   factory_girl_rails
   faker
