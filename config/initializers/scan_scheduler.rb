@@ -1,3 +1,3 @@
-if defined?( Rails::Server )
+if !Rails.env.test?
     ScanScheduler.start
 end
