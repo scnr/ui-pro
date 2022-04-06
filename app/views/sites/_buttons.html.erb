@@ -23,11 +23,12 @@
         <i class="fa fa-cog"></i>
     <% end %>
 
-    <%= link_to site, method: :delete,
+    <%= link_to site,
                 title: 'Delete site',
                 class: 'btn btn-sm btn-danger',
                 data: {
-                        confirm: 'Deleting this site will destroy all ' +
+                  turbo_method: :delete,
+                  turbo_confirm: 'Deleting this site will destroy all ' +
                                          'associated data, are you sure?'
                 } do %>
         <i class="fa fa-trash"></i>
