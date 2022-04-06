@@ -4,8 +4,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
         <%= "#{yield( :title )} - " if content_for?( :title ) %>
-        <%= "#{title_breadcrumbs} - " if !title_breadcrumbs.empty? %>
-        SCNR::Pro
+        <%= "#{title_breadcrumbs} ~ " if !title_breadcrumbs.empty? %>
+        SCNR::Pro v<%= SCNR::UI::Pro::VERSION %>
+        (SCNR::Engine v<%= SCNR::Engine::VERSION %>)
     </title>
 
 <!--    <meta name="turbo-cache-control" content="no-cache">-->
