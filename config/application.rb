@@ -6,7 +6,8 @@ require 'rails/all'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-module SCNR::UI
+module SCNR
+module UI
 module Pro
     class Application < Rails::Application
         config.load_defaults 6.0
@@ -38,5 +39,6 @@ module Pro
         # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
         # config.i18n.default_locale = :de
     end
+end
 end
 end
