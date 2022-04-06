@@ -1,13 +1,4 @@
 GIT
-  remote: https://github.com/sparklemotion/nokogiri.git
-  revision: 388edb8ac4e91173273d49c49f2c1e1dd9f62732
-  branch: main
-  specs:
-    nokogiri (1.14.0.dev)
-      mini_portile2 (~> 2.8.0)
-      racc (~> 1.4)
-
-GIT
   remote: https://github.com/typhoeus/ethon.git
   revision: 7fdfc7554195ff47e4594c30458eb2e46a5263f1
   branch: thread-safe-easy-handle-cleanup
@@ -236,7 +227,6 @@ GEM
     http_parser.rb (0.6.0)
     i18n (1.10.0)
       concurrent-ruby (~> 1.0)
-    io-wait (0.2.1)
     jbuilder (2.11.5)
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
@@ -276,14 +266,16 @@ GEM
       digest
       net-protocol
       timeout
-    net-protocol (0.1.2)
-      io-wait
+    net-protocol (0.1.3)
       timeout
     net-smtp (0.3.1)
       digest
       net-protocol
       timeout
     nio4r (2.5.8)
+    nokogiri (1.13.3)
+      mini_portile2 (~> 2.8.0)
+      racc (~> 1.4)
     oj (3.13.11)
     oj_mimic_json (1.0.1)
     orm_adapter (0.5.0)
@@ -292,7 +284,7 @@ GEM
       activerecord (>= 5.2)
       request_store (~> 1.1)
     parse-cron (0.1.4)
-    pg (1.3.4)
+    pg (1.3.5)
     pony (1.11)
       mail (>= 2.0)
     public_suffix (3.1.1)
@@ -339,7 +331,6 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     rdoc (4.3.0)
-    redis (4.6.0)
     regexp_parser (2.2.1)
     request_store (1.5.1)
       rack (>= 1.4)
@@ -352,7 +343,7 @@ GEM
     rspec-expectations (3.11.0)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.11.0)
-    rspec-mocks (3.11.0)
+    rspec-mocks (3.11.1)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.11.0)
     rspec-rails (5.1.1)
@@ -413,7 +404,7 @@ GEM
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
     strscan (3.0.1)
-    sys-proctable (1.1.5-universal-aix-5)
+    sys-proctable (1.1.5-universal-aix5)
     thermite (0.13.0)
       minitar (~> 0.5)
       rake (>= 10)
@@ -481,7 +472,6 @@ DEPENDENCIES
   launchy
   listen
   loofah
-  nokogiri!
   oj
   oj_mimic_json
   paper_trail
@@ -490,7 +480,6 @@ DEPENDENCIES
   puma
   rails (= 7.0.2.3)
   rails_layout
-  redis (~> 4.0)
   rspec-rails
   sass-rails
   scnr-application!
