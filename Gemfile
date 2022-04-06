@@ -76,7 +76,6 @@ group :development, :test do
     gem 'awesome_print'
 end
 
-gem 'nokogiri', github: 'sparklemotion/nokogiri', branch: 'main'
 gem 'ethon',    github: 'typhoeus/ethon', branch: 'thread-safe-easy-handle-cleanup'
 
 if File.exist? '../../qadron/dsel'
@@ -98,6 +97,3 @@ end
 if File.exist? '../engine'
     gem 'scnr-engine', path: '../engine'
 end
-
-# Use Redis for Action Cable
-gem "redis", "~> 4.0"
