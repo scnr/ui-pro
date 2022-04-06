@@ -10,6 +10,8 @@ Bundler.require(*Rails.groups)
 module SCNR
 module UI
 module Pro
+    VERSION = File.read( File.dirname( __FILE__ ) + '/../VERSION' ).strip
+
     class Application < Rails::Application
         config.load_defaults 6.0
 
