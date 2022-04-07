@@ -148,6 +148,8 @@ FrameworkHelper.framework do |f|
     end
 end
 
+exit
+
 site = user.sites.create!(
     protocol: 'http',
     host:     'testhtml5.vulnweb.com',
@@ -184,8 +186,6 @@ site = user.sites.create!(
 #         start_at: Time.now
 #     }
 # )
-
-exit
 
 scans_size         = 4
 revisions_per_scan = 3
