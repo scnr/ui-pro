@@ -240,7 +240,7 @@ module Scan
         progress_tracking_for( revision )[:issue_digests] ||=
             revision.scan.issues.where.not( state: 'fixed' ).digests
 
-        # With errors and live sitemap.
+        # With errors and summary sitemap.
         instance.scan.progress(
             with:    {
                 issues:  true,

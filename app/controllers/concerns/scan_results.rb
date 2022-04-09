@@ -19,7 +19,7 @@ module ScanResults
     SCAN_RESULT_REVISION_ACTIONS =
         SCAN_RESULT_SITE_ACTIONS +
         SCAN_RESULT_SCAN_ACTIONS +
-            [ :revert_configuration, :configuration, :live, :health, :errors ]
+            [ :revert_configuration, :configuration, :summary, :health, :errors ]
 
     SCAN_RESULT_ACTIONS          = SCAN_RESULT_REVISION_ACTIONS
 
@@ -29,27 +29,12 @@ module ScanResults
         revisions: SCAN_RESULT_REVISION_ACTIONS
     }
 
-    def live
-        # from = nil
-        # if params[:from]
-        #     from = Time.at( params[:from].to_f / 1000.0 )
-        # end
-        #
-        # to = nil
-        # if params[:to]
-        #     to = Time.at( params[:to].to_f / 1000.0 )
-        # end
-
+    def summary
         respond_to do |format|
             format.html do
-                @live = prepare_live_stream_data
+                @summary = prepare_live_stream_data
                 process_and_show
             end
-
-            # format.js do
-            #     @live = prepare_live_stream_data( from, to )
-            #     render partial: '/shared/scan_results/live/stream', format: :js
-            # end
         end
 
         session[:live_last_update] = Time.now
@@ -62,30 +47,6 @@ module ScanResults
             reviews:  scan_results_reviewed_issues
         }
     end
-
-    # def prepare_live_stream_data( from, to = Time.now )
-    #     data = {}
-    #
-        # data[:issues] = apply_time_range(
-        #     preload_issue_associations( scan_results_owner.issues ),
-        #     from, to
-        # )
-        # data[:coverage] = apply_time_range( scan_results_coverage, from, to )
-        # data[:reviews] = apply_time_range( scan_results_reviewed_issues, from,
-        #                                    to, :updated_at )
-    #
-    #     data[:issues]   = preload_issue_associations( scan_results_owner.issues )
-    #     data[:coverage] = scan_results_coverage
-    #     data[:reviews]  = scan_results_reviewed_issues
-    #
-    #     data
-    # end
-
-    # def apply_time_range( relation, from, to, attribute = :created_at )
-    #     return relation if !from || !to
-    #
-    #     relation.where( attribute => (from..to) )
-    # end
 
     def issues
         @issues_summary = prepare_issue_data

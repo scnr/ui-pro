@@ -18,7 +18,6 @@
 //= require ace/worker-html
 //= require ace/theme-monokai
 //= require ace/mode-ruby
-//= require scan_results/live.js
 //= require_tree .
 
 function loading(){
@@ -179,7 +178,7 @@ var updatePage = (function () {
 
     function reload () {
         if(
-            // window.location.pathname.endsWith( '/live' ) ||
+            // window.location.pathname.endsWith( '/summary' ) ||
             window.location.pathname.includes( '/issues/' ) ||
             $( 'input' ).is(':visible')
         ) { return }

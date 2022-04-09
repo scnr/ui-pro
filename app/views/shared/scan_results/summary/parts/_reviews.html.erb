@@ -1,7 +1,7 @@
 <%
    count = 0
    by_state = {}
-   issues   = @live[:reviews]
+   issues   = @summary[:reviews]
 
    group_issues = proc do |group, issue|
        state = issue.auto_review_status
@@ -50,7 +50,7 @@
                     <ul class="list-unstyled">
                         <% issue_group.each do |issue| %>
                             <li>
-                                <%= render partial: '/shared/scan_results/live/stream/issue',
+                                <%= render partial: '/shared/scan_results/live/parts/issue',
                                                locals: { issue: issue } %>
                             </li>
                         <% end %>

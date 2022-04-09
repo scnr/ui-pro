@@ -31,7 +31,7 @@ describe ScanScheduler::Helpers::Instance do
     end
 
     describe '#active_instance_count' do
-        it 'returns the amount of live instances' do
+        it 'returns the amount of summary instances' do
             revisions = []
 
             # Increase on spawn
@@ -52,7 +52,7 @@ describe ScanScheduler::Helpers::Instance do
     end
 
     describe '#active_instance_count_for_site' do
-        it 'returns the amount of live instances for the given site' do
+        it 'returns the amount of summary instances for the given site' do
             revisions = []
 
             # Increase on spawn

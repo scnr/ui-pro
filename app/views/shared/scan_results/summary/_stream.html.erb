@@ -1,0 +1,39 @@
+<%
+    col = 0
+
+    if @summary[:reviews].any?
+        col += 1
+    end
+
+    if @summary[:issues].any?
+        col += 1
+    end
+
+    if @summary[:coverage].any?
+        col += 1
+    end
+
+    col = 12 / col
+
+%>
+<div class="row">
+
+    <% if @summary[:reviews].any? %>
+        <div class="col-md-<%= col %>">
+            <%= render partial: '/shared/scan_results/summary/parts/reviews' %>
+        </div>
+    <% end %>
+
+    <% if @summary[:issues].any? %>
+        <div class="col-md-<%= col %>">
+            <%= render partial: '/shared/scan_results/summary/parts/issues' %>
+        </div>
+    <% end %>
+
+    <% if @summary[:coverage].any? %>
+        <div class="col-md-<%= col %>">
+            <%= render partial: '/shared/scan_results/summary/parts/coverage' %>
+        </div>
+    <% end %>
+
+</div>

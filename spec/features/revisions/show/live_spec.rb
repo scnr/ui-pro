@@ -1,3 +1,3 @@
-feature 'Revision live' do
+feature 'Revision summary' do
     pending
 end

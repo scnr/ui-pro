@@ -12,9 +12,9 @@
     <ul class="nav nav-tabs">
 
         <% if @revision %>
-            <li id="live-tab" class="<%= 'active' if sections['live'] %>">
-                <%= link_to params_h.merge( action: 'live' ).merge filter_params do %>
-                    Live
+            <li id="live-tab" class="<%= 'active' if sections['summary'] %>">
+                <%= link_to params_h.merge( action: 'summary' ).merge filter_params do %>
+                    Summary
                 <% end %>
             </li>
         <% end %>
@@ -76,10 +76,10 @@
     </ul>
 
     <div class="tab-content">
-        <% if sections['live'] %>
-            <div class="tab-pane <%= 'active' if sections['live'] %>" id="live">
-                <%= render partial: 'shared/scan_results/live', locals: {
-                    data: @live
+        <% if sections['summary'] %>
+            <div class="tab-pane <%= 'active' if sections['summary'] %>" id="summary">
+                <%= render partial: 'shared/scan_results/summary', locals: {
+                    data: @summary
                 } %>
             </div>
         <% end %>

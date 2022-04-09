@@ -72,24 +72,6 @@
         </div>
     <% end %>
 
-<!--    <div class="row">-->
-<!--        <div class="col-md-8" id="live-stream-actions">-->
-<!--            <div class="btn-group" role="group">-->
-<!--                <button id="acknowledge-all" type="button" class="btn btn-default">-->
-<!--                    Acknowledge all-->
-<!--                </button>-->
-
-<!--                <button id="merge-updates" type="button" class="btn btn-default">-->
-<!--                    Merge updates-->
-<!--                </button>-->
-
-<!--                <button id="clear-updates" type="button" class="btn btn-default">-->
-<!--                    Clear stream-->
-<!--                </button>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-
     <div class="row">
         <div class="col-md-12">
             <h4 id="live-stream-clock"></h4>
@@ -113,7 +95,7 @@
                 </small>
             </h4>
 
-            <%=  render( partial: 'shared/scan_results/live/stream', formats: :html ) %>
+            <%=  render( partial: 'shared/scan_results/summary/stream', formats: :html ) %>
         </div>
     </div>
 

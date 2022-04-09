@@ -67,7 +67,7 @@ module FrameworkHelper
     end
 
     def content_type_for_report( format )
-        reporters[format.to_s][:content_type] || 'application/octet-stream'
+        reporters[format.to_s][:content_type] || 'application/octet-parts'
     end
 
     def reporters

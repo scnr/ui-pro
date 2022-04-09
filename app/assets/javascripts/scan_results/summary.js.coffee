@@ -2,7 +2,7 @@
 #    $(e).removeClass( 'pulsating' )
 #
 #update_feed = ( acknowledge_all ) ->
-#    return if !window.location.pathname.endsWith( '/live' )
+#    return if !window.location.pathname.endsWith( '/summary' )
 #
 #    d   = new Date()
 #    now = d.getTime()
@@ -13,9 +13,9 @@
 #    },
 #    (data) ->
 #        if acknowledge_all
-#            acknowledge( '.live-stream-batch' )
+#            acknowledge( '.summary-parts-batch' )
 #
-#        $('.live-stream-batch').mouseover ->
+#        $('.summary-parts-batch').mouseover ->
 #            acknowledge( this )
 #
 #    window.live_stream_from = now
@@ -24,10 +24,10 @@
 #    window.live_stream_from = null
 #    clear_feed()
 #    update_feed( true )
-#    acknowledge( '.live-stream-batch' )
+#    acknowledge( '.summary-parts-batch' )
 #
 #clear_feed = () ->
-#    $('#live-stream').html('')
+#    $('#summary-parts').html('')
 #
 #setup_feed = () ->
 #    if window.liveIntervalID
@@ -39,10 +39,10 @@
 #
 #setup = () ->
 #    merge_feed()
-#    if $('#live-stream').is(':visible')
+#    if $('#summary-parts').is(':visible')
 #        setup_feed()
 #    $('#acknowledge-all').click ->
-#        acknowledge( '.live-stream-batch' )
+#        acknowledge( '.summary-parts-batch' )
 #    $('#merge-updates').click ->
 #        merge_feed()
 #    $('#clear-updates').click ->

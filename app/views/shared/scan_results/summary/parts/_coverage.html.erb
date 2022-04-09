@@ -1,5 +1,5 @@
 <%
-   coverage_entry_count = @live[:coverage].size
+   coverage_entry_count = @summary[:coverage].size
 %>
 
 <% if coverage_entry_count > 0 %>
@@ -15,7 +15,7 @@
         <div class="row">
             <div class="col-md-12">
                 <ul class="list-unstyled">
-                    <% @live[:coverage].each do |entry| %>
+                    <% @summary[:coverage].each do |entry| %>
                         <li>
                             <code>[<%= entry.code %>]</code>
 
