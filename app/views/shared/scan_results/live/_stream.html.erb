@@ -1,3 +1,39 @@
-<%= render partial: '/shared/scan_results/live/stream/reviews' %>
-<%= render partial: '/shared/scan_results/live/stream/issues' %>
-<%= render partial: '/shared/scan_results/live/stream/coverage' %>
+<%
+    col = 0
+
+    if @live[:reviews].any?
+        col += 1
+    end
+
+    if @live[:issues].any?
+        col += 1
+    end
+
+    if @live[:coverage].any?
+        col += 1
+    end
+
+    col = 12 / col
+
+%>
+<div class="row">
+
+    <% if @live[:reviews].any? %>
+        <div class="col-md-<%= col %>">
+            <%= render partial: '/shared/scan_results/live/stream/reviews' %>
+        </div>
+    <% end %>
+
+    <% if @live[:issues].any? %>
+        <div class="col-md-<%= col %>">
+            <%= render partial: '/shared/scan_results/live/stream/issues' %>
+        </div>
+    <% end %>
+
+    <% if @live[:coverage].any? %>
+        <div class="col-md-<%= col %>">
+            <%= render partial: '/shared/scan_results/live/stream/coverage' %>
+        </div>
+    <% end %>
+
+</div>

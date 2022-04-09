@@ -23,16 +23,16 @@
    end
 
    {
-           'regression'     => 'regressions',
+           'regression'     => 'regression',
            'fixed'          => 'fixed',
-           'false_positive' => 'false_positives'
+           'false_positive' => 'false_positive'
    }.each do |k, v|
        next if !by_state.include?( k )
        by_state[v] = by_state.delete(k)
    end
 %>
 
-<% if count > 1 %>
+<% if count > 0 %>
     <div class="live-stream-entry">
         <% by_state.each do |state, issue_group| %>
 
@@ -40,12 +40,13 @@
                 <div class="col-md-12">
                     <h3>
                         <%= issue_group.size %> <%= state %>
+                        <%= 'issue'.pluralize issue_group.size %>
                     </h3>
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-md-offset-3 col-md-9">
+                <div class="col-md-12">
                     <ul class="list-unstyled">
                         <% issue_group.each do |issue| %>
                             <li>
