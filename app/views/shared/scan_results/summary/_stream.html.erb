@@ -18,9 +18,9 @@
 %>
 <div class="row">
 
-    <% if @summary[:reviews].any? %>
+    <% if @summary[:coverage].any? %>
         <div class="col-md-<%= col %>">
-            <%= render partial: '/shared/scan_results/summary/parts/reviews' %>
+            <%= render partial: '/shared/scan_results/summary/parts/coverage' %>
         </div>
     <% end %>
 
@@ -30,10 +30,9 @@
         </div>
     <% end %>
 
-    <% if @summary[:coverage].any? %>
+    <% if @summary[:reviews].any? %>
         <div class="col-md-<%= col %>">
-            <%= render partial: '/shared/scan_results/summary/parts/coverage' %>
+            <%= render partial: '/shared/scan_results/summary/parts/reviews' %>
         </div>
     <% end %>
-
 </div>
