@@ -72,23 +72,23 @@
         </div>
     <% end %>
 
-    <div class="row">
-        <div class="col-md-8" id="live-stream-actions">
-            <div class="btn-group" role="group">
-                <button id="acknowledge-all" type="button" class="btn btn-default">
-                    Acknowledge all
-                </button>
+<!--    <div class="row">-->
+<!--        <div class="col-md-8" id="live-stream-actions">-->
+<!--            <div class="btn-group" role="group">-->
+<!--                <button id="acknowledge-all" type="button" class="btn btn-default">-->
+<!--                    Acknowledge all-->
+<!--                </button>-->
 
-                <button id="merge-updates" type="button" class="btn btn-default">
-                    Merge updates
-                </button>
+<!--                <button id="merge-updates" type="button" class="btn btn-default">-->
+<!--                    Merge updates-->
+<!--                </button>-->
 
-                <button id="clear-updates" type="button" class="btn btn-default">
-                    Clear stream
-                </button>
-            </div>
-        </div>
-    </div>
+<!--                <button id="clear-updates" type="button" class="btn btn-default">-->
+<!--                    Clear stream-->
+<!--                </button>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
 
     <div class="row">
         <div class="col-md-8">
@@ -104,6 +104,13 @@
 
     <div class="row">
         <div id="live-stream" class="col-md-8">
+            <h4>
+                <small>
+                    <%= seconds_to_hms @revision.duration %>
+                </small>
+            </h4>
+
+            <%=  render( partial: 'shared/scan_results/live/stream', formats: :html ) %>
         </div>
     </div>
 
