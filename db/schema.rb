@@ -280,15 +280,15 @@ ActiveRecord::Schema[7.0].define(version: 2022_03_15_100002) do
   end
 
   create_table "performance_snapshots", force: :cascade do |t|
-    t.integer "http_request_count"
-    t.integer "http_response_count"
-    t.integer "http_time_out_count"
-    t.float "http_average_responses_per_second"
-    t.float "http_average_response_time"
-    t.integer "http_max_concurrency"
-    t.integer "http_original_max_concurrency"
-    t.float "runtime"
-    t.integer "page_count"
+    t.integer "http_request_count", default: 0
+    t.integer "http_response_count", default: 0
+    t.integer "http_time_out_count", default: 0
+    t.float "http_average_responses_per_second", default: 0.0
+    t.float "http_average_response_time", default: 0.0
+    t.integer "http_max_concurrency", default: 0
+    t.integer "http_original_max_concurrency", default: 0
+    t.float "runtime", default: 0.0
+    t.integer "page_count", default: 0
     t.text "current_page"
     t.integer "revision_current_id"
     t.bigint "revision_id"
