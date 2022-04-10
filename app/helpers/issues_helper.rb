@@ -12,6 +12,8 @@ module IssuesHelper
     end
 
     def sitemap_entry_url( sitemap_entry )
+        return filter_params_without_page if !sitemap_entry
+
         filter_params_without_page.merge(
             'filter[pages][]' =>
                 sitemap_entry.is_a?( Integer ) ?
