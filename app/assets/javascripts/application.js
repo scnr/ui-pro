@@ -207,6 +207,8 @@ function setupPageUpdate() {
 
 
 function setup() {
+    window.topOffset = $('#top-nav').height();
+
     // Init all tooltips.
     $('[data-toggle="tooltip"]').tooltip();
 
@@ -214,26 +216,14 @@ function setup() {
 
     setupScroll();
     setupPageUpdate();
-}
-
-jQuery(function ($) {
-    window.topOffset = $('#top-nav').height();
 
     // Restore the last open tab from the URL fragment.
     openFromWindowLocation();
     scrollToActiveElementFromWindowLocation();
-});
+}
 
 $(window).bind( 'hashchange', function () {
     openFromWindowLocation();
-});
-
-$(document).ajaxStop( function() {
-    setup();
-});
-
-$(document).ready( function( $ ) {
-    setup();
 });
 
 $(document).on( "turbo:load", setup );

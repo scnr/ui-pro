@@ -86,7 +86,7 @@
                         <% has_active = true %>
 
                         <li class="active">
-                            <a href="<%= id_to_location id %>/<%= i %>/inspect/arguments">
+                            <a data-turbo="false" href="<%= id_to_location id %>/<%= i %>/inspect/arguments">
                                 Arguments
                             </a>
                         </li>
@@ -94,7 +94,7 @@
 
                     <% if with_source %>
                         <li <%= 'class="active"' if !has_active %>>
-                            <a href="<%= id_to_location id %>/<%= i %>/inspect/source">
+                            <a data-turbo="false" href="<%= id_to_location id %>/<%= i %>/inspect/source">
                                 Source
                             </a>
                         </li>
