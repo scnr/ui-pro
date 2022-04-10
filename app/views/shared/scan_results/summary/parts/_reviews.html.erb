@@ -50,7 +50,7 @@
                     <ul class="list-unstyled">
                         <% issue_group.each do |issue| %>
                             <li>
-                                <%= render partial: '/shared/scan_results/live/parts/issue',
+                                <%= render partial: '/shared/scan_results/summary/parts/issue',
                                                locals: { issue: issue } %>
                             </li>
                         <% end %>
