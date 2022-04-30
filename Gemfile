@@ -76,25 +76,7 @@ group :development, :test do
     gem 'awesome_print'
 end
 
-gem 'ethon',    github: 'typhoeus/ethon', branch: 'thread-safe-easy-handle-cleanup'
-
-if File.exist? '../../qadron/dsel'
-    gem 'dsel', path: '../../qadron/dsel'
-else
-    gem 'dsel'
-end
-
-if File.exist? '../../qadron/toq'
-    gem 'toq', path: '../../qadron/toq'
-else
-    gem 'toq'
-end
-
-if File.exist? '../../qadron/cuboid'
-    gem 'cuboid', path: '../../qadron/cuboid'
-else
-    gem 'cuboid'
-end
+gem 'ethon', github: 'typhoeus/ethon', branch: 'thread-safe-easy-handle-cleanup'
 
 if File.exist? '../application'
     gem 'scnr-application', path: '../application'
