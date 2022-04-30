@@ -4,5 +4,6 @@ production:
     encoding: unicode
     pool: 50
     username: scnr-pro
-    password: secret # Update this.
+    # Update this:
+    password: secret
     database: scnr_pro_production
