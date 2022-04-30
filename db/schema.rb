@@ -328,6 +328,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_03_15_100002) do
     t.integer "scope_directory_depth_limit"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.index ["name"], name: "index_profiles_on_name", unique: true
     t.index ["user_id"], name: "index_profiles_on_user_id"
   end
 
