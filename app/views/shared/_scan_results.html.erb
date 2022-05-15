@@ -73,6 +73,13 @@
         <% end %>
       </li>
 
+        <% if @revision&.report %>
+            <li id="export-tab" class="<%= 'active' if sections['export'] %>">
+                <%= link_to params_h.merge( action: 'export' ).merge filter_params do %>
+                    Export
+                <% end %>
+            </li>
+        <% end %>
     </ul>
 
     <div class="tab-content">
@@ -127,5 +134,11 @@
             <%= render partial: 'shared/scan_results/events' %>
           </div>
       <% end %>
+
+        <% if sections['export'] %>
+            <div class="tab-pane <%= 'active' if sections['export'] %>" id="export">
+                <%= render partial: 'shared/scan_results/export' %>
+            </div>
+        <% end %>
     </div>
 </div>

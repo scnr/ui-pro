@@ -11,7 +11,7 @@ module ScanResults
 
     DEFAULT_ACTION = :issues
 
-    SCAN_RESULT_SITE_ACTIONS     = [ :issues, :coverage, :reviews, :events ]
+    SCAN_RESULT_SITE_ACTIONS     = [ :issues, :coverage, :reviews, :events, :export ]
 
     SCAN_RESULT_SCAN_ACTIONS     =
         SCAN_RESULT_SITE_ACTIONS
@@ -86,6 +86,33 @@ module ScanResults
     def configuration
         @configuration = prepare_configuration_data
         process_and_show
+    end
+
+    def export
+        @report = scan_results_owner.report
+        process_and_show
+    end
+
+    def report
+        report        = scan_results_owner.report
+        report_object = SCNR::Engine::Report.load( report.location )
+
+        name = "#{URI( @scan.url ).host} - #{@scan.profile.name} - #{@revision.id}".
+          gsub( '/', '_' ).gsub( '.', '_' ).gsub( "\n", '' ).gsub( "\r", '' )
+
+        format = URI( request.url ).path.split( '.' ).last
+
+        if format == 'ser'
+            report    = report_object.to_ser
+            extension = 'ser'
+        else
+            report    = FrameworkHelper.framework { |f| f.report_as format, report_object }
+            extension = FrameworkHelper.reporters[format][:extension]
+        end
+
+        send_data report,
+                  type: FrameworkHelper.content_type_for_report( format ),
+                  disposition: "attachment; filename=\"#{name}.#{extension}\""
     end
 
     def revert_configuration

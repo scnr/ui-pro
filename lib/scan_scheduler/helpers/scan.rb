@@ -428,6 +428,9 @@ module Scan
                 if mark_issues_fixed && revision.scan.revisions.size > 1
                     mark_other_issues_fixed( revision, report.issues.map(&:digest) )
                 end
+
+                revision.report = Report.create( location: report_path )
+                revision.save
             rescue => e
                 log_exception_for( revision, e )
             end

@@ -7,6 +7,8 @@ class Revision < ActiveRecord::Base
 
     custom_serialize :rpc_options, Hash
 
+    has_one  :report, dependent: :destroy
+
     has_one  :performance_snapshot, dependent: :destroy,
              foreign_key: 'revision_current_id'
 

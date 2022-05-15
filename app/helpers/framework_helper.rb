@@ -67,11 +67,15 @@ module FrameworkHelper
     end
 
     def content_type_for_report( format )
-        reporters[format.to_s][:content_type] || 'application/octet-parts'
+        if reporters[format.to_s]
+            reporters[format.to_s][:content_type]
+        else
+            'application/octet-parts'
+        end
     end
 
     def reporters
-        components_for( :reporters ).reject { |name, _| name == 'txt' }
+        components_for( :reporters )
     end
 
     def reports_with_outfile

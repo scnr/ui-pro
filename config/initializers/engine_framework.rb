@@ -20,7 +20,8 @@ DEFAULT_PLUGINS = [
 ]
 
 EXCLUDE_REPORTERS = [
-    :txt
+    :txt,
+    :stdout
 ]
 
 # Component loading isn't thread-safe so preload everything here.
