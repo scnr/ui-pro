@@ -89,7 +89,7 @@ Rails.application.configure do
   end
 
   if ENV['SCNR_PRO_LOG_DIR'].present?
-    config.paths['log'] = ENV['SCNR_PRO_LOG_DIR'] - '/webui.log'
+    config.paths['log'] = ENV['SCNR_PRO_LOG_DIR'] + '/webui.log'
   end
 
   # Do not dump schema after migrations.
