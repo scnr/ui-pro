@@ -89,8 +89,9 @@ Rails.application.configure do
   end
 
   if ENV['SCNR_PRO_LOG_DIR'].present?
-    config.paths['log'] = ENV['SCNR_PRO_LOG_DIR'] + '/webui.log'
+    config.logger = ActiveSupport::Logger.new( ENV['SCNR_PRO_LOG_DIR'] + '/webui.log' )
   end
+
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
