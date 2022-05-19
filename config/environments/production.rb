@@ -88,6 +88,10 @@ Rails.application.configure do
     config.logger    = ActiveSupport::TaggedLogging.new(logger)
   end
 
+  if ENV['SCNR_PRO_LOGDIR'].present?
+    config.paths['log'] = ENV['SCNR_PRO_LOGDIR'] - '/webui.log'
+  end
+
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 end

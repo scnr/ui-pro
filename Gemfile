@@ -30,6 +30,7 @@ gem 'coderay'
 gem 'diffy'
 
 gem 'pg'
+gem 'sqlite3'
 
 gem 'parse-cron'
 

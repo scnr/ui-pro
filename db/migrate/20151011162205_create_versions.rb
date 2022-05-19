@@ -23,7 +23,7 @@ class CreateVersions < ActiveRecord::Migration[5.1]
             t.text :object_to_s
 
             t.string :whodunnit
-            t.jsonb :object
+            t.binary :object
             t.datetime :created_at
         end
 
