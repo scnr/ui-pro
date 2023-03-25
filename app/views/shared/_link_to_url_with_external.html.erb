@@ -5,8 +5,10 @@
 %>
 <small>
     <%= link_to external, target: '_blank' do %>
-        <i class="fa fa-external-link"></i>
+        <i title="Open resource in new window" class="fa fa-external-link"></i>
     <% end%>
+
+    &#8212;
 </small>
 
 <%= internal ? link_to( display, internal, options ) : display %>
