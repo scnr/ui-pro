@@ -4,22 +4,22 @@
                 class: select_button_class(
                                site_path( site ),
                                include_actions: ScanResults::SCAN_RESULT_ACTIONS
-                       ) + ' btn-primary' do %>
+                       ) do %>
         <i class="fa fa-home"></i>
     <% end %>
 
     <%= link_to site_scans_path( site ), title: 'Scans',
-                class: select_button_class( site_scans_path( site ) ) + ' btn-default' do %>
+                class: select_button_class( site_scans_path( site ) ) do %>
         <i class="fa fa-tasks"></i>
     <% end %>
 
     <%= link_to site_roles_path( site ), title: 'User roles',
-                class: select_button_class( site_roles_path( site ) ) + ' btn-default' do %>
+                class: select_button_class( site_roles_path( site ) ) do %>
         <i class="fa fa-users"></i>
     <% end %>
 
     <%= link_to edit_site_path( site ), title: 'Settings',
-                class: select_button_class( edit_site_path( site ) ) + ' btn-default' do %>
+                class: select_button_class( edit_site_path( site ) ) do %>
         <i class="fa fa-cog"></i>
     <% end %>
 

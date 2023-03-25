@@ -3,8 +3,8 @@ module ApplicationHelper
     SCOPED_FIND_EACH_BATCH_SIZE = 1000
 
     def select_button_class( path, include_actions: [], include_children: true )
-        default  = 'btn btn-sm'
-        selected = 'btn btn-selected'
+        default  = 'btn btn-sm btn-default'
+        selected = 'btn btn-sm btn-primary btn-default'
 
         if include_actions.any?
             include_actions.each do |action|
