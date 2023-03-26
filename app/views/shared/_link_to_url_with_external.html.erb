@@ -3,12 +3,11 @@
     internal = options.delete(:internal)
     display  = options.delete(:display) || external
 %>
-<small>
-    <%= link_to external, target: '_blank' do %>
-        <i title="Open resource in new window" class="fa fa-external-link"></i>
-    <% end%>
-
-    &#8212;
-</small>
 
 <%= internal ? link_to( display, internal, options ) : display %>
+
+<small>
+  <%= link_to external, target: '_blank' do %>
+    <i title="Open resource in new window" class="fa fa-external-link"></i>
+  <% end%>
+</small>
