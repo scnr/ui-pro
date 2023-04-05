@@ -41,6 +41,8 @@ class SitesController < ApplicationController
     # POST /sites
     # POST /sites.json
     def create
+        # SiteAddJob.perform_later( site_params, current_user )
+
         @site = Site.new( site_params )
         @site.user = current_user
 
@@ -60,12 +62,10 @@ class SitesController < ApplicationController
     # DELETE /sites/1
     # DELETE /sites/1.json
     def destroy
-        @site.destroy
+        fail 'Cannot delete site while scanning!' if @site.being_scanned?
 
-        respond_to do |format|
-            format.html { redirect_to sites_url, status: 303, notice: 'Site was successfully destroyed.' }
-            format.json { head :no_content }
-        end
+        @site.destroying!
+        SiteDeleteJob.perform_later( @site )
     end
 
     private
@@ -106,13 +106,18 @@ class SitesController < ApplicationController
         )
     end
 
+    # Never trust parameters from the scary internet, only allow the white list through.
+    def site_params
+        params.require(:site).permit(*[ :protocol, :host, :port ])
+    end
+
     def validate_connectivity( site )
         return true if site.protocol.blank? || site.host.blank? || site.port.blank?
 
         response = SCNR::Engine::HTTP::Client.get(
-            "#{site.url}/favicon.ico",
-            follow_location: true,
-            mode:            :sync
+          "#{site.url}/favicon.ico",
+          follow_location: true,
+          mode:            :sync
         )
 
         if !response
@@ -122,7 +127,7 @@ class SitesController < ApplicationController
 
         if response.code == 0
             site.errors.add :host,
-                       "#{response.return_message.to_s.downcase} for: #{site.url}"
+                            "#{response.return_message.to_s.downcase} for: #{site.url}"
             return
         end
 
@@ -131,11 +136,6 @@ class SitesController < ApplicationController
         end
 
         true
-    end
-
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def site_params
-        params.require(:site).permit(*[ :protocol, :host, :port ])
     end
 
 end

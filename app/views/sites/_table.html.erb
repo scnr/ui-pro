@@ -18,7 +18,11 @@
                     <%= render partial: 'favicon', locals: { site: site } %>
                 </span>
 
+              <% if site.destroying? %>
+                <%= site.url %>
+              <% else %>
                 <%= link_to_with_filters site.url, site %>
+              <% end %>
             </td>
 
             <td class="state">
@@ -56,6 +60,8 @@
             </td>
 
             <td class="last-scanned">
+              <% if !site.destroying? %>
+
                 <% has_something = false %>
 
                 <% if site.being_scanned? %>
@@ -76,10 +82,15 @@
                 <% if !has_something %>
                     never
                 <% end %>
+              <% end %>
             </td>
 
             <td>
+              <% if site.destroying? %>
+                Deleting... <i class="fas fa-spinner fa-spin"></i>
+                <% else %>
                 <%= render partial: 'buttons', locals: { site: site } %>
+              <% end %>
             </td>
         </tr>
     <% end %>

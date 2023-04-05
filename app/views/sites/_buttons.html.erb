@@ -23,6 +23,7 @@
         <i class="fa fa-cog"></i>
     <% end %>
 
+  <% if !site.being_scanned? %>
     <%= link_to site,
                 title: 'Delete site',
                 class: 'btn btn-sm btn-danger',
@@ -33,4 +34,5 @@
                 } do %>
         <i class="fa fa-trash"></i>
     <% end %>
+  <% end %>
 </div>

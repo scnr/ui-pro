@@ -62,6 +62,15 @@ class Site < ActiveRecord::Base
         revisions.in_progress?
     end
 
+    def destroying!
+        self.processing = 'destroying'
+        self.save
+    end
+
+    def destroying?
+        self.processing == 'destroying'
+    end
+
     def revision_in_progress
         return if revisions.size == 0
         revisions.includes(:scan).in_progress.first
