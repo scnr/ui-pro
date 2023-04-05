@@ -26,7 +26,7 @@
                         <% if severity != last_severity &&
                                 issue_severity_counts[severity] != issue_count %>
                             <li>
-                                <h4 class="text-severity text-severity-<%= severity %>">
+                                <h4 id="issue-summary-severity-<%= severity %>" class="text-severity text-severity-<%= severity %>">
                                     <%= issue_severity_counts[severity] %> <%= severity%> severity
                                 </h4>
                             </li>
