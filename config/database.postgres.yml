@@ -1,3 +1,6 @@
+#    $ sudo -u postgres psql
+#    postgres=# CREATE USER "scnr-pro" WITH PASSWORD 'secret';
+#    postgres=# ALTER USER "scnr-pro" superuser;
 production:
     host: localhost
     adapter: postgresql
