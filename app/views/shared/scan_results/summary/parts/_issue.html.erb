@@ -2,13 +2,12 @@
             title: issue.state.humanize do %>
     <i class="fa fa-<%= issue_state_to_icon issue.state %>">
     </i>
-<% end %>
 
 &#8212;
 
-<a href="<%= site_scan_revision_path( issue.site_id, issue.scan, issue.revision ) %>#summary-issue-check-<%= issue.type.check_shortname %>">
     <%= issue.type.name %>
 </a>
+<% end %>
 
 <% if issue.input_vector.affected_input_name %>
     in
