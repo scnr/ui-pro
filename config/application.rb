@@ -9,7 +9,7 @@ Bundler.require(*Rails.groups)
 
 module SCNR
 module UI
-module Pro
+module Web
     VERSION = File.read( File.dirname( __FILE__ ) + '/../VERSION' ).strip
 
     class Application < Rails::Application
