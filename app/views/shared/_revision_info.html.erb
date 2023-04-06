@@ -9,6 +9,12 @@
    schedule = scan.schedule
 %>
 
+<% if revision.in_progress? %>
+<script>
+   window.scan_duration_seconds = <%= revision.duration %>;
+</script>
+<% end %>
+
 <div class="revision-info">
     <% if revision.active? %>
         <% if !hide_revision_name %>
@@ -30,8 +36,12 @@
         <% if extended %>
             <%= l revision.started_at %>.
             <br/>
+
             Duration:
-            <%= seconds_to_hms revision.duration %>
+
+            <span class="scan-duration-clock-hms">
+              <%= seconds_to_hms revision.duration %>
+            </span>
 
             <% if (stop_after_hours = schedule.stop_after_hours) %>
                 &mdash;

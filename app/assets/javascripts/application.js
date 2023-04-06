@@ -205,7 +205,6 @@ function setupPageUpdate() {
         window.updatePageInterval = window.setInterval( updatePage, 5000 )
 }
 
-
 function setup() {
     window.topOffset = $('#top-nav').height();
 
@@ -220,10 +219,32 @@ function setup() {
     // Restore the last open tab from the URL fragment.
     openFromWindowLocation();
     scrollToActiveElementFromWindowLocation();
+
+    // Keep the revision duration timer going.
+    var previous_interval = window.clock_interval;
+    window.clock_interval = setInterval(
+        function (){
+            if( !window.scan_duration_seconds ) {
+                clearInterval(previous_interval);
+                return;
+            }
+
+            var scan_duration_hms = new Date( window.scan_duration_seconds * 1000 ).toISOString().slice( 11, 19 );
+            // console.log( scan_duration_hms );
+            $('.scan-duration-clock-hms').html( scan_duration_hms );
+            window.scan_duration_seconds += 1;
+
+            if( previous_interval )
+                clearInterval( previous_interval ) ;
+        },
+        1000
+    );
+
 }
 
 $(window).bind( 'hashchange', function () {
     openFromWindowLocation();
 });
+
 
 $(document).on( "turbo:load", setup );

@@ -8,6 +8,12 @@
     reviewed_issues_count = @revision.reviewed_issues.size
 %>
 
+<% if @revision.in_progress? %>
+<script>
+    window.scan_duration_seconds = <%= @revision.duration %>;
+</script>
+<% end %>
+
 <div id="summary-statistics">
     <div class="row">
         <div class="col-md-2">
@@ -89,11 +95,20 @@
 
     <div class="row">
         <div id="live-stream" class="col-md-12">
-            <h4>
-                <small>
-                    <%= seconds_to_hms @revision.duration %>
+
+          <h4>
+          <% if @revision.in_progress? %>
+
+                <small class="scan-duration-clock-hms">
+                  <%= seconds_to_hms @revision.duration %>
                 </small>
-            </h4>
+
+            <% else %>
+                <small>
+                  <%= seconds_to_hms @revision.duration %>
+                </small>
+          <% end %>
+          </h4>
 
             <%=  render( partial: 'shared/scan_results/summary/stream', formats: :html ) %>
         </div>
