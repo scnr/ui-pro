@@ -200,9 +200,21 @@ var updatePage = (function () {
     return reload
 })()
 
+window.original_alert = window.alert;
+window.alert = function( params ){
+    stopPageUpdate();
+    window.original_alert.apply( window, params );
+    setupPageUpdate();
+}
+
 function setupPageUpdate() {
     if( !window.updatePageInterval )
         window.updatePageInterval = window.setInterval( updatePage, 5000 )
+}
+
+function stopPageUpdate() {
+    if( window.updatePageInterval )
+        clearInterval( window.updatePageInterval )
 }
 
 function setup() {
