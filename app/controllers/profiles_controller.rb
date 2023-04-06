@@ -63,7 +63,7 @@ class ProfilesController < ApplicationController
     # PUT /profiles/1/default
     def default
         @profile.default!
-        render partial: 'table', formats: :js
+        redirect_to profiles_url
     end
 
     # DELETE /profiles/1

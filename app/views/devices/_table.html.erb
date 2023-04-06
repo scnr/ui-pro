@@ -21,7 +21,7 @@
                                     html: { onsubmit: 'loading();' } do %>
                     <input type="radio"
                            class="make-default"
-                           onclick="$(this).submit()"
+                           onclick="this.form.requestSubmit()"
                            name="id_<%= device.id %>"
                            id="id_<%= device.id %>"
                            autocomplete="off"

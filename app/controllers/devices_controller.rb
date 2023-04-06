@@ -54,7 +54,7 @@ class DevicesController < ApplicationController
 
     def default
         @device.default!
-        render partial: 'table', formats: :js
+        redirect_to devices_url
     end
 
     def destroy
