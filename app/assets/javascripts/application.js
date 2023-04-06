@@ -173,7 +173,10 @@ function setupScroll(){
     });
 }
 
-var updatePage = (function () {
+window.disablePageUpdate = false;
+var updatePage = function () {
+    if( window.disablePageUpdate ) return;
+
     var scrollPosition;
 
     function reload () {
@@ -197,24 +200,21 @@ var updatePage = (function () {
         }
     });
 
-    return reload
-})()
-
-window.original_alert = window.alert;
-window.alert = function( params ){
-    stopPageUpdate();
-    window.original_alert.apply( window, params );
-    setupPageUpdate();
+    reload();
+    return true;
 }
+
+// window.original_confirm = window.confirm;
+// Turbo.FormSubmission.confirmMethod = function( data, title, cb ){
+//     window.disablePageUpdate = true;
+//     console.log( 1 );
+//     ret = window.original_confirm.apply( window, [data, title, cb] );
+//     // window.disablePageUpdate = false;
+//     return ret
+// }
 
 function setupPageUpdate() {
-    if( !window.updatePageInterval )
-        window.updatePageInterval = window.setInterval( updatePage, 5000 )
-}
-
-function stopPageUpdate() {
-    if( window.updatePageInterval )
-        clearInterval( window.updatePageInterval )
+    startPageUpdate();
 }
 
 function setup() {
@@ -251,6 +251,27 @@ function setup() {
         },
         1000
     );
+
+    Turbo.setConfirmMethod(( message, element ) => {
+        stopPageUpdate();
+        var result = window.confirm( message );
+        startPageUpdate();
+        return result;
+    })
+
+}
+
+function stopPageUpdate(){
+    window.disablePageUpdate = true;
+    clearInterval( window.updatePageInterval );
+    window.updatePageInterval = null;
+}
+
+function startPageUpdate(){
+    window.disablePageUpdate = false;
+    if( !window.updatePageInterval ) {
+        window.updatePageInterval = window.setInterval( updatePage, 3000 )
+    }
 
 }
 

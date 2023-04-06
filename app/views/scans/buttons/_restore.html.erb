@@ -1,7 +1,6 @@
 <%= link_to restore_site_scan_path( scan.site, scan ),
             title: 'Restore scan',
             class: 'btn btn-sm btn-success',
-            onclick: 'updatePage();',
             data: {
               turbo_method: :patch
             } do %>

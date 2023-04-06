@@ -1,3 +1,9 @@
+<%
+  if !scan.scanning? && scan.status.to_s.ends_with?( 'ing' )
+    return
+  end
+%>
+
 <% if scan.active? %>
     <% if scan.paused? %>
         <%= render partial: 'scans/buttons/resume', locals: { scan: scan } %>
