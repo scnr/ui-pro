@@ -6,7 +6,7 @@
    current_scan_count = scans.count
 %>
 
-<%= render 'shared/sidebar_site' %>
+<%= render 'shared/sidebar_site', locals: { no_delete_button: true } %>
 
 <% if scans.any? %>
 

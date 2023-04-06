@@ -1,3 +1,7 @@
+<%
+  no_delete = !!local_assigns.include?(:no_delete_button)
+%>
+
 <div class="btn-group" role="group">
     <%= link_to_with_filters site,
                 title: 'Site overview',
@@ -23,7 +27,7 @@
         <i class="fa fa-cog"></i>
     <% end %>
 
-  <% if !site.being_scanned? %>
+  <% if !no_delete && !site.being_scanned? %>
     <%= link_to site,
                 title: 'Delete site',
                 class: 'btn btn-sm btn-danger',

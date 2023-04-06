@@ -5,10 +5,13 @@ production:
     timeout: 5000
 
 development:
-    adapter: sqlite3
-    database: <%= (path = ENV['SCNR_PRO_DB_DIR']) ? path : 'db' %>/development.sqlite3
+    host: localhost
+    adapter: postgresql
+    encoding: unicode
     pool: 50
-    timeout: 5000
+    username: scnr-pro
+    password: secret
+    database: scnr_pro_development
 
 test:
     adapter: sqlite3

@@ -1,5 +1,6 @@
 <%
    hide_site_buttons = !!local_assigns[:hide_site_buttons]
+   no_delete_button  = !!local_assigns[:no_delete_button]
 %>
 
 <div id="sidebar-site">
@@ -11,6 +12,9 @@
     </h4>
 
     <% if !hide_site_buttons %>
-        <%= render partial: 'sites/buttons', locals: { site: @site } %>
+        <%= render partial: 'sites/buttons', locals: {
+          site: @site,
+          no_delete_button: no_delete_button
+        } %>
     <% end %>
 </div>
