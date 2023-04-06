@@ -71,6 +71,15 @@ class Scan < ActiveRecord::Base
         schedule.scheduled?
     end
 
+    def destroying!
+        self.processing = 'destroying'
+        self.save
+    end
+
+    def destroying?
+        self.processing == 'destroying'
+    end
+
     def to_s
         name
     end

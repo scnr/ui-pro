@@ -73,6 +73,10 @@
 </td>
 
 <td>
+  <% if scan.destroying? %>
+    Deleting... <i class="fas fa-spinner fa-spin"></i>
+  <% else %>
     <%= render partial: '/scans/buttons',
                locals: { scan: scan } %>
+  <% end %>
 </td>

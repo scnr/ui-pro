@@ -96,10 +96,11 @@ class ScansController < ApplicationController
     # DELETE /scans/1
     # DELETE /scans/1.json
     def destroy
-        @scan.destroy
+        @scan.destroying!
+        ScanDeleteJob.perform_later( @scan )
 
         respond_to do |format|
-            format.html { redirect_to site_scans_url, status: 303, notice: 'Scan was successfully destroyed.' }
+            format.html { redirect_to site_scans_url, status: 303, notice: 'The scan is being deleted.' }
             format.json { head :no_content }
         end
     end
