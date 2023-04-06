@@ -66,6 +66,11 @@ class SitesController < ApplicationController
 
         @site.destroying!
         SiteDeleteJob.perform_later( @site )
+
+        respond_to do |format|
+            format.html { redirect_to sites_url, status: 303, notice: 'Site is being deleted.' }
+            format.json { head :no_content }
+        end
     end
 
     private
