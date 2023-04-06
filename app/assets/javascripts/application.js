@@ -270,6 +270,10 @@ function stopPageUpdate(){
 function startPageUpdate(){
     window.disablePageUpdate = false;
     if( !window.updatePageInterval ) {
+        var interval = setInterval(
+            function(){ updatePage(); clearInterval( interval ) },
+            100
+        );
         window.updatePageInterval = window.setInterval( updatePage, 3000 )
     }
 
