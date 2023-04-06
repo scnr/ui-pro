@@ -6,12 +6,7 @@
    current_scan_count = scans.count
 %>
 
-<%= render 'shared/sidebar_site', locals: { no_delete_button: true } %>
-
 <% if scans.any? %>
-
-<hr/>
-
 <ul id="sidebar-scans" class="nav nav-pills nav-stacked">
     <li class="nav-header">
         <a>

@@ -47,6 +47,10 @@
             %>
         <% end %>
 
+        <% if @site&.id %>
+          <%= render partial: 'shared/sidebar_site' %>
+        <% end %>
+
         <div id="content" class="col-md-<%= size %> <%= offset %>">
             <%= render 'layouts/messages' %>
             <%= yield %>

@@ -1,20 +1,11 @@
 <%
-   hide_site_buttons = !!local_assigns[:hide_site_buttons]
    no_delete_button  = !!local_assigns[:no_delete_button]
 %>
 
-<div id="sidebar-site">
+<div id="site-navbar">
+      <%= render partial: 'sites/buttons', locals: {
+        site: @site,
+        no_delete_button: no_delete_button
+      } %>
 
-    <%= render partial: '/sites/favicon', locals: { site: @site } %>
-
-    <h4>
-        <%= link_to_with_filters @site.url, @site %>
-    </h4>
-
-    <% if !hide_site_buttons %>
-        <%= render partial: 'sites/buttons', locals: {
-          site: @site,
-          no_delete_button: no_delete_button
-        } %>
-    <% end %>
 </div>

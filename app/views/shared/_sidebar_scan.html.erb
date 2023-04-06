@@ -1,12 +1,3 @@
-<%
-   hide_site_buttons = !!local_assigns[:hide_site_buttons]
-%>
-
-<%= render partial: 'shared/sidebar_site',
-           locals: { hide_site_buttons: hide_site_buttons } %>
-
-<hr/>
-
 <div id="sidebar-scan">
     <ul class="nav nav-stacked">
         <li class="<%= 'active' if params[:controller] == 'scans' %>">
