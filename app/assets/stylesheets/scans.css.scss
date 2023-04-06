@@ -67,6 +67,15 @@ form.scan-form {
     border-left: 1px solid #eeeeee;
 }
 
-#scan-info-details {
-    text-align: left;
+.scan-name {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+#sidebar-scan {
+    text-align: center;
+
+    .buttons {
+        padding-top: 10px;
+    }
 }

@@ -15,22 +15,30 @@
                     <i class="fa fa-arrow-left"></i>
                 <% end %>
 
-                <%= @scan %> scan
+            <span class="scan-name"><%= @scan %></span>
             <% end %>
         </li>
     </ul>
 
-    <% if !@scan.status %>
-        <span class="scan-status label label-emphasis label-default" >
-            <%= @scan.scheduled? ? 'Pending' : 'Unscheduled' %>
-        </span>
-    <% else %>
-        <span class="scan-status label label-emphasis label-<%= status_to_label( @scan.status ) %>" >
-            <%= @scan.status.to_s.capitalize %>
-        </span>
-    <% end %>
+    <div class="row">
+      <div class="md-12">
+        <% if !@scan.status %>
+            <span class="scan-status label label-emphasis label-default" >
+                <%= @scan.scheduled? ? 'Pending' : 'Unscheduled' %>
+            </span>
+        <% else %>
+            <span class="scan-status label label-emphasis label-<%= status_to_label( @scan.status ) %>" >
+                <%= @scan.status.to_s.capitalize %>
+            </span>
+        <% end %>
+      </div>
+    </div>
 
-    <%= render partial: '/scans/buttons', locals: { scan: @scan } %>
+    <div class="row buttons">
+      <div class="md-12">
+        <%= render partial: '/scans/buttons', locals: { scan: @scan } %>
+      </div>
+    </div>
 
     <div class="help-block" id="scan-info-details">
         <%= render partial: '/shared/scan_info', locals: {
@@ -41,4 +49,5 @@
     <div class="description help-block">
         <%= md @scan.description %>
     </div>
+
 </div>
