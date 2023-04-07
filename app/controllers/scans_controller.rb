@@ -14,8 +14,7 @@ class ScansController < ApplicationController
     # GET /scans
     # GET /scans.json
     def index
-        @scheduled_scans   = @scans.scheduled
-        @unscheduled_scans = @scans.unscheduled
+        @scheduled_scans = @scans.scheduled
     end
 
     # GET /scans/1
