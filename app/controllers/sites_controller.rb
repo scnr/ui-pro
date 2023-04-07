@@ -30,7 +30,7 @@ class SitesController < ApplicationController
     # GET /sites/1
     # GET /sites/1.json
     def show
-        if @site.scans.size == 0
+        if @site.scans.count == 0
             redirect_to new_site_scan_path( @site )
             return
         end
