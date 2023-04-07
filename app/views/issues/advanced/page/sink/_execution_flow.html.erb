@@ -35,12 +35,13 @@
             <td>
                 <a href="javascript:void(0);"
                    onclick="$('#<%= id %>-execution_flow_sinks-<%= i %>-stacktrace').toggle()"
-                   class="btn btn-info btn-xs">
+                   class="btn btn-info btn-xs <%= 'disabled' if sink.stackframes.empty? %>">
                     Stacktrace
                 </a>
             </td>
         </tr>
 
+        <% if sink.stackframes.any? %>
         <tr id="<%= id %>-execution_flow_sinks-<%= i %>-stacktrace" class="inspection">
             <td colspan="3">
                 <%= render 'issues/advanced/page/sink/trace/table',
@@ -51,5 +52,6 @@
                 %>
             </td>
         </tr>
+      <% end %>
     <% end %>
 </table>
