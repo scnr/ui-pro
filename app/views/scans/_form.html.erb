@@ -42,7 +42,7 @@
                               disabled: @scan.revisions.any?,
                               collection: Device.all,
                               selected: @scan.device ? @scan.device.id :
-                                            Device.default
+                                          Device.default.try(:id)
             %>
         </div>
     </div>
