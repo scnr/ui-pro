@@ -75,7 +75,7 @@
                     <% has_something = true %>
 
                     <%= link_to [site, last_performed.scan, last_performed] do %>
-                        <%= time_ago_in_words last_performed.performed_at %> ago
+                        <%= last_performed.performed_at %>
                     <% end %>
                 <% end %>
 
