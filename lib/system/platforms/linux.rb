@@ -33,9 +33,8 @@ class Linux < Base
     def memory_for_process_group( pgid )
         rss = 0
 
-        Sys::ProcTable.ps do |p|
-            next if p.pgrp != pgid
-            rss += p.rss
+        _exec( "ps -eo rss -g #{pgid}" ).split("\n")[1..-1].each do |rss_string|
+            rss += rss_string.to_i
         end
 
         rss * System::PAGESIZE
