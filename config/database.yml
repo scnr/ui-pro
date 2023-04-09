@@ -10,7 +10,7 @@ development:
     encoding: unicode
     pool: 100
     username: scnr-pro
-    password: secret
+    password: <%= ENV['SCNR_PRO_PG_PASSWD'] %>
     database: scnr_pro_development
 
 test:
