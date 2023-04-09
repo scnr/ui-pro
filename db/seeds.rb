@@ -67,7 +67,9 @@ p = Profile.create! engine_defaults.merge(
     )
 puts 'Client-side profile created: ' << p.name
 
-firefox_ua = Device.create(
+devices = []
+
+devices << firefox_ua = Device.create(
     name:          'Firefox 36.0',
     device_user_agent:    'Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0',
     device_width:  1200,
@@ -76,7 +78,7 @@ firefox_ua = Device.create(
     device_pixel_ratio:   1.0
 )
 
-ie_ua = Device.create(
+devices << ie_ua = Device.create(
     name:          'Internet Explorer 11.0',
     device_user_agent:    'Mozilla/5.0 (compatible, MSIE 11, Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko',
     device_width:  1200,
@@ -85,7 +87,7 @@ ie_ua = Device.create(
     device_pixel_ratio:   1.0
 )
 
-ipad_ua = Device.create(
+devices << ipad_ua = Device.create(
     name:          'iPad (portrait)',
     device_user_agent:    'Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10',
     device_width:  768,
@@ -94,7 +96,7 @@ ipad_ua = Device.create(
     device_pixel_ratio:   1.0
 )
 
-iphone_ua = Device.create(
+devices << iphone_ua = Device.create(
     name:          'iPhone (portrait)',
     device_user_agent:    'Mozilla/5.0 (iPhone; CPU iPhone OS 6_1_4 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10B350 Safari/8536.25',
     device_width:  320,
@@ -148,14 +150,14 @@ FrameworkHelper.framework do |f|
     end
 end
 
-exit
+# exit
 
-site = user.sites.create!(
-    protocol: 'http',
-    host:     'testhtml5.vulnweb.com',
-    port:     80,
-)
-
+# site = user.sites.create!(
+#     protocol: 'http',
+#     host:     'testhtml5.vulnweb.com',
+#     port:     80,
+# )
+#
 # site.scans.create(
 #     profile:             all_checks_profile,
 #     site_role:           site.roles.first,
@@ -186,218 +188,218 @@ site = user.sites.create!(
 #         start_at: Time.now
 #     }
 # )
-
-scans_size         = 4
-revisions_per_scan = 3
-
-sites = [
-    # '/home/zapotek/workspace/engine/spec/support/fixtures/report.afr',
-    '/home/zapotek/Downloads/testhtml5.vulnweb.com.afr',
-    '/home/zapotek/Downloads/testfire.net.afr'
-]
-
-sites.each.with_index do |afr, si|
-    sitemap    = nil
-    report     = SCNR::Engine::Report.load( afr )
-    parsed_url = SCNR::Engine::URI( report.url )
-    issues     = report.issues.shuffle.chunk( scans_size * revisions_per_scan )
-
-    puts 'Creating site'
-    site = user.sites.create(
-        protocol: parsed_url.scheme,
-        host:     parsed_url.host,
-        port:     parsed_url.port || 80,
-    )
-
-    site.roles.create(
-        name:                        'Administrator',
-        description:                 'Administrator account',
-        session_check_url:           site.url,
-        session_check_pattern:       'logout',
-        scope_exclude_path_patterns: ['logout'],
-        login_type:                  'form',
-        login_form_url:              "#{site.url}/admin/login",
-        login_form_parameters:       {
-            'user'     => 'admin',
-            'password' => 'secret'
-        }
-    )
-
-    site.roles.create(
-        name:                        'User',
-        description:                 'User account',
-        session_check_url:           site.url,
-        session_check_pattern:       'logout',
-        scope_exclude_path_patterns: ['logout'],
-        login_type:                  'form',
-        login_form_url:              "#{site.url}/login",
-        login_form_parameters:       {
-            'user'     => 'user',
-            'password' => 'not-so-secret'
-        }
-    )
-
-    site.reload
-    site.roles.reload
-
-    previous_scan = nil
-    scans_size.times do |i|
-        break if issues.empty?
-
-        site.scans.create(
-            profile:             p,
-            site_role:           site.roles[i % site.roles.size],
-            device:               device,
-            name:                "my scheduled scan #{scan_id}",
-            schedule_attributes: {
-                start_at: Time.now + 3600
-            }
-        )
-
-        site.scans.create(
-            profile:             p,
-            site_role:           site.roles[i % site.roles.size],
-            device:              device,
-            name:                "my scheduled scan #{scan_id}",
-            schedule_attributes: {
-                day_frequency:   10,
-                month_frequency: 1
-            }
-        )
-
-        site.scans.create(
-            profile:             p,
-            site_role:           site.roles[i % site.roles.size],
-            device:              device,
-            name:                "my scheduled scan #{scan_id}",
-            schedule_attributes: {
-                day_frequency:    1,
-                stop_after_hours: 10
-            }
-        )
-
-        site.scans.create(
-            profile:             p,
-            site_role:           site.roles[i % site.roles.size],
-            device:              device,
-            name:                "my scheduled scan #{scan_id}",
-            schedule_attributes: {
-                start_at:         Time.now + 3600,
-                day_frequency:    1,
-                month_frequency:  2,
-                stop_after_hours: 10
-            }
-        )
-
-        s = site.scans.create(
-            profile:             p,
-            site_role:           site.roles[i % site.roles.size],
-            device:              device,
-            name:                "my scheduled scan #{scan_id}",
-            schedule_attributes: {
-                day_frequency:    1,
-                month_frequency:  2,
-                stop_after_hours: 10
-            }
-        )
-        s.save
-
-        s.revisions.create(
-            state:      'started',
-            started_at: Time.now - 8000,
-            stopped_at: Time.now - 4000
-        )
-
-        puts "[#{i}] Creating scan"
-        scan = site.scans.create(
-            profile:     p,
-            site_role:   site.roles[i % site.roles.size],
-            device:      device,
-            name:        "my scan #{scan_id}",
-            description: 'my description'
-        )
-        ap scan.errors.messages
-        scan.schedule.destroy
-        scan.save
-
-        last_revision = nil
-        revisions_per_scan.times do |j|
-            break if issues.empty?
-
-            puts "[#{i} - #{j}] Creating revision"
-            revision = scan.revisions.create(
-                state:      'started',
-                started_at: Time.now - 8000,
-                stopped_at: Time.now - 4000
-            )
-
-            scan.revisions.create(
-                state:      'started',
-                started_at: Time.now - 8000,
-                stopped_at: Time.now - 4000
-            )
-
-            sitemap ||= report.sitemap.each do |url, code|
-                revision.sitemap_entries.create(
-                    url:  url,
-                    code: code
-                )
-            end
-
-            puts "[#{i} - #{j}] Creating issues"
-            issues.pop.each do |issue|
-                issue.variations.each do |variation|
-                    ap issue.unique_id
-                    ap issue.variations.first.page.dom.url
-
-                    solo = variation.to_solo( issue )
-
-                    next if !solo.check
-
-                    if previous_scan = site.scans.all.find { |s| s != scan }
-                        ap previous_scan.id
-                        ap scan.id
-
-                        prev_scan_revision = previous_scan.revisions.create(
-                            state:      'started',
-                            started_at: Time.now - 8000,
-                            stopped_at: Time.now - 4000
-                        )
-
-                        prev_scan_revision.issues.create_from_engine(
-                            solo,
-                            state: Issue::STATES.sample
-                        )
-                    end
-
-                    is = revision.issues.create_from_engine(
-                        solo,
-                        state: Issue::STATES.sample
-                    )
-                    ap is.errors.messages
-
-                    break
-                end
-
-                # ap sitemap_entry.reload.issues.size
-            end
-
-            if last_revision
-                last_revision.issues.each do |iss|
-                    next if iss.state != 'fixed'
-
-                    iss.fixed_by_revision = revision
-                    iss.save
-                    ap iss.errors.messages
-                end
-            end
-
-            last_revision = revision
-        end
-
-        scan.revisions.create(
-            state:      'started',
-            started_at: Time.now - 8000
-        )
-    end
-end
+#
+# scans_size         = 4
+# revisions_per_scan = 3
+#
+# sites = [
+#     '/home/zapotek/workspace/scnr/engine/spec/support/fixtures/report.ser',
+#     # '/home/zapotek/Downloads/testhtml5.vulnweb.com.ser',
+#     # '/home/zapotek/Downloads/testfire.net.ser'
+# ]
+#
+# sites.each.with_index do |ser, si|
+#     sitemap    = nil
+#     report     = SCNR::Engine::Report.load( ser )
+#     parsed_url = SCNR::Engine::URI( report.url )
+#     issues     = report.issues.shuffle.chunk( scans_size * revisions_per_scan )
+#
+#     puts 'Creating site'
+#     site = user.sites.create(
+#         protocol: parsed_url.scheme,
+#         host:     parsed_url.host,
+#         port:     parsed_url.port || 80,
+#     )
+#
+#     site.roles.create(
+#         name:                        'Administrator',
+#         description:                 'Administrator account',
+#         session_check_url:           site.url,
+#         session_check_pattern:       'logout',
+#         scope_exclude_path_patterns: ['logout'],
+#         login_type:                  'form',
+#         login_form_url:              "#{site.url}/admin/login",
+#         login_form_parameters:       {
+#             'user'     => 'admin',
+#             'password' => 'secret'
+#         }
+#     )
+#
+#     site.roles.create(
+#         name:                        'User',
+#         description:                 'User account',
+#         session_check_url:           site.url,
+#         session_check_pattern:       'logout',
+#         scope_exclude_path_patterns: ['logout'],
+#         login_type:                  'form',
+#         login_form_url:              "#{site.url}/login",
+#         login_form_parameters:       {
+#             'user'     => 'user',
+#             'password' => 'not-so-secret'
+#         }
+#     )
+#
+#     site.reload
+#     site.roles.reload
+#
+#     previous_scan = nil
+#     scans_size.times do |i|
+#         break if issues.empty?
+#
+#         site.scans.create(
+#             profile:             p,
+#             site_role:           site.roles[i % site.roles.size],
+#             device:               devices.sample,
+#             name:                "my scheduled scan #{scan_id}",
+#             schedule_attributes: {
+#                 start_at: Time.now + 3600
+#             }
+#         )
+#
+#         site.scans.create(
+#             profile:             p,
+#             site_role:           site.roles[i % site.roles.size],
+#             device:              devices.sample,
+#             name:                "my scheduled scan #{scan_id}",
+#             schedule_attributes: {
+#                 day_frequency:   10,
+#                 month_frequency: 1
+#             }
+#         )
+#
+#         site.scans.create(
+#             profile:             p,
+#             site_role:           site.roles[i % site.roles.size],
+#             device:              devices.sample,
+#             name:                "my scheduled scan #{scan_id}",
+#             schedule_attributes: {
+#                 day_frequency:    1,
+#                 stop_after_hours: 10
+#             }
+#         )
+#
+#         site.scans.create(
+#             profile:             p,
+#             site_role:           site.roles[i % site.roles.size],
+#             device:              devices.sample,
+#             name:                "my scheduled scan #{scan_id}",
+#             schedule_attributes: {
+#                 start_at:         Time.now + 3600,
+#                 day_frequency:    1,
+#                 month_frequency:  2,
+#                 stop_after_hours: 10
+#             }
+#         )
+#
+#         s = site.scans.create(
+#             profile:             p,
+#             site_role:           site.roles[i % site.roles.size],
+#             device:              devices.sample,
+#             name:                "my scheduled scan #{scan_id}",
+#             schedule_attributes: {
+#                 day_frequency:    1,
+#                 month_frequency:  2,
+#                 stop_after_hours: 10
+#             }
+#         )
+#         s.save
+#
+#         s.revisions.create(
+#             status:      'finished',
+#             started_at: Time.now - 8000,
+#             stopped_at: Time.now - 4000
+#         )
+#
+#         puts "[#{i}] Creating scan"
+#         scan = site.scans.create(
+#             profile:     p,
+#             site_role:   site.roles[i % site.roles.size],
+#             device:      device,
+#             name:        "my scan #{scan_id}",
+#             description: 'my description'
+#         )
+#         ap scan.errors.messages
+#         scan.schedule.destroy
+#         scan.save
+#
+#         last_revision = nil
+#         revisions_per_scan.times do |j|
+#             break if issues.empty?
+#
+#             puts "[#{i} - #{j}] Creating revision"
+#             revision = scan.revisions.create(
+#                 state:      'started',
+#                 started_at: Time.now - 8000,
+#                 stopped_at: Time.now - 4000
+#             )
+#
+#             scan.revisions.create(
+#                 state:      'started',
+#                 started_at: Time.now - 8000,
+#                 stopped_at: Time.now - 4000
+#             )
+#
+#             sitemap ||= report.sitemap.each do |url, code|
+#                 revision.sitemap_entries.create(
+#                     url:  url,
+#                     code: code
+#                 )
+#             end
+#
+#             puts "[#{i} - #{j}] Creating issues"
+#             issues.pop.each do |issue|
+#                 issue.variations.each do |variation|
+#                     ap issue.unique_id
+#                     ap issue.variations.first.page.dom.url
+#
+#                     solo = variation.to_solo( issue )
+#
+#                     next if !solo.check
+#
+#                     if previous_scan = site.scans.all.find { |s| s != scan }
+#                         ap previous_scan.id
+#                         ap scan.id
+#
+#                         prev_scan_revision = previous_scan.revisions.create(
+#                             state:      'started',
+#                             started_at: Time.now - 8000,
+#                             stopped_at: Time.now - 4000
+#                         )
+#
+#                         prev_scan_revision.issues.create_from_engine(
+#                             solo,
+#                             state: Issue::STATES.sample
+#                         )
+#                     end
+#
+#                     is = revision.issues.create_from_engine(
+#                         solo,
+#                         state: Issue::STATES.sample
+#                     )
+#                     ap is.errors.messages
+#
+#                     break
+#                 end
+#
+#                 # ap sitemap_entry.reload.issues.size
+#             end
+#
+#             if last_revision
+#                 last_revision.issues.each do |iss|
+#                     next if iss.state != 'fixed'
+#
+#                     iss.fixed_by_revision = revision
+#                     iss.save
+#                     ap iss.errors.messages
+#                 end
+#             end
+#
+#             last_revision = revision
+#         end
+#
+#         scan.revisions.create(
+#             state:      'started',
+#             started_at: Time.now - 8000
+#         )
+#     end
+# end
