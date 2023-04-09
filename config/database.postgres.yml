@@ -5,7 +5,7 @@ production:
     host: localhost
     adapter: postgresql
     encoding: unicode
-    pool: 50
+    pool: 100
     username: scnr-pro
     password: secret
     database: scnr_pro_production
