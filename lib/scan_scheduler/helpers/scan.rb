@@ -112,7 +112,7 @@ module Scan
         # Don't even bother...
         if slots <= 0
             log_info 'No available slots.'
-            # return
+            return
         end
 
         # Don't use #limit here to only grab the amount of scans for available
@@ -130,7 +130,7 @@ module Scan
 
             if slots <= 0
                 log_info ' -- No available slots.'
-                # return
+                return
             end
 
             site = scan.site
