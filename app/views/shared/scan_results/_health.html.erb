@@ -22,152 +22,158 @@
         When necessary, the system will automatically throttle itself to match current conditions.
     </p>
 
-  <h2>Application</h2>
+  <div id="health-application-server-group" class="row">
+    <div id="health-application" class="col-md-3 group">
+      <h2>Application</h2>
 
-  <div class="row">
-    <div class="chart-container" id="health-total_average_app_time">
-      <h3>
-        Responsiveness
-      </h3>
+      <div class="row">
+        <div class="chart-container col-md-12" id="health-total_average_app_time">
+          <h3>
+            Responsiveness
+          </h3>
 
-      <% state = @revision.performance_snapshot.total_average_app_time_state %>
-      <h4 class="text text-state-<%= state %> health-state">
-        <%= state.capitalize %>
-      </h4>
+          <% state = @revision.performance_snapshot.total_average_app_time_state %>
+          <h4 class="text text-state-<%= state %> health-state">
+            <%= state.capitalize %>
+          </h4>
 
-      <p class="text-muted health-description">
-        <%= case state
-                when :excellent
-                    'The application does not seem to be under any stress.'
+          <p class="text-muted health-description">
+            <%= case state
+                    when :excellent
+                        'The application does not seem to be under any stress.'
 
-                when :good
-                    'The application seems to be under a little stress, this ' +
-                      'will have a small impact on performance.'
+                    when :good
+                        'The application seems to be under a little stress, this ' +
+                          'will have a small impact on performance.'
 
-                when :fair
-                    'The application seems to be under stress, this ' +
-                      'will have a considerable impact on performance.'
+                    when :fair
+                        'The application seems to be under stress, this ' +
+                          'will have a considerable impact on performance.'
 
-                when :poor
-                    'The application seems to be under a lot of stress, this ' +
-                      'will have a massive impact on performance.'
-            end %>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="chart-container" id="current_total_average_app_time"></div>
-  </div>
-
-  <div class="row">
-    <div class="chart-container" id="historic_total_average_app_time"></div>
-  </div>
-
-  <h2>Server</h2>
-
-    <div class="row">
-      <div class="chart-container" id="health-network_reliability">
-        <h3>
-          Reliability
-        </h3>
-
-        <% state = @revision.performance_snapshot.http_failed_count_state %>
-        <h4 class="text text-state-<%= state %> health-state">
-          <%= state.capitalize %>
-        </h4>
-
-        <p class="text-muted health-description">
-          <%= case state
-                  when :excellent
-                      'Connections seem highly reliable.'
-
-                  when :good
-                      'A small amount of requests have failed, nothing to ' +
-                        'worry about yet though.'
-
-                  when :fair
-                      'A considerable amount of requests have failed, there ' +
-                        'is a small chance that scan will yield incomplete results.'
-
-                  when :poor
-                      'A large amount of requests have failed, there is a ' +
-                        'chance that scan will yield incomplete results.'
-              end %>
-        </p>
+                    when :poor
+                        'The application seems to be under a lot of stress, this ' +
+                          'will have a massive impact on performance.'
+                end %>
+        </div>
       </div>
 
-      <div class="chart-container" id="health-server_performance">
-        <h3>
-          Performance
-        </h3>
-
-        <% state = @revision.performance_snapshot.http_average_responses_per_second_state %>
-        <h4 class="text text-state-<%= state %> health-state">
-          <%= state.capitalize %>
-        </h4>
-
-        <p class="text-muted health-description">
-          <%= case state
-                  when :excellent
-                      'The server is performing very well.'
-
-                  when :good
-                      'The server is performing well enough.'
-
-                  when :fair
-                      'The server is somewhat slow, this will have ' +
-                        'an impact on performance.'
-
-                  when :poor
-                      'The server is performing poorly, this will ' +
-                        'have a considerable impact on performance.'
-              end %>
-        </p>
+      <div class="row">
+        <div class="chart-container col-md-12" id="current_total_average_app_time"></div>
       </div>
 
-      <div class="chart-container" id="health-server_responsiveness">
-        <h3>
-          Responsiveness
-        </h3>
-
-        <% state = @revision.performance_snapshot.http_average_response_time_state %>
-        <h4 class="text text-state-<%= state %> health-state">
-          <%= state.capitalize %>
-        </h4>
-
-        <p class="text-muted health-description">
-          <%= case state
-                  when :excellent
-                      'The server does not seem to be under any stress.'
-
-                  when :good
-                      'The server seems to be under a little stress, this ' +
-                        'will have a small impact on performance.'
-
-                  when :fair
-                      'The server seems to be under stress, this ' +
-                        'will have a considerable impact on performance.'
-
-                  when :poor
-                      'The server seems to be under a lot of stress, this ' +
-                        'will have a massive impact on performance.'
-              end %>
-        </p>
+      <div class="row">
+        <div class="chart-container col-md-12" id="historic_total_average_app_time"></div>
       </div>
     </div>
 
-  <div class="row">
-    <div class="chart-container" id="current_http_failed_count"></div>
-    <div class="chart-container" id="current_http_average_responses_per_second"></div>
-    <div class="chart-container" id="current_http_average_response_time"></div>
-    <div class="chart-container" id="current_total_average_app_time"></div>
-  </div>
+    <div id="health-server" class="col-md-9 group">
+      <h2>Server</h2>
 
-  <div class="row">
-    <div class="chart-container" id="historic_http_failed_count"></div>
-    <div class="chart-container" id="historic_http_average_responses_per_second"></div>
-    <div class="chart-container" id="historic_http_average_response_time"></div>
-    <div class="chart-container" id="historic_total_average_app_time"></div>
+        <div class="row">
+          <div class="chart-container col-md-4" id="health-network_reliability">
+            <h3>
+              Reliability
+            </h3>
+
+            <% state = @revision.performance_snapshot.http_failed_count_state %>
+            <h4 class="text text-state-<%= state %> health-state">
+              <%= state.capitalize %>
+            </h4>
+
+            <p class="text-muted health-description">
+              <%= case state
+                      when :excellent
+                          'Connections seem highly reliable.'
+
+                      when :good
+                          'A small amount of requests have failed, nothing to ' +
+                            'worry about yet though.'
+
+                      when :fair
+                          'A considerable amount of requests have failed, there ' +
+                            'is a small chance that scan will yield incomplete results.'
+
+                      when :poor
+                          'A large amount of requests have failed, there is a ' +
+                            'chance that scan will yield incomplete results.'
+                  end %>
+            </p>
+          </div>
+
+          <div class="chart-container col-md-4" id="health-server_performance">
+            <h3>
+              Performance
+            </h3>
+
+            <% state = @revision.performance_snapshot.http_average_responses_per_second_state %>
+            <h4 class="text text-state-<%= state %> health-state">
+              <%= state.capitalize %>
+            </h4>
+
+            <p class="text-muted health-description">
+              <%= case state
+                      when :excellent
+                          'The server is performing very group.'
+
+                      when :good
+                          'The server is performing group enough.'
+
+                      when :fair
+                          'The server is somewhat slow, this will have ' +
+                            'an impact on performance.'
+
+                      when :poor
+                          'The server is performing poorly, this will ' +
+                            'have a considerable impact on performance.'
+                  end %>
+            </p>
+          </div>
+
+          <div class="chart-container col-md-4" id="health-server_responsiveness">
+            <h3>
+              Responsiveness
+            </h3>
+
+            <% state = @revision.performance_snapshot.http_average_response_time_state %>
+            <h4 class="text text-state-<%= state %> health-state">
+              <%= state.capitalize %>
+            </h4>
+
+            <p class="text-muted health-description">
+              <%= case state
+                      when :excellent
+                          'The server does not seem to be under any stress.'
+
+                      when :good
+                          'The server seems to be under a little stress, this ' +
+                            'will have a small impact on performance.'
+
+                      when :fair
+                          'The server seems to be under stress, this ' +
+                            'will have a considerable impact on performance.'
+
+                      when :poor
+                          'The server seems to be under a lot of stress, this ' +
+                            'will have a massive impact on performance.'
+                  end %>
+            </p>
+          </div>
+        </div>
+
+      <div class="row">
+        <div class="chart-container col-md-4" id="current_http_failed_count"></div>
+        <div class="chart-container col-md-4" id="current_http_average_responses_per_second"></div>
+        <div class="chart-container col-md-4" id="current_http_average_response_time"></div>
+        <div class="chart-container col-md-4" id="current_total_average_app_time"></div>
+      </div>
+
+      <div class="row">
+        <div class="chart-container col-md-4" id="historic_http_failed_count"></div>
+        <div class="chart-container col-md-4" id="historic_http_average_responses_per_second"></div>
+        <div class="chart-container col-md-4" id="historic_http_average_response_time"></div>
+        <div class="chart-container col-md-4" id="historic_total_average_app_time"></div>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -260,134 +266,143 @@
       );
   </script>
 
-  <h2>Client</h2>
+  <div id="health-network" class="row">
+    <div class="col-md-12 group">
+      <h2>Network</h2>
 
-  <div class="row">
-    <div class="chart-container" id="health-network_reliability">
-      <h3>
-        Reliability
-      </h3>
+      <div class="row">
+        <div class="chart-container col-md-6" id="health-scanner_performance">
+          <h3>
+            Download
+          </h3>
 
-      <% state = @revision.performance_snapshot.browser_failed_job_count_state %>
-      <h4 class="text text-state-<%= state %> health-state">
-        <%= state.capitalize %>
-      </h4>
+          <p class="text-muted health-description">
+          </p>
+        </div>
 
-      <p class="text-muted health-description">
-        <%= case state
-                when :excellent
-                    'DOM operations seem highly reliable.'
+        <div class="chart-container col-md-6" id="health-scanner_performance">
+          <h3>
+            Upload
+          </h3>
 
-                when :good
-                    'A small amount of DOM operations have failed, nothing to ' +
-                      'worry about yet though.'
+          <p class="text-muted health-description">
+          </p>
+        </div>
 
-                when :fair
-                    'A considerable amount of DOM operations have failed, there ' +
-                      'is a small chance that scan will yield incomplete results.'
+      </div>
 
-                when :poor
-                    'A large amount of DOM operations have failed, there is a ' +
-                      'chance that scan will yield incomplete results.'
-            end %>
-      </p>
+      <div class="row">
+        <div class="chart-container col-md-6" id="current_download_kbps"></div>
+        <div class="chart-container col-md-6" id="current_upload_kbps"></div>
+      </div>
+
+      <div class="row">
+        <div class="chart-container col-md-6" id="historic_download_kbps"></div>
+        <div class="chart-container col-md-6" id="historic_upload_kbps"></div>
+      </div>
     </div>
-
-    <div class="chart-container" id="health-scanner_performance">
-      <h3>
-        Performance
-      </h3>
-
-      <% state = @revision.performance_snapshot.http_max_concurrency_state %>
-      <h4 class="text text-state-<%= state %> health-state">
-        <%= state.capitalize %>
-      </h4>
-
-      <p class="text-muted health-description">
-        <%= case state
-                when :excellent
-                    'Operating close to the configured maximum.'
-
-                when :good
-                    'To alleviate temporary server stress concurrency had to be lowered a little.'
-
-                when :fair
-                    'To alleviate persistent server stress concurrency had to be lowered considerably .'
-
-                when :poor
-                    'To alleviate high server stress concurrency had to be greatly lowered.'
-            end %>
-      </p>
-    </div>
-
-    <div class="chart-container" id="health-request_counter">
-      <h3>
-        HTTP request counter
-      </h3>
-
-      <p class="text-muted health-description">
-        Nothing to add, just FYI.
-      </p>
-    </div>
-
-    <div class="chart-container" id="health-request_counter">
-      <h3>
-        Browser job counter
-      </h3>
-
-      <p class="text-muted health-description">
-        Nothing to add, just FYI.
-      </p>
-    </div>
-
   </div>
 
-  <div class="row">
-    <div class="chart-container" id="current_browser_job_failed_count"></div>
-    <div class="chart-container" id="current_http_max_concurrency"></div>
-    <div class="chart-container" id="current_http_request_count"></div>
-    <div class="chart-container" id="current_browser_job_count"></div>
-  </div>
+    <div id="health-client" class="row">
+      <div class="col-md-12 group">
 
-  <div class="row">
-    <div class="chart-container" id="historic_browser_job_failed_count"></div>
-    <div class="chart-container" id="historic_http_max_concurrency"></div>
-    <div class="chart-container" id="historic_http_request_count"></div>
-    <div class="chart-container" id="historic_browser_job_count"></div>
-  </div>
+      <h2>Client</h2>
 
-  <h2>Network</h2>
+      <div class="row">
+        <div class="chart-container col-md-3" id="health-network_reliability">
+          <h3>
+            Reliability
+          </h3>
 
-  <div class="row">
-    <div class="chart-container" id="health-scanner_performance">
-      <h3>
-        Download
-      </h3>
+          <% state = @revision.performance_snapshot.browser_failed_job_count_state %>
+          <h4 class="text text-state-<%= state %> health-state">
+            <%= state.capitalize %>
+          </h4>
 
-      <p class="text-muted health-description">
-      </p>
+          <p class="text-muted health-description">
+            <%= case state
+                    when :excellent
+                        'DOM operations seem highly reliable.'
+
+                    when :good
+                        'A small amount of DOM operations have failed, nothing to ' +
+                          'worry about yet though.'
+
+                    when :fair
+                        'A considerable amount of DOM operations have failed, there ' +
+                          'is a small chance that scan will yield incomplete results.'
+
+                    when :poor
+                        'A large amount of DOM operations have failed, there is a ' +
+                          'chance that scan will yield incomplete results.'
+                end %>
+          </p>
+        </div>
+
+        <div class="chart-container col-md-3" id="health-scanner_performance">
+          <h3>
+            Performance
+          </h3>
+
+          <% state = @revision.performance_snapshot.http_max_concurrency_state %>
+          <h4 class="text text-state-<%= state %> health-state">
+            <%= state.capitalize %>
+          </h4>
+
+          <p class="text-muted health-description">
+            <%= case state
+                    when :excellent
+                        'Operating close to the configured maximum.'
+
+                    when :good
+                        'To alleviate temporary server stress concurrency had to be lowered a little.'
+
+                    when :fair
+                        'To alleviate persistent server stress concurrency had to be lowered considerably .'
+
+                    when :poor
+                        'To alleviate high server stress concurrency had to be greatly lowered.'
+                end %>
+          </p>
+        </div>
+
+        <div class="chart-container col-md-3" id="health-request_counter">
+          <h3>
+            HTTP request counter
+          </h3>
+
+          <p class="text-muted health-description">
+            Nothing to add, just FYI.
+          </p>
+        </div>
+
+        <div class="chart-container col-md-3" id="health-request_counter">
+          <h3>
+            Browser job counter
+          </h3>
+
+          <p class="text-muted health-description">
+            Nothing to add, just FYI.
+          </p>
+        </div>
+
+      </div>
+
+      <div class="row">
+        <div class="chart-container col-md-3" id="current_browser_job_failed_count"></div>
+        <div class="chart-container col-md-3" id="current_http_max_concurrency"></div>
+        <div class="chart-container col-md-3" id="current_http_request_count"></div>
+        <div class="chart-container col-md-3" id="current_browser_job_count"></div>
+      </div>
+
+      <div class="row">
+        <div class="chart-container col-md-3" id="historic_browser_job_failed_count"></div>
+        <div class="chart-container col-md-3" id="historic_http_max_concurrency"></div>
+        <div class="chart-container col-md-3" id="historic_http_request_count"></div>
+        <div class="chart-container col-md-3" id="historic_browser_job_count"></div>
+      </div>
+      </div>
     </div>
-
-    <div class="chart-container" id="health-scanner_performance">
-      <h3>
-        Upload
-      </h3>
-
-      <p class="text-muted health-description">
-      </p>
-    </div>
-
-  </div>
-
-  <div class="row">
-    <div class="chart-container" id="current_download_kbps"></div>
-    <div class="chart-container" id="current_upload_kbps"></div>
-  </div>
-
-  <div class="row">
-    <div class="chart-container" id="historic_download_kbps"></div>
-    <div class="chart-container" id="historic_upload_kbps"></div>
-  </div>
 
   <script>
       window.http_request_count_gauge = window.generateGaugeChart(

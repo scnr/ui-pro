@@ -4,9 +4,9 @@ class PerformanceSnapshot < ActiveRecord::Base
 
     MAX_HTTP_TIME_OUT_RATIO               = 0.05
     MAX_HTTP_FAILED_RATIO                 = 0.05
-    MAX_HTTP_AVERAGE_RESPONSES_PER_SECOND = 120
-    MAX_HTTP_AVERAGE_RESPONSE_TIME        = 1
-    MAX_TOTAL_AVERAGE_APP_TIME            = 0.7
+    MAX_HTTP_AVERAGE_RESPONSES_PER_SECOND = 100
+    MAX_HTTP_AVERAGE_RESPONSE_TIME        = 2
+    MAX_TOTAL_AVERAGE_APP_TIME            = 1.5
 
     MAX_BROWSER_FAILED_RATIO              = 0.05
 

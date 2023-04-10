@@ -1,6 +1,10 @@
 #health {
     .row {
         text-align: center;
+        width: 99%;
+    }
+
+    .group {
     }
 
     .c3-circle {
@@ -8,8 +12,6 @@
     }
 
     .chart-container {
-        padding-left: 10px;
-        width: 19%;
         display: inline;
         position: relative;
         float: left;
@@ -41,4 +43,13 @@
         }
     }
 
+    #health-application {
+    }
+
+    #health-server {
+        border-left: 1px solid #ccc;
+    }
+
+    #health-network {
+    }
 }
