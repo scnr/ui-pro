@@ -31,4 +31,14 @@
             display: none
         }
     }
+
+    #current_browser_job_count {
+        .c3-chart-arcs-gauge-min,
+        .c3-chart-arcs-gauge-max,
+        .c3-shape,
+        .c3-chart-arcs-background {
+            display: none
+        }
+    }
+
 }

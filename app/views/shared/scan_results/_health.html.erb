@@ -395,7 +395,7 @@
           {
               name:  'Requests',
               value: <%= @revision.performance_snapshot.http_request_count %>,
-              label: <%= number_with_delimiter( @revision.performance_snapshot.http_request_count).to_json.html_safe %>,
+              label: <%= number_with_delimiter( @revision.performance_snapshot.http_request_count ).to_json.html_safe %>,
               unit:  'requests'
           }
       );
@@ -414,7 +414,7 @@
           {
               name:  'Jobs',
               value: <%= @revision.performance_snapshot.browser_job_count %>,
-              label: <%= number_with_delimiter( @revision.performance_snapshot.browser_job_count).to_json.html_safe %>,
+              label: <%= number_with_delimiter( @revision.performance_snapshot.browser_job_count ).to_json.html_safe %>,
               unit:  'jobs'
           }
       );
