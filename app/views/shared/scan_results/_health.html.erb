@@ -22,13 +22,56 @@
         When necessary, the system will automatically throttle itself to match current conditions.
     </p>
 
+  <h2>Application</h2>
+
+  <div class="row">
+    <div class="chart-container" id="health-total_average_app_time">
+      <h3>
+        Responsiveness
+      </h3>
+
+      <% state = @revision.performance_snapshot.total_average_app_time_state %>
+      <h4 class="text text-state-<%= state %> health-state">
+        <%= state.capitalize %>
+      </h4>
+
+      <p class="text-muted health-description">
+        <%= case state
+                when :excellent
+                    'The application does not seem to be under any stress.'
+
+                when :good
+                    'The application seems to be under a little stress, this ' +
+                      'will have a small impact on performance.'
+
+                when :fair
+                    'The application seems to be under stress, this ' +
+                      'will have a considerable impact on performance.'
+
+                when :poor
+                    'The application seems to be under a lot of stress, this ' +
+                      'will have a massive impact on performance.'
+            end %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="chart-container" id="current_total_average_app_time"></div>
+  </div>
+
+  <div class="row">
+    <div class="chart-container" id="historic_total_average_app_time"></div>
+  </div>
+
+  <h2>Server</h2>
+
     <div class="row">
       <div class="chart-container" id="health-network_reliability">
         <h3>
           Reliability
         </h3>
 
-        <% state = @revision.performance_snapshot.http_time_out_count_state %>
+        <% state = @revision.performance_snapshot.http_failed_count_state %>
         <h4 class="text text-state-<%= state %> health-state">
           <%= state.capitalize %>
         </h4>
@@ -36,7 +79,7 @@
         <p class="text-muted health-description">
           <%= case state
                   when :excellent
-                      'Network connections seem highly reliable.'
+                      'Connections seem highly reliable.'
 
                   when :good
                       'A small amount of requests have failed, nothing to ' +
@@ -53,36 +96,9 @@
         </p>
       </div>
 
-      <div class="chart-container" id="health-scanner_performance">
-        <h3>
-          Scanner performance
-        </h3>
-
-        <% state = @revision.performance_snapshot.http_max_concurrency_state %>
-        <h4 class="text text-state-<%= state %> health-state">
-          <%= state.capitalize %>
-        </h4>
-
-        <p class="text-muted health-description">
-          <%= case state
-                  when :excellent
-                      'Operating close to the configured maximum.'
-
-                  when :good
-                      'To alleviate temporary server stress concurrency had to be lowered a little.'
-
-                  when :fair
-                      'To alleviate persistent server stress concurrency had to be lowered considerably .'
-
-                  when :poor
-                      'To alleviate high server stress concurrency had to be greatly lowered.'
-              end %>
-        </p>
-      </div>
-
       <div class="chart-container" id="health-server_performance">
         <h3>
-          Server performance
+          Performance
         </h3>
 
         <% state = @revision.performance_snapshot.http_average_responses_per_second_state %>
@@ -111,7 +127,7 @@
 
       <div class="chart-container" id="health-server_responsiveness">
         <h3>
-          Server responsiveness
+          Responsiveness
         </h3>
 
         <% state = @revision.performance_snapshot.http_average_response_time_state %>
@@ -138,89 +154,23 @@
               end %>
         </p>
       </div>
-
-      <div class="chart-container" id="health-total_average_app_time">
-        <h3>
-          Web application responsiveness
-        </h3>
-
-        <% state = @revision.performance_snapshot.total_average_app_time_state %>
-        <h4 class="text text-state-<%= state %> health-state">
-          <%= state.capitalize %>
-        </h4>
-
-        <p class="text-muted health-description">
-          <%= case state
-                  when :excellent
-                      'The application does not seem to be under any stress.'
-
-                  when :good
-                      'The application seems to be under a little stress, this ' +
-                        'will have a small impact on performance.'
-
-                  when :fair
-                      'The application seems to be under stress, this ' +
-                        'will have a considerable impact on performance.'
-
-                  when :poor
-                      'The application seems to be under a lot of stress, this ' +
-                        'will have a massive impact on performance.'
-              end %>
-      </div>
     </div>
 
   <div class="row">
-    <div class="chart-container" id="current_http_time_out_count"></div>
-    <div class="chart-container" id="current_http_max_concurrency"></div>
+    <div class="chart-container" id="current_http_failed_count"></div>
     <div class="chart-container" id="current_http_average_responses_per_second"></div>
     <div class="chart-container" id="current_http_average_response_time"></div>
     <div class="chart-container" id="current_total_average_app_time"></div>
   </div>
 
-  <hr/>
-
   <div class="row">
-    <div class="chart-container" id="historic_http_time_out_count"></div>
-    <div class="chart-container" id="historic_http_max_concurrency"></div>
+    <div class="chart-container" id="historic_http_failed_count"></div>
     <div class="chart-container" id="historic_http_average_responses_per_second"></div>
     <div class="chart-container" id="historic_http_average_response_time"></div>
     <div class="chart-container" id="historic_total_average_app_time"></div>
   </div>
 
-  <div class="row">
-    <div class="chart-container" id="health-request_counter">
-      <h3>
-        Request counter
-      </h3>
-
-      <p class="text-muted health-description">
-        Nothing to add, just FYI.
-      </p>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="chart-container" id="current_http_request_count"></div>
-  </div>
-
-  <hr/>
-
-  <div class="row">
-    <div class="chart-container" id="historic_http_request_count"></div>
-  </div>
-
   <script>
-      window.http_max_concurrency_gauge = window.generateGaugeChart(
-          '#current_http_max_concurrency',
-          {
-              name:  'Request concurrency',
-              value: <%= @revision.performance_snapshot.http_max_concurrency %>,
-              min:   <%= PerformanceSnapshot::MIN_MAX_CONCURRENCY %>,
-              max:   <%= @revision.performance_snapshot.http_original_max_concurrency %>,
-              unit:  'open connections'
-          }
-      );
-
       window.http_average_responses_per_second_gauge = window.generateGaugeChart(
           '#current_http_average_responses_per_second',
           {
@@ -242,36 +192,15 @@
           }
       );
 
-      window.http_time_out_count_gauge = window.generateGaugeChart(
-          '#current_http_time_out_count',
+      window.http_failed_count_gauge = window.generateGaugeChart(
+          '#current_http_failed_count',
           {
-              name:  'Timed out requests',
-              value: <%= @revision.performance_snapshot.http_time_out_count_pct %>,
-              label: <%= @revision.performance_snapshot.http_time_out_count_pct %> + '%',
-              max:    <%= 100 * PerformanceSnapshot::MAX_HTTP_TIME_OUT_RATIO %>,
-              unit:  'timed out requests',
+              name:  'Reliability',
+              value: <%= @revision.performance_snapshot.http_failed_count_pct %>,
+              label: <%= @revision.performance_snapshot.http_failed_count_pct %> + '%',
+              max:    <%= 100 * PerformanceSnapshot::MAX_HTTP_FAILED_RATIO %>,
+              unit:  'failed requests',
               better: 'low'
-          }
-      );
-
-      window.http_request_count_gauge = window.generateGaugeChart(
-          '#current_http_request_count',
-          {
-              name:  'Requests',
-              value: <%= @revision.performance_snapshot.http_request_count %>,
-              label: <%= number_with_delimiter( @revision.performance_snapshot.http_request_count).to_json.html_safe %>,
-              unit:  'requests'
-          }
-      );
-
-      window.http_max_concurrency_chart = window.generateLineChart(
-          '#historic_http_max_concurrency',
-          {
-              name:  'Request concurrency',
-              values: <%= @health.map { |d| d['http_max_concurrency'] }.to_json %>,
-              x_axis: <%= x_axis %>,
-              min:    <%= PerformanceSnapshot::MIN_MAX_CONCURRENCY %>,
-              max:   <%= @revision.performance_snapshot.http_original_max_concurrency %>
           }
       );
 
@@ -296,23 +225,14 @@
           }
       );
 
-      window.http_time_out_count_chart = window.generateLineChart(
-          '#historic_http_time_out_count',
+      window.http_failed_count_chart = window.generateLineChart(
+          '#historic_http_failed_count',
           {
               name:  'Timed out requests',
-              values: <%= @health.map { |d| d['http_time_out_count'] }.to_json %>,
+              values: <%= @health.map { |d| d['http_failed_count'] }.to_json %>,
               x_axis: <%= x_axis %>,
-              max:    <%= @revision.performance_snapshot.max_http_time_out_count %>,
+              max:    <%= @revision.performance_snapshot.max_http_failed_count %>,
               better: 'low'
-          }
-      );
-
-      window.http_request_count_chart = window.generateLineChart(
-          '#historic_http_request_count',
-          {
-              name:  'Requests',
-              values: <%= @health.map { |d| d['http_request_count'] }.to_json %>,
-              x_axis: <%= x_axis %>
           }
       );
 
@@ -340,6 +260,263 @@
       );
   </script>
 
+  <h2>Client</h2>
+
+  <div class="row">
+    <div class="chart-container" id="health-network_reliability">
+      <h3>
+        Reliability
+      </h3>
+
+      <% state = @revision.performance_snapshot.browser_failed_job_count_state %>
+      <h4 class="text text-state-<%= state %> health-state">
+        <%= state.capitalize %>
+      </h4>
+
+      <p class="text-muted health-description">
+        <%= case state
+                when :excellent
+                    'DOM operations seem highly reliable.'
+
+                when :good
+                    'A small amount of DOM operations have failed, nothing to ' +
+                      'worry about yet though.'
+
+                when :fair
+                    'A considerable amount of DOM operations have failed, there ' +
+                      'is a small chance that scan will yield incomplete results.'
+
+                when :poor
+                    'A large amount of DOM operations have failed, there is a ' +
+                      'chance that scan will yield incomplete results.'
+            end %>
+      </p>
+    </div>
+
+    <div class="chart-container" id="health-scanner_performance">
+      <h3>
+        Performance
+      </h3>
+
+      <% state = @revision.performance_snapshot.http_max_concurrency_state %>
+      <h4 class="text text-state-<%= state %> health-state">
+        <%= state.capitalize %>
+      </h4>
+
+      <p class="text-muted health-description">
+        <%= case state
+                when :excellent
+                    'Operating close to the configured maximum.'
+
+                when :good
+                    'To alleviate temporary server stress concurrency had to be lowered a little.'
+
+                when :fair
+                    'To alleviate persistent server stress concurrency had to be lowered considerably .'
+
+                when :poor
+                    'To alleviate high server stress concurrency had to be greatly lowered.'
+            end %>
+      </p>
+    </div>
+
+    <div class="chart-container" id="health-request_counter">
+      <h3>
+        HTTP request counter
+      </h3>
+
+      <p class="text-muted health-description">
+        Nothing to add, just FYI.
+      </p>
+    </div>
+
+    <div class="chart-container" id="health-request_counter">
+      <h3>
+        Browser job counter
+      </h3>
+
+      <p class="text-muted health-description">
+        Nothing to add, just FYI.
+      </p>
+    </div>
+
+  </div>
+
+  <div class="row">
+    <div class="chart-container" id="current_browser_job_failed_count"></div>
+    <div class="chart-container" id="current_http_max_concurrency"></div>
+    <div class="chart-container" id="current_http_request_count"></div>
+    <div class="chart-container" id="current_browser_job_count"></div>
+  </div>
+
+  <div class="row">
+    <div class="chart-container" id="historic_browser_job_failed_count"></div>
+    <div class="chart-container" id="historic_http_max_concurrency"></div>
+    <div class="chart-container" id="historic_http_request_count"></div>
+    <div class="chart-container" id="historic_browser_job_count"></div>
+  </div>
+
+  <h2>Network</h2>
+
+  <div class="row">
+    <div class="chart-container" id="health-scanner_performance">
+      <h3>
+        Download
+      </h3>
+
+      <p class="text-muted health-description">
+      </p>
+    </div>
+
+    <div class="chart-container" id="health-scanner_performance">
+      <h3>
+        Upload
+      </h3>
+
+      <p class="text-muted health-description">
+      </p>
+    </div>
+
+  </div>
+
+  <div class="row">
+    <div class="chart-container" id="current_download_kbps"></div>
+    <div class="chart-container" id="current_upload_kbps"></div>
+  </div>
+
+  <div class="row">
+    <div class="chart-container" id="historic_download_kbps"></div>
+    <div class="chart-container" id="historic_upload_kbps"></div>
+  </div>
+
+  <script>
+      window.http_request_count_gauge = window.generateGaugeChart(
+          '#current_http_request_count',
+          {
+              name:  'Requests',
+              value: <%= @revision.performance_snapshot.http_request_count %>,
+              label: <%= number_with_delimiter( @revision.performance_snapshot.http_request_count).to_json.html_safe %>,
+              unit:  'requests'
+          }
+      );
+
+      window.http_request_count_chart = window.generateLineChart(
+          '#historic_http_request_count',
+          {
+              name:  'Requests',
+              values: <%= @health.map { |d| d['http_request_count'] }.to_json %>,
+              x_axis: <%= x_axis %>
+          }
+      );
+
+      window.browser_job_count_gauge = window.generateGaugeChart(
+          '#current_browser_job_count',
+          {
+              name:  'Jobs',
+              value: <%= @revision.performance_snapshot.browser_job_count %>,
+              label: <%= number_with_delimiter( @revision.performance_snapshot.browser_job_count).to_json.html_safe %>,
+              unit:  'jobs'
+          }
+      );
+
+      window.browser_job_count_chart = window.generateLineChart(
+          '#historic_browser_job_count',
+          {
+              name:  'Events',
+              values: <%= @health.map { |d| d['browser_job_count'] }.to_json %>,
+              x_axis: <%= x_axis %>
+          }
+      );
+
+      window.download_kbps_gauge = window.generateGaugeChart(
+          '#current_download_kbps',
+          {
+              name:  'Download KBps',
+              value: <%= @revision.performance_snapshot.download_kbps %>,
+              label: <%= @revision.performance_snapshot.download_kbps %> + ' KBps',
+              max:    <%= @health.map { |d| d['download_kbps'].to_f }.max %>,
+              better: 'high'
+          }
+      );
+
+      window.download_bkps_chart = window.generateLineChart(
+          '#historic_download_kbps',
+          {
+              name:  'Download KBps',
+              values: <%= @health.map { |d| d['download_kbps'] }.to_json %>,
+              x_axis: <%= x_axis %>,
+              max:    <%= @revision.performance_snapshot.download_kbps %>,
+              better: 'high'
+          }
+      );
+
+      window.upload_kbps_gauge = window.generateGaugeChart(
+          '#current_upload_kbps',
+          {
+              name:  'Download KBps',
+              value: <%= @revision.performance_snapshot.upload_kbps %>,
+              label: <%= @revision.performance_snapshot.upload_kbps %> + ' KBps',
+              max:    <%= @health.map { |d| d['upload_kbps'].to_f }.max %>,
+              better: 'high'
+          }
+      );
+
+      window.download_bps_gauge = window.generateLineChart(
+          '#historic_upload_kbps',
+          {
+              name:  'Download KBps',
+              values: <%= @health.map { |d| d['upload_kbps'] }.to_json %>,
+              x_axis: <%= x_axis %>,
+              max:    <%= @revision.performance_snapshot.upload_kbps %>,
+              better: 'high'
+          }
+      );
+
+      window.browser_job_failed_count_gauge = window.generateGaugeChart(
+          '#current_browser_job_failed_count',
+          {
+              name:  'Reliability',
+              value: <%= @revision.performance_snapshot.browser_job_failed_count_pct %>,
+              label: <%= @revision.performance_snapshot.browser_job_failed_count_pct %> + '%',
+              max:    <%= 100 * PerformanceSnapshot::MAX_BROWSER_FAILED_RATIO %>,
+              unit:  'failed browser jobs',
+              better: 'low'
+          }
+      );
+
+      window.browser_job_failed_count_chart = window.generateLineChart(
+          '#historic_browser_job_failed_count',
+          {
+              name:  'Failed browser jobs',
+              values: <%= @health.map { |d| d['browser_job_failed_count'] }.to_json %>,
+              x_axis: <%= x_axis %>,
+              max:    <%= @revision.performance_snapshot.max_browser_job_failed_count %>,
+              better: 'low'
+          }
+      );
+
+      window.http_max_concurrency_gauge = window.generateGaugeChart(
+          '#current_http_max_concurrency',
+          {
+              name:  'Request concurrency',
+              value: <%= @revision.performance_snapshot.http_max_concurrency %>,
+              min:   <%= PerformanceSnapshot::MIN_MAX_CONCURRENCY %>,
+              max:   <%= @revision.performance_snapshot.http_original_max_concurrency %>,
+              unit:  'open connections'
+          }
+      );
+
+      window.http_max_concurrency_chart = window.generateLineChart(
+          '#historic_http_max_concurrency',
+          {
+              name:  'Request concurrency',
+              values: <%= @health.map { |d| d['http_max_concurrency'] }.to_json %>,
+              x_axis: <%= x_axis %>,
+              min:    <%= PerformanceSnapshot::MIN_MAX_CONCURRENCY %>,
+              max:   <%= @revision.performance_snapshot.http_original_max_concurrency %>
+          }
+      );
+  </script>
 
 <% else %>
 

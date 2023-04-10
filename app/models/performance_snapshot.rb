@@ -3,11 +3,38 @@ class PerformanceSnapshot < ActiveRecord::Base
     STATES = %i(excellent good fair poor)
 
     MAX_HTTP_TIME_OUT_RATIO               = 0.05
+    MAX_HTTP_FAILED_RATIO                 = 0.05
     MAX_HTTP_AVERAGE_RESPONSES_PER_SECOND = 120
     MAX_HTTP_AVERAGE_RESPONSE_TIME        = 1
     MAX_TOTAL_AVERAGE_APP_TIME            = 0.7
 
+    MAX_BROWSER_FAILED_RATIO              = 0.05
+
     MIN_MAX_CONCURRENCY                   = 1
+
+    def download_kbps
+        (download_bps * 8 / 1000).round(2)
+    end
+
+    def upload_kbps
+        (upload_bps * 8 / 1000).round(2)
+    end
+
+    def browser_failed_job_count_state
+        self.class.determine_state(
+          browser_job_failed_count,
+          max_http_time_out_count,
+          better: :low
+        )
+    end
+
+    def max_browser_job_failed_count
+        (browser_job_count * MAX_BROWSER_FAILED_RATIO).to_i
+    end
+
+    def browser_job_failed_count_pct
+        (browser_job_failed_count / Float( browser_job_count ) * 100).round( 2 )
+    end
 
     def http_time_out_count_state
         self.class.determine_state(
@@ -23,6 +50,22 @@ class PerformanceSnapshot < ActiveRecord::Base
 
     def http_time_out_count_pct
         (http_time_out_count / Float( http_request_count ) * 100).round( 2 )
+    end
+
+    def http_failed_count_state
+        self.class.determine_state(
+          http_failed_count,
+          max_http_failed_count,
+          better: :low
+        )
+    end
+
+    def max_http_failed_count
+        (http_request_count * MAX_HTTP_FAILED_RATIO).to_i
+    end
+
+    def http_failed_count_pct
+        (http_failed_count / Float( http_request_count ) * 100).round( 2 )
     end
 
     def total_average_app_time_state
@@ -68,6 +111,7 @@ class PerformanceSnapshot < ActiveRecord::Base
             http_request_count:                statistics[:http][:request_count],
             http_response_count:               statistics[:http][:response_count],
             http_time_out_count:               statistics[:http][:time_out_count],
+            http_failed_count:                 statistics[:http][:failed_count],
             http_average_responses_per_second: statistics[:http][:total_responses_per_second],
             http_average_response_time:        statistics[:http][:total_average_response_time],
             http_max_concurrency:              statistics[:http][:max_concurrency],
@@ -75,7 +119,9 @@ class PerformanceSnapshot < ActiveRecord::Base
             download_bps:                      statistics[:http][:download_bps],
             upload_bps:                        statistics[:http][:upload_bps],
             total_average_app_time:            statistics[:http][:total_average_app_time],
+            browser_job_count:                 statistics[:browser_pool][:completed_job_count],
             browser_job_time_out_count:        statistics[:browser_pool][:time_out_count],
+            browser_job_failed_count:          statistics[:browser_pool][:failed_count],
             seconds_per_browser_job:           statistics[:browser_pool][:seconds_per_job],
             runtime:                           statistics[:runtime],
             page_count:                        statistics[:found_pages],

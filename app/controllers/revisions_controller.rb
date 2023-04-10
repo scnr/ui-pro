@@ -67,7 +67,8 @@ class RevisionsController < ApplicationController
 
         @revision.performance_snapshots.find_in_batches.map do |batch|
             batch.each do |snapshot|
-                snapshot = snapshot.attributes
+                s = snapshot
+                snapshot = s.attributes
 
                 snapshot['duration'] =
                     SCNR::Engine::Utilities.seconds_to_hms( snapshot['runtime'] )
@@ -77,6 +78,9 @@ class RevisionsController < ApplicationController
 
                 snapshot['http_average_responses_per_second'] =
                     snapshot['http_average_responses_per_second'].to_i
+
+                snapshot['download_kbps'] = s.download_kbps
+                snapshot['upload_kbps']   = s.upload_kbps
 
                 snapshots << snapshot
             end

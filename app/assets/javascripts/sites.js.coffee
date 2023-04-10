@@ -61,8 +61,8 @@ window.updateGauges = ( snapshot ) ->
         columns: [['Average response times', snapshot.http_average_response_time]]
     )
 
-    window.http_time_out_count_gauge.load(
-        columns: [['Timed out requests', snapshot.http_time_out_count]]
+    window.http_failed_count_gauge.load(
+        columns: [['Failed requests', snapshot.http_failed_count]]
     )
 
     window.http_request_count_gauge.load(
@@ -156,24 +156,40 @@ window.generateLineChart = ( bindto, options ) ->
                                 <td>' + snapshot.duration + '</td>
                             </tr>
                             <tr>
-                                <th>Requests</th>
-                                <td>' + snapshot.http_request_count + '</td>
+                                <th>WebApp responsiveness</th>
+                                <td>' + snapshot.total_average_app_time.toFixed(2) + ' seconds/response</td>
                             </tr>
                             <tr>
-                                <th>Request concurrency</th>
-                                <td>' + snapshot.http_max_concurrency + '</td>
+                                <th>Failed HTTP requests</th>
+                                <td>' + snapshot.http_failed_count + '</td>
                             </tr>
                             <tr>
-                                <th>Average responses per second</th>
+                                <th>Responses/second</th>
                                 <td>' + snapshot.http_average_responses_per_second + '</td>
                             </tr>
                             <tr>
-                                <th>Average response times</th>
-                                <td>' + snapshot.http_average_response_time + ' seconds</td>
+                                <th>Server responsiveness</th>
+                                <td>' + snapshot.http_average_response_time + ' seconds/response</td>
                             </tr>
                             <tr>
-                                <th>Timed out requests</th>
-                                <td>' + snapshot.http_time_out_count + '</td>
+                                <th>Client reliability</th>
+                                <td>' + snapshot.browser_job_failed_count + ' failed browser jobs</td>
+                            </tr>
+                            <tr>
+                                <th>Performance</th>
+                                <td>' + snapshot.http_max_concurrency + ' connections</td>
+                            </tr>
+                            <tr>
+                                <th>HTTP Requests</th>
+                                <td>' + snapshot.http_request_count + '</td>
+                            </tr>
+                            <tr>
+                                <th>Browser jobs</th>
+                                <td>' + snapshot.browser_job_count + '</td>
+                            </tr>
+                            <tr>
+                                <th>Bandwidth (d/l)</th>
+                                <td>' + snapshot.download_kbps + '/' + snapshot.upload_kbps + ' KBps</td>
                             </tr>
                             </tbody>
                          </table>
