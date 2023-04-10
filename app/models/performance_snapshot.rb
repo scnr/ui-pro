@@ -5,6 +5,7 @@ class PerformanceSnapshot < ActiveRecord::Base
     MAX_HTTP_TIME_OUT_RATIO               = 0.05
     MAX_HTTP_AVERAGE_RESPONSES_PER_SECOND = 120
     MAX_HTTP_AVERAGE_RESPONSE_TIME        = 1
+    MAX_TOTAL_AVERAGE_APP_TIME            = 0.7
 
     MIN_MAX_CONCURRENCY                   = 1
 
@@ -24,8 +25,12 @@ class PerformanceSnapshot < ActiveRecord::Base
         (http_time_out_count / Float( http_request_count ) * 100).round( 2 )
     end
 
+    def total_average_app_time_state
+        self.class.determine_state total_average_app_time, MAX_TOTAL_AVERAGE_APP_TIME, better: :low
+    end
+
     def http_average_responses_per_second_state
-        self.class.determine_state http_average_responses_per_second, 120
+        self.class.determine_state http_average_responses_per_second, MAX_HTTP_AVERAGE_RESPONSES_PER_SECOND
     end
 
     def http_max_concurrency_state
@@ -33,7 +38,7 @@ class PerformanceSnapshot < ActiveRecord::Base
     end
 
     def http_average_response_time_state
-        self.class.determine_state http_average_response_time, 1, better: :low
+        self.class.determine_state http_average_response_time, MAX_HTTP_AVERAGE_RESPONSE_TIME, better: :low
     end
 
     def self.determine_state( value, max, min: 0.0, better: :high )
@@ -67,6 +72,11 @@ class PerformanceSnapshot < ActiveRecord::Base
             http_average_response_time:        statistics[:http][:total_average_response_time],
             http_max_concurrency:              statistics[:http][:max_concurrency],
             http_original_max_concurrency:     statistics[:http][:original_max_concurrency],
+            download_bps:                      statistics[:http][:download_bps],
+            upload_bps:                        statistics[:http][:upload_bps],
+            total_average_app_time:            statistics[:http][:total_average_app_time],
+            browser_job_time_out_count:        statistics[:browser_pool][:time_out_count],
+            seconds_per_browser_job:           statistics[:browser_pool][:seconds_per_job],
             runtime:                           statistics[:runtime],
             page_count:                        statistics[:found_pages],
             current_page:                      statistics[:current_page]

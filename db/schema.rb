@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_06_133526) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_10_043710) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -294,6 +294,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_06_133526) do
     t.integer "revision_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.float "total_average_app_time"
+    t.float "download_bps"
+    t.float "upload_bps"
+    t.integer "browser_job_time_out_count"
+    t.float "seconds_per_browser_job"
     t.index ["revision_current_id"], name: "index_performance_snapshots_on_revision_current_id"
     t.index ["revision_id"], name: "index_performance_snapshots_on_revision_id"
   end
