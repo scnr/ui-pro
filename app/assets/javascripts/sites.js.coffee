@@ -172,6 +172,10 @@ window.generateLineChart = ( bindto, options ) ->
                                 <td>' + snapshot.http_average_response_time + ' seconds/response</td>
                             </tr>
                             <tr>
+                                <th>Bandwidth (d/l)</th>
+                                <td>' + snapshot.download_kbps + '/' + snapshot.upload_kbps + ' KBps</td>
+                            </tr>
+                            <tr>
                                 <th>Client reliability</th>
                                 <td>' + snapshot.browser_job_failed_count + ' failed browser jobs</td>
                             </tr>
@@ -186,10 +190,6 @@ window.generateLineChart = ( bindto, options ) ->
                             <tr>
                                 <th>Browser jobs</th>
                                 <td>' + snapshot.browser_job_count + '</td>
-                            </tr>
-                            <tr>
-                                <th>Bandwidth (d/l)</th>
-                                <td>' + snapshot.download_kbps + '/' + snapshot.upload_kbps + ' KBps</td>
                             </tr>
                             </tbody>
                          </table>
