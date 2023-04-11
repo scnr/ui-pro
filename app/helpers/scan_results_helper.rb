@@ -217,6 +217,11 @@ module ScanResultsHelper
                 data[:scans] = data[:scans].sort_by { |r| r.id }.reverse
             end
 
+            missing_issues = nil
+            if @revision == @scan.last_revision && @scan.completed?
+                missing_issues = filter_pages( @revision.missing_issues )
+            end
+
             store.merge!(
                 site:                data[:site],
                 scans:               data[:scans],
@@ -228,6 +233,7 @@ module ScanResultsHelper
                 sitemap_data:        sitemap_data,
                 max_severity:        max_severity,
                 issues:              page_filtered_issues,
+                missing_issues:      missing_issues,
                 chart_data:          chart_data,
                 revision_data:       revision_data,
                 unique_issues_count: unique_issues_count.size

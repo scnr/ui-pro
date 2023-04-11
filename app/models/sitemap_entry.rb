@@ -22,6 +22,10 @@ class SitemapEntry < ActiveRecord::Base
         joins(:issues).where( issues: revision.issues )
     end
 
+    def path
+        URI( url ).path
+    end
+
     def set_owners
         if revision
             self.scan = revision.scan

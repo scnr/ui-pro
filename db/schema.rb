@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_10_105805) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_11_065907) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -277,6 +277,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_10_105805) do
     t.index ["site_id"], name: "index_issues_on_site_id"
     t.index ["sitemap_entry_id"], name: "index_issues_on_sitemap_entry_id"
     t.index ["state"], name: "index_issues_on_state"
+  end
+
+  create_table "missing_issues_revisions", id: false, force: :cascade do |t|
+    t.bigint "issue_id"
+    t.bigint "revision_id"
+    t.index ["issue_id"], name: "index_missing_issues_revisions_on_issue_id"
+    t.index ["revision_id"], name: "index_missing_issues_revisions_on_revision_id"
   end
 
   create_table "performance_snapshots", force: :cascade do |t|

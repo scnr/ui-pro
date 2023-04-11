@@ -55,12 +55,6 @@
                 </div>
             </div>
         <% else %>
-            <%= render partial: 'shared/scan_results/issues/filter',
-                       locals: {
-                               data: data
-                       } %>
-            <hr/>
-
             <% if @sitemap_entry %>
                 <div class="well">
                     <p>
@@ -116,6 +110,28 @@
                 </p>
             <% end %>
         <% end %>
+
+    <% if data[:missing_issues]&.any? %>
+      <h3>Missing</h3>
+      <p class="alert alert-warning">
+        These issues were logged by previous revisions but not identified by this one.<br/>
+        This could be an indication that the issues have been fixed or environmental conditions
+        are obstructing the scan (like network or server stress &#8212; you can find out in
+        the <a href="health">Health</a> display).
+      </p>
+      <div class="row">
+        <div class="col-md-12 summary-issues-container" id="summary-issues">
+          <%= render partial: 'shared/scan_results/issues/list',
+                     locals: {
+                       id: 'summary',
+                       data: { issues: data[:missing_issues] },
+                       force_show_logged_by: true
+                     } %>
+        </div>
+      </div>
+
+<% end %>
+
     <% else %>
         <p class="alert alert-info">
             No scan has started yet...

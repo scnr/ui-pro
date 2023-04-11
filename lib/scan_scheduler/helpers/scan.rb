@@ -93,7 +93,7 @@ module Scan
 
         revision.aborting!
 
-        download_report_and_shutdown( revision, status: 'aborted' )
+        download_report_and_shutdown( revision, status: 'aborted', mark_missing_issues: false )
     end
 
     def each_due_scan( &block )
@@ -363,7 +363,7 @@ module Scan
                 finish( revision )
             end
         else
-            download_report_and_shutdown( revision, status: 'completed' )
+            download_report_and_shutdown( revision, status: 'completed', mark_missing_issues: true )
         end
     end
 
@@ -393,7 +393,7 @@ module Scan
     # It will also shutdown the associated instance.
     #
     # @param    [Revision]  revision
-    def download_report_and_shutdown( revision, status: nil )
+    def download_report_and_shutdown( revision, status: nil, mark_missing_issues: nil )
         log_info_for revision, 'Grabbing report'
 
         instance = instance_for( revision )
@@ -411,6 +411,10 @@ module Scan
                 import_issues_from_report( revision, report )
                 import_coverage_from_report( revision, report )
 
+                # if mark_missing_issues
+                    mark_missing_issues_from_report( revision, report )
+                # end
+
                 revision.report = Report.create( location: report_path )
                 revision.save
             rescue => e
@@ -425,6 +429,14 @@ module Scan
 
                 log_info_for revision, status.capitalize
             end
+        end
+    end
+
+    def mark_missing_issues_from_report( revision, report )
+        revision.scan.issues.reorder('').where.not(
+          digest: report.issues.map(&:digest)
+        ).each do |issue|
+            revision.missing_issues << issue
         end
     end
 

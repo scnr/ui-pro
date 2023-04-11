@@ -21,6 +21,8 @@ class Revision < ActiveRecord::Base
     has_one :site_role, dependent: :destroy
 
     has_many :issues,  dependent: :destroy
+    has_and_belongs_to_many :missing_issues, class_name: 'Issue',
+                            join_table: 'missing_issues_revisions'
     has_many :reviewed_issues,  class_name: 'Issue',
              foreign_key: 'reviewed_by_revision_id'
 
