@@ -108,22 +108,6 @@ module Issue
 
     end
 
-    # Marks issues of other revisions as fixed, if their digests are not included
-    # in the given `issue_digests`.
-    #
-    # @param    [Revision]          revision
-    # @param    [Array<Integer>]    issue_digests
-    def mark_other_issues_fixed( revision, issue_digests )
-        # Mark issues of previous revisions as fixed if they're not logged by
-        # this revision.
-        revision.scan.issues.reorder('').where.not(
-            digest: issue_digests
-        ).update_all(
-            state:                   'fixed',
-            reviewed_by_revision_id: revision.id
-        )
-    end
-
     def reset_issue_state
         @updatable_issue_data_per_digest = {}
     end

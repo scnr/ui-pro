@@ -93,11 +93,7 @@ module Scan
 
         revision.aborting!
 
-        download_report_and_shutdown(
-            revision,
-            mark_issues_fixed: false,
-            status:            'aborted'
-        )
+        download_report_and_shutdown( revision, status: 'aborted' )
     end
 
     def each_due_scan( &block )
@@ -367,13 +363,7 @@ module Scan
                 finish( revision )
             end
         else
-            download_report_and_shutdown(
-                revision,
-                # Don't mark issues as fixed if they're missing from a rescoped
-                # scan, issues may be missing due to the scope reduction.
-                mark_issues_fixed: revision.index > 1 && !revision.previous.rescoped?,
-                status:            'completed'
-            )
+            download_report_and_shutdown( revision, status: 'completed' )
         end
     end
 
@@ -403,11 +393,7 @@ module Scan
     # It will also shutdown the associated instance.
     #
     # @param    [Revision]  revision
-    def download_report_and_shutdown(
-        revision,
-        mark_issues_fixed: true,
-        status:            nil
-    )
+    def download_report_and_shutdown( revision, status: nil )
         log_info_for revision, 'Grabbing report'
 
         instance = instance_for( revision )
@@ -424,10 +410,6 @@ module Scan
 
                 import_issues_from_report( revision, report )
                 import_coverage_from_report( revision, report )
-
-                if mark_issues_fixed && revision.scan.revisions.size > 1
-                    mark_other_issues_fixed( revision, report.issues.map(&:digest) )
-                end
 
                 revision.report = Report.create( location: report_path )
                 revision.save
