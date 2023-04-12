@@ -218,7 +218,7 @@ module ScanResultsHelper
             end
 
             missing_issues = nil
-            if @revision == @scan.last_revision && @scan.completed?
+            if @revision && @revision == @revision.scan.last_revision && @scan.completed?
                 missing_issues = filter_pages( @revision.missing_issues )
             end
 
