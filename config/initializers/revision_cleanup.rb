@@ -1,3 +1,5 @@
+return if File.basename($0) == 'rake'
+
 Rails.configuration.after_initialize do
 Revision.active.each do |revision|
     begin
