@@ -45,7 +45,7 @@ class PerformanceSnapshot < ActiveRecord::Base
     end
 
     def max_http_time_out_count
-        (http_request_count * MAX_HTTP_TIME_OUT_RATIO).to_i
+        (100 * MAX_HTTP_TIME_OUT_RATIO).to_i
     end
 
     def http_time_out_count_pct
@@ -61,7 +61,7 @@ class PerformanceSnapshot < ActiveRecord::Base
     end
 
     def max_http_failed_count
-        (http_request_count * MAX_HTTP_FAILED_RATIO).to_i
+        (100 * MAX_HTTP_FAILED_RATIO).to_i
     end
 
     def http_failed_count_pct

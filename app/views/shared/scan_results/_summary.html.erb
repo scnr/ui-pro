@@ -6,6 +6,21 @@
     performance_snapshot = @revision.performance_snapshot
 
     reviewed_issues_count = @revision.reviewed_issues.size
+
+    reliabilities_t = {
+      excellent: 0,
+      good:      1,
+      fair:      2,
+      poor:      3
+    }
+
+    reliability = reliabilities_t.find do |k, v|
+        v == [
+          reliabilities_t[performance_snapshot.http_failed_count_state],
+          reliabilities_t[performance_snapshot.browser_failed_job_count_state]
+        ].max
+    end.first
+
 %>
 
 <% if @revision.in_progress? %>
@@ -18,12 +33,11 @@
     <div class="row">
         <div class="col-md-2">
             <h3>
-                <% state = performance_snapshot.http_max_concurrency_state %>
-                <strong class="text text-state-<%= state %> health-state">
-                    <%= state.capitalize %>
+                <strong class="text text-state-<%= reliability %> health-state">
+                    <%= reliability.capitalize %>
                 </strong>
 
-                health
+                reliability
             </h3>
         </div>
 

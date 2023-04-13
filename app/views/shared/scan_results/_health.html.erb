@@ -91,11 +91,11 @@
 
                       when :fair
                           'A considerable amount of requests have failed, there ' +
-                            'is a small chance that scan will yield incomplete results.'
+                            'is a small chance that the scan will yield incomplete results.'
 
                       when :poor
                           'A large amount of requests have failed, there is a ' +
-                            'chance that scan will yield incomplete results.'
+                            'chance that the scan will yield incomplete results.'
                   end %>
             </p>
           </div>
@@ -204,7 +204,7 @@
               name:  'Reliability',
               value: <%= @revision.performance_snapshot.http_failed_count_pct %>,
               label: <%= @revision.performance_snapshot.http_failed_count_pct %> + '%',
-              max:    <%= 100 * PerformanceSnapshot::MAX_HTTP_FAILED_RATIO %>,
+              max:    <%= PerformanceSnapshot::MAX_HTTP_FAILED_RATIO %>,
               unit:  'failed requests',
               better: 'low'
           }
@@ -493,7 +493,7 @@
               name:  'Reliability',
               value: <%= @revision.performance_snapshot.browser_job_failed_count_pct %>,
               label: <%= @revision.performance_snapshot.browser_job_failed_count_pct %> + '%',
-              max:    <%= 100 * PerformanceSnapshot::MAX_BROWSER_FAILED_RATIO %>,
+              max:    <%= PerformanceSnapshot::MAX_BROWSER_FAILED_RATIO %>,
               unit:  'failed browser jobs',
               better: 'low'
           }
