@@ -57,7 +57,36 @@
 
     <hr/>
 
-    <div id="platforms">
+  <div id="audit">
+    <fieldset>
+      <h2 id="audit-h">
+        Audit
+        <small>How shall the web application be audited?</small>
+      </h2>
+
+      <div class="row">
+        <div class="col-md-6">
+          <%= f.input :audit_mode,
+                      label: 'Mode',
+                      default: SCNR::Engine::Options.audit.mode,
+                      collection: SCNR::Engine::Options.audit.class::MODES
+          %>
+        </div>
+        <div class="col-md-6 input-help">
+          <%= messages_for( :scan_mode ) %>
+
+          <p class="help-block alert alert-info">
+            Different web application may require different types of audit modes to yield best results. <br/>
+            Adjust accordingly.
+          </p>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+
+  <hr/>
+
+  <div id="platforms">
         <fieldset>
             <h2 id="platforms-h">
                 Software stack

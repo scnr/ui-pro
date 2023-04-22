@@ -101,3 +101,4 @@ device_width: ''
 device_height: ''
 
 max_parallel_scans: 'Maximum number of active scans at any given time.'
+scan_mode: 'How extensive should the audit process be -- affects the amount of payloads sent to the web application.'

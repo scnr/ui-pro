@@ -14,6 +14,7 @@ class SiteProfile < ActiveRecord::Base
     set_scanner_options(
         platforms:  { type: Array, validate: true },
 
+        audit_mode:         String,
         no_fingerprinting:  :bool,
 
         input_values:           { type: Hash,   validate: true, format: :lsv },
@@ -55,6 +56,8 @@ class SiteProfile < ActiveRecord::Base
     private
 
     def default_values
+        self.audit_mode                    ||= SCNR::Engine::Options.audit.mode.to_s
+
         self.http_request_concurrency      ||=
           SCNR::Engine::Options.http.request_concurrency
 
