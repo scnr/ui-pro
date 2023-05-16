@@ -183,6 +183,7 @@ GEM
       sassc (~> 2.0)
     font-kit-rails (1.2.0)
       rails
+    foreman (0.87.2)
     globalid (1.1.0)
       activesupport (>= 5.0)
     google-protobuf (3.23.0-x86_64-linux)
@@ -464,6 +465,7 @@ DEPENDENCIES
   faker
   font-awesome-sass
   font-kit-rails
+  foreman (~> 0.87.2)
   jbuilder
   jquery-rails
   kramdown
