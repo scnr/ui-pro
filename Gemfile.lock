@@ -6,45 +6,6 @@ GIT
     ethon (0.15.0)
       ffi (>= 1.15.0)
 
-PATH
-  remote: ../application
-  specs:
-    scnr-application (0.0.2)
-      cuboid (~> 0.1.9.1)
-      scnr-engine (~> 1.0dev)
-
-PATH
-  remote: ../engine
-  specs:
-    scnr-engine (1.0dev)
-      addressable (= 2.5.2)
-      awesome_print (= 1.6.1)
-      bundler
-      childprocess (= 0.8.0)
-      coderay (= 1.1.2)
-      concurrent-ruby (= 1.1.8)
-      concurrent-ruby-ext (= 1.1.8)
-      cuboid (~> 0.1.9.1)
-      dsel
-      http_parser.rb (= 0.6.0)
-      kramdown (= 2.3.1)
-      loofah (= 2.9.1)
-      msgpack (= 1.1.0)
-      nokogiri
-      ox (= 2.14.14)
-      pony (= 1.11)
-      puma (= 5.6.2)
-      rack (~> 2.2.3)
-      rack-test
-      rubyzip (= 2.3.0)
-      selenium-webdriver (= 4.1.0)
-      sys-proctable (= 1.1.5)
-      thermite (~> 0)
-      typhoeus (= 1.4.0)
-      vmstat (= 2.3.0)
-      watir (= 6.19.1)
-      webrick (= 1.7.0)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -351,6 +312,37 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
+    scnr-application (0.0.2)
+      cuboid (~> 0.1.9.1)
+      scnr-engine (~> 1.0dev)
+    scnr-engine (1.0dev)
+      addressable (= 2.5.2)
+      awesome_print (= 1.6.1)
+      bundler
+      childprocess (= 0.8.0)
+      coderay (= 1.1.2)
+      concurrent-ruby (= 1.1.8)
+      concurrent-ruby-ext (= 1.1.8)
+      cuboid (~> 0.1.9.1)
+      dsel
+      http_parser.rb (= 0.6.0)
+      kramdown (= 2.3.1)
+      loofah (= 2.9.1)
+      msgpack (= 1.1.0)
+      nokogiri
+      ox (= 2.14.14)
+      pony (= 1.11)
+      puma (= 5.6.2)
+      rack (~> 2.2.3)
+      rack-test
+      rubyzip (= 2.3.0)
+      selenium-webdriver (= 4.1.0)
+      sys-proctable (= 1.1.5)
+      thermite (~> 0)
+      typhoeus (= 1.4.0)
+      vmstat (= 2.3.0)
+      watir (= 6.19.1)
+      webrick (= 1.7.0)
     sdoc (0.4.2)
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
@@ -468,8 +460,8 @@ DEPENDENCIES
   rails_layout
   rspec-rails
   sass-rails
-  scnr-application!
-  scnr-engine!
+  scnr-application
+  scnr-engine
   sdoc (~> 0.4.0)
   selenium-webdriver
   shoulda

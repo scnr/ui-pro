@@ -17,8 +17,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_22_045509) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
-    t.integer "record_id", null: false
-    t.integer "blob_id", null: false
+    t.bigint "record_id", null: false
+    t.bigint "blob_id", null: false
     t.datetime "created_at", precision: nil, null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
@@ -30,14 +30,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_22_045509) do
     t.string "content_type"
     t.text "metadata"
     t.string "service_name", null: false
-    t.integer "byte_size", null: false
+    t.bigint "byte_size", null: false
     t.string "checksum"
     t.datetime "created_at", precision: nil, null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
   create_table "active_storage_variant_records", force: :cascade do |t|
-    t.integer "blob_id", null: false
+    t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
@@ -62,7 +62,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_22_045509) do
     t.binary "body"
     t.binary "raw"
     t.string "requestable_type"
-    t.integer "requestable_id"
+    t.bigint "requestable_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index ["requestable_type", "requestable_id"], name: "index_http_requests_on_requestable"
@@ -80,7 +80,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_22_045509) do
     t.text "return_message"
     t.binary "raw_headers"
     t.string "responsable_type"
-    t.integer "responsable_id"
+    t.bigint "responsable_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index ["responsable_type", "responsable_id"], name: "index_http_responses_on_responsable"
@@ -97,8 +97,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_22_045509) do
     t.text "source"
     t.string "http_method"
     t.text "affected_input_name"
-    t.integer "sitemap_entry_id"
-    t.integer "issue_id"
+    t.bigint "sitemap_entry_id"
+    t.bigint "issue_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index ["issue_id"], name: "index_input_vectors_on_issue_id"
@@ -111,7 +111,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_22_045509) do
     t.integer "tainted_argument_index"
     t.binary "tainted_value"
     t.binary "taint_value"
-    t.integer "issue_page_dom_id"
+    t.bigint "issue_page_dom_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index ["issue_page_dom_id"], name: "index_issue_page_dom_data_flow_sinks_on_issue_page_dom_id"
@@ -120,7 +120,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_22_045509) do
 
   create_table "issue_page_dom_execution_flow_sinks", force: :cascade do |t|
     t.binary "data"
-    t.integer "issue_page_dom_id"
+    t.bigint "issue_page_dom_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index ["issue_page_dom_id"], name: "index_issue_page_dom_execution_flow_sinks_on_issue_page_dom_id"
@@ -131,7 +131,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_22_045509) do
     t.binary "arguments"
     t.text "name"
     t.string "with_dom_function_type"
-    t.integer "with_dom_function_id"
+    t.bigint "with_dom_function_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index ["name"], name: "index_issue_page_dom_functions_on_name"
@@ -142,7 +142,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_22_045509) do
     t.integer "line"
     t.text "url"
     t.string "with_dom_stack_frame_type"
-    t.integer "with_dom_stack_frame_id"
+    t.bigint "with_dom_stack_frame_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index ["with_dom_stack_frame_type", "with_dom_stack_frame_id"], name: "issue_page_dom_stack_frames_poly_index"
@@ -153,7 +153,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_22_045509) do
     t.text "event"
     t.binary "options"
     t.float "time"
-    t.integer "issue_page_dom_id"
+    t.bigint "issue_page_dom_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index ["issue_page_dom_id"], name: "index_issue_page_dom_transitions_on_issue_page_dom_id"
@@ -162,7 +162,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_22_045509) do
   create_table "issue_page_doms", force: :cascade do |t|
     t.text "url"
     t.binary "body"
-    t.integer "issue_page_id"
+    t.bigint "issue_page_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index ["issue_page_id"], name: "index_issue_page_doms_on_issue_page_id"
@@ -170,7 +170,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_22_045509) do
   end
 
   create_table "issue_pages", force: :cascade do |t|
-    t.integer "sitemap_entry_id"
+    t.bigint "sitemap_entry_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index ["sitemap_entry_id"], name: "index_issue_pages_on_sitemap_entry_id"
@@ -188,7 +188,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_22_045509) do
   create_table "issue_platforms", force: :cascade do |t|
     t.string "shortname"
     t.string "name"
-    t.integer "issue_platform_type_id"
+    t.bigint "issue_platform_type_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index ["issue_platform_type_id"], name: "index_issue_platforms_on_issue_platform_type_id"
@@ -199,7 +199,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_22_045509) do
   create_table "issue_remarks", force: :cascade do |t|
     t.string "author"
     t.text "text"
-    t.integer "issue_id"
+    t.bigint "issue_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index ["issue_id"], name: "index_issue_remarks_on_issue_id"
@@ -208,7 +208,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_22_045509) do
   create_table "issue_type_references", force: :cascade do |t|
     t.string "title"
     t.text "url"
-    t.integer "issue_type_id"
+    t.bigint "issue_type_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index ["issue_type_id"], name: "index_issue_type_references_on_issue_type_id"
@@ -236,7 +236,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_22_045509) do
     t.text "description"
     t.text "remedy_guidance"
     t.integer "cwe"
-    t.integer "issue_type_severity_id"
+    t.bigint "issue_type_severity_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index ["check_shortname"], name: "index_issue_types_on_check_shortname", unique: true
@@ -257,13 +257,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_22_045509) do
     t.binary "signature"
     t.integer "referring_issue_page_id"
     t.integer "reviewed_by_revision_id"
-    t.integer "revision_id"
-    t.integer "scan_id"
-    t.integer "site_id"
-    t.integer "issue_page_id"
-    t.integer "issue_type_id"
-    t.integer "issue_platform_id"
-    t.integer "sitemap_entry_id"
+    t.bigint "revision_id"
+    t.bigint "scan_id"
+    t.bigint "site_id"
+    t.bigint "issue_page_id"
+    t.bigint "issue_type_id"
+    t.bigint "issue_platform_id"
+    t.bigint "sitemap_entry_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index ["active"], name: "index_issues_on_active"
@@ -298,7 +298,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_22_045509) do
     t.integer "page_count", default: 0
     t.text "current_page"
     t.integer "revision_current_id"
-    t.integer "revision_id"
+    t.bigint "revision_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.float "total_average_app_time", default: 0.0
@@ -314,7 +314,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_22_045509) do
   end
 
   create_table "profiles", force: :cascade do |t|
-    t.integer "user_id"
+    t.bigint "user_id"
     t.boolean "default"
     t.string "name"
     t.text "description"
@@ -348,7 +348,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_22_045509) do
   end
 
   create_table "reports", force: :cascade do |t|
-    t.integer "revision_id"
+    t.bigint "revision_id"
     t.text "location"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
@@ -356,8 +356,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_22_045509) do
   end
 
   create_table "revisions", force: :cascade do |t|
-    t.integer "scan_id"
-    t.integer "site_id"
+    t.bigint "scan_id"
+    t.bigint "site_id"
     t.integer "index"
     t.binary "rpc_options"
     t.text "snapshot_path"
@@ -384,12 +384,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_22_045509) do
     t.integer "revisions_count", default: 0
     t.integer "issues_count", default: 0
     t.integer "sitemap_entries_count", default: 0
-    t.integer "site_id"
-    t.integer "device_id"
-    t.integer "site_role_id"
+    t.bigint "site_id"
+    t.bigint "device_id"
+    t.bigint "site_role_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.integer "profile_id"
+    t.bigint "profile_id"
     t.string "processing"
     t.index ["device_id"], name: "index_scans_on_device_id"
     t.index ["profile_id"], name: "index_scans_on_profile_id"
@@ -406,7 +406,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_22_045509) do
     t.datetime "start_at", precision: nil
     t.float "stop_after_hours"
     t.boolean "stop_suspend"
-    t.integer "scan_id"
+    t.bigint "scan_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index ["scan_id"], name: "index_schedules_on_scan_id"
@@ -450,21 +450,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_22_045509) do
     t.string "http_authentication_username", default: ""
     t.string "http_authentication_password", default: ""
     t.binary "dom_wait_for_elements"
-    t.integer "site_id"
-    t.integer "revision_id"
+    t.bigint "site_id"
+    t.bigint "revision_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.string "scan_mode"
-    t.string "paranoia"
-    t.string "audit_paranoia", default: "medium"
     t.string "audit_mode", default: "moderate"
     t.index ["revision_id"], name: "index_site_profiles_on_revision_id"
     t.index ["site_id"], name: "index_site_profiles_on_site_id"
   end
 
   create_table "site_roles", force: :cascade do |t|
-    t.integer "site_id"
-    t.integer "revision_id"
+    t.bigint "site_id"
+    t.bigint "revision_id"
     t.string "name"
     t.text "description"
     t.text "session_check_url"
@@ -488,9 +485,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_22_045509) do
     t.integer "issue_pages_count", default: 0
     t.integer "input_vectors_count", default: 0
     t.bigint "digest"
-    t.integer "site_id"
-    t.integer "scan_id"
-    t.integer "revision_id"
+    t.bigint "site_id"
+    t.bigint "scan_id"
+    t.bigint "revision_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index ["digest", "revision_id"], name: "index_sitemap_entries_on_digest_and_revision_id", unique: true
@@ -508,7 +505,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_22_045509) do
     t.integer "revisions_count", default: 0
     t.integer "issues_count", default: 0
     t.integer "sitemap_entries_count", default: 0
-    t.integer "user_id"
+    t.bigint "user_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.string "processing"
@@ -517,8 +514,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_22_045509) do
   end
 
   create_table "sites_users", id: false, force: :cascade do |t|
-    t.integer "site_id"
-    t.integer "user_id"
+    t.bigint "site_id"
+    t.bigint "user_id"
     t.index ["site_id", "user_id"], name: "index_sites_users_on_site_id_and_user_id"
     t.index ["site_id"], name: "index_sites_users_on_site_id"
     t.index ["user_id"], name: "index_sites_users_on_user_id"
@@ -554,7 +551,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_22_045509) do
     t.string "whodunnit"
     t.binary "object"
     t.datetime "created_at", precision: nil
-    t.json "object_changes"
+    t.jsonb "object_changes"
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
     t.index ["revision_id"], name: "index_versions_on_revision_id"
     t.index ["scan_id"], name: "index_versions_on_scan_id"
