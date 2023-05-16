@@ -15,6 +15,7 @@
     <meta name="turbo-cache-control" content="no-preview">
     <meta name="description" content="<%= content_for?(:description) ? yield(:description) : 'SCNR Pro' %>">
     <%= stylesheet_link_tag 'application', media: 'all' %>
+    <%= action_cable_meta_tag %>
     <%= javascript_include_tag 'application' %>
     <%= javascript_pack_tag "application" %>
     <%= csrf_meta_tags %>
