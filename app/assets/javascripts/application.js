@@ -174,35 +174,35 @@ function setupScroll(){
 }
 
 window.disablePageUpdate = false;
-var updatePage = function () {
-    if( window.disablePageUpdate ) return;
+// var updatePage = function () {
+//     if( window.disablePageUpdate ) return;
 
-    var scrollPosition;
+//     var scrollPosition;
 
-    function reload () {
-        if(
-            // window.location.pathname.endsWith( '/summary' ) ||
-            window.location.pathname.includes( '/issues/' ) ||
-            $( 'input' ).is(':visible')
-        ) { return }
+//     function reload () {
+//         if(
+//             // window.location.pathname.endsWith( '/summary' ) ||
+//             window.location.pathname.includes( '/issues/' ) ||
+//             $( 'input' ).is(':visible')
+//         ) { return }
 
-        scrollPosition = [window.scrollX, window.scrollY];
-        Turbo.visit( window.location.toString(), { action: 'replace' } );
-        return true;
-    }
+//         scrollPosition = [window.scrollX, window.scrollY];
+//         Turbo.visit( window.location.toString(), { action: 'replace' } );
+//         return true;
+//     }
 
-    $(document).on( 'turbo:load', function () {
-        if( scrollPosition ) {
-            setTimeout( () => {
-                window.scrollTo.apply( window, scrollPosition );
-                scrollPosition = null;
-            });
-        }
-    });
+//     $(document).on( 'turbo:load', function () {
+//         if( scrollPosition ) {
+//             setTimeout( () => {
+//                 window.scrollTo.apply( window, scrollPosition );
+//                 scrollPosition = null;
+//             });
+//         }
+//     });
 
-    reload();
-    return true;
-}
+//     reload();
+//     return true;
+// }
 
 // window.original_confirm = window.confirm;
 // Turbo.FormSubmission.confirmMethod = function( data, title, cb ){
@@ -226,7 +226,7 @@ function setup() {
     $('a[data-toggle="tab"]').on('shown.bs.tab', setupScroll);
 
     setupScroll();
-    setupPageUpdate();
+    // setupPageUpdate();
 
     // Restore the last open tab from the URL fragment.
     openFromWindowLocation();
