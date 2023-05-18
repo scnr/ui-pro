@@ -1,3 +1,5 @@
+<% content_for(:action_cable_channel, 'SitesChannel') %>
+
 <div class="page-header">
     <h1>Sites</h1>
 
@@ -8,12 +10,10 @@
 
 <%= render 'form' %>
 
-<% if @sites.any? %>
 <div id="sites">
     <div class="row">
-        <div class="col-md-12" data-refreshable-partial="<%= table_sites_path %>">
+        <div class="col-md-12" id="sites-container">
             <%= render 'table', sites: @sites %>
         </div>
     </div>
 </div>
-<% end %>

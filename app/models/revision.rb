@@ -41,6 +41,10 @@ class Revision < ActiveRecord::Base
     before_save :copy_site_profile
     before_save :copy_site_role
 
+    # Broadcasts callbacks.
+    after_create_commit :broadcast_create_job
+    after_update_commit :broadcast_update_job, if: :saved_change_to_status?
+
     scope :in_progress, -> do
         where.not( started_at: nil ).where( stopped_at: nil )
     end
@@ -125,6 +129,14 @@ class Revision < ActiveRecord::Base
 
     def ensure_performance_snapshot
         self.performance_snapshot ||= build_performance_snapshot
+    end
+
+    def broadcast_create_job
+        Broadcasts::Sites::RevisionUpdateJob.perform_later(id)
+    end
+
+    def broadcast_update_job
+        Broadcasts::Sites::RevisionUpdateJob.perform_later(id)
     end
 
 end

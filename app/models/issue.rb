@@ -40,6 +40,9 @@ class Issue < ActiveRecord::Base
 
     before_save :set_owners
 
+    # Broadcasts callbacks.
+    after_create_commit :broadcast_create_job
+
     STATES.each do |state|
         scope state, -> do
             where( state: state )
@@ -238,6 +241,12 @@ class Issue < ActiveRecord::Base
     def set_owners
         # The revision setter handles this.
         self.revision = revision
+    end
+
+    private
+
+    def broadcast_create_job
+        Broadcasts::Sites::IssueCreateJob.perform_later(id)
     end
 
 end

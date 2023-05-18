@@ -11,11 +11,13 @@
 #
 default: &default
   # Turn on/off access logs ("Started..." and "Finished...")
-  access_logs_disabled: false
+  access_logs_disabled: true
   # Whether to enable gRPC level logging or not
-  log_grpc: false
+  log_grpc: true
   # Use HTTP adapter for a quick start (since redis gem is not present in the project)
-  broadcast_adapter: http
+  # broadcast_adapter: http
+  broadcast_adapter: redis
+  redis_url: <%= ENV.fetch('REDIS_URL', 'redis://localhost:6379/1') %>
   # Use the same channel name for WebSocket server, e.g.:
   #   $ anycable-go --redis_channel="__anycable__"
   redis_channel: "__anycable__"
@@ -23,11 +25,5 @@ default: &default
 development:
   <<: *default
 
-test:
-  <<: *default
-
 production:
   <<: *default
-  # Use Redis or NATS in production
-  broadcast_adapter: redis
-  # broadcast_adapter: nats

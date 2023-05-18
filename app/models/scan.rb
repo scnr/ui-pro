@@ -35,6 +35,9 @@ class Scan < ActiveRecord::Base
     # which shall be updated once the scan finishes, based on the set freq.
     before_create :ensure_schedule
 
+    # Broadcasts callbacks.
+    after_create_commit :broadcast_create_job
+
     scope :scheduled,   -> do
         includes(:schedule).where.not( schedules: { start_at: nil } ).
             order( 'schedules.start_at asc' )
@@ -141,6 +144,10 @@ class Scan < ActiveRecord::Base
 
     def ensure_schedule
         self.schedule ||= build_schedule
+    end
+
+    def broadcast_create_job
+        Broadcasts::Sites::ScanCreateJob.perform_later(id)
     end
 
 end

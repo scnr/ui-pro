@@ -42,6 +42,9 @@ class Site < ActiveRecord::Base
     after_create :create_guest_role
     before_save  :ensure_profile
 
+    # Broadcasts callbacks.
+    after_create_commit :broadcast_create_job
+
     def url
         u = "#{protocol}://#{host}"
 
@@ -129,6 +132,10 @@ class Site < ActiveRecord::Base
             description: 'Un-authenticated visitor.',
             login_type:  'none'
         )
+    end
+
+    def broadcast_create_job
+        Broadcasts::Sites::SiteCreateJob.perform_later(id)
     end
 
 end
