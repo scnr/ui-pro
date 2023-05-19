@@ -10,7 +10,7 @@
 
     <tbody>
     <% @profiles.each do |profile| %>
-        <tr>
+        <tr data-profile-id=<%= profile.id %>>
             <td>
                 <%= simple_form_for profile,
                                     url: default_profile_path( profile ),
@@ -32,7 +32,7 @@
                 <%= link_to profile.name, profile %>
             </td>
 
-            <td>
+            <td data-scan-size>
                 <%= profile.scans.size %>
             </td>
 

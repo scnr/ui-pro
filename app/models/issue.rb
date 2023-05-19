@@ -248,6 +248,7 @@ class Issue < ActiveRecord::Base
     def broadcast_create_job
         Broadcasts::Sites::IssueCreateJob.perform_later(id)
         Broadcasts::Devices::IssueCreateJob.perform_later(id)
+        Broadcasts::Profiles::IssueCreateJob.perform_later(id)
     end
 
 end

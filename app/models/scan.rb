@@ -150,10 +150,12 @@ class Scan < ActiveRecord::Base
     def broadcast_create_job
         Broadcasts::Sites::ScanCreateJob.perform_later(id)
         Broadcasts::Devices::ScanCreateJob.perform_later(id)
+        Broadcasts::Profiles::ScanCreateJob.perform_later(id)
     end
 
     def broadcast_destroy_job
         Broadcasts::Devices::ScanDestroyJob.perform_later(site.user.id, device.id)
+        Broadcasts::Profiles::ScanDestroyJob.perform_later(site.user.id, profile.id)
     end
 
 end
