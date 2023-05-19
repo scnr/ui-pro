@@ -353,7 +353,7 @@ module ScanResultsHelper
             params:     filter_params
         }
 
-        if ScanResults::SCAN_RESULT_ACTIONS.include?( params[:action].to_sym )
+        if ScanResults::SCAN_RESULT_ACTIONS.include?( params[:action].try(:to_sym) )
              route[:action] = params.permit(:action)[:action]
         else
             route[:action] = options[:action] || 'issues'

@@ -133,10 +133,12 @@ class Revision < ActiveRecord::Base
 
     def broadcast_create_job
         Broadcasts::Sites::RevisionUpdateJob.perform_later(id)
+        Broadcasts::Devices::RevisionUpdateJob.perform_later(id)
     end
 
     def broadcast_update_job
         Broadcasts::Sites::RevisionUpdateJob.perform_later(id)
+        Broadcasts::Devices::RevisionUpdateJob.perform_later(id)
     end
 
 end

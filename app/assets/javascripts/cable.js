@@ -6,8 +6,14 @@ function getCableChannel() {
   return $('meta[name=action-cable-channel]').attr('content');
 };
 
-function loadChannel(targetChannel, currentChannel) {
+function loadChannel(targetChannel, currentChannel = getCableChannel()) {
   return targetChannel === currentChannel
+};
+
+function alreadySubscribed(channel) {
+  return App.cable.subscriptions.subscriptions.some(function(subscription) {
+    return JSON.parse(subscription.identifier).channel == channel
+  });
 };
 
 (function() {

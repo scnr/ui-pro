@@ -5,22 +5,44 @@ module Broadcasts
     class IssueCreateJob < ApplicationJob
       queue_as :default
 
-      def perform(issue_id)
-        issue = Issue.find_by(id: issue_id)
+      def perform(id)
+        issue = find_issue(id)
         return if issue.blank?
 
-        site = issue.revision&.site
+        site = find_site(issue)
         return if site.blank?
 
-        user = site.user
+        user = find_user(site)
         return if user.blank?
 
+        broadcast_issue_create(user, site)
+      end
+
+      private
+
+      def find_issue(id)
+        Issue.find_by(id: id)
+      end
+
+      def find_site(issue)
+        issue.revision.try(:site)
+      end
+
+      def find_user(site)
+        site.user
+      end
+
+      def broadcast_issue_create(user, site)
         SitesChannel.broadcast_to(
           user,
           site_id: site.id,
-          html: SitesController.render(partial: 'sites/site', locals: { site: site }),
+          html: render_site_partial(site),
           action: :update
         )
+      end
+
+      def render_site_partial(site)
+        SitesController.render(partial: 'sites/site', locals: { site: site })
       end
     end
   end

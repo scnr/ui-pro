@@ -37,6 +37,7 @@ class Scan < ActiveRecord::Base
 
     # Broadcasts callbacks.
     after_create_commit :broadcast_create_job
+    after_destroy_commit :broadcast_destroy_job
 
     scope :scheduled,   -> do
         includes(:schedule).where.not( schedules: { start_at: nil } ).
@@ -148,6 +149,11 @@ class Scan < ActiveRecord::Base
 
     def broadcast_create_job
         Broadcasts::Sites::ScanCreateJob.perform_later(id)
+        Broadcasts::Devices::ScanCreateJob.perform_later(id)
+    end
+
+    def broadcast_destroy_job
+        Broadcasts::Devices::ScanDestroyJob.perform_later(device.id, site.user.id)
     end
 
 end

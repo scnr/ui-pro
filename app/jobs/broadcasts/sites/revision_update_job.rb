@@ -5,22 +5,44 @@ module Broadcasts
     class RevisionUpdateJob < ApplicationJob
       queue_as :default
 
-      def perform(revision_id)
-        revision = Revision.find_by(id: revision_id)
+      def perform(id)
+        revision = find_revision(id)
         return if revision.blank?
 
-        site = revision.site
+        site = find_site(revision)
         return if site.blank?
 
-        user = site.user
+        user = find_user(site)
         return if user.blank?
 
+        broadcast_revision_update(user, site)
+      end
+
+      private
+
+      def find_revision(id)
+        Revision.find_by(id: id)
+      end
+
+      def find_site(revision)
+        revision.site
+      end
+
+      def find_user(site)
+        site.user
+      end
+
+      def broadcast_revision_update(user, site)
         SitesChannel.broadcast_to(
           user,
           site_id: site.id,
-          html: SitesController.render(partial: 'sites/site', locals: { site: site }),
+          html: render_site_partial(site),
           action: :update
         )
+      end
+
+      def render_site_partial(site)
+        SitesController.render(partial: 'sites/site', locals: { site: site })
       end
     end
   end

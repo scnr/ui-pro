@@ -1,9 +1,15 @@
 $(document).on('turbo:load', function() {
-  if (!loadChannel('SitesChannel', getCableChannel())) {
+  const channel = 'SitesChannel';
+
+  if (!loadChannel(channel)) {
     return;
   };
 
-  App.cable.subscriptions.create('SitesChannel', {
+  if (alreadySubscribed(channel)) {
+    return;
+  };
+
+  App.cable.subscriptions.create(channel, {
     received(data) {
       this.enusreTablePresence();
 
