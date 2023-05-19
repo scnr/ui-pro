@@ -153,7 +153,7 @@ class Scan < ActiveRecord::Base
     end
 
     def broadcast_destroy_job
-        Broadcasts::Devices::ScanDestroyJob.perform_later(device.id, site.user.id)
+        Broadcasts::Devices::ScanDestroyJob.perform_later(site.user.id, device.id)
     end
 
 end
