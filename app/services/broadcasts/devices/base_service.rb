@@ -18,12 +18,11 @@ module Broadcasts
       private
 
       def broadcast_to_device_channel
-        DeviceChannel.broadcast_to(
-          user,
-          device_id: device.id,
-          scans_count: scans.count,
-          sidebar_html: render_sidebar_partial
-        )
+        DeviceChannel.broadcast_to(user, **params)
+      end
+
+      def params
+        { device_id: device.id, scans_count: scans.count, sidebar_html: render_sidebar_partial }
       end
 
       def render_sidebar_partial

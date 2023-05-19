@@ -33,10 +33,10 @@ $(document).on('turbo:load', function() {
       $('#sites-container table').removeClass('hidden');
     },
     createSite(data) {
-      $('#sites-container tbody').prepend(data.html);
+      $('#sites-container tbody').prepend(data.site_html);
     },
     updateSite(data) {
-      $(`[data-site-id="${data.site_id}"]`).replaceWith(data.html);
+      $(`[data-site-id="${data.site_id}"]`).replaceWith(data.site_html);
     },
     destroySite(data) {
       $(`[data-site-id="${data.site_id}"]`).remove();
