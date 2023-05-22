@@ -54,3 +54,7 @@ i.site-favicon {
 p.site-name {
     font-size: 15px;
 }
+
+#sites-table:not(:has(tbody tr)) {
+    display: none;
+}

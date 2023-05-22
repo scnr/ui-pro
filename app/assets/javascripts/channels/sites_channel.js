@@ -11,8 +11,6 @@ $(document).on('turbo:load', function() {
 
   App.cable.subscriptions.create(channel, {
     received(data) {
-      this.enusreTablePresence();
-
       switch(data.action) {
         case 'create':
           this.createSite(data);
@@ -24,13 +22,6 @@ $(document).on('turbo:load', function() {
           this.destroySite(data);
           break
       };
-    },
-    enusreTablePresence() {
-      if ($('#sites-container table').is(':visible')) {
-        return;
-      };
-
-      $('#sites-container table').removeClass('hidden');
     },
     createSite(data) {
       $('#sites-container tbody').prepend(data.site_html);

@@ -157,7 +157,6 @@ class Scan < ActiveRecord::Base
     def broadcast_destroy_job
         Broadcasts::Devices::ScanDestroyJob.perform_later(site.user.id, device.id)
         Broadcasts::Profiles::ScanDestroyJob.perform_later(site.user.id, profile.id)
-        Broadcasts::SiteRoles::UpdateJob.perform_later(site_role.id)
     end
 
 end
