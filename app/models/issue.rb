@@ -249,6 +249,7 @@ class Issue < ActiveRecord::Base
         Broadcasts::Sites::IssueCreateJob.perform_later(id)
         Broadcasts::Devices::IssueCreateJob.perform_later(id)
         Broadcasts::Profiles::IssueCreateJob.perform_later(id)
+        Broadcasts::SiteRoles::UpdateJob.perform_later(revision.scan.site_role.id)
     end
 
 end

@@ -50,6 +50,10 @@ class SiteRole < ActiveRecord::Base
     validate :validate_login_script_code_syntax
     validate :validate_session_check_pattern
 
+    # Broadcasts callbacks.
+    after_create_commit :broadcast_create_job
+    after_destroy_commit :broadcast_destroy_job
+
     def self.guest
         where( login_type: 'none' ).first
     end
@@ -137,6 +141,14 @@ class SiteRole < ActiveRecord::Base
     def create_login_script_code_tempfile_path
         "#{Dir.tmpdir}/#{self.class}-#{login_script_code.to_s.persistent_hash}" <<
             '-login_script_code.rb'
+    end
+
+    def broadcast_create_job
+        Broadcasts::SiteRoles::CreateJob.perform_later(id)
+    end
+
+    def broadcast_destroy_job
+        Broadcasts::SiteRoles::DestroyJob.perform_later(id, site&.user&.id)
     end
 
 end

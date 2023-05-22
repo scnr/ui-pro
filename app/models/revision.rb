@@ -135,12 +135,14 @@ class Revision < ActiveRecord::Base
         Broadcasts::Sites::RevisionUpdateJob.perform_later(id)
         Broadcasts::Devices::RevisionUpdateJob.perform_later(id)
         Broadcasts::Profiles::RevisionUpdateJob.perform_later(id)
+        Broadcasts::SiteRoles::UpdateJob.perform_later(scan.site_role.id)
     end
 
     def broadcast_update_job
         Broadcasts::Sites::RevisionUpdateJob.perform_later(id)
         Broadcasts::Devices::RevisionUpdateJob.perform_later(id)
         Broadcasts::Profiles::RevisionUpdateJob.perform_later(id)
+        Broadcasts::SiteRoles::UpdateJob.perform_later(scan.site_role.id)
     end
 
 end

@@ -11,10 +11,11 @@
 
 <% if site_role.scans.empty? %>
     <%= link_to site_role_path( site_role.site, site_role ),
-                method: :delete,
-                remote: true,
-                class: "btn btn-#{button_size} btn-danger",
-                data: { confirm: 'Are you sure?' } do %>
+                data: {
+                    turbo_method: :delete,
+                    turbo_confirm: 'Are you sure?'
+                },
+                class: "btn btn-#{button_size} btn-danger" do %>
         <i class="fa fa-trash"></i>
     <% end %>
 <% end %>
