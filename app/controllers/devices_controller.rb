@@ -59,7 +59,8 @@ class DevicesController < ApplicationController
 
     def destroy
         @device.destroy
-        respond_with(@device)
+
+        redirect_to devices_url, status: 303, notice: 'User agent was successfully destroyed.'
     end
 
     private

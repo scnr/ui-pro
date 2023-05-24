@@ -7,7 +7,7 @@ module Broadcasts
         begin
           return false if user.blank? || site.blank?
 
-          broadcast_to_sites_channel
+          broadcast_to_site_channel
 
           true
         rescue ActiveRecord::RecordNotFound
@@ -17,8 +17,8 @@ module Broadcasts
 
       private
 
-      def broadcast_to_sites_channel
-        SitesChannel.broadcast_to(user, **params)
+      def broadcast_to_site_channel
+        SiteChannel.broadcast_to(user, **params)
       end
 
       def params

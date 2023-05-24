@@ -71,8 +71,7 @@ class ProfilesController < ApplicationController
     def destroy
         @profile.destroy
         respond_to do |format|
-            format.html { redirect_to profiles_url, notice: 'Profile was successfully destroyed.' }
-            format.json { head :no_content }
+            format.html { redirect_to profiles_url, status: 303, notice: 'Profile was successfully destroyed.' }
         end
     end
 

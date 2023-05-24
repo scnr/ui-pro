@@ -18,6 +18,8 @@ class SitemapEntry < ActiveRecord::Base
     before_save :set_owners
     before_save :set_digest
 
+    after_create_commit :broadcast_create_job
+
     def self.with_issues_in_revision( revision )
         joins(:issues).where( issues: revision.issues )
     end
@@ -40,5 +42,11 @@ class SitemapEntry < ActiveRecord::Base
 
     def set_digest
         self.digest = url.persistent_hash
+    end
+
+    private
+
+    def broadcast_create_job
+        Broadcasts::Scans::UpdateJob.perform_later(scan.id)
     end
 end

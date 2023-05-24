@@ -1,5 +1,5 @@
 $(document).on('turbo:load', function() {
-  const channel = 'SitesChannel';
+  const channel = 'SiteChannel';
 
   if (!loadChannel(channel)) {
     return;
@@ -31,10 +31,6 @@ $(document).on('turbo:load', function() {
     },
     destroySite(data) {
       $(`[data-site-id="${data.site_id}"]`).remove();
-
-      if ($('#sites-container tbody').children().length === 0) {
-        $('#sites-container table').addClass('hidden');
-      };
     }
   });
 });

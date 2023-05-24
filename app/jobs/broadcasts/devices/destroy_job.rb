@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 module Broadcasts
-  module Sites
-    class IssueCreateJob < ApplicationJob
+  module Devices
+    class DestroyJob < ApplicationJob
       queue_as :default
 
       def perform(id)
-        Broadcasts::Sites::IssueCreateService.call(issue_id: id)
+        Broadcasts::Devices::DestroyService.call(device_id: id)
       end
     end
   end

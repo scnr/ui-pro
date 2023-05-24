@@ -2,11 +2,11 @@
 
 module Broadcasts
   module Devices
-    class IssueCreateJob < ApplicationJob
+    class CreateJob < ApplicationJob
       queue_as :default
 
       def perform(id)
-        Broadcasts::Devices::IssueCreateService.call(issue_id: id)
+        Broadcasts::Devices::CreateService.call(device_id: id)
       end
     end
   end

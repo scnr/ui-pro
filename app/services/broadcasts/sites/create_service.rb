@@ -2,7 +2,7 @@
 
 module Broadcasts
   module Sites
-    class SiteCreateService < BaseService
+    class CreateService < BaseService
       def initialize(site_id:)
         @site_id = site_id
       end

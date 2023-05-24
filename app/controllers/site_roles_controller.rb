@@ -58,7 +58,6 @@ class SiteRolesController < ApplicationController
 
         respond_to do |format|
             format.html { redirect_to site_roles_path(@site_role.site), status: 303 }
-            # format.json { head :no_content }
         end
     end
 

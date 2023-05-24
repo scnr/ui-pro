@@ -5,78 +5,80 @@
    with_status           = !!local_assigns[:with_status]
 %>
 
-<td>
-    <%= link_to scan.name, [@site, scan] %>
-</td>
-
-<td>
-    <%= link_to revision.index.ordinalize,
-                site_scan_revision_path( @site, scan, revision ) %>
-</td>
-
-<% if with_status %>
+<tr data-scan-id=<%= scan.id %>>
     <td>
-        <%= scan.status.capitalize %>
+        <%= link_to scan.name, [site, scan] %>
     </td>
-<% end %>
 
-<td>
-    <%= link_to scan.profile, scan.profile %>
-</td>
+    <td>
+        <%= link_to revision.index.ordinalize,
+                    site_scan_revision_path( site, scan, revision ) %>
+    </td>
 
-<td>
-    <%= link_to scan.device, scan.device %>
-</td>
+    <% if with_status %>
+        <td>
+            <%= scan.status.capitalize %>
+        </td>
+    <% end %>
 
-<td>
-    <%= link_to scan.site_role, site_role_path( scan.site, scan.site_role ) %>
-</td>
+    <td>
+        <%= link_to scan.profile, scan.profile %>
+    </td>
 
-<td>
-    <%= seconds_to_hms revision.duration %>
-</td>
+    <td>
+        <%= link_to scan.device, scan.device %>
+    </td>
 
-<td>
-    <span class="revision-sitemap-count">
-        <%= revision.sitemap_entries.size %>
-    </span>
+    <td>
+        <%= link_to scan.site_role, site_role_path( scan.site, scan.site_role ) %>
+    </td>
 
-    /
+    <td>
+        <%= seconds_to_hms revision.duration %>
+    </td>
 
-    <span class="scan-sitemap-count">
-        <%= scan.sitemap_entries.size %>
-    </span>
-</td>
+    <td>
+        <span class="revision-sitemap-count">
+            <%= revision.sitemap_entries.size %>
+        </span>
 
-<td>
-    <span class="revision-issue-count">
-        <%= revision.issues.size %>
-    </span>
+        /
 
-    /
+        <span class="scan-sitemap-count">
+            <%= scan.sitemap_entries.size %>
+        </span>
+    </td>
 
-    <span class="scan-issue-count">
-        <%= scan.issues.size %>
-    </span>
-</td>
+    <td>
+        <span class="revision-issue-count">
+            <%= revision.issues.size %>
+        </span>
 
-<td>
-    <span class="revision-max-severity label-lg label-severity label-severity-<%= revision_max_severity %>">
-        <%= revision_max_severity.capitalize %>
-    </span>
+        /
 
-    /
+        <span class="scan-issue-count">
+            <%= scan.issues.size %>
+        </span>
+    </td>
 
-    <span class="scan-max-severity label-lg label-severity label-severity-<%= scan_max_severity %>">
-        <%= scan_max_severity.capitalize %>
-    </span>
-</td>
+    <td>
+        <span class="revision-max-severity label-lg label-severity label-severity-<%= revision_max_severity %>">
+            <%= revision_max_severity.capitalize %>
+        </span>
 
-<td>
-  <% if scan.destroying? %>
-    Deleting... <i class="fas fa-spinner fa-spin"></i>
-  <% else %>
-    <%= render partial: '/scans/buttons',
-               locals: { scan: scan } %>
-  <% end %>
-</td>
+        /
+
+        <span class="scan-max-severity label-lg label-severity label-severity-<%= scan_max_severity %>">
+            <%= scan_max_severity.capitalize %>
+        </span>
+    </td>
+
+    <td>
+    <% if scan.destroying? %>
+        Deleting... <i class="fas fa-spinner fa-spin"></i>
+    <% else %>
+        <%= render partial: '/scans/buttons',
+                locals: { scan: scan } %>
+    <% end %>
+    </td>
+</tr>

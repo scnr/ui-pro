@@ -246,10 +246,11 @@ class Issue < ActiveRecord::Base
     private
 
     def broadcast_create_job
-        Broadcasts::Sites::IssueCreateJob.perform_later(id)
-        Broadcasts::Devices::IssueCreateJob.perform_later(id)
-        Broadcasts::Profiles::IssueCreateJob.perform_later(id)
+        Broadcasts::Sites::UpdateJob.perform_later(site.id)
+        Broadcasts::Devices::UpdateJob.perform_later(scan.device.id)
+        Broadcasts::Profiles::UpdateJob.perform_later(scan.profile.id)
         Broadcasts::SiteRoles::UpdateJob.perform_later(revision.scan.site_role.id)
+        Broadcasts::Scans::UpdateJob.perform_later(revision.scan.id)
     end
 
 end

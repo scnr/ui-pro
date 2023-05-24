@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 module Broadcasts
-  module Devices
-    class ScanCreateJob < ApplicationJob
+  module Scans
+    class CreateJob < ApplicationJob
       queue_as :default
 
       def perform(id)
-        Broadcasts::Devices::ScanCreateService.call(scan_id: id)
+        Broadcasts::Scans::CreateService.call(scan_id: id)
       end
     end
   end

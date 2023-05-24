@@ -2,11 +2,11 @@
 
 module Broadcasts
   module Profiles
-    class IssueCreateJob < ApplicationJob
+    class CreateJob < ApplicationJob
       queue_as :default
 
       def perform(id)
-        Broadcasts::Profiles::IssueCreateService.call(issue_id: id)
+        Broadcasts::Profiles::CreateService.call(profile_id: id)
       end
     end
   end

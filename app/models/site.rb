@@ -135,7 +135,11 @@ class Site < ActiveRecord::Base
     end
 
     def broadcast_create_job
-        Broadcasts::Sites::SiteCreateJob.perform_later(id)
+        Broadcasts::Sites::CreateJob.perform_later(id)
+    end
+
+    def broadcast_destroy_job
+        Broadcasts::Sites::DestroyJob.perform_later(id, user_id)
     end
 
 end

@@ -252,12 +252,12 @@ function setup() {
         1000
     );
 
-    Turbo.setConfirmMethod(( message, element ) => {
-        stopPageUpdate();
-        var result = window.confirm( message );
-        startPageUpdate();
-        return result;
-    })
+    // Turbo.setConfirmMethod(( message, element ) => {
+    //     stopPageUpdate();
+    //     var result = window.confirm( message );
+    //     startPageUpdate();
+    //     return result;
+    // })
 
 }
 

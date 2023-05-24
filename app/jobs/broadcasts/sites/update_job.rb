@@ -2,11 +2,11 @@
 
 module Broadcasts
   module Sites
-    class ScanCreateJob < ApplicationJob
+    class UpdateJob < ApplicationJob
       queue_as :default
 
       def perform(id)
-        Broadcasts::Sites::ScanCreateService.call(scan_id: id)
+        Broadcasts::Sites::UpdateService.call(site_id: id)
       end
     end
   end

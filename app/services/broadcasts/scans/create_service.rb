@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Broadcasts
-  module Sites
-    class ScanCreateService < BaseService
+  module Scans
+    class CreateService < BaseService
       def initialize(scan_id:)
         @scan_id = scan_id
       end
@@ -15,16 +15,8 @@ module Broadcasts
         @scan ||= Scan.find(scan_id)
       end
 
-      def user
-        @user ||= site.try(:user)
-      end
-
-      def site
-        @site ||= scan.site
-      end
-
       def action
-        :update
+        :create
       end
     end
   end

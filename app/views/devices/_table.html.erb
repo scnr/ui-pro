@@ -12,55 +12,6 @@
     </thead>
 
     <tbody>
-    <% @devices.each do |device| %>
-        <tr data-device-id=<%= device.id %>>
-            <td>
-                <%= simple_form_for device,
-                                    url: default_device_path( device ),
-                                    method: :patch, remote: true,
-                                    html: { onsubmit: 'loading();' } do %>
-                    <input type="radio"
-                           class="make-default"
-                           onclick="this.form.requestSubmit()"
-                           name="id_<%= device.id %>"
-                           id="id_<%= device.id %>"
-                           autocomplete="off"
-                           <%= 'checked="checked"'.html_safe if device.default? %>
-                           <%= 'disabled' if device.default? %>
-                    >
-                <% end %>
-            </td>
-
-            <td>
-                <%= link_to device.name, device %>
-            </td>
-
-            <td>
-                <%= device.device_user_agent %>
-            </td>
-
-            <td>
-                <%= device.device_width %>x<%= device.device_height %>
-            </td>
-
-            <td>
-              <input type="checkbox"
-                     name="id_<%= device.id %>"
-                     id="id_<%= device.id %>"
-                     autocomplete="off"
-                     <%= 'checked="checked"'.html_safe if device.device_touch %>
-                     disabled
-              >
-            </td>
-
-            <td data-scan-size>
-                <%= device.scans.size %>
-            </td>
-
-            <td>
-                <%= render 'actions', device: device %>
-            </td>
-        </tr>
-    <% end %>
+        <%= render partial: 'row_field', collection: devices, as: :device %>
     </tbody>
 </table>

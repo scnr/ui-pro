@@ -2,22 +2,21 @@
 
 module Broadcasts
   module Profiles
-    class ScanDestroyService < BaseService
-      def initialize(user_id:, profile_id:)
-        @user_id = user_id
+    class CreateService < BaseService
+      def initialize(profile_id:)
         @profile_id = profile_id
       end
 
       private
 
-      attr_reader :user_id, :profile_id
-
-      def user
-        @user ||= User.find(user_id)
-      end
+      attr_reader :profile_id
 
       def profile
         @profile ||= Profile.find(profile_id)
+      end
+
+      def action
+        :create
       end
     end
   end

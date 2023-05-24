@@ -4,6 +4,8 @@
    breadcrumb_add @site.url, site_path( @site )
 %>
 
+<% content_for(:action_cable_channel, 'ScanChannel') %>
+
 <div class="page-header">
     <h1>
         Scans
@@ -20,4 +22,5 @@
     </div>
 </div>
 
-<%= render partial: 'scans/tables' %>
+<%= render 'scans/tables', active_scans: @active_scans, suspended_scans: @suspended_scans,
+                           finished_scans: @finished_scans, scheduled_scans: @scheduled_scans, site: @site %>

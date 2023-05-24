@@ -6,6 +6,11 @@ class Device < ActiveRecord::Base
     include ProfileExport
     include ProfileDefaultHelpers
 
+    # Broadcasts callbacks.
+    after_create_commit :broadcast_create_job
+    after_update_commit :broadcast_update_job
+    after_destroy_commit :broadcast_destroy_job
+
     events
     set_scanner_options(
         device_user_agent:   String,
@@ -25,5 +30,19 @@ class Device < ActiveRecord::Base
 
     def to_s
         name
+    end
+
+    private
+
+    def broadcast_create_job
+        Broadcasts::Devices::CreateJob.perform_later(id)
+    end
+
+    def broadcast_update_job
+        Broadcasts::Devices::UpdateJob.perform_later(id)
+    end
+
+    def broadcast_destroy_job
+        Broadcasts::Devices::DestroyJob.perform_later(id)
     end
 end

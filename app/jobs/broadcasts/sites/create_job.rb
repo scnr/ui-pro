@@ -2,11 +2,11 @@
 
 module Broadcasts
   module Sites
-    class RevisionUpdateJob < ApplicationJob
+    class CreateJob < ApplicationJob
       queue_as :default
 
       def perform(id)
-        Broadcasts::Sites::RevisionUpdateService.call(revision_id: id)
+        Broadcasts::Sites::CreateService.call(site_id: id)
       end
     end
   end

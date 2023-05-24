@@ -2,11 +2,11 @@
 
 module Broadcasts
   module Devices
-    class RevisionUpdateJob < ApplicationJob
+    class UpdateJob < ApplicationJob
       queue_as :default
 
       def perform(id)
-        Broadcasts::Devices::RevisionUpdateService.call(revision_id: id)
+        Broadcasts::Devices::UpdateService.call(device_id: id)
       end
     end
   end

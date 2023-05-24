@@ -37,6 +37,7 @@ class Scan < ActiveRecord::Base
 
     # Broadcasts callbacks.
     after_create_commit :broadcast_create_job
+    after_update_commit :broadcast_update_job
     after_destroy_commit :broadcast_destroy_job
 
     scope :scheduled,   -> do
@@ -148,15 +149,22 @@ class Scan < ActiveRecord::Base
     end
 
     def broadcast_create_job
-        Broadcasts::Sites::ScanCreateJob.perform_later(id)
-        Broadcasts::Devices::ScanCreateJob.perform_later(id)
-        Broadcasts::Profiles::ScanCreateJob.perform_later(id)
+        Broadcasts::Sites::UpdateJob.perform_later(site.id)
+        Broadcasts::Devices::UpdateJob.perform_later(device.id)
+        Broadcasts::Profiles::UpdateJob.perform_later(profile.id)
         Broadcasts::SiteRoles::UpdateJob.perform_later(site_role.id)
+        Broadcasts::Scans::CreateJob.perform_later(id)
+    end
+
+    def broadcast_update_job
+        Broadcasts::Scans::UpdateJob.perform_later(id)
     end
 
     def broadcast_destroy_job
-        Broadcasts::Devices::ScanDestroyJob.perform_later(site.user.id, device.id)
-        Broadcasts::Profiles::ScanDestroyJob.perform_later(site.user.id, profile.id)
+        Broadcasts::Sites::UpdateJob.perform_later(site.id)
+        Broadcasts::Devices::UpdateJob.perform_later(device.id)
+        Broadcasts::Profiles::UpdateJob.perform_later(profile.id)
+        Broadcasts::Scans::DestroyJob.perform_later(id, site.user_id)
     end
 
 end

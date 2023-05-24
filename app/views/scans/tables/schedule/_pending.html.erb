@@ -10,54 +10,6 @@
     </thead>
 
     <tbody>
-    <% @scheduled_scans.each do |scan| %>
-        <% schedule = scan.schedule %>
-
-        <tr>
-            <td>
-                <%= link_to scan, site_scan_path( scan.site, scan )%>
-            </td>
-
-            <td class="scans-schedule-pending-start_at">
-                <% if schedule.due? %>
-                    <span class="label label-info"
-                        title="Parallel scan limit has been reached, the scan will run as soon as there's an available slot."
-                        >
-                        ASAP
-                    </span>
-                <% else %>
-                    <%= l( schedule.start_at ) %>
-                <% end %>
-            </td>
-
-            <td class="scans-schedule-pending-stop_after_hours">
-                <% if schedule.stop_after_hours %>
-                    <%= pluralize schedule.stop_after_hours.to_i, 'hour' %>
-                <% else %>
-                    <span class="label label-info">
-                        Unrestricted
-                    </span>
-                <% end %>
-            </td>
-
-            <td class="scans-schedule-pending-frequency">
-                <% if schedule.recurring? %>
-                    <%= render_frequency schedule %>
-                <% else %>
-                    <span class="label label-info">
-                        Unspecified
-                    </span>
-                <% end %>
-            </td>
-
-            <td>
-                <%= link_to edit_site_scan_path( @site, scan ),
-                            title: 'Edit scan settings.',
-                            class: 'btn btn-sm btn-warning' do %>
-                    <i class="fas fa-edit"></i>
-                <% end %>
-            </td>
-        </tr>
-    <% end %>
+        <%= render partial: 'scans/tables/schedule/row_field', collection: scans, as: :scan, locals: { site: site } %>
     </tbody>
 </table>

@@ -4,8 +4,6 @@ class SiteDeleteJob < ApplicationJob
     def perform( site )
       site.destroying!
       site.destroy
-
-      Broadcasts::Sites::SiteDestroyService.call(site: site)
     end
 
 end

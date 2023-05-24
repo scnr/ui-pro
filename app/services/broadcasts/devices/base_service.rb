@@ -5,7 +5,7 @@ module Broadcasts
     class BaseService < ApplicationService
       def call
         begin
-          return false if user.blank? || device.blank?
+          return false if device.blank?
 
           broadcast_to_device_channel
 
@@ -17,12 +17,29 @@ module Broadcasts
 
       private
 
+      def device
+        nil
+      end
+
+      def action
+        nil
+      end
+
+      def scans
+        @scans ||= device.try(:scans) || []
+      end
+
       def broadcast_to_device_channel
-        DeviceChannel.broadcast_to(user, **params)
+        DeviceChannel.broadcast_to(:devices, **params)
       end
 
       def params
-        { device_id: device.id, scans_count: scans.count, sidebar_html: render_sidebar_partial }
+        {
+          device_id: device.id,
+          action: action,
+          sidebar_html: render_sidebar_partial,
+          device_html: render_device_partial
+        }
       end
 
       def render_sidebar_partial
@@ -36,16 +53,8 @@ module Broadcasts
         )
       end
 
-      def user
-        nil
-      end
-
-      def device
-        nil
-      end
-
-      def scans
-        @scans ||= device.try(:scans) || []
+      def render_device_partial
+        DevicesController.render(partial: 'devices/row_field', locals: { device: device })
       end
     end
   end

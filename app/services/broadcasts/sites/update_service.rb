@@ -2,17 +2,17 @@
 
 module Broadcasts
   module Sites
-    class SiteDestroyService < BaseService
-      def initialize(site:)
-        @site = site
+    class UpdateService < BaseService
+      def initialize(site_id:)
+        @site_id = site_id
       end
 
       private
 
-      attr_reader :site
+      attr_reader :site_id
 
-      def params
-        { site_id: site.id, action: action }
+      def site
+        @site ||= Site.find(site_id)
       end
 
       def user
@@ -20,7 +20,7 @@ module Broadcasts
       end
 
       def action
-        :destroy
+        :update
       end
     end
   end
