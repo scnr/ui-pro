@@ -251,6 +251,7 @@ class Issue < ActiveRecord::Base
         Broadcasts::Profiles::UpdateJob.perform_later(scan.profile.id)
         Broadcasts::SiteRoles::UpdateJob.perform_later(revision.scan.site_role.id)
         Broadcasts::Scans::UpdateJob.perform_later(revision.scan.id)
+        Broadcasts::ScanResults::UpdateJob.perform_later(site.user.id)
     end
 
 end

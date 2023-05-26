@@ -48,5 +48,6 @@ class SitemapEntry < ActiveRecord::Base
 
     def broadcast_create_job
         Broadcasts::Scans::UpdateJob.perform_later(scan.id)
+        Broadcasts::ScanResults::UpdateJob.perform_later(scan.site.user.id)
     end
 end

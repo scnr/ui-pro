@@ -1,3 +1,5 @@
+<% content_for(:action_cable_channel, 'ScanResultChannel') %>
+
 <%
    title params[:action].capitalize
    breadcrumb_add 'Sites', sites_path
@@ -13,7 +15,9 @@
 
 <div class="row" id="revision-info">
     <div class="col-md-12">
-        <%= render partial: 'shared/scan_heading' %>
+        <div id="scan-info-container">
+            <%= render partial: 'shared/scan_heading' %>
+        </div>
     </div>
 </div>
 

@@ -154,10 +154,12 @@ class Scan < ActiveRecord::Base
         Broadcasts::Profiles::UpdateJob.perform_later(profile.id)
         Broadcasts::SiteRoles::UpdateJob.perform_later(site_role.id)
         Broadcasts::Scans::CreateJob.perform_later(id)
+        Broadcasts::ScanResults::UpdateJob.perform_later(site.user.id)
     end
 
     def broadcast_update_job
         Broadcasts::Scans::UpdateJob.perform_later(id)
+        Broadcasts::ScanResults::UpdateJob.perform_later(site.user.id)
     end
 
     def broadcast_destroy_job
