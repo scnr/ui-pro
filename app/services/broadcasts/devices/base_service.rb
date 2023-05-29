@@ -5,8 +5,6 @@ module Broadcasts
     class BaseService < ApplicationService
       def call
         begin
-          return false if device.blank?
-
           broadcast_to_device_channel
 
           true
