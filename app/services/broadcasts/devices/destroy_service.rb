@@ -10,13 +10,9 @@ module Broadcasts
       def call
         return false if device_id.blank?
 
-        begin
-          broadcast_to_device_channel
+        broadcast_to_device_channel
 
-          true
-        rescue ActiveRecord::RecordNotFound
-          false
-        end
+        true
       end
 
       private

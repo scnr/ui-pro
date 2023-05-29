@@ -83,6 +83,7 @@ end
 group :development, :test do
     gem 'puma'
     gem 'awesome_print'
+    gem 'pry-byebug'
 end
 
 gem 'ethon', github: 'typhoeus/ethon', branch: 'thread-safe-easy-handle-cleanup'

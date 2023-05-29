@@ -9,7 +9,7 @@ module Broadcasts
       end
 
       def call
-        return if scan_id.blank? || user_id.blank?
+        return false if scan_id.blank? || user_id.blank?
 
         begin
           broadcast_to_scan_channel

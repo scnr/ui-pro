@@ -5,7 +5,7 @@ module Broadcasts
     class BaseService < ApplicationService
       def call
         begin
-          return false if profile.blank? || user.blank?
+          return false if user.blank?
 
           broadcast_to_profile_channel
 

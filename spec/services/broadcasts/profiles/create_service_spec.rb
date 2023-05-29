@@ -4,6 +4,8 @@ RSpec.describe Broadcasts::Profiles::CreateService do
   subject(:service) { described_class.call(profile_id: profile_id) }
 
   shared_examples 'does not broadcast the message' do
+    it { is_expected.to be_falsey }
+
     it 'does not broadcast the message' do
       expect(ProfileChannel).not_to receive(:broadcast_to)
       service
@@ -60,16 +62,12 @@ RSpec.describe Broadcasts::Profiles::CreateService do
     context 'when profile is not found' do
       let(:profile_id) { 0 }
 
-      it { is_expected.to be_falsey }
-
       include_examples 'does not broadcast the message'
     end
 
     context 'when user is not present' do
       let(:profile) { create(:profile) }
       let(:profile_id) { profile.id }
-
-      it { is_expected.to be_falsey }
 
       include_examples 'does not broadcast the message'
     end
