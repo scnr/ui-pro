@@ -21,5 +21,7 @@ RSpec.configure do |config|
 
     config.append_after(:each) do
         DatabaseCleaner.clean
+        clear_enqueued_jobs
+        clear_performed_jobs
     end
 end
