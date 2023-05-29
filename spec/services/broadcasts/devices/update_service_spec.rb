@@ -42,7 +42,7 @@ RSpec.describe Broadcasts::Devices::UpdateService do
 
     it { is_expected.to be_truthy }
 
-    it 'broadcasts to the DeviceChannel' do
+    it 'broadcasts the message' do
       expect(DeviceChannel).to receive(:broadcast_to).with(:devices, **channel_params)
       service
     end
@@ -53,6 +53,11 @@ RSpec.describe Broadcasts::Devices::UpdateService do
       let(:device_id) { 0 }
 
       it { is_expected.to be_falsey }
+
+      it 'does not broadcasts the message' do
+        expect(DeviceChannel).not_to receive(:broadcast_to)
+        service
+      end
     end
   end
 end

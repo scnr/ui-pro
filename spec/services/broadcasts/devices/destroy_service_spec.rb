@@ -14,7 +14,7 @@ RSpec.describe Broadcasts::Devices::DestroyService do
 
     it { is_expected.to be_truthy }
 
-    it 'broadcasts to the DeviceChannel' do
+    it 'broadcasts the message' do
       expect(DeviceChannel).to receive(:broadcast_to).with(:devices, **channel_params)
       service
     end
@@ -25,6 +25,11 @@ RSpec.describe Broadcasts::Devices::DestroyService do
       let(:device_id) { nil }
 
       it { is_expected.to be_falsey }
+
+      it 'does not broadcasts the message' do
+        expect(DeviceChannel).not_to receive(:broadcast_to)
+        service
+      end
     end
   end
 end
