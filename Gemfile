@@ -80,20 +80,16 @@ end
 
 gem 'ethon', github: 'typhoeus/ethon', branch: 'thread-safe-easy-handle-cleanup'
 
-if File.exist? '../introspector'
-    gem 'scnr-introspector', path: '../introspector'
-else
-    gem 'scnr-introspector'
-end
-
 if File.exist? '../application'
     gem 'scnr-application', path: '../application'
 else
     gem 'scnr-application'
 end
 
+if File.exist? '../introspector'
+    gem 'scnr-introspector', path: '../introspector'
+end
+
 if File.exist? '../engine'
     gem 'scnr-engine', path: '../engine'
-else
-    gem 'scnr-engine'
 end
