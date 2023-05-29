@@ -78,6 +78,7 @@ group :test do
     gem 'selenium-webdriver'
     gem 'factory_girl_rails'
     gem 'rspec-rails'
+    gem 'action-cable-testing', '~> 0.6.1'
 end
 
 group :development, :test do

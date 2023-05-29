@@ -7,8 +7,7 @@ RSpec.describe Broadcasts::Scans::UpdateService do
     it { is_expected.to be_truthy }
 
     it 'broadcasts the message' do
-      expect(ScanChannel).to receive(:broadcast_to).with(user, **channel_params)
-      service
+      expect { service }.to have_broadcasted_to(user).from_channel(ScanChannel).with(**channel_params)
     end
   end
 
@@ -16,8 +15,7 @@ RSpec.describe Broadcasts::Scans::UpdateService do
     it { is_expected.to be_falsey }
 
     it 'does not broadcast the message' do
-      expect(ScanChannel).not_to receive(:broadcast_to)
-      service
+      expect { service }.not_to have_broadcasted_to.from_channel(ScanChannel)
     end
   end
 
@@ -43,7 +41,7 @@ RSpec.describe Broadcasts::Scans::UpdateService do
         scan_id: scan.id,
         scan_html: scan_html,
         status: status,
-        action: :update
+        action: 'update'
       }
     end
     let(:scan_html) { Faker::Lorem.word }
@@ -56,7 +54,7 @@ RSpec.describe Broadcasts::Scans::UpdateService do
     context 'with scheduled status' do
       let(:status_trait) { :with_scheduled_status }
       let(:partial_path) { described_class::SCHEDULED_TABLE_ROW_PATH }
-      let(:status) { :scheduled }
+      let(:status) { 'scheduled' }
 
       include_examples 'broadcasts the message'
     end
@@ -64,21 +62,21 @@ RSpec.describe Broadcasts::Scans::UpdateService do
     context 'with suspended status' do
       let(:status_trait) { :with_suspended_status }
       let(:with_status) { false }
-      let(:status) { :suspended }
+      let(:status) { 'suspended' }
 
       include_examples 'broadcasts the message'
     end
 
     context 'with active status' do
       let(:status_trait) { :with_active_status }
-      let(:status) { :active }
+      let(:status) { 'active' }
 
       include_examples 'broadcasts the message'
     end
 
     context 'with finished status' do
       let(:status_trait) { :with_finished_status }
-      let(:status) { :finished }
+      let(:status) { 'finished' }
 
       include_examples 'broadcasts the message'
     end

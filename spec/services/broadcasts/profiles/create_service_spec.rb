@@ -7,8 +7,7 @@ RSpec.describe Broadcasts::Profiles::CreateService do
     it { is_expected.to be_falsey }
 
     it 'does not broadcast the message' do
-      expect(ProfileChannel).not_to receive(:broadcast_to)
-      service
+      expect { service }.not_to have_broadcasted_to.from_channel(ProfileChannel)
     end
   end
 
@@ -19,7 +18,7 @@ RSpec.describe Broadcasts::Profiles::CreateService do
     let(:channel_params) do
       {
         profile_id: profile_id,
-        action: :create,
+        action: 'create',
         sidebar_html: sidebar_html,
         profile_html: profile_html
       }
@@ -53,8 +52,7 @@ RSpec.describe Broadcasts::Profiles::CreateService do
     it { is_expected.to be_truthy }
 
     it 'broadcasts the message' do
-      expect(ProfileChannel).to receive(:broadcast_to).with(user, **channel_params)
-      service
+      expect { service }.to have_broadcasted_to(user).from_channel(ProfileChannel).with(**channel_params)
     end
   end
 
