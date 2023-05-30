@@ -1,0 +1,13 @@
+---
+:concurrency: 5
+
+development:
+  :concurrency: 10
+
+production:
+  :concurrency: 10
+
+:queues:
+  - [default, 1]
+  - [anycable, 2]
+  - [mailers, 1]

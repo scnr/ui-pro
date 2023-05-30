@@ -3,7 +3,7 @@
 module Broadcasts
   module Profiles
     class CreateJob < ApplicationJob
-      queue_as :default
+      queue_as :anycable
 
       def perform(id)
         Broadcasts::Profiles::CreateService.call(profile_id: id)

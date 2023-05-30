@@ -49,6 +49,9 @@ gem 'turbo-rails'
 gem 'anycable-rails', '~> 1.3', '>= 1.3.7'
 gem 'redis', '~> 5.0', '>= 5.0.6'
 
+# Background Jobs
+gem 'sidekiq'
+
 # Foreman
 gem 'foreman', '~> 0.87.2'
 

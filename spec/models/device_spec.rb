@@ -14,7 +14,7 @@ RSpec.describe Device do
     expect_it { to validate_numericality_of :device_height }
 
     describe 'broadcast callbacks' do
-        let(:queue_name) { 'default' }
+        let(:queue_name) { 'anycable' }
 
         describe 'after_create_commit' do
             subject(:device) { build(:device) }

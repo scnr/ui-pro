@@ -3,7 +3,7 @@
 module Broadcasts
   module SiteRoles
     class UpdateJob < ApplicationJob
-      queue_as :default
+      queue_as :anycable
 
       def perform(id)
         Broadcasts::SiteRoles::UpdateService.call(site_role_id: id)

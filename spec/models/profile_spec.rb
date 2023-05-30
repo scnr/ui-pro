@@ -14,7 +14,7 @@ RSpec.describe Profile do
     end
 
     describe 'broadcast callbacks' do
-        let(:queue_name) { 'default' }
+        let(:queue_name) { 'anycable' }
 
         describe 'after_create_commit' do
             subject(:profile) { build(:profile) }

@@ -5,7 +5,7 @@ RSpec.describe Broadcasts::Scans::DestroyJob do
 
   let(:scan_id) { rand(1..3) }
   let(:user_id) { rand(1..3) }
-  let(:queue_name) { 'default' }
+  let(:queue_name) { 'anycable' }
 
   before { allow(Broadcasts::Scans::DestroyService).to receive(:call).and_return(true) }
 

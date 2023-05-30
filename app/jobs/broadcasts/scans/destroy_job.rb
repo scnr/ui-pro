@@ -3,7 +3,7 @@
 module Broadcasts
   module Scans
     class DestroyJob < ApplicationJob
-      queue_as :default
+      queue_as :anycable
 
       def perform(scan_id, user_id)
         Broadcasts::Scans::DestroyService.call(scan_id: scan_id, user_id: user_id)

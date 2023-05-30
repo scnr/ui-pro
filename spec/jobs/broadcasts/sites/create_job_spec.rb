@@ -4,7 +4,7 @@ RSpec.describe Broadcasts::Sites::CreateJob do
   subject(:job) { described_class.perform_later(id) }
 
   let(:id) { rand(1..3) }
-  let(:queue_name) { 'default' }
+  let(:queue_name) { 'anycable' }
 
   before { allow(Broadcasts::Sites::CreateService).to receive(:call).and_return(true) }
 

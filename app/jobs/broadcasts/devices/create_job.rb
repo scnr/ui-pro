@@ -3,7 +3,7 @@
 module Broadcasts
   module Devices
     class CreateJob < ApplicationJob
-      queue_as :default
+      queue_as :anycable
 
       def perform(id)
         Broadcasts::Devices::CreateService.call(device_id: id)
