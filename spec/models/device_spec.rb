@@ -19,7 +19,7 @@ RSpec.describe Device do
         describe 'after_create_commit' do
             subject(:device) { build(:device) }
 
-            it 'calls Broadcasts::Devices::CreateJob' do
+            it 'enqueues Broadcasts::Devices::CreateJob' do
                 expect { device.save }.to have_enqueued_job(Broadcasts::Devices::CreateJob).with(device.id).on_queue(queue_name)
             end
         end
@@ -27,7 +27,7 @@ RSpec.describe Device do
         describe 'after_update_commit' do
             subject(:device) { create(:device) }
 
-            it 'calls Broadcasts::Devices::CreateJob' do
+            it 'enqueues Broadcasts::Devices::CreateJob' do
                 expect { device.save }.to have_enqueued_job(Broadcasts::Devices::UpdateJob).with(device.id).on_queue(queue_name)
             end
         end
@@ -35,7 +35,7 @@ RSpec.describe Device do
         describe 'after_destroy_commit' do
             subject(:device) { create(:device) }
 
-            it 'calls Broadcasts::Devices::CreateJob' do
+            it 'enqueues Broadcasts::Devices::CreateJob' do
                 expect { device.destroy }.to have_enqueued_job(Broadcasts::Devices::DestroyJob).with(device.id).on_queue(queue_name)
             end
         end

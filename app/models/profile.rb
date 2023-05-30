@@ -48,6 +48,7 @@ class Profile < ActiveRecord::Base
     validates_presence_of   :name
     validates_uniqueness_of :name, scope: :user
 
+    # Broadcasts callbacks.
     after_create_commit :broadcast_create_job
     after_update_commit :broadcast_update_job
     after_destroy_commit :broadcast_destroy_job

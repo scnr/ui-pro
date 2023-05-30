@@ -11,6 +11,7 @@ class IssuePage < ActiveRecord::Base
     belongs_to :issue, optional: true
     belongs_to :sitemap_entry, counter_cache: true, optional: true
 
+    # Broadcasts callbacks.
     after_create_commit :broadcast_create_job
 
     def self.create_from_engine( page, options = {} )

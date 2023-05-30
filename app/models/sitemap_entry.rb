@@ -18,6 +18,7 @@ class SitemapEntry < ActiveRecord::Base
     before_save :set_owners
     before_save :set_digest
 
+    # Broadcasts callbacks.
     after_create_commit :broadcast_create_job
 
     def self.with_issues_in_revision( revision )
@@ -48,6 +49,12 @@ class SitemapEntry < ActiveRecord::Base
 
     def broadcast_create_job
         Broadcasts::Scans::UpdateJob.perform_later(scan.id)
-        Broadcasts::ScanResults::UpdateJob.perform_later(scan.site.user.id)
+        Broadcasts::ScanResults::UpdateJob.perform_later(broadcast_user_id)
+    end
+
+    def broadcast_user_id
+        return site.user.id             if site.present?
+        return scan.site&.user&.id      if scan.present?
+        return revision.site&.user&.id  if revision.present?
     end
 end
