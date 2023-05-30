@@ -249,8 +249,8 @@ class Issue < ActiveRecord::Base
         Broadcasts::Sites::UpdateJob.perform_later(site.id)
         Broadcasts::Devices::UpdateJob.perform_later(scan.device.id)
         Broadcasts::Profiles::UpdateJob.perform_later(scan.profile.id)
-        Broadcasts::SiteRoles::UpdateJob.perform_later(revision.scan.site_role.id)
-        Broadcasts::Scans::UpdateJob.perform_later(revision.scan.id)
+        Broadcasts::SiteRoles::UpdateJob.perform_later(scan.site_role.id)
+        Broadcasts::Scans::UpdateJob.perform_later(scan.id)
         Broadcasts::ScanResults::UpdateJob.perform_later(site.user.id)
     end
 
