@@ -1,6 +1,6 @@
-require 'rails_helper'
+# frozen_string_literal: true
 
-describe SiteRole, type: :model do
+RSpec.describe SiteRole do
     subject { FactoryGirl.create :site_role }
     let(:revision){ FactoryGirl.create :revision, scan: scan }
     let(:scan){ FactoryGirl.create :scan, site: site }
@@ -394,6 +394,35 @@ EORUBY
     describe '#to_s' do
         it 'returns the name' do
             expect(subject.to_s.object_id).to eq subject.name.object_id
+        end
+    end
+
+    describe 'broadcast callbacks' do
+        let(:site) { create(:site, user: user) }
+        let(:user) { create(:user) }
+
+        describe 'after_create_commit' do
+            subject(:site_role) { build(:site_role, site: site) }
+
+            it 'enqueues Broadcasts::SiteRoles::CreateJob' do
+                expect { site_role.save }.to have_enqueued_job(Broadcasts::SiteRoles::CreateJob).with(site_role.id)
+            end
+        end
+
+        describe 'after_update_commit' do
+            subject(:site_role) { create(:site_role, site: site) }
+
+            it 'enqueues Broadcasts::SiteRoles::UpdateJob' do
+                expect { site_role.touch }.to have_enqueued_job(Broadcasts::SiteRoles::UpdateJob).with(site_role.id)
+            end
+        end
+
+        describe 'after_destroy_commit' do
+            subject(:site_role) { create(:site_role, site: site) }
+
+            it 'enqueues Broadcasts::SiteRoles::DestroyJob' do
+                expect { site_role.destroy }.to have_enqueued_job(Broadcasts::SiteRoles::DestroyJob).with(site_role.id, user.id)
+            end
         end
     end
 end

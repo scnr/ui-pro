@@ -52,6 +52,7 @@ class SiteRole < ActiveRecord::Base
 
     # Broadcasts callbacks.
     after_create_commit :broadcast_create_job
+    after_update_commit :broadcast_update_job
     after_destroy_commit :broadcast_destroy_job
 
     def self.guest
@@ -145,6 +146,10 @@ class SiteRole < ActiveRecord::Base
 
     def broadcast_create_job
         Broadcasts::SiteRoles::CreateJob.perform_later(id)
+    end
+
+    def broadcast_update_job
+        Broadcasts::SiteRoles::UpdateJob.perform_later(id)
     end
 
     def broadcast_destroy_job
