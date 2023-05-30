@@ -1,6 +1,6 @@
-require 'spec_helper'
+# frozen_string_literal: true
 
-describe IssuePage do
+RSpec.describe IssuePage do
     subject { FactoryGirl.create :issue_page }
 
     expect_it { to have_one(:request).dependent(:destroy) }
@@ -26,4 +26,13 @@ describe IssuePage do
         end
     end
 
+    describe 'broadcast callbacks' do
+        describe 'after_create_commit' do
+            subject(:issue_page) { build(:issue_page) }
+
+            it 'enqueues Broadcasts::ScanResults::UpdateJob' do
+                expect { issue_page.save }.to have_enqueued_job(Broadcasts::ScanResults::UpdateJob)
+            end
+        end
+    end
 end
