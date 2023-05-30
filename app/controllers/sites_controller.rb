@@ -80,7 +80,7 @@ class SitesController < ApplicationController
     end
 
     def set_sites
-        @sites = current_user.sites.order( id: :desc )
+        @sites = current_user.sites.where( processing: nil ).order( id: :desc )
     end
 
     def set_scans
