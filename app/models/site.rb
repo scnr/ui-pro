@@ -44,6 +44,7 @@ class Site < ActiveRecord::Base
 
     # Broadcasts callbacks.
     after_create_commit :broadcast_create_job
+    after_destroy_commit :broadcast_destroy_job
 
     def url
         u = "#{protocol}://#{host}"
