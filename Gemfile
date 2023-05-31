@@ -100,6 +100,4 @@ end
 
 if File.exist? '../engine'
     gem 'scnr-engine', path: '../engine'
-else
-    gem 'scnr-engine'
 end
