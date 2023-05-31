@@ -109,7 +109,16 @@ Email delivery is disabled in development.
 Getting Started
 ---------------
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+1. Run `bundle install` command.
+2. Make sure to `export RAILS_ENV=development` to your current terminal session.
+3. Create a database:
+```bash
+rails db:create db:migrate db:seed
+```
+4. To run the application execute the following command:
+```bash
+foreman start -f Procfile.dev
+```
 
 Documentation and Support
 -------------------------
