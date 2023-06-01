@@ -3,7 +3,7 @@
 module Broadcasts
   module Profiles
     class UpdateJob < ApplicationJob
-      queue_as :anycable
+      queue_as :default
 
       def perform(id)
         Broadcasts::Profiles::UpdateService.call(profile_id: id)

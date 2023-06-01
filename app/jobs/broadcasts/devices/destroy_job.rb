@@ -3,7 +3,7 @@
 module Broadcasts
   module Devices
     class DestroyJob < ApplicationJob
-      queue_as :anycable
+      queue_as :default
 
       def perform(id)
         Broadcasts::Devices::DestroyService.call(device_id: id)

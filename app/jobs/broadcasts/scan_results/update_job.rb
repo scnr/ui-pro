@@ -3,7 +3,7 @@
 module Broadcasts
   module ScanResults
     class UpdateJob < ApplicationJob
-      queue_as :anycable
+      queue_as :default
 
       def perform(user_id)
         Broadcasts::ScanResults::UpdateService.call(user_id: user_id)

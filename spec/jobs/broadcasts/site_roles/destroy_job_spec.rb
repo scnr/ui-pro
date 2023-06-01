@@ -5,7 +5,7 @@ RSpec.describe Broadcasts::SiteRoles::DestroyJob do
 
   let(:site_role_id) { rand(1..3) }
   let(:user_id) { rand(1..3) }
-  let(:queue_name) { 'anycable' }
+  let(:queue_name) { 'default' }
 
   before { allow(Broadcasts::SiteRoles::DestroyService).to receive(:call).and_return(true) }
 

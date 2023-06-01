@@ -4,7 +4,7 @@ RSpec.describe Broadcasts::ScanResults::UpdateJob do
   subject(:job) { described_class.perform_later(id) }
 
   let(:id) { rand(1..3) }
-  let(:queue_name) { 'anycable' }
+  let(:queue_name) { 'default' }
 
   before { allow(Broadcasts::ScanResults::UpdateService).to receive(:call).and_return(true) }
 

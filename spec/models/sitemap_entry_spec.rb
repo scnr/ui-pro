@@ -68,7 +68,7 @@ RSpec.describe SitemapEntry do
     end
 
     describe 'broadcast callbacks' do
-        let(:queue_name) { 'anycable' }
+        let(:queue_name) { 'default' }
 
         describe 'after_create_commit' do
             subject(:sitemap_entry) { build(:sitemap_entry, scan: scan, site: site, revision: nil) }

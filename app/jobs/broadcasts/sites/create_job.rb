@@ -3,7 +3,7 @@
 module Broadcasts
   module Sites
     class CreateJob < ApplicationJob
-      queue_as :anycable
+      queue_as :default
 
       def perform(id)
         Broadcasts::Sites::CreateService.call(site_id: id)
