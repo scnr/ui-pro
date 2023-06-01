@@ -79,18 +79,6 @@ GEM
       tzinfo (~> 2.0)
     addressable (2.5.2)
       public_suffix (>= 2.0.2, < 4.0)
-    anycable (1.3.1)
-      anycable-core (= 1.3.1)
-      grpc (~> 1.37)
-    anycable-core (1.3.1)
-      anyway_config (~> 2.2)
-      google-protobuf (>= 3.13)
-    anycable-rails (1.3.7)
-      actioncable (>= 6.0)
-      anycable (~> 1.3.0)
-      globalid
-    anyway_config (2.4.1)
-      ruby-next-core (>= 0.14.0)
     autoprefixer-rails (10.4.13.0)
       execjs (~> 2)
     awesome_print (1.6.1)
@@ -133,7 +121,6 @@ GEM
     concurrent-ruby (1.1.8)
     concurrent-ruby-ext (1.1.8)
       concurrent-ruby (= 1.1.8)
-    connection_pool (2.4.0)
     crass (1.0.6)
     cuboid (0.2.7)
       awesome_print (= 1.6.1)
@@ -190,12 +177,6 @@ GEM
     foreman (0.87.2)
     globalid (1.1.0)
       activesupport (>= 5.0)
-    google-protobuf (3.23.0-x86_64-linux)
-    googleapis-common-protos-types (1.6.0)
-      google-protobuf (~> 3.14)
-    grpc (1.54.2-x86_64-linux)
-      google-protobuf (~> 3.21)
-      googleapis-common-protos-types (~> 1.0)
     http_parser.rb (0.6.0)
     i18n (1.13.0)
       concurrent-ruby (~> 1.0)
@@ -305,10 +286,6 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     rdoc (4.3.0)
-    redis (5.0.6)
-      redis-client (>= 0.9.0)
-    redis-client (0.14.1)
-      connection_pool
     regexp_parser (2.8.0)
     request_store (1.5.1)
       rack (>= 1.4)
@@ -334,7 +311,6 @@ GEM
       rspec-mocks (~> 3.12)
       rspec-support (~> 3.12)
     rspec-support (3.12.0)
-    ruby-next-core (0.15.3)
     ruby2_keywords (0.0.5)
     rubyzip (2.3.0)
     sass-rails (6.0.0)
@@ -462,7 +438,6 @@ PLATFORMS
 DEPENDENCIES
   ace-rails-ap
   action-cable-testing (~> 0.6.1)
-  anycable-rails (~> 1.3, >= 1.3.7)
   awesome_print
   better_errors
   binding_of_caller
@@ -499,7 +474,6 @@ DEPENDENCIES
   puma
   rails (= 7.0.2.3)
   rails_layout
-  redis (~> 5.0, >= 5.0.6)
   rspec-rails
   sass-rails
   scnr-application

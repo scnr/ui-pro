@@ -45,10 +45,6 @@ gem 'paper_trail'#, '~> 4.0.0'
 
 gem 'turbo-rails'
 
-# WebSockets
-gem 'anycable-rails', '~> 1.3', '>= 1.3.7'
-gem 'redis', '~> 5.0', '>= 5.0.6'
-
 # Foreman
 gem 'foreman', '~> 0.87.2'
 
