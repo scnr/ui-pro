@@ -45,9 +45,6 @@ gem 'paper_trail'#, '~> 4.0.0'
 
 gem 'turbo-rails'
 
-# Foreman
-gem 'foreman', '~> 0.87.2'
-
 group :doc do
     gem 'sdoc', '~> 0.4.0'
 end
