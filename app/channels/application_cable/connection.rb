@@ -11,9 +11,10 @@ module ApplicationCable
     private
 
     def find_verified_user
-      User.first # TODO: replace User.first with User.find(cookies.encrypted[:user_id])
-    rescue ActiveRecord::RecordNotFound
-      reject_unauthorized_connection
+      user = env['warden'].user
+      return reject_unauthorized_connection if user.blank?
+
+      user
     end
   end
 end
