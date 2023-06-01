@@ -36,7 +36,7 @@ module Instance
         increment_active_instance_count_for_site revision.site
 
         # Don't fork, we don't want the entire Rails env.
-        application.spawn :instance do |instance|
+        application.spawn :instance, daemonize: true do |instance|
             log_info_for revision, "Spawned instance at #{instance.url}"
 
             @revision_id_to_instance_url[revision.id] = instance.url
