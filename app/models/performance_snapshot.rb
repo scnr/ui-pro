@@ -14,8 +14,6 @@ class PerformanceSnapshot < ActiveRecord::Base
 
     belongs_to :revision, class_name: 'Revision', foreign_key: :revision_current_id, optional: true
 
-    after_update_commit :broadcast_update_job, if: :saved_change_to_current_page?
-
     def download_kbps
         (download_bps * 8 / 1000).round(2)
     end
@@ -131,11 +129,5 @@ class PerformanceSnapshot < ActiveRecord::Base
             page_count:                        statistics[:found_pages],
             current_page:                      statistics[:current_page]
         }
-    end
-
-    private
-
-    def broadcast_update_job
-        Broadcasts::ScanResults::UpdateJob.performa_later(revision.site.user) if revision.present?
     end
 end

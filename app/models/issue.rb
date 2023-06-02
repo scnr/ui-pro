@@ -40,9 +40,6 @@ class Issue < ActiveRecord::Base
 
     before_save :set_owners
 
-    # Broadcasts callbacks.
-    after_create_commit :broadcast_create_job
-
     STATES.each do |state|
         scope state, -> do
             where( state: state )
@@ -241,17 +238,6 @@ class Issue < ActiveRecord::Base
     def set_owners
         # The revision setter handles this.
         self.revision = revision
-    end
-
-    private
-
-    def broadcast_create_job
-        Broadcasts::Sites::UpdateJob.perform_later(site.id)
-        Broadcasts::Devices::UpdateJob.perform_later(scan.device.id)
-        Broadcasts::Profiles::UpdateJob.perform_later(scan.profile.id)
-        Broadcasts::SiteRoles::UpdateJob.perform_later(scan.site_role.id)
-        Broadcasts::Scans::UpdateJob.perform_later(scan.id)
-        Broadcasts::ScanResults::UpdateJob.perform_later(site.user.id)
     end
 
 end

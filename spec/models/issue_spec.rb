@@ -502,39 +502,4 @@ describe Issue do
         end
     end
 
-    describe 'broadcast callbacks' do
-        let(:user) { create(:user) }
-        let(:site) { create(:site, user: user) }
-        let(:scan) { create(:scan, site: site) }
-        let(:revision) { create(:revision, scan: scan) }
-
-        describe 'after_create_commit' do
-            subject!(:issue) { build(:issue, site: site, revision: revision) }
-
-            it 'enqueues Broadcasts::Sites::UpdateJob' do
-                expect { issue.save }.to have_enqueued_job(Broadcasts::Sites::UpdateJob).with(site.id)
-            end
-
-            it 'enqueues Broadcasts::Devices::UpdateJob' do
-                expect { issue.save }.to have_enqueued_job(Broadcasts::Devices::UpdateJob).with(scan.device.id)
-            end
-
-            it 'enqueues Broadcasts::Profiles::UpdateJob' do
-                expect { issue.save }.to have_enqueued_job(Broadcasts::Profiles::UpdateJob).with(scan.profile.id)
-            end
-
-            it 'enqueues Broadcasts::SiteRoles::UpdateJob' do
-                expect { issue.save }.to have_enqueued_job(Broadcasts::SiteRoles::UpdateJob).with(scan.site_role.id)
-            end
-
-            it 'enqueues Broadcasts::Scans::UpdateJob' do
-                expect { issue.save }.to have_enqueued_job(Broadcasts::Scans::UpdateJob).with(scan.id)
-            end
-
-            it 'enqueues Broadcasts::ScanResults::UpdateJob' do
-                expect { issue.save }.to have_enqueued_job(Broadcasts::ScanResults::UpdateJob).with(user.id)
-            end
-        end
-    end
-
 end

@@ -1,6 +1,6 @@
-# frozen_string_literal: true
+require 'spec_helper'
 
-RSpec.describe SitemapEntry do
+describe SitemapEntry do
     subject { FactoryGirl.create(:sitemap_entry) }
 
     expect_it { to belong_to(:site).optional }
@@ -65,30 +65,5 @@ RSpec.describe SitemapEntry do
         subject.save
 
         expect(subject.digest).to eq 'test'.persistent_hash
-    end
-
-    describe 'broadcast callbacks' do
-        let(:queue_name) { 'default' }
-
-        describe 'after_create_commit' do
-            subject(:sitemap_entry) { build(:sitemap_entry, scan: scan, site: site, revision: nil) }
-
-            let(:scan) { build(:scan, site: site) }
-            let(:site) { build(:site, user: user) }
-            let(:user) { create(:user) }
-
-            before do
-                site.save(validate: false)
-                scan.save(validate: false)
-            end
-
-            it 'enqueues Broadcasts::Scans::UpdateJob' do
-                expect { sitemap_entry.save }.to have_enqueued_job(Broadcasts::Scans::UpdateJob).with(sitemap_entry.scan.id).on_queue(queue_name)
-            end
-
-            it 'enqueues Broadcasts::ScanResults::UpdateJob' do
-                expect { sitemap_entry.save }.to have_enqueued_job(Broadcasts::ScanResults::UpdateJob).with(user.id).on_queue(queue_name)
-            end
-        end
     end
 end

@@ -41,10 +41,6 @@ class Revision < ActiveRecord::Base
     before_save :copy_site_profile
     before_save :copy_site_role
 
-    # Broadcasts callbacks.
-    after_create_commit :broadcast_create_job
-    after_update_commit :broadcast_update_job, if: :saved_change_to_status?
-
     scope :in_progress, -> do
         where.not( started_at: nil ).where( stopped_at: nil )
     end
@@ -129,24 +125,6 @@ class Revision < ActiveRecord::Base
 
     def ensure_performance_snapshot
         self.performance_snapshot ||= build_performance_snapshot
-    end
-
-    def broadcast_create_job
-        Broadcasts::Sites::UpdateJob.perform_later(site.id)
-        Broadcasts::Devices::UpdateJob.perform_later(scan.device.id)
-        Broadcasts::Profiles::UpdateJob.perform_later(scan.profile.id)
-        Broadcasts::SiteRoles::UpdateJob.perform_later(scan.site_role.id)
-        Broadcasts::Scans::UpdateJob.perform_later(scan.id)
-        Broadcasts::ScanResults::UpdateJob.perform_later(site.user.id)
-    end
-
-    def broadcast_update_job
-        Broadcasts::Sites::UpdateJob.perform_later(site.id)
-        Broadcasts::Devices::UpdateJob.perform_later(scan.device.id)
-        Broadcasts::Profiles::UpdateJob.perform_later(scan.profile.id)
-        Broadcasts::SiteRoles::UpdateJob.perform_later(scan.site_role.id)
-        Broadcasts::Scans::UpdateJob.perform_later(scan.id)
-        Broadcasts::ScanResults::UpdateJob.perform_later(site.user.id)
     end
 
 end

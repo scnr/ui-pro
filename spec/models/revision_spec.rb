@@ -1,6 +1,6 @@
-# frozen_string_literal: true
+require 'spec_helper'
 
-RSpec.describe Revision do
+describe Revision do
     subject { FactoryGirl.create :revision, scan: scan }
     let(:other_revision) { FactoryGirl.create :revision, scan: scan }
     let(:scan) { FactoryGirl.create :scan, site: site }
@@ -457,71 +457,6 @@ RSpec.describe Revision do
     describe '#to_s' do
         it 'returns the index' do
             expect(subject.to_s).to eq "#{subject.index.ordinalize} revision"
-        end
-    end
-
-    describe 'broadcast callbacks' do
-        let(:user) { create(:user) }
-        let(:scan) { create(:scan, site: site) }
-        let(:site) { create(:site, user: user) }
-
-        describe 'after_create_commit' do
-            subject!(:revision) { build(:revision, site: site, scan: scan) }
-
-            it 'enqueues Broadcasts::Sites::UpdateJob' do
-                expect { revision.save }.to have_enqueued_job(Broadcasts::Sites::UpdateJob).with(site.id)
-            end
-
-            it 'enqueues Broadcasts::Devices::UpdateJob' do
-                expect { revision.save }.to have_enqueued_job(Broadcasts::Devices::UpdateJob).with(scan.device.id)
-            end
-
-            it 'enqueues Broadcasts::Profiles::UpdateJob' do
-                expect { revision.save }.to have_enqueued_job(Broadcasts::Profiles::UpdateJob).with(scan.profile.id)
-            end
-
-            it 'enqueues Broadcasts::SiteRoles::UpdateJob' do
-                expect { revision.save }.to have_enqueued_job(Broadcasts::SiteRoles::UpdateJob).with(scan.site_role.id)
-            end
-
-            it 'enqueues Broadcasts::Scans::UpdateJob' do
-                expect { revision.save }.to have_enqueued_job(Broadcasts::Scans::UpdateJob).with(scan.id)
-            end
-
-            it 'enqueues Broadcasts::ScanResults::UpdateJob' do
-                expect { revision.save }.to have_enqueued_job(Broadcasts::ScanResults::UpdateJob).with(user.id)
-            end
-        end
-
-        describe 'after_update_commit' do
-            subject!(:revision) { create(:revision, site: site, scan: scan, status: old_status) }
-
-            let(:old_status) { 'initializing' }
-            let(:new_status) { 'scanning' }
-
-            it 'enqueues Broadcasts::Sites::UpdateJob' do
-                expect { revision.update(status: new_status) }.to have_enqueued_job(Broadcasts::Sites::UpdateJob).with(site.id)
-            end
-
-            it 'enqueues Broadcasts::Devices::UpdateJob' do
-                expect { revision.update(status: new_status) }.to have_enqueued_job(Broadcasts::Devices::UpdateJob).with(scan.device.id)
-            end
-
-            it 'enqueues Broadcasts::Profiles::UpdateJob' do
-                expect { revision.update(status: new_status) }.to have_enqueued_job(Broadcasts::Profiles::UpdateJob).with(scan.profile.id)
-            end
-
-            it 'enqueues Broadcasts::SiteRoles::UpdateJob' do
-                expect { revision.update(status: new_status) }.to have_enqueued_job(Broadcasts::SiteRoles::UpdateJob).with(scan.site_role.id)
-            end
-
-            it 'enqueues Broadcasts::Scans::UpdateJob' do
-                expect { revision.update(status: new_status) }.to have_enqueued_job(Broadcasts::Scans::UpdateJob).with(scan.id).at_least(1)
-            end
-
-            it 'enqueues Broadcasts::ScanResults::UpdateJob' do
-                expect { revision.update(status: new_status) }.to have_enqueued_job(Broadcasts::ScanResults::UpdateJob).with(user.id).at_least(1)
-            end
         end
     end
 end
