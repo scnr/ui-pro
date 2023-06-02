@@ -111,7 +111,6 @@ Getting Started
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
-
 Documentation and Support
 -------------------------
 
