@@ -11,7 +11,7 @@ export default class IssueChart {
 
     if (!chartElement) {
       return;
-    }
+    };
 
     const ctx = chartElement.getContext('2d');
     const chartInstance = Chart.getChart(ctx);

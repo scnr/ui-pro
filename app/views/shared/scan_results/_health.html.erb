@@ -58,7 +58,9 @@
       </div>
 
       <div class="row">
-        <div class="chart-container col-md-12" id="current_total_average_app_time"></div>
+        <div class="chart-container col-md-12">
+          <canvas id="current_total_average_app_time" height=180></canvas>
+        </div>
       </div>
 
       <div class="row">
@@ -161,34 +163,39 @@
         </div>
 
       <div class="row">
-        <div class="chart-container col-md-4" id="current_http_failed_count"></div>
-        <div class="chart-container col-md-4" id="current_http_average_responses_per_second"></div>
-        <div class="chart-container col-md-4" id="current_http_average_response_time"></div>
-        <div class="chart-container col-md-4" id="current_total_average_app_time"></div>
+        <div class="chart-container col-md-4">
+            <canvas id="current_http_failed_count" height=180></canvas>
+        </div>
+        <div class="chart-container col-md-4">
+            <canvas id="current_http_average_responses_per_second" height=180></canvas>
+        </div>
+        <div class="chart-container col-md-4">
+            <canvas id="current_http_average_response_time" height=180></canvas>
+        </div>
       </div>
 
       <div class="row">
         <div class="chart-container col-md-4" id="historic_http_failed_count"></div>
         <div class="chart-container col-md-4" id="historic_http_average_responses_per_second"></div>
         <div class="chart-container col-md-4" id="historic_http_average_response_time"></div>
-        <div class="chart-container col-md-4" id="historic_total_average_app_time"></div>
       </div>
     </div>
   </div>
 
   <script>
-      window.http_average_responses_per_second_gauge = window.generateGaugeChart(
-          '#current_http_average_responses_per_second',
+      $(document).ready(function() {
+        const averageResponsePerSecondGaugeChart = new window.Charts.gaugeChart(
+          'current_http_average_responses_per_second',
           {
               name:   'Average responses per second',
               value:  <%= @revision.performance_snapshot.http_average_responses_per_second.to_i %>,
               max:    <%= PerformanceSnapshot::MAX_HTTP_AVERAGE_RESPONSES_PER_SECOND %>,
               unit:   'responses/second'
           }
-      );
+        );
 
-      window.http_average_response_time_gauge = window.generateGaugeChart(
-          '#current_http_average_response_time',
+        const currentHttpAverageResponseTimeGaugeChart = new window.Charts.gaugeChart(
+          'current_http_average_response_time',
           {
               name:   'Average response times',
               value:  <%= @revision.performance_snapshot.http_average_response_time.round( 2 ) %>,
@@ -196,19 +203,38 @@
               unit:   'seconds/response',
               better: 'low'
           }
-      );
+        );
 
-      window.http_failed_count_gauge = window.generateGaugeChart(
-          '#current_http_failed_count',
-          {
-              name:  'Reliability',
-              value: <%= @revision.performance_snapshot.http_failed_count_pct %>,
-              label: <%= @revision.performance_snapshot.http_failed_count_pct %> + '%',
-              max:    <%= PerformanceSnapshot::MAX_HTTP_FAILED_RATIO %>,
-              unit:  'failed requests',
-              better: 'low'
-          }
-      );
+        const currentHttpFailedCountGaugeChart = new window.Charts.gaugeChart(
+            'current_http_failed_count',
+            {
+                name:  'Reliability',
+                value: <%= @revision.performance_snapshot.http_failed_count_pct %>,
+                label: <%= @revision.performance_snapshot.http_failed_count_pct %> + '%',
+                max:    <%= PerformanceSnapshot::MAX_HTTP_FAILED_RATIO %>,
+                unit:  'failed requests',
+                better: 'low'
+            }
+        );
+
+        const currentTotalAverageAppTimeGaugeChart = new window.Charts.gaugeChart(
+            'current_total_average_app_time',
+            {
+                name:  'Application responsiveness',
+                value:  <%= @revision.performance_snapshot.total_average_app_time.to_f.round( 2 ) %>,
+                min:    0,
+                max:    <%= PerformanceSnapshot::MAX_TOTAL_AVERAGE_APP_TIME %>,
+                unit:   'seconds/response',
+                better: 'low'
+            }
+        );
+
+        averageResponsePerSecondGaugeChart.initializeChart();
+        currentHttpAverageResponseTimeGaugeChart.initializeChart();
+        currentHttpFailedCountGaugeChart.initializeChart();
+        currentTotalAverageAppTimeGaugeChart.initializeChart();
+      });
+
 
       window.http_average_responses_per_second_chart = window.generateLineChart(
           '#historic_http_average_responses_per_second',
@@ -238,18 +264,6 @@
               values: <%= @health.map { |d| d['http_failed_count'] }.to_json %>,
               x_axis: <%= x_axis %>,
               max:    <%= @revision.performance_snapshot.max_http_failed_count %>,
-              better: 'low'
-          }
-      );
-
-      window.historic_total_average_app_time_gauge = window.generateGaugeChart(
-          '#current_total_average_app_time',
-          {
-              name:  'Application responsiveness',
-              value:  <%= @revision.performance_snapshot.total_average_app_time.to_f.round( 2 ) %>,
-              min:    0,
-              max:    <%= PerformanceSnapshot::MAX_TOTAL_AVERAGE_APP_TIME %>,
-              unit:   'seconds/response',
               better: 'low'
           }
       );
@@ -292,8 +306,12 @@
       </div>
 
       <div class="row">
-        <div class="chart-container col-md-6" id="current_download_kbps"></div>
-        <div class="chart-container col-md-6" id="current_upload_kbps"></div>
+        <div class="chart-container col-md-6">
+            <canvas id="current_download_kbps"></canvas>
+        </div>
+        <div class="chart-container col-md-6">
+            <canvas id="current_upload_kbps"></canvas>
+        </div>
       </div>
 
       <div class="row">
@@ -389,10 +407,18 @@
       </div>
 
       <div class="row">
-        <div class="chart-container col-md-3" id="current_browser_job_failed_count"></div>
-        <div class="chart-container col-md-3" id="current_http_max_concurrency"></div>
-        <div class="chart-container col-md-3" id="current_http_request_count"></div>
-        <div class="chart-container col-md-3" id="current_browser_job_count"></div>
+        <div class="chart-container col-md-3">
+            <canvas id="current_browser_job_failed_count"></canvas>
+        </div>
+        <div class="chart-container col-md-3">
+            <canvas id="current_http_max_concurrency"></canvas>
+        </div>
+        <div class="chart-container col-md-3">
+            <canvas id="current_http_request_count"></canvas>
+        </div>
+        <div class="chart-container col-md-3">
+            <canvas id="current_browser_job_count"></canvas>
+        </div>
       </div>
 
       <div class="row">
@@ -405,15 +431,79 @@
     </div>
 
   <script>
-      window.http_request_count_gauge = window.generateGaugeChart(
-          '#current_http_request_count',
-          {
-              name:  'Requests',
-              value: <%= @revision.performance_snapshot.http_request_count %>,
-              label: <%= number_with_delimiter( @revision.performance_snapshot.http_request_count ).to_json.html_safe %>,
-              unit:  'requests'
-          }
-      );
+      $(document).ready(function() {
+          const httpRequestCountGaugeChart = new window.Charts.gaugeChart(
+            'current_http_request_count',
+            {
+                name:  'Requests',
+                value: <%= @revision.performance_snapshot.http_request_count %>,
+                label: <%= number_with_delimiter( @revision.performance_snapshot.http_request_count ).to_json.html_safe %>,
+                unit:  'requests'
+            }
+          );
+
+          const browserJobCountGaugeChart = new window.Charts.gaugeChart(
+              'current_browser_job_count',
+              {
+                  name:  'Jobs',
+                  value: <%= @revision.performance_snapshot.browser_job_count %>,
+                  label: <%= number_with_delimiter( @revision.performance_snapshot.browser_job_count ).to_json.html_safe %>,
+                  unit:  'jobs'
+              }
+          );
+
+          const downloadKbpsGaugeChart = new window.Charts.gaugeChart(
+              'current_download_kbps',
+              {
+                  name:  'Download KBps',
+                  value: <%= @revision.performance_snapshot.download_kbps %>,
+                  label: <%= @revision.performance_snapshot.download_kbps %> + ' KBps',
+                  max:    <%= @health.map { |d| d['download_kbps'].to_f }.max %>,
+                  better: 'high'
+              }
+          );
+
+          const uploadKbpsGaugeChart = new window.Charts.gaugeChart(
+              'current_upload_kbps',
+              {
+                  name:  'Download KBps',
+                  value: <%= @revision.performance_snapshot.upload_kbps %>,
+                  label: <%= @revision.performance_snapshot.upload_kbps %> + ' KBps',
+                  max:    <%= @health.map { |d| d['upload_kbps'].to_f }.max %>,
+                  better: 'high'
+              }
+          );
+
+          const browserJobFailedCountGaugeChart = new window.Charts.gaugeChart(
+              'current_browser_job_failed_count',
+              {
+                  name:  'Reliability',
+                  value: <%= @revision.performance_snapshot.browser_job_failed_count_pct %>,
+                  label: <%= @revision.performance_snapshot.browser_job_failed_count_pct %> + '%',
+                  max:    <%= PerformanceSnapshot::MAX_BROWSER_FAILED_RATIO %>,
+                  unit:  'failed browser jobs',
+                  better: 'low'
+              }
+          );
+
+          const httpMaxConcurrencyGaugeChart = new window.Charts.gaugeChart(
+              'current_http_max_concurrency',
+              {
+                  name:  'Request concurrency',
+                  value: <%= @revision.performance_snapshot.http_max_concurrency %>,
+                  min:   <%= PerformanceSnapshot::MIN_MAX_CONCURRENCY %>,
+                  max:   <%= @revision.performance_snapshot.http_original_max_concurrency %>,
+                  unit:  'open connections'
+              }
+          );
+
+          httpRequestCountGaugeChart.initializeChart();
+          browserJobCountGaugeChart.initializeChart();
+          downloadKbpsGaugeChart.initializeChart();
+          uploadKbpsGaugeChart.initializeChart();
+          browserJobFailedCountGaugeChart.initializeChart();
+          httpMaxConcurrencyGaugeChart.initializeChart();
+      });
 
       window.http_request_count_chart = window.generateLineChart(
           '#historic_http_request_count',
@@ -421,16 +511,6 @@
               name:  'Requests',
               values: <%= @health.map { |d| d['http_request_count'] }.to_json %>,
               x_axis: <%= x_axis %>
-          }
-      );
-
-      window.browser_job_count_gauge = window.generateGaugeChart(
-          '#current_browser_job_count',
-          {
-              name:  'Jobs',
-              value: <%= @revision.performance_snapshot.browser_job_count %>,
-              label: <%= number_with_delimiter( @revision.performance_snapshot.browser_job_count ).to_json.html_safe %>,
-              unit:  'jobs'
           }
       );
 
@@ -443,17 +523,6 @@
           }
       );
 
-      window.download_kbps_gauge = window.generateGaugeChart(
-          '#current_download_kbps',
-          {
-              name:  'Download KBps',
-              value: <%= @revision.performance_snapshot.download_kbps %>,
-              label: <%= @revision.performance_snapshot.download_kbps %> + ' KBps',
-              max:    <%= @health.map { |d| d['download_kbps'].to_f }.max %>,
-              better: 'high'
-          }
-      );
-
       window.download_bkps_chart = window.generateLineChart(
           '#historic_download_kbps',
           {
@@ -461,17 +530,6 @@
               values: <%= @health.map { |d| d['download_kbps'] }.to_json %>,
               x_axis: <%= x_axis %>,
               max:    <%= @revision.performance_snapshot.download_kbps %>,
-              better: 'high'
-          }
-      );
-
-      window.upload_kbps_gauge = window.generateGaugeChart(
-          '#current_upload_kbps',
-          {
-              name:  'Download KBps',
-              value: <%= @revision.performance_snapshot.upload_kbps %>,
-              label: <%= @revision.performance_snapshot.upload_kbps %> + ' KBps',
-              max:    <%= @health.map { |d| d['upload_kbps'].to_f }.max %>,
               better: 'high'
           }
       );
@@ -487,18 +545,6 @@
           }
       );
 
-      window.browser_job_failed_count_gauge = window.generateGaugeChart(
-          '#current_browser_job_failed_count',
-          {
-              name:  'Reliability',
-              value: <%= @revision.performance_snapshot.browser_job_failed_count_pct %>,
-              label: <%= @revision.performance_snapshot.browser_job_failed_count_pct %> + '%',
-              max:    <%= PerformanceSnapshot::MAX_BROWSER_FAILED_RATIO %>,
-              unit:  'failed browser jobs',
-              better: 'low'
-          }
-      );
-
       window.browser_job_failed_count_chart = window.generateLineChart(
           '#historic_browser_job_failed_count',
           {
@@ -507,17 +553,6 @@
               x_axis: <%= x_axis %>,
               max:    <%= @revision.performance_snapshot.max_browser_job_failed_count %>,
               better: 'low'
-          }
-      );
-
-      window.http_max_concurrency_gauge = window.generateGaugeChart(
-          '#current_http_max_concurrency',
-          {
-              name:  'Request concurrency',
-              value: <%= @revision.performance_snapshot.http_max_concurrency %>,
-              min:   <%= PerformanceSnapshot::MIN_MAX_CONCURRENCY %>,
-              max:   <%= @revision.performance_snapshot.http_original_max_concurrency %>,
-              unit:  'open connections'
           }
       );
 

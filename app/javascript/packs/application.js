@@ -17,6 +17,8 @@
 
 import "@hotwired/turbo-rails";
 import IssueChart from '../charts/issues_chart';
+import GaugeChart from '../charts/gauge_chart';
 
 window.Charts ||= {}
 window.Charts.issueChart = IssueChart;
+window.Charts.gaugeChart = GaugeChart;
