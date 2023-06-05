@@ -8,46 +8,6 @@ addHighlight = (selector) ->
 removeHighlight = (selector) ->
     $(selector).removeClass('label-info');
 
-window.generateIssuesChart = () ->
-    c3.generate
-        bindto: '#chart-issues',
-        legend:
-            show: false
-        transition:
-            duration: 0
-        size:
-            height: 250
-        data:
-            x: 'x'
-            columns: []
-            axes:
-                Severity: 'y2'
-            type: 'bar',
-            types:
-                Severity: 'line'
-            regions: [],
-        axis:
-            x:
-                type: 'category',
-                tick:
-                    rotate: 15
-            y:
-                label:
-                    position: 'outer-center'
-            y2:
-                label:
-                    position: 'outer-center'
-                show: true,
-                type: 'category',
-                categories: [1,2,3,4]
-                tick:
-                    format: (d) ->
-                        ["Informational","Low","Medium","High"][d - 1]
-        padding:
-            bottom: 40
-        color:
-            pattern: [ '#1f77b4', '#ff7f0e' ]
-
 window.updateGauges = ( snapshot ) ->
     window.http_max_concurrency_gauge.load(
         columns: [['Request concurrency', snapshot.http_max_concurrency]]

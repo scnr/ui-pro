@@ -16,3 +16,7 @@
 // const imagePath = (name) => images(name, true)
 
 import "@hotwired/turbo-rails";
+import IssueChart from '../charts/issues_chart';
+
+window.Charts ||= {}
+window.Charts.issueChart = IssueChart;

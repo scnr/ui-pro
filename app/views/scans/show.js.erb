@@ -1,3 +1,1 @@
-$("#sidebar").html("<%= j render(partial: "sidebar") %>");
-$("#scan-info-container").html("<%= j render(partial: "shared/scan_heading") %>");
-$("#scan-results").html("<%= j render(partial: "shared/scan_results") %>");
+<%= render(partial: 'shared/scan_results', formats: :js, locals: { sidebar_partial_path: 'scans/sidebar' }) %>

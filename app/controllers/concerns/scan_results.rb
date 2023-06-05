@@ -46,7 +46,7 @@ module ScanResults
 
     def issues
         @issues_summary = prepare_issue_data
-        process_and_show
+        process_and_show(:issues)
     end
 
     def coverage
@@ -184,14 +184,19 @@ module ScanResults
         process_issues( scan_results_issues.includes( :sitemap_entry ) )
     end
 
-    def process_and_show
+    def process_and_show(js_partial = :show)
         perform_issue_processing
 
-        if params[:partial]
-            render partial: '/shared/scan_results',
-                   format: :html
-        else
-            render 'show'
+        respond_to do |format|
+            format.html {
+                if params[:partial]
+                    render partial: '/shared/scan_results',
+                           format: :html
+                else
+                    render 'show'
+                end
+            }
+            format.js { render js_partial }
         end
     end
 
