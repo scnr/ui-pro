@@ -8,13 +8,13 @@ module ApplicationHelper
 
         if include_actions.any?
             include_actions.each do |action|
-                return selected if request.env['PATH_INFO'].starts_with?( "#{path}/#{action}" )
+                return selected if request.env['PATH_INFO'].to_s.starts_with?( "#{path}/#{action}" )
             end
         else
-            return request.env['PATH_INFO'].start_with?( path ) ? selected : default
+            return request.env['PATH_INFO'].to_s.start_with?( path ) ? selected : default
         end
 
-        request.env['PATH_INFO'] ==  path ? selected : default
+        request.env['PATH_INFO'].to_s ==  path ? selected : default
     end
 
     def seconds_to_hms( seconds )

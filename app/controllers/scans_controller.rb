@@ -14,6 +14,9 @@ class ScansController < ApplicationController
     # GET /scans
     # GET /scans.json
     def index
+        @active_scans = @scans.active
+        @suspended_scans = @scans.suspended
+        @finished_scans = @scans.finished
         @scheduled_scans = @scans.scheduled
     end
 

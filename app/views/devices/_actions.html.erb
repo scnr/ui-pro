@@ -23,9 +23,8 @@
 </span>
 
 <span data-title="<%= disabled_delete %>" data-toggle="tooltip">
-    <%= link_to device, method: :delete,
-                class: "btn btn-sm btn-danger #{'disabled' if disabled_delete}",
-                data: { confirm: 'Are you sure?' } do %>
+    <%= link_to device, class: "btn btn-sm btn-danger #{'disabled' if disabled_delete}",
+                data: { turbo_confirm: 'Are you sure?', turbo_method: :delete } do %>
         <i class="fa fa-trash"></i>
     <% end %>
 </span>

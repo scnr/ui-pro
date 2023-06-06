@@ -7,14 +7,6 @@
     </thead>
 
     <tbody>
-    <% scans.each do |scan| %>
-        <tr>
-            <%= render partial: '/scans/tables/row_fields',
-                       locals: {
-                               scan: scan,
-                               with_status: true
-                       } %>
-        </tr>
-    <% end %>
+        <%= render partial: 'scans/tables/row_fields', collection: scans, as: :scan, locals: { site: site, with_status: true } %>
     </tbody>
 </table>

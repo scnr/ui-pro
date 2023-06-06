@@ -173,37 +173,6 @@ function setupScroll(){
     });
 }
 
-window.disablePageUpdate = false;
-var updatePage = function () {
-    if( window.disablePageUpdate ) return;
-
-    var scrollPosition;
-
-    function reload () {
-        if(
-            // window.location.pathname.endsWith( '/summary' ) ||
-            window.location.pathname.includes( '/issues/' ) ||
-            $( 'input' ).is(':visible')
-        ) { return }
-
-        scrollPosition = [window.scrollX, window.scrollY];
-        Turbo.visit( window.location.toString(), { action: 'replace' } );
-        return true;
-    }
-
-    $(document).on( 'turbo:load', function () {
-        if( scrollPosition ) {
-            setTimeout( () => {
-                window.scrollTo.apply( window, scrollPosition );
-                scrollPosition = null;
-            });
-        }
-    });
-
-    reload();
-    return true;
-}
-
 // window.original_confirm = window.confirm;
 // Turbo.FormSubmission.confirmMethod = function( data, title, cb ){
 //     window.disablePageUpdate = true;
@@ -212,10 +181,6 @@ var updatePage = function () {
 //     // window.disablePageUpdate = false;
 //     return ret
 // }
-
-function setupPageUpdate() {
-    startPageUpdate();
-}
 
 function setup() {
     window.topOffset = $('#top-nav').height();
@@ -226,7 +191,6 @@ function setup() {
     $('a[data-toggle="tab"]').on('shown.bs.tab', setupScroll);
 
     setupScroll();
-    setupPageUpdate();
 
     // Restore the last open tab from the URL fragment.
     openFromWindowLocation();
@@ -251,33 +215,10 @@ function setup() {
         },
         1000
     );
-
-    Turbo.setConfirmMethod(( message, element ) => {
-        stopPageUpdate();
-        var result = window.confirm( message );
-        startPageUpdate();
-        return result;
-    })
-
-}
-
-function stopPageUpdate(){
-    window.disablePageUpdate = true;
-    clearInterval( window.updatePageInterval );
-    window.updatePageInterval = null;
-}
-
-function startPageUpdate(){
-    window.disablePageUpdate = false;
-    if( !window.updatePageInterval ) {
-        window.updatePageInterval = window.setInterval( updatePage, 3000 )
-    }
-
 }
 
 $(window).bind( 'hashchange', function () {
     openFromWindowLocation();
 });
-
 
 $(document).on( "turbo:load", setup );

@@ -583,4 +583,24 @@ describe Site, type: :model do
             expect(subject.to_s).to eq subject.url
         end
     end
+
+    describe 'broadcast callbacks' do
+        let(:user) { create(:user) }
+
+        describe 'after_create_commit' do
+            subject(:site) { build(:site, user: user) }
+
+            it 'enqueues Broadcasts::Sites::CreateJob' do
+                expect { site.save }.to have_enqueued_job(Broadcasts::Sites::CreateJob).with(site.id)
+            end
+        end
+
+        describe 'after_destroy_commit' do
+            subject!(:site) { create(:site, user: user) }
+
+            it 'enqueues Broadcasts::Sites::DestroyJob' do
+                expect { site.destroy }.to have_enqueued_job(Broadcasts::Sites::DestroyJob).with(site.id, user.id)
+            end
+        end
+    end
 end

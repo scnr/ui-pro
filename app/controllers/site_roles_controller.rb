@@ -29,22 +29,24 @@ class SiteRolesController < ApplicationController
         @site_role = SiteRole.new( parsed_params )
         @site_role.site = @site
 
-        if @site_role.save
-            flash[:notice] = 'Site role was successfully created.'
-            render :show
-        else
-            render :new
+        respond_to do |format|
+            if @site_role.save
+                format.html { redirect_to site_role_path(@site, @site_role), notice: 'Site role was successfully created.' }
+            else
+                format.html { render :new }
+            end
         end
     end
 
     def update
         fail 'Cannot update Guest role.' if @site_role.guest?
 
-        if @site_role.update( parsed_params )
-            flash[:notice] = 'Site role was successfully updated.'
-            render :show
-        else
-            render :edit
+        respond_to do |format|
+            if @site_role.update( parsed_params )
+                format.html { redirect_to site_role_path(@site_role.site, @site_role, notice: 'Site role was successfully updated.') }
+            else
+                format.html { render :edit }
+            end
         end
     end
 
@@ -53,7 +55,10 @@ class SiteRolesController < ApplicationController
         fail 'Cannot delete role with scans.' if @site_role.scans.any?
 
         @site_role.destroy
-        render :index
+
+        respond_to do |format|
+            format.html { redirect_to site_roles_path(@site_role.site), status: 303 }
+        end
     end
 
     private

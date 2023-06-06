@@ -71,11 +71,13 @@ group :test do
     gem 'selenium-webdriver'
     gem 'factory_girl_rails'
     gem 'rspec-rails'
+    gem 'action-cable-testing', '~> 0.6.1'
 end
 
 group :development, :test do
     gem 'puma'
     gem 'awesome_print'
+    gem 'pry-byebug'
 end
 
 gem 'ethon', github: 'typhoeus/ethon', branch: 'thread-safe-easy-handle-cleanup'
@@ -84,10 +86,6 @@ if File.exist? '../application'
     gem 'scnr-application', path: '../application'
 else
     gem 'scnr-application'
-end
-
-if File.exist? '../introspector'
-    gem 'scnr-introspector', path: '../introspector'
 end
 
 if File.exist? '../engine'

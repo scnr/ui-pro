@@ -12,6 +12,8 @@ class PerformanceSnapshot < ActiveRecord::Base
 
     MIN_MAX_CONCURRENCY                   = 1
 
+    belongs_to :revision, class_name: 'Revision', foreign_key: :revision_current_id, optional: true
+
     def download_kbps
         (download_bps * 8 / 1000).round(2)
     end

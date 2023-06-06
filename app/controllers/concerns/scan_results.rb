@@ -30,12 +30,8 @@ module ScanResults
     }
 
     def summary
-        respond_to do |format|
-            format.html do
-                @summary = prepare_live_stream_data
-                process_and_show
-            end
-        end
+        @summary = prepare_live_stream_data
+        process_and_show
 
         session[:live_last_update] = Time.now
     end

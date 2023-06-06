@@ -26,6 +26,8 @@ module Scan
 
             handle_if_rpc_error( revision, r )
         end
+
+        broadcast_to_the_channels( revision )
     end
 
     # Resumes the scan for the given `revision`.
@@ -39,6 +41,8 @@ module Scan
 
             handle_if_rpc_error( revision, r )
         end
+
+        broadcast_to_the_channels( revision )
     end
 
     # Resumes the scan for the given `revision`.
@@ -65,6 +69,8 @@ module Scan
                 monitor( revision )
             end
         end
+
+        broadcast_to_the_channels( revision )
     end
 
     # Suspends the scan for the given `revision`.
@@ -81,6 +87,8 @@ module Scan
             log_info_for revision, 'Suspended, grabbing snapshot path.'
             handle_if_rpc_error( revision, r )
         end
+
+        broadcast_to_the_channels( revision )
     end
 
     # Aborts the scan for the given `revision`.
@@ -94,6 +102,8 @@ module Scan
         revision.aborting!
 
         download_report_and_shutdown( revision, status: 'aborted', mark_missing_issues: false )
+
+        broadcast_to_the_channels( revision )
     end
 
     def each_due_scan( &block )
@@ -174,6 +184,8 @@ module Scan
                 monitor( revision )
             end
         end
+
+        broadcast_to_the_channels( revision )
     end
 
     def rescope( revision )
@@ -208,6 +220,8 @@ module Scan
 
             monitor( revision )
         end
+
+        broadcast_to_the_channels( revision )
     end
 
     def monitor( revision )
@@ -304,6 +318,8 @@ module Scan
                 abort revision
             end
 
+            broadcast_to_the_channels( revision )
+
             return
         end
 
@@ -333,6 +349,8 @@ module Scan
         if progress[:errors].any?
             update[:error_messages] = "#{revision.error_messages}#{progress[:errors].join( "\n" )}\n"
         end
+
+        broadcast_to_the_channels( revision )
 
         return if update.empty?
 
@@ -384,6 +402,28 @@ module Scan
         end
 
         kill_instance_for( revision )
+
+        broadcast_to_the_channels( revision )
+    end
+
+    def broadcast_to_the_channels( revision )
+        return if revision.blank?
+
+        scan        = revision.scan
+        site        = revision.site
+        user        = site.try(:user)
+        profile     = site.try(:profile)
+        device      = site.try(:device)
+        site_role   = scan.try(:scan_role)
+
+        Broadcasts::Sites::UpdateJob.perform_later(site.id)             if site.present?
+        Broadcasts::Devices::UpdateJob.perform_later(device.id)         if device.present?
+        Broadcasts::Profiles::UpdateJob.perform_later(profile.id)       if profile.present?
+        Broadcasts::SiteRoles::UpdateJob.perform_later(site_role.id)    if site_role.present?
+        Broadcasts::Scans::UpdateJob.perform_later(scan.id)             if scan.present?
+        Broadcasts::ScanResults::UpdateJob.perform_later(user.id)       if user.present?
+
+        true
     end
 
     # Aborts the scan for the `revision`, downloads and stores the report under
@@ -429,6 +469,8 @@ module Scan
 
                 log_info_for revision, status.capitalize
             end
+
+            broadcast_to_the_channels( revision )
         end
     end
 
@@ -484,6 +526,8 @@ module Scan
         revision.performance_snapshots.create( attributes )
 
         progress_tracking_for( revision )[:last_performance_update] = Time.now
+
+        broadcast_to_the_channels( revision )
     end
 
     def progress_tracking_for( revision )

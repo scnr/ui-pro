@@ -10,8 +10,12 @@
 
 <div class="row" id="site-info">
     <div class="col-md-12">
-        <%= render partial: 'shared/scan_heading' %>
+        <div id="site-info-container">
+            <%= render partial: 'shared/scan_heading' %>
+        </div>
     </div>
 </div>
 
-<%= render 'shared/scan_results' %>
+<div id="scan-results" class="row">
+    <%= render 'shared/scan_results' %>
+</div>

@@ -1,54 +1,48 @@
 <div class="row">
     <div id="site-scans" class="col-md-8">
-        <div id="site-scans-active" class="row">
+        <div id="site-scans-active" class="row table-container">
             <div class="col-md-12">
                 <h2>Active</h2>
 
-                <% if (scans = @scans.active).any? %>
-                    <%= render partial: 'scans/tables/active',
-                               locals: { scans: scans } %>
-                <% else %>
-                    <p class="alert alert-info">
-                        No active scans.
-                    </p>
-                <% end %>
+                <%= render partial: 'scans/tables/active',
+                           locals: { scans: active_scans, site: site } %>
+
+                <p class="alert alert-info">
+                    No active scans.
+                </p>
             </div>
         </div>
 
-        <div id="site-scans-suspended" class="row">
+        <div id="site-scans-suspended" class="row table-container">
             <div class="col-md-12">
                 <h2>Suspended</h2>
 
-                <% if (scans = @scans.suspended).any? %>
-                    <%= render partial: 'scans/tables/suspended',
-                               locals: { scans: scans } %>
-                <% else %>
-                    <p class="alert alert-info">
-                        No suspended scans.
-                    </p>
-                <% end %>
+                <%= render partial: 'scans/tables/suspended',
+                           locals: { scans: suspended_scans, site: site } %>
+
+                <p class="alert alert-info">
+                    No suspended scans.
+                </p>
             </div>
         </div>
 
-        <div id="site-scans-finished" class="row">
+        <div id="site-scans-finished" class="row table-container">
             <div class="col-md-12">
                 <h2>Finished</h2>
 
-                <% if (scans = @scans.finished).any? %>
-                    <%= render partial: 'scans/tables/finished',
-                               locals: { scans: scans } %>
-                <% else %>
-                    <p class="alert alert-info">
-                        No finished scans.
-                    </p>
-                <% end %>
+                <%= render partial: 'scans/tables/finished',
+                           locals: { scans: finished_scans, site: site } %>
+
+                <p class="alert alert-info">
+                    No finished scans.
+                </p>
             </div>
         </div>
     </div>
 
-    <div id="site-scans-schedule" class="col-md-4">
+    <div id="site-scans-scheduled" class="col-md-4 table-container">
         <h2>Schedule</h2>
 
-        <%= render partial: 'scans/tables/schedule' %>
+        <%= render 'scans/tables/schedule', scheduled_scans: scheduled_scans, site: site %>
     </div>
 </div>

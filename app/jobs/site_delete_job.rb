@@ -5,4 +5,5 @@ class SiteDeleteJob < ApplicationJob
       site.destroying!
       site.destroy
     end
+
 end

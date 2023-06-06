@@ -1,4 +1,4 @@
-describe System::Platforms::OSX do
+describe System::Platforms::Osx do
     subject { described_class.new }
 
     describe '#memory_free' do

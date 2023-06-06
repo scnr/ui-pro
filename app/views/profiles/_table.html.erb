@@ -9,37 +9,6 @@
     </thead>
 
     <tbody>
-    <% @profiles.each do |profile| %>
-        <tr>
-            <td>
-                <%= simple_form_for profile,
-                                    url: default_profile_path( profile ),
-                                    method: :patch, remote: true,
-                                    html: { onsubmit: 'loading();' } do %>
-                    <input type="radio"
-                           class="make-default"
-                           onclick="this.form.requestSubmit()"
-                           name="id_<%= profile.id %>"
-                           id="id_<%= profile.id %>"
-                           autocomplete="off"
-                           <%= 'checked="checked"'.html_safe if profile.default? %>
-                           <%= 'disabled' if profile.default? %>
-                    >
-                <% end %>
-            </td>
-
-            <td>
-                <%= link_to profile.name, profile %>
-            </td>
-
-            <td>
-                <%= profile.scans.size %>
-            </td>
-
-            <td>
-                <%= render 'actions', profile: profile %>
-            </td>
-        </tr>
-    <% end %>
+        <%= render partial: 'row_field', collection: @profiles, as: :profile %>
     </tbody>
 </table>

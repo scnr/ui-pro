@@ -9,26 +9,6 @@
     </thead>
 
     <tbody>
-    <% @site_roles.each do |site_role| %>
-        <tr>
-            <td>
-                <a href="<%= site_role_path( site_role.site, site_role ) %>">
-                    <%= site_role.name %>
-                </a>
-            </td>
-
-            <td>
-                <%= site_role.login_type %>
-            </td>
-
-            <td>
-                <%= site_role.scans.size %>
-            </td>
-
-            <td>
-                <%= render 'actions', site_role: site_role %>
-            </td>
-        </tr>
-    <% end %>
+        <%= render partial: 'table_row', collection: @site_roles, as: :site_role %>
     </tbody>
 </table>

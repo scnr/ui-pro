@@ -3,8 +3,8 @@ require 'spec_helper'
 describe SitemapEntry do
     subject { FactoryGirl.create(:sitemap_entry) }
 
-    expect_it { to belong_to :site }
-    expect_it { to belong_to :revision }
+    expect_it { to belong_to(:site).optional }
+    expect_it { to belong_to(:revision).optional }
     expect_it { to have_many :issues }
 
     describe 'scope' do

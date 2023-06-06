@@ -1,6 +1,6 @@
-require 'spec_helper'
+# frozen_string_literal: true
 
-describe Scan do
+RSpec.describe Scan do
     subject { FactoryGirl.create :scan, site: site }
     let(:settings){ Settings }
     let(:other_scan) { FactoryGirl.create :scan, site: site }
@@ -436,6 +436,31 @@ describe Scan do
             }
 
             expect(options).to eq rpc_options
+        end
+    end
+
+    describe 'broadcast callbacks' do
+        let(:site) { create(:site, user: user) }
+        let(:user) { create(:user) }
+
+        describe 'after_destroy_commit' do
+            subject!(:scan) { create(:scan, site: site) }
+
+            it 'enqueues Broadcasts::Sites::UpdateJob' do
+                expect { scan.destroy }.to have_enqueued_job(Broadcasts::Sites::UpdateJob).with(site.id)
+            end
+
+            it 'enqueues Broadcasts::Devices::UpdateJob' do
+                expect { scan.destroy }.to have_enqueued_job(Broadcasts::Devices::UpdateJob).with(scan.device.id)
+            end
+
+            it 'enqueues Broadcasts::Profiles::UpdateJob' do
+                expect { scan.destroy }.to have_enqueued_job(Broadcasts::Profiles::UpdateJob).with(scan.profile.id)
+            end
+
+            it 'enqueues Broadcasts::Scans::DestroyJob' do
+                expect { scan.destroy }.to have_enqueued_job(Broadcasts::Scans::DestroyJob).with(scan.id, user.id)
+            end
         end
     end
 end
