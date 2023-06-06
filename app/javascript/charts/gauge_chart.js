@@ -8,6 +8,7 @@ export default class GaugeChart {
 
     this.chartInstance = null;
     this.thresholdColors = ['#FF0000', '#F97600', '#F6C600', '#60B044'];
+    this.thresholdStep = options.max / 4;
   }
 
   initializeChart() {
@@ -34,9 +35,9 @@ export default class GaugeChart {
       data: {
         labels: [this.options.name, ''],
         datasets: [{
-          data: [this.options.value, this.options.max - this.options.value],
+          data: [this.getCurrentValue(), this.options.max - this.getCurrentValue()],
           backgroundColor: [
-            this.getGradientSegment(ctx),
+            this.getGaugeColor(),
             'rgba(224, 224, 224, 1)'
           ],
           borderWidth: 1,
@@ -62,21 +63,18 @@ export default class GaugeChart {
     });
   }
 
-  getGradientSegment(ctx) {
-    const chartElement = this.getChartElement();
+  getGaugeColor() {
+    const currentValue = this.getCurrentValue();
 
-    if (!chartElement) {
-      return;
+    if (currentValue <= this.thresholdStep) {
+      return this.getThresholdColors()[0];
+    } else if ((currentValue > this.thresholdStep) && (currentValue <= this.thresholdStep * 2)) {
+      return this.getThresholdColors()[1];
+    } else if ((currentValue > this.thresholdStep * 2) && (currentValue <= this.thresholdStep * 3)) {
+      return this.getThresholdColors()[2];
+    } else {
+      return this.getThresholdColors()[3]
     };
-
-    const chartWidth = chartElement.getBoundingClientRect().width;
-    const gradientSegment = ctx.createLinearGradient(0, 0, chartWidth, 0);
-
-    this.getThresholdColors().forEach((color, index) => {
-      gradientSegment.addColorStop(0.25 * index, color);
-    });
-
-    return gradientSegment;
   }
 
   getThresholdColors() {
@@ -89,6 +87,10 @@ export default class GaugeChart {
 
   getChartElement() {
     return document.getElementById(this.chartElementId);
+  }
+
+  getCurrentValue() {
+    return this.options.value;
   }
 
   updateDataset(data) {

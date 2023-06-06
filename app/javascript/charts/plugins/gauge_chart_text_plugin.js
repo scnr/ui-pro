@@ -12,7 +12,7 @@ export default function gaugeChartTextPlugin(options = {}) {
       const showLabel = options.show_label === undefined ? true : options.show_label;
 
       function textLablel(text, x, y, fontSize, fillStyle, textBaseLine, textAlign) {
-        if (!text) {
+        if (text === undefined) {
           return;
         };
 

@@ -59,12 +59,14 @@
 
       <div class="row">
         <div class="chart-container col-md-12">
-          <canvas id="current_total_average_app_time" height=180></canvas>
+          <canvas id="current_total_average_app_time"></canvas>
         </div>
       </div>
 
       <div class="row">
-        <div class="chart-container col-md-12" id="historic_total_average_app_time"></div>
+        <div class="chart-container col-md-12">
+            <canvas id="historic_total_average_app_time" height=180></canvas>
+        </div>
       </div>
     </div>
 
@@ -175,9 +177,15 @@
       </div>
 
       <div class="row">
-        <div class="chart-container col-md-4" id="historic_http_failed_count"></div>
-        <div class="chart-container col-md-4" id="historic_http_average_responses_per_second"></div>
-        <div class="chart-container col-md-4" id="historic_http_average_response_time"></div>
+        <div class="chart-container col-md-4">
+            <canvas id="historic_http_failed_count"></canvas>
+        </div>
+        <div class="chart-container col-md-4">
+            <canvas id="historic_http_average_responses_per_second"></canvas>
+        </div>
+        <div class="chart-container col-md-4">
+            <canvas id="historic_http_average_response_time"></canvas>
+        </div>
       </div>
     </div>
   </div>
@@ -229,47 +237,8 @@
             }
         );
 
-        averageResponsePerSecondGaugeChart.initializeChart();
-        currentHttpAverageResponseTimeGaugeChart.initializeChart();
-        currentHttpFailedCountGaugeChart.initializeChart();
-        currentTotalAverageAppTimeGaugeChart.initializeChart();
-      });
-
-
-      window.http_average_responses_per_second_chart = window.generateLineChart(
-          '#historic_http_average_responses_per_second',
-          {
-              name:   'Average responses per second',
-              values: <%= @health.map { |d| d['http_average_responses_per_second'] }.to_json %>,
-              x_axis: <%= x_axis %>,
-              max:    <%= PerformanceSnapshot::MAX_HTTP_AVERAGE_RESPONSES_PER_SECOND %>
-          }
-      );
-
-      window.http_average_response_time_chart = window.generateLineChart(
-          '#historic_http_average_response_time',
-          {
-              name:   'Average response times',
-              values: <%= @health.map { |d| d['http_average_response_time'] }.to_json %>,
-              x_axis: <%= x_axis %>,
-              max:    <%= PerformanceSnapshot::MAX_HTTP_AVERAGE_RESPONSE_TIME %>,
-              better: 'low'
-          }
-      );
-
-      window.http_failed_count_chart = window.generateLineChart(
-          '#historic_http_failed_count',
-          {
-              name:  'Timed out requests',
-              values: <%= @health.map { |d| d['http_failed_count'] }.to_json %>,
-              x_axis: <%= x_axis %>,
-              max:    <%= @revision.performance_snapshot.max_http_failed_count %>,
-              better: 'low'
-          }
-      );
-
-      window.total_average_app_time_chart = window.generateLineChart(
-          '#historic_total_average_app_time',
+        const totalAverageAppTimeLineChart = new window.Charts.lineChart(
+          'historic_total_average_app_time',
           {
               name:  'Application responsiveness',
               values: <%= @health.map { |d| d['total_average_app_time'] }.to_json %>,
@@ -277,7 +246,51 @@
               max:    <%= @revision.performance_snapshot.total_average_app_time %>,
               better: 'low'
           }
-      );
+        );
+
+        const httpAverageResponsesPerSecondLineChart = new window.Charts.lineChart(
+            'historic_http_average_responses_per_second',
+            {
+                name:   'Average responses per second',
+                values: <%= @health.map { |d| d['http_average_responses_per_second'] }.to_json %>,
+                x_axis: <%= x_axis %>,
+                max:    <%= PerformanceSnapshot::MAX_HTTP_AVERAGE_RESPONSES_PER_SECOND %>
+            }
+        );
+
+        const httpAverageResponseTimeLineChart = new window.Charts.lineChart(
+            'historic_http_average_response_time',
+            {
+                name:   'Average response times',
+                values: <%= @health.map { |d| d['http_average_response_time'] }.to_json %>,
+                x_axis: <%= x_axis %>,
+                max:    <%= PerformanceSnapshot::MAX_HTTP_AVERAGE_RESPONSE_TIME %>,
+                better: 'low'
+            }
+        );
+
+        const httpFailedCountLineChart = new window.Charts.lineChart(
+            'historic_http_failed_count',
+            {
+                name:  'Timed out requests',
+                values: <%= @health.map { |d| d['http_failed_count'] }.to_json %>,
+                x_axis: <%= x_axis %>,
+                max:    <%= @revision.performance_snapshot.max_http_failed_count %>,
+                better: 'low'
+            }
+        );
+
+
+        averageResponsePerSecondGaugeChart.initializeChart();
+        currentHttpAverageResponseTimeGaugeChart.initializeChart();
+        currentHttpFailedCountGaugeChart.initializeChart();
+        currentTotalAverageAppTimeGaugeChart.initializeChart();
+
+        totalAverageAppTimeLineChart.initializeChart();
+        httpAverageResponsesPerSecondLineChart.initializeChart();
+        httpAverageResponseTimeLineChart.initializeChart();
+        httpFailedCountLineChart.initializeChart();
+      });
   </script>
 
   <div id="health-network" class="row">
@@ -315,8 +328,12 @@
       </div>
 
       <div class="row">
-        <div class="chart-container col-md-6" id="historic_download_kbps"></div>
-        <div class="chart-container col-md-6" id="historic_upload_kbps"></div>
+        <div class="chart-container col-md-6">
+            <canvas id="historic_download_kbps"></canvas>
+        </div>
+        <div class="chart-container col-md-6">
+            <canvas id="historic_upload_kbps"></canvas>
+        </div>
       </div>
     </div>
   </div>
@@ -422,10 +439,18 @@
       </div>
 
       <div class="row">
-        <div class="chart-container col-md-3" id="historic_browser_job_failed_count"></div>
-        <div class="chart-container col-md-3" id="historic_http_max_concurrency"></div>
-        <div class="chart-container col-md-3" id="historic_http_request_count"></div>
-        <div class="chart-container col-md-3" id="historic_browser_job_count"></div>
+        <div class="chart-container col-md-3">
+            <canvas id="historic_browser_job_failed_count"></canvas>
+        </div>
+        <div class="chart-container col-md-3">
+            <canvas id="historic_http_max_concurrency"></canvas>
+        </div>
+        <div class="chart-container col-md-3">
+            <canvas id="historic_http_request_count"></canvas>
+        </div>
+        <div class="chart-container col-md-3">
+            <canvas id="historic_browser_job_count"></canvas>
+        </div>
       </div>
       </div>
     </div>
@@ -466,7 +491,7 @@
           const uploadKbpsGaugeChart = new window.Charts.gaugeChart(
               'current_upload_kbps',
               {
-                  name:  'Download KBps',
+                  name:  'Upload KBps',
                   value: <%= @revision.performance_snapshot.upload_kbps %>,
                   label: <%= @revision.performance_snapshot.upload_kbps %> + ' KBps',
                   max:    <%= @health.map { |d| d['upload_kbps'].to_f }.max %>,
@@ -497,75 +522,82 @@
               }
           );
 
+          const httpRequestCountLineChart = new window.Charts.lineChart(
+              'historic_http_request_count',
+              {
+                  name:  'Requests',
+                  values: <%= @health.map { |d| d['http_request_count'] }.to_json %>,
+                  x_axis: <%= x_axis %>
+              }
+          );
+
+          const browserJobCountLineChart = new window.Charts.lineChart(
+              'historic_browser_job_count',
+              {
+                  name:  'Events',
+                  values: <%= @health.map { |d| d['browser_job_count'] }.to_json %>,
+                  x_axis: <%= x_axis %>
+              }
+          );
+
+          const downloadKbpsLineChart = new window.Charts.lineChart(
+              'historic_download_kbps',
+              {
+                  name:  'Download KBps',
+                  values: <%= @health.map { |d| d['download_kbps'] }.to_json %>,
+                  x_axis: <%= x_axis %>,
+                  max:    <%= @revision.performance_snapshot.download_kbps %>,
+                  better: 'high'
+              }
+          );
+
+          const uploadKbpsLineChart = new window.Charts.lineChart(
+              'historic_upload_kbps',
+              {
+                  name:  'Upload KBps',
+                  values: <%= @health.map { |d| d['upload_kbps'] }.to_json %>,
+                  x_axis: <%= x_axis %>,
+                  max:    <%= @revision.performance_snapshot.upload_kbps %>,
+                  better: 'high'
+              }
+          );
+
+          const browserJobFailedCountLineChart = new window.Charts.lineChart(
+              'historic_browser_job_failed_count',
+              {
+                  name:  'Failed browser jobs',
+                  values: <%= @health.map { |d| d['browser_job_failed_count'] }.to_json %>,
+                  x_axis: <%= x_axis %>,
+                  max:    <%= @revision.performance_snapshot.max_browser_job_failed_count %>,
+                  better: 'low'
+              }
+          );
+
+          const httpMaxConcurrencyLineChart = new window.Charts.lineChart(
+              'historic_http_max_concurrency',
+              {
+                  name:  'Request concurrency',
+                  values: <%= @health.map { |d| d['http_max_concurrency'] }.to_json %>,
+                  x_axis: <%= x_axis %>,
+                  min:    <%= PerformanceSnapshot::MIN_MAX_CONCURRENCY %>,
+                  max:   <%= @revision.performance_snapshot.http_original_max_concurrency %>
+              }
+          );
+
           httpRequestCountGaugeChart.initializeChart();
           browserJobCountGaugeChart.initializeChart();
           downloadKbpsGaugeChart.initializeChart();
           uploadKbpsGaugeChart.initializeChart();
           browserJobFailedCountGaugeChart.initializeChart();
           httpMaxConcurrencyGaugeChart.initializeChart();
+
+          httpRequestCountLineChart.initializeChart();
+          browserJobCountLineChart.initializeChart();
+          downloadKbpsLineChart.initializeChart();
+          uploadKbpsLineChart.initializeChart();
+          browserJobFailedCountLineChart.initializeChart();
+          httpMaxConcurrencyLineChart.initializeChart();
       });
-
-      window.http_request_count_chart = window.generateLineChart(
-          '#historic_http_request_count',
-          {
-              name:  'Requests',
-              values: <%= @health.map { |d| d['http_request_count'] }.to_json %>,
-              x_axis: <%= x_axis %>
-          }
-      );
-
-      window.browser_job_count_chart = window.generateLineChart(
-          '#historic_browser_job_count',
-          {
-              name:  'Events',
-              values: <%= @health.map { |d| d['browser_job_count'] }.to_json %>,
-              x_axis: <%= x_axis %>
-          }
-      );
-
-      window.download_bkps_chart = window.generateLineChart(
-          '#historic_download_kbps',
-          {
-              name:  'Download KBps',
-              values: <%= @health.map { |d| d['download_kbps'] }.to_json %>,
-              x_axis: <%= x_axis %>,
-              max:    <%= @revision.performance_snapshot.download_kbps %>,
-              better: 'high'
-          }
-      );
-
-      window.download_bps_gauge = window.generateLineChart(
-          '#historic_upload_kbps',
-          {
-              name:  'Download KBps',
-              values: <%= @health.map { |d| d['upload_kbps'] }.to_json %>,
-              x_axis: <%= x_axis %>,
-              max:    <%= @revision.performance_snapshot.upload_kbps %>,
-              better: 'high'
-          }
-      );
-
-      window.browser_job_failed_count_chart = window.generateLineChart(
-          '#historic_browser_job_failed_count',
-          {
-              name:  'Failed browser jobs',
-              values: <%= @health.map { |d| d['browser_job_failed_count'] }.to_json %>,
-              x_axis: <%= x_axis %>,
-              max:    <%= @revision.performance_snapshot.max_browser_job_failed_count %>,
-              better: 'low'
-          }
-      );
-
-      window.http_max_concurrency_chart = window.generateLineChart(
-          '#historic_http_max_concurrency',
-          {
-              name:  'Request concurrency',
-              values: <%= @health.map { |d| d['http_max_concurrency'] }.to_json %>,
-              x_axis: <%= x_axis %>,
-              min:    <%= PerformanceSnapshot::MIN_MAX_CONCURRENCY %>,
-              max:   <%= @revision.performance_snapshot.http_original_max_concurrency %>
-          }
-      );
   </script>
 
 <% else %>
