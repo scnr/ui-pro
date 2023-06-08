@@ -1,0 +1,14 @@
+const averageResponsePerSecondGaugeChart = new window.Charts.gaugeChart(
+    'current_http_average_responses_per_second',
+    {
+        name:   'Average responses per second',
+        value:  <%= revision.performance_snapshot.http_average_responses_per_second.to_i %>,
+        max:    <%= PerformanceSnapshot::MAX_HTTP_AVERAGE_RESPONSES_PER_SECOND %>,
+        unit:   'responses/second'
+    }
+);
+
+averageResponsePerSecondGaugeChart.initializeChart();
+averageResponsePerSecondGaugeChart.updateDataset({
+    value: <%= revision.performance_snapshot.http_average_responses_per_second.to_i %>
+});

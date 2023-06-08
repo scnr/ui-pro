@@ -1,0 +1,16 @@
+const uploadKbpsGaugeChart = new window.Charts.gaugeChart(
+    'current_upload_kbps',
+    {
+        name: 'Upload KBps',
+        value: <%= revision.performance_snapshot.upload_kbps %>,
+        label: <%= revision.performance_snapshot.upload_kbps %> + ' KBps',
+        max: <%= health.map { |d| d['upload_kbps'].to_f }.max %>
+    }
+);
+
+uploadKbpsGaugeChart.initializeChart();
+uploadKbpsGaugeChart.updateDataset({
+    value: <%= revision.performance_snapshot.upload_kbps %>,
+    label: <%= revision.performance_snapshot.upload_kbps %> + ' KBps',
+    max: <%= health.map { |d| d['upload_kbps'].to_f }.max %>
+});

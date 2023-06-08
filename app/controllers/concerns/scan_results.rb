@@ -62,7 +62,7 @@ module ScanResults
 
     def health
         @health = prepare_health_data
-        process_and_show
+        process_and_show(:health)
     end
 
     def errors

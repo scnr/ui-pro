@@ -1,0 +1,17 @@
+const currentHttpFailedCountGaugeChart = new window.Charts.gaugeChart(
+    'current_http_failed_count',
+    {
+        name: 'Reliability',
+        value: <%= revision.performance_snapshot.http_failed_count_pct %>,
+        label: <%= revision.performance_snapshot.http_failed_count_pct %> + '%',
+        max: <%= PerformanceSnapshot::MAX_HTTP_FAILED_RATIO %>,
+        unit: 'failed requests',
+        better: 'low'
+    }
+);
+
+currentHttpFailedCountGaugeChart.initializeChart();
+currentHttpFailedCountGaugeChart.updateDataset({
+    value: <%= revision.performance_snapshot.http_failed_count_pct %>,
+    label: <%= revision.performance_snapshot.http_failed_count_pct %> + '%',
+});

@@ -8,11 +8,12 @@ export default class GaugeChart {
 
     this.chartInstance = null;
     this.thresholdColors = ['#FF0000', '#F97600', '#F6C600', '#60B044'];
-    this.thresholdStep = options.max / 4;
+    this.thresholdStep = (options.max || 0) / 4;
+    this.greyColor = 'rgba(224, 224, 224, 1)';
   }
 
   initializeChart() {
-    const chartElement = this.getChartElement();
+    const chartElement = document.getElementById(this.chartElementId);
 
     if (!chartElement) {
       return;
@@ -35,11 +36,8 @@ export default class GaugeChart {
       data: {
         labels: [this.options.name, ''],
         datasets: [{
-          data: [this.getCurrentValue(), this.options.max - this.getCurrentValue()],
-          backgroundColor: [
-            this.getGaugeColor(),
-            'rgba(224, 224, 224, 1)'
-          ],
+          data: this.initialDataset(),
+          backgroundColor: [this.getGaugeColor(this.options.value), this.greyColor],
           borderWidth: 1,
           cutout: '60%',
           circumference: 180,
@@ -47,6 +45,11 @@ export default class GaugeChart {
         }]
       },
       options: {
+        pluginData: {
+          value: this.options.value || 0,
+          max: this.options.max || this.options.value || 0,
+          label: this.options.label,
+        },
         aspectRatio: 1.5,
         plugins: {
           legend: {
@@ -63,19 +66,32 @@ export default class GaugeChart {
     });
   }
 
-  getGaugeColor() {
-    const currentValue = this.getCurrentValue();
-
-    if (currentValue <= this.thresholdStep) {
+  getGaugeColor(value) {
+    if (value <= this.thresholdStep) {
       return this.getThresholdColors()[0];
-    } else if ((currentValue > this.thresholdStep) && (currentValue <= this.thresholdStep * 2)) {
+    } else if ((value > this.thresholdStep) && (value <= this.thresholdStep * 2)) {
       return this.getThresholdColors()[1];
-    } else if ((currentValue > this.thresholdStep * 2) && (currentValue <= this.thresholdStep * 3)) {
+    } else if ((value > this.thresholdStep * 2) && (value <= this.thresholdStep * 3)) {
       return this.getThresholdColors()[2];
     } else {
       return this.getThresholdColors()[3]
     };
   }
+
+  initialDataset() {
+    const currentValue = this.options.value || 0;
+    const maxValue = this.options.max || this.options.value || 0;
+
+    return [currentValue, this.getValueDifference(currentValue, maxValue)];
+  }
+
+  getValueDifference(currentValue, maxValue) {
+    if (currentValue >= maxValue) {
+      return 0;
+    };
+
+    return maxValue - currentValue;
+  };
 
   getThresholdColors() {
     if (this.options.better === 'low') {
@@ -85,15 +101,20 @@ export default class GaugeChart {
     return this.thresholdColors;
   }
 
-  getChartElement() {
-    return document.getElementById(this.chartElementId);
-  }
-
-  getCurrentValue() {
-    return this.options.value;
-  }
-
   updateDataset(data) {
-    // TODO: needs to be implemented.
-  }
+    if (!this.chartInstance) {
+      return;
+    };
+
+    const { value, label, max } = data;
+
+    this.chartInstance.options.pluginData.value = value;
+    this.chartInstance.options.pluginData.max = max || this.options.max || value;
+    this.chartInstance.options.pluginData.label = label || this.options.label;
+    this.thresholdStep = this.chartInstance.options.pluginData.max / 4;
+
+    this.chartInstance.data.datasets[0].data = [value, this.getValueDifference(value, this.chartInstance.options.pluginData.max)];
+    this.chartInstance.data.datasets[0].backgroundColor = [this.getGaugeColor(value), this.greyColor];
+    this.chartInstance.update();
+  };
 }

@@ -1,0 +1,16 @@
+const httpMaxConcurrencyGaugeChart = new window.Charts.gaugeChart(
+    'current_http_max_concurrency',
+    {
+        name: 'Request concurrency',
+        value: <%= revision.performance_snapshot.http_max_concurrency %>,
+        min: <%= PerformanceSnapshot::MIN_MAX_CONCURRENCY %>,
+        max: <%= revision.performance_snapshot.http_original_max_concurrency %>,
+        unit: 'open connections'
+    }
+);
+
+httpMaxConcurrencyGaugeChart.initializeChart();
+httpMaxConcurrencyGaugeChart.updateDataset({
+    value: <%= revision.performance_snapshot.http_max_concurrency %>,
+    max: <%= revision.performance_snapshot.http_original_max_concurrency %>
+});

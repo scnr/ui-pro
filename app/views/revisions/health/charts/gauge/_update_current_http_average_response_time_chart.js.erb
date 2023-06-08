@@ -1,0 +1,15 @@
+const currentHttpAverageResponseTimeGaugeChart = new window.Charts.gaugeChart(
+    'current_http_average_response_time',
+    {
+        name: 'Average response times',
+        value: <%= revision.performance_snapshot.http_average_response_time.round( 2 ) %>,
+        max: <%= PerformanceSnapshot::MAX_HTTP_AVERAGE_RESPONSE_TIME %>,
+        unit: 'seconds/response',
+        better: 'low'
+    }
+);
+
+currentHttpAverageResponseTimeGaugeChart.initializeChart();
+currentHttpAverageResponseTimeGaugeChart.updateDataset({
+    value: <%= revision.performance_snapshot.http_average_response_time.round( 2 ) %>
+});

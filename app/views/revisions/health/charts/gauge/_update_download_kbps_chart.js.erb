@@ -1,0 +1,16 @@
+const downloadKbpsGaugeChart = new window.Charts.gaugeChart(
+    'current_download_kbps',
+    {
+        name: 'Download KBps',
+        value: <%= revision.performance_snapshot.download_kbps %>,
+        label: <%= revision.performance_snapshot.download_kbps %> + ' KBps',
+        max: <%= health.map { |d| d['download_kbps'].to_f }.max %>
+    }
+);
+
+downloadKbpsGaugeChart.initializeChart();
+downloadKbpsGaugeChart.updateDataset({
+    value: <%= revision.performance_snapshot.download_kbps %>,
+    label: <%= revision.performance_snapshot.download_kbps %> + ' KBps',
+    max: <%= health.map { |d| d['download_kbps'].to_f }.max %>
+});

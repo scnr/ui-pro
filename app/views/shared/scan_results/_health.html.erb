@@ -280,7 +280,6 @@
             }
         );
 
-
         averageResponsePerSecondGaugeChart.initializeChart();
         currentHttpAverageResponseTimeGaugeChart.initializeChart();
         currentHttpFailedCountGaugeChart.initializeChart();
@@ -466,7 +465,6 @@
                 unit:  'requests'
             }
           );
-
           const browserJobCountGaugeChart = new window.Charts.gaugeChart(
               'current_browser_job_count',
               {
@@ -476,7 +474,6 @@
                   unit:  'jobs'
               }
           );
-
           const downloadKbpsGaugeChart = new window.Charts.gaugeChart(
               'current_download_kbps',
               {

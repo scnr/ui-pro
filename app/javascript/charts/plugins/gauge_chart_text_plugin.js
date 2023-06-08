@@ -4,12 +4,13 @@ export default function gaugeChartTextPlugin(options = {}) {
     afterDatasetsDraw(chart, args, pluginOptions) {
       const { ctx, data, chartArea: { top, bottom, left, right, width, height }, scales: { r } } = chart;
 
-      ctx.save();
       const xCoor = chart.getDatasetMeta(0).data[0].x;
       const yCoor = chart.getDatasetMeta(0).data[0].y;
-      const label = options.label || data.datasets[0].data[0];
+      const label = chart.options.pluginData.label || data.datasets[0].data[0];
       const unit = options.unit;
-      const showLabel = options.show_label === undefined ? true : options.show_label;
+      const showLabel = options.show_label === undefined ? true : this.options.show_label;
+
+      ctx.save()
 
       function textLablel(text, x, y, fontSize, fillStyle, textBaseLine, textAlign) {
         if (text === undefined) {
@@ -24,7 +25,7 @@ export default function gaugeChartTextPlugin(options = {}) {
       };
 
       textLablel(options.min || 0, left, yCoor + 20, 12, '#666', 'top', 'left');
-      textLablel(options.max || options.value, right, yCoor + 20, 12, '#666', 'top', 'right');
+      textLablel(chart.options.pluginData.max || chart.options.pluginData.value || 0, right, yCoor + 20, 12, '#666', 'top', 'right');
 
       if (showLabel) {
         textLablel(label, xCoor, yCoor, 36, 'black', 'bottom', 'center');
