@@ -1,0 +1,21 @@
+<% values = health.map { |d| d['http_average_response_time'] }.to_json %>
+
+const httpAverageResponseTimeLineChart = new window.Charts.lineChart(
+    'historic_http_average_response_time',
+    {
+        name:   'Average response times',
+        values: <%= values %>,
+        x_axis: <%= x_axis %>,
+        max:    <%= PerformanceSnapshot::MAX_HTTP_AVERAGE_RESPONSE_TIME %>,
+        better: 'low'
+    }
+);
+
+httpAverageResponseTimeLineChart.initializeChart();
+
+<% if local_assigns[:update] %>
+    httpAverageResponseTimeLineChart.updateDataset({
+        labels: <%= x_axis %>,
+        values: <%= values %>
+    });
+<% end %>

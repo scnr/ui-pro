@@ -169,5 +169,17 @@ export default class LineChart {
     tooltipEl.style.opacity = 0.7;
     tooltipEl.style.left = Math.max(left, 0) + 'px';
     tooltipEl.style.top = Math.max(top, 0) + 'px';
-  };
+  }
+
+  updateDataset(data) {
+    if (!this.chartInstance) {
+      return;
+    };
+
+    const { labels, values } = data;
+
+    this.chartInstance.data.labels = labels;
+    this.chartInstance.data.datasets[0].data = values;
+    this.chartInstance.update();
+  }
 }

@@ -1,0 +1,21 @@
+<% values = health.map { |d| d['total_average_app_time'] }.to_json %>
+
+const totalAverageAppTimeLineChart = new window.Charts.lineChart(
+    'historic_total_average_app_time',
+    {
+        name:  'Application responsiveness',
+        values: <%= values %>,
+        x_axis: <%= x_axis %>,
+        max:    <%= revision.performance_snapshot.total_average_app_time %>,
+        better: 'low'
+    }
+);
+
+totalAverageAppTimeLineChart.initializeChart();
+
+<% if local_assigns[:update] %>
+    totalAverageAppTimeLineChart.updateDataset({
+        labels: <%= x_axis %>,
+        values: <%= values %>
+    });
+<% end %>

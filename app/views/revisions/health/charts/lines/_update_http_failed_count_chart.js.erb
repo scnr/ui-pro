@@ -1,0 +1,21 @@
+<% values = health.map { |d| d['http_failed_count'] }.to_json %>
+
+const httpFailedCountLineChart = new window.Charts.lineChart(
+    'historic_http_failed_count',
+    {
+        name:  'Timed out requests',
+        values: <%= values %>,
+        x_axis: <%= x_axis %>,
+        max:    <%= revision.performance_snapshot.max_http_failed_count %>,
+        better: 'low'
+    }
+);
+
+httpFailedCountLineChart.initializeChart();
+
+<% if local_assigns[:update] %>
+    httpFailedCountLineChart.updateDataset({
+        labels: <%= x_axis %>,
+        values: <%= values %>
+    });
+<% end %>

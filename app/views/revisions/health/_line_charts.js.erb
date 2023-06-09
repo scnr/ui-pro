@@ -1,0 +1,71 @@
+<% x_axis = health.map { |d| d['runtime'] }.to_json.html_safe %>
+
+<%= render(
+        partial: 'revisions/health/charts/lines/update_browser_job_count_chart',
+        formats: :js,
+        locals: { revision: revision, health: health, x_axis: x_axis, update: local_assigns[:update] }
+    )
+%>
+
+<%= render(
+        partial: 'revisions/health/charts/lines/update_browser_job_failed_count_chart',
+        formats: :js,
+        locals: { revision: revision, health: health, x_axis: x_axis, update: local_assigns[:update] }
+    )
+%>
+
+<%= render(
+        partial: 'revisions/health/charts/lines/update_download_kbps_chart',
+        formats: :js,
+        locals: { revision: revision, health: health, x_axis: x_axis, update: local_assigns[:update] }
+    )
+%>
+
+<%= render(
+        partial: 'revisions/health/charts/lines/update_http_average_response_time_chart',
+        formats: :js,
+        locals: { revision: revision, health: health, x_axis: x_axis, update: local_assigns[:update] }
+    )
+%>
+
+<%= render(
+        partial: 'revisions/health/charts/lines/update_http_average_responses_per_second_chart',
+        formats: :js,
+        locals: { revision: revision, health: health, x_axis: x_axis, update: local_assigns[:update] }
+    )
+%>
+
+<%= render(
+        partial: 'revisions/health/charts/lines/update_http_failed_count_chart',
+        formats: :js,
+        locals: { revision: revision, health: health, x_axis: x_axis, update: local_assigns[:update] }
+    )
+%>
+
+<%= render(
+        partial: 'revisions/health/charts/lines/update_http_max_concurrency_chart',
+        formats: :js,
+        locals: { revision: revision, health: health, x_axis: x_axis, update: local_assigns[:update] }
+    )
+%>
+
+<%= render(
+        partial: 'revisions/health/charts/lines/update_http_request_count_chart',
+        formats: :js,
+        locals: { revision: revision, health: health, x_axis: x_axis, update: local_assigns[:update] }
+    )
+%>
+
+<%= render(
+        partial: 'revisions/health/charts/lines/update_total_average_app_time_chart',
+        formats: :js,
+        locals: { revision: revision, health: health, x_axis: x_axis, update: local_assigns[:update] }
+    )
+%>
+
+<%= render(
+        partial: 'revisions/health/charts/lines/update_upload_kbps_chart',
+        formats: :js,
+        locals: { revision: revision, health: health, x_axis: x_axis, update: local_assigns[:update] }
+    )
+%>

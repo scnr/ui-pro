@@ -1,8 +1,10 @@
+<% value = revision.performance_snapshot.http_average_response_time.round( 2 ) %>
+
 const currentHttpAverageResponseTimeGaugeChart = new window.Charts.gaugeChart(
     'current_http_average_response_time',
     {
         name: 'Average response times',
-        value: <%= revision.performance_snapshot.http_average_response_time.round( 2 ) %>,
+        value: <%= value %>,
         max: <%= PerformanceSnapshot::MAX_HTTP_AVERAGE_RESPONSE_TIME %>,
         unit: 'seconds/response',
         better: 'low'
@@ -10,6 +12,9 @@ const currentHttpAverageResponseTimeGaugeChart = new window.Charts.gaugeChart(
 );
 
 currentHttpAverageResponseTimeGaugeChart.initializeChart();
-currentHttpAverageResponseTimeGaugeChart.updateDataset({
-    value: <%= revision.performance_snapshot.http_average_response_time.round( 2 ) %>
-});
+
+<% if local_assigns[:update] %>
+    currentHttpAverageResponseTimeGaugeChart.updateDataset({
+        value: <%= value %>
+    });
+<% end %>

@@ -1,0 +1,19 @@
+<% values = health.map { |d| d['http_request_count'] }.to_json %>
+
+const httpRequestCountLineChart = new window.Charts.lineChart(
+    'historic_http_request_count',
+    {
+        name:  'Requests',
+        values: <%= values %>,
+        x_axis: <%= x_axis %>
+    }
+);
+
+httpRequestCountLineChart.initializeChart();
+
+<% if local_assigns[:update] %>
+    httpRequestCountLineChart.updateDataset({
+        labels: <%= x_axis %>,
+        values: <%= values %>
+    });
+<% end %>

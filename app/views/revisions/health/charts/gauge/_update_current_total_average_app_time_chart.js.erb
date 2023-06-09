@@ -1,8 +1,10 @@
+<% value = revision.performance_snapshot.total_average_app_time.to_f.round( 2 ) %>
+
 const currentTotalAverageAppTimeGaugeChart = new window.Charts.gaugeChart(
     'current_total_average_app_time',
     {
         name: 'Application responsiveness',
-        value: <%= revision.performance_snapshot.total_average_app_time.to_f.round( 2 ) %>,
+        value: <%= value %>,
         min: 0,
         max: <%= PerformanceSnapshot::MAX_TOTAL_AVERAGE_APP_TIME %>,
         unit: 'seconds/response',
@@ -11,6 +13,9 @@ const currentTotalAverageAppTimeGaugeChart = new window.Charts.gaugeChart(
 );
 
 currentTotalAverageAppTimeGaugeChart.initializeChart();
-currentTotalAverageAppTimeGaugeChart.updateDataset({
-    value: <%= revision.performance_snapshot.total_average_app_time.to_f.round( 2 ) %>
-});
+
+<% if local_assigns[:update] %>
+    currentTotalAverageAppTimeGaugeChart.updateDataset({
+        value: <%= value %>
+    });
+<% end %>

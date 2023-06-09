@@ -1,0 +1,21 @@
+<% values = health.map { |d| d['download_kbps'] }.to_json %>
+
+const downloadKbpsLineChart = new window.Charts.lineChart(
+    'historic_download_kbps',
+    {
+        name:  'Download KBps',
+        values: <%= values %>,
+        x_axis: <%= x_axis %>,
+        max:    <%= revision.performance_snapshot.download_kbps %>,
+        better: 'high'
+    }
+);
+
+downloadKbpsLineChart.initializeChart();
+
+<% if local_assigns[:update] %>
+    downloadKbpsLineChart.updateDataset({
+        labels: <%= x_axis %>,
+        values: <%= values %>
+    });
+<% end %>

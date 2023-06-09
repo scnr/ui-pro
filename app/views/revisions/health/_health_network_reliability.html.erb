@@ -1,0 +1,31 @@
+<% state = @revision.performance_snapshot.http_failed_count_state %>
+
+<div class="chart-container col-md-4" id="health-network_reliability">
+  <h3>
+    Reliability
+  </h3>
+
+  <h4 class="text text-state-<%= state %> health-state">
+    <%= state.capitalize %>
+  </h4>
+
+  <p class="text-muted health-description">
+    <%= case state
+          when :excellent
+              'Connections seem highly reliable.'
+
+          when :good
+              'A small amount of requests have failed, nothing to ' +
+                'worry about yet though.'
+
+          when :fair
+              'A considerable amount of requests have failed, there ' +
+                'is a small chance that the scan will yield incomplete results.'
+
+          when :poor
+              'A large amount of requests have failed, there is a ' +
+                'chance that the scan will yield incomplete results.'
+        end
+    %>
+  </p>
+</div>

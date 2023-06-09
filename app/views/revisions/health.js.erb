@@ -2,70 +2,31 @@
     if ($('#health-application-server-group').length) {
         $("#sidebar").html("<%= j render(partial: 'revisions/sidebar', formats: :html) %>");
 
-        <% x_axis = @health.map { |d| d['runtime'] }.to_json.html_safe %>
-
         window.performance_snapshots = <%= @health.to_json.html_safe %>;
 
+        // Update Gauge Charts
         <%= render(
-                partial: 'revisions/health/charts/gauge/update_browser_job_count_chart',
+                partial: 'revisions/health/gauge_charts',
                 formats: :js,
-                locals: { revision: @revision }
+                locals: { revision: @revision, health: @health, update: true }
             )
         %>
+
+        // Update Line Charts
         <%= render(
-                partial: 'revisions/health/charts/gauge/update_browser_job_failed_count_chart',
+                partial: 'revisions/health/line_charts',
                 formats: :js,
-                locals: { revision: @revision }
+                locals: { revision: @revision, health: @health, update: true }
             )
         %>
-        <%= render(
-                partial: 'revisions/health/charts/gauge/update_current_total_average_app_time_chart',
-                formats: :js,
-                locals: { revision: @revision }
-            )
-        %>
-        <%= render(
-                partial: 'revisions/health/charts/gauge/update_download_kbps_chart',
-                formats: :js,
-                locals: { revision: @revision, health: @health }
-            )
-        %>
-        <%= render(
-                partial: 'revisions/health/charts/gauge/update_http_max_concurency_chart',
-                formats: :js,
-                locals: { revision: @revision }
-            )
-        %>
-        <%= render(
-                partial: 'revisions/health/charts/gauge/update_http_request_count_chart',
-                formats: :js,
-                locals: { revision: @revision }
-            )
-        %>
-        <%= render(
-                partial: 'revisions/health/charts/gauge/update_upload_kbps_chart',
-                formats: :js,
-                locals: { revision: @revision, health: @health }
-            )
-        %>
-        <%= render(
-                partial: 'revisions/health/charts/gauge/update_current_http_responses_per_second_chart',
-                formats: :js,
-                locals: { revision: @revision }
-            )
-        %>
-        <%= render(
-                partial: 'revisions/health/charts/gauge/update_current_http_average_response_time_chart',
-                formats: :js,
-                locals: { revision: @revision }
-            )
-        %>
-        <%= render(
-                partial: 'revisions/health/charts/gauge/update_current_http_failed_count_chart',
-                formats: :js,
-                locals: { revision: @revision }
-            )
-        %>
+
+        // Update state blocks
+        $('#health-total_average_app_time').replaceWith("<%= j render(partial: 'revisions/health/health_total_average_app_time', locals: { revision: @revision }) %>");
+        $('#health-network_reliability').replaceWith("<%= j render(partial: 'revisions/health/health_network_reliability', locals: { revision: @revision }) %>");
+        $('#health-server_performance').replaceWith("<%= j render(partial: 'revisions/health/health_server_performance', locals: { revision: @revision }) %>");
+        $('#health-server_responsiveness').replaceWith("<%= j render(partial: 'revisions/health/health_server_responsiveness', locals: { revision: @revision }) %>");
+        $('#health-browser_failed_job_count').replaceWith("<%= j render(partial: 'revisions/health/health_browser_failed_job_count', locals: { revision: @revision }) %>")
+        $('#health-scanner_performance').replaceWith("<%= j render(partial: 'revisions/health/health_scanner_performance', locals: { revision: @revision }) %>")
     } else {
         <%= render(partial: 'shared/scan_results', formats: :js, locals: { sidebar_partial_path: 'revisions/sidebar' }) %>
     };
