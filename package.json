@@ -2,6 +2,7 @@
   "dependencies": {
     "@hotwired/turbo-rails": "^7.1.1",
     "@rails/webpacker": "^5.4.4",
+    "bootstrap": "4.6.2",
     "chart.js": "^4.3.0"
   },
   "devDependencies": {
