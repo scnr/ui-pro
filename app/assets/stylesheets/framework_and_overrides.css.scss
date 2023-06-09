@@ -18,12 +18,12 @@ $severity-none-color-faded: #dff0d8;
 
 // make all images responsive by default
 img {
-  //@extend .img-responsive;
+  //@extend .img-fluid;
   margin: 0 auto;
 }
 
 hr {
-  //@extend .img-responsive;
+  //@extend .img-fluid;
   margin: 0 auto;
 }
 
