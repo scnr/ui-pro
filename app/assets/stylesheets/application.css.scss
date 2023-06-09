@@ -14,10 +14,9 @@
 
 @import "font-awesome";
 @import "font-kit-rails/open-sans";
-@import "c3";
 @import "**/*";
 
-.fa .badge, .c3 .tick, .c3-legend-item {
+.fa .badge, .tick {
     font-family: "Open Sans", sans-serif;
 }
 
