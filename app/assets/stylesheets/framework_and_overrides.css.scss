@@ -126,7 +126,7 @@ section {
 .button-xs {
   @extend .btn;
   @extend .btn-primary;
-  @extend .btn-xs !optional;
+  @extend .btn-sm !optional;
 }
 
 .badge-severity {
