@@ -11,7 +11,8 @@
 // about supported directives.
 //
 //= require jquery
-//= require bootstrap/dist/js/bootstrap
+//= require popper
+//= require bootstrap
 //= require d3
 //= require ace/ace
 //= require ace/worker-html
