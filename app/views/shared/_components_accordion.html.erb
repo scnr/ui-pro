@@ -1,12 +1,12 @@
-<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+<div class="card-group" id="accordion" role="tablist" aria-multiselectable="true">
     <% components.each do |shortname, info| %>
-        <div class="panel-heading" role="tab">
-            <h4 class="panel-title" data-toggle="collapse"
+        <div class="card-header" role="tab">
+            <h4 class="card-title" data-toggle="collapse"
                 role="tab" data-target="#<%= shortname %>">
                 <%= info[:name] %> (<code><%= shortname %></code>)
             </h4>
             <div style="height: 0px;" id="<%= shortname %>" class="panel-collapse collapse">
-                <div class="panel-body">
+                <div class="card-body">
                     <div>
                         <%= md info[:description] %>
                     </div>
@@ -27,7 +27,7 @@
                         <hr/>
                     <%end%>
 
-                    <table class="table table-borderless table-condensed">
+                    <table class="table table-borderless table-sm">
                         <tr>
                             <th>Version:</th>
                             <td><%= info[:version] %></td>

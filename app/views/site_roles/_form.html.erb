@@ -76,11 +76,11 @@
                 </div>
 
                 <div class="col-md-5">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
+                    <div class="card bg-light">
+                        <div class="card-header">
                             Let's say there's a page at <code><%= @site.url %></code>:
                         </div>
-                        <div class="panel-body">
+                        <div class="card-body">
                             <%= code_highlight do %>
 <!-- [...] -->
 
@@ -222,11 +222,11 @@
                     </div>
                 </div>
                 <div class="col-md-5">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
+                    <div class="card bg-light">
+                        <div class="card-header">
                             Let's say there's a form at <code><%= @site.url %>/login</code>:
                         </div>
-                        <div class="panel-body">
+                        <div class="card-body">
                             <%= code_highlight do %>
 <!-- [...] -->
 
@@ -245,7 +245,7 @@
 
                             <hr/>
 
-                            <table class="table table-condensed table-borderless">
+                            <table class="table table-sm table-borderless">
                                 <tr>
                                     <th>Username</th>
                                     <td><kbd>admin</kbd></td>

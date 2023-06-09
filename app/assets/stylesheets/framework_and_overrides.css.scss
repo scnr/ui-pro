@@ -369,16 +369,16 @@ tr.table-row-indented-level-3 td:nth-child(1) {
   border: none;
 }
 
-.table .panel-group {
+.table .card-group {
   margin:  0;
   padding: 0;
 }
 
-.table .panel-group .panel-heading {
+.table .card-group .card-header {
   padding: 5px;
 }
 
-.table, .table .table-condensed {
+.table, .table .table-sm {
   margin-bottom: 0;
 }
 
@@ -404,7 +404,7 @@ h1, h2, h3, h4, h5 {
   word-wrap: break-word;
 }
 
-.panel .panel-heading {
+.card .card-header {
   margin-bottom: 0;
 }
 
@@ -429,10 +429,6 @@ h1, h2, h3, h4, h5 {
 
 .nav > li.nav-header > a:hover {
   background-color: inherit;
-}
-
-.navbar-fixed-top {
-  z-index: 999;
 }
 
 .tooltip {
