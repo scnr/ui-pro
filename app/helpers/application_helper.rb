@@ -4,7 +4,7 @@ module ApplicationHelper
 
     def select_button_class( path, include_actions: [], include_children: true )
         default  = 'btn btn-sm btn-secondary'
-        selected = 'btn btn-sm btn-primary btn-secondary'
+        selected = 'btn btn-sm btn-primary'
 
         if include_actions.any?
             include_actions.each do |action|
