@@ -13,7 +13,6 @@
 //= require jquery
 //= require bootstrap
 //= require d3
-//= require c3
 //= require ace/ace
 //= require ace/worker-html
 //= require ace/theme-monokai

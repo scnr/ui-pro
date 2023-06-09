@@ -22,7 +22,6 @@ gem 'kramdown'
 gem 'loofah'
 
 gem 'd3-rails', '3.5.16'
-gem 'c3-rails', '0.4.11'
 
 gem 'ace-rails-ap'
 
