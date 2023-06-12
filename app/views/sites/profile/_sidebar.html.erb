@@ -10,13 +10,13 @@
 }
 %>
 
-<button class="btn btn-secondary btn-primary" id="site_profile-submit">
+<button class="btn btn-light btn-primary" id="site_profile-submit">
     Save
 </button>
 
 <% if @site.revisions.active.any? %>
     <span data-toggle="tooltip" title="Save and apply to active scans.">
-        <button class="btn btn-secondary btn-warning" data-toggle="modal"
+        <button class="btn btn-light btn-warning" data-toggle="modal"
                 data-target="#site_profile-submit-and-apply-confirm">
             Save and apply
         </button>
