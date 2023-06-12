@@ -70,10 +70,16 @@ a.navbar-brand {
 // apply styles to HTML elements
 // to make views framework-neutral
 main {
-  @extend .container;
+  @extend .container-fluid;
   padding-bottom: 80px;
   width: 100%;
   margin-top: 78px; // accommodate the navbar
+}
+
+.page-header {
+  padding-bottom: 9px;
+  margin: 40px 20px;
+  border-bottom: 1px solid #eeeeee;
 }
 
 section {
