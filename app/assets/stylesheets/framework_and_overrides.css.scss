@@ -140,22 +140,27 @@ section {
 }
 
 .badge-severity-high {
+  color: white;
   background-color: $severity-high-color;
 }
 
 .badge-severity-medium {
+  color: white;
   background-color: $severity-medium-color;
 }
 
 .badge-severity-low {
+  color: white;
   background-color: $severity-low-color;
 }
 
 .badge-severity-informational {
+  color: white;
   background-color: $severity-informational-color;
 }
 
 .badge-severity-none {
+  color: white;
   background-color: $severity-none-color;
 }
 
@@ -252,26 +257,32 @@ section {
 }
 
 .label-severity {
-  @extend .label !optional;
+  @extend .badge !optional;
+  @extend .badge-pill !optional;
 }
 
 .label-severity-high {
+  color: white;
   background-color: $severity-high-color;
 }
 
 .label-severity-medium {
+  color: white;
   background-color: $severity-medium-color;
 }
 
 .label-severity-low {
+  color: white;
   background-color: $severity-low-color;
 }
 
 .label-severity-informational {
+  color: white;
   background-color: $severity-informational-color;
 }
 
 .label-severity-none {
+  color: white;
   background-color: $severity-none-color;
 }
 
