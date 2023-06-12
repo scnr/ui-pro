@@ -85,16 +85,16 @@
                     <% if frame.function.arguments %>
                         <% has_active = true %>
 
-                        <li class="active">
-                            <a data-turbo="false" href="<%= id_to_location id %>/<%= i %>/inspect/arguments">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-turbo="false" href="<%= id_to_location id %>/<%= i %>/inspect/arguments">
                                 Arguments
                             </a>
                         </li>
                     <% end %>
 
                     <% if with_source %>
-                        <li <%= 'class="active"' if !has_active %>>
-                            <a data-turbo="false" href="<%= id_to_location id %>/<%= i %>/inspect/source">
+                        <li class="nav-item">
+                            <a class="nav-link <%= 'active' if !has_active %>" data-turbo="false" href="<%= id_to_location id %>/<%= i %>/inspect/source">
                                 Source
                             </a>
                         </li>

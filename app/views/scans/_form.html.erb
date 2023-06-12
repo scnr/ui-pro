@@ -86,20 +86,17 @@
 
             <div class="format-tabs">
                 <ul class="nav nav-tabs" role="tablist">
-                    <li role="presentation"
-                        class="<%= 'active' if !@scan.schedule.frequency_format ||
-                                @scan.schedule.frequency_format == 'simple' %>"
-                    >
-                        <a href="#simple" aria-controls="simple"
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link <%= 'active' if !@scan.schedule.frequency_format || @scan.schedule.frequency_format == 'simple' %>"
+                           href="#simple"
+                           aria-controls="simple"
                            role="tab" data-toggle="tab">
                             Simple
                         </a>
                     </li>
-                    <li role="presentation"
-                        class="<%= 'active' if @scan.schedule.frequency_format == 'cron' %>"
-                    >
-                        <a href="#cron" aria-controls="cron"
-                           role="tab" data-toggle="tab">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link <%= 'active' if @scan.schedule.frequency_format == 'cron' %>"
+                           href="#cron" aria-controls="cron" role="tab" data-toggle="tab">
                             Cronline
                         </a>
                     </li>
