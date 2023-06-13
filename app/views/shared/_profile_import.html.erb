@@ -1,11 +1,12 @@
 <div id="<%= type.gsub( '-', '_' ) %>-import" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">
-                    &#10006;
+                <h4>Import <%= type %>:</h3>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
                 </button>
-                <h3>Import <%= type %>:</h3>
             </div>
 
             <%= simple_form_for type.gsub( '-', '_' ), url: import_url, html: { multipart: true } do |f| %>
