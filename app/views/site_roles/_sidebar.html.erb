@@ -16,9 +16,9 @@
 
     <hr/>
 
-    <ul id="sidebar-roles" class="nav nav-pills nav-stacked">
-        <li class="nav-header">
-            <a>
+    <ul id="sidebar-roles" class="nav nav-pills nav-stacked flex-column">
+        <li class="nav-item nav-header">
+            <a class="nav-link">
                 Roles
             </a>
         </li>
@@ -29,10 +29,7 @@
         %>
             <li
                 id="sidebar-role-<%= role.id %>"
-
-                <% if @site_role == role %>
-                    class="active"
-                <% end %>
+                class="nav-item"
 
                 <% if scan_count > 0 %>
                     title="<%= pluralize scan_count, 'scan' %>"
@@ -40,11 +37,11 @@
                     title="No scans"
                 <% end %>
             >
-                <%= link_to site_role_path( @site, role ) do %>
+                <%= link_to site_role_path( @site, role ), class: "nav-link #{'active' if @site_role == role}" do %>
                     <%= role %>
 
                     <% if scan_count > 0 %>
-                        <span class="badge badge-info">
+                        <span class="badge badge-pill badge-info">
                             <%= scan_count %>
                         </span>
                     <% end %>

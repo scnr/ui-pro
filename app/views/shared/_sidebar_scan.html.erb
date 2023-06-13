@@ -1,5 +1,5 @@
 <div id="sidebar-scan">
-    <ul class="nav nav-stacked flex-column">
+    <ul class="nav nav-pills nav-stacked flex-column">
         <li class="nav-item">
             <%= link_to_with_filters @scan, class: "nav-link #{('active' if params[:controller] == 'scans')}" do %>
                 <% if @issue %>
@@ -13,7 +13,7 @@
 
     <div class="row d-block">
       <div class="md-12">
-        <h4>
+        <h6>
             <% if !@scan.status %>
                 <span class="scan-status badge badge-primary" >
                     <%= @scan.scheduled? ? 'Pending' : 'Unscheduled' %>
@@ -23,7 +23,7 @@
                     <%= @scan.status.to_s.capitalize %>
                 </span>
             <% end %>
-        </h4>
+        </h6>
       </div>
     </div>
 
