@@ -15,22 +15,24 @@
         <%= @profile.id ? 'Update' : 'Create' %>
     </button>
 <% else %>
-    <%= render 'actions', profile: @profile %>
+    <div class="row d-block mb-2">
+        <%= render 'actions', profile: @profile %>
+    </div>
 <% end %>
 
 <hr/>
 
 <div id="scrollspy-container">
     <ul class="nav nav-pills nav-stacked sidenav">
-        <li>
-            <a href="#top" class="scroll">
+        <li class="nav-item">
+            <a href="#top" class="nav-link scroll">
                 <i class="fa fa-chevron-up"></i>
                 Top
             </a>
         </li>
         <% sections.each do |id, title| %>
-            <li>
-                <a href="#<%= id.to_s %>" class="scroll">
+            <li class="nav-item">
+                <a href="#<%= id.to_s %>" class="nav-link scroll">
                     <%= title.to_s.html_safe %>
                 </a>
             </li>

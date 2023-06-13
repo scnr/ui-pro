@@ -6,23 +6,23 @@
 }
 %>
 
-<button class="btn btn-primary" onclick="$('.profile-form').submit()">
+<button class="btn btn-primary mb-2" onclick="$('.profile-form').submit()">
     Save
 </button>
 
 <hr/>
 
 <div id="scrollspy-container">
-    <ul class="nav nav-pills nav-stacked sidenav">
-        <li>
-            <a href="#top" class="scroll">
+    <ul class="nav nav-pills nav-stacked sidenav flex-column">
+        <li class="nav-item">
+            <a href="#top" class="nav-link scroll">
                 <i class="fa fa-chevron-up"></i>
                 Top
             </a>
         </li>
         <% sections.each do |id, title| %>
-            <li>
-                <a href="#<%= id.to_s %>" class="scroll">
+            <li class="nav-item">
+                <a href="#<%= id.to_s %>" class="nav-link scroll">
                     <%= title.to_s.html_safe %>
                 </a>
             </li>

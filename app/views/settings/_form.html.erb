@@ -14,7 +14,7 @@
                                 <ul class="list-unstyled">
                                     <% messages.each do |message| %>
                                         <li>
-                                            <span class="help-block">
+                                            <span class="text text-muted">
                                                 <%= message %>
                                             </span>
                                         </li>
@@ -74,7 +74,7 @@
                     <%= messages_for( :max_parallel_scans ) %>
 
                     <p id="max_parallel_scans_auto-help-block"
-                       class="help-block alert alert-info
+                       class="text text-muted alert alert-info
                        <%= 'hide' if !@settings.max_parallel_scans_auto? %>">
 
                         The system will determine the amount of scans that can
@@ -86,7 +86,7 @@
                     </p>
 
                     <p id="max_parallel_scans-help-block"
-                       class="help-block alert alert-warning
+                       class="text text-muted alert alert-warning
                        <%= 'hide' if @settings.max_parallel_scans_auto? %>">
 
                         Please make sure that the machine has enough available

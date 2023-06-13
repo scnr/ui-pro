@@ -17,7 +17,7 @@
                             <ul class="list-unstyled">
                                 <% messages.each do |message| %>
                                     <li>
-                                        <span class="help-block">
+                                        <span class="text text-muted">
                                             <%= message %>
                                         </span>
                                     </li>
@@ -45,7 +45,7 @@
                 <div class="col-md-6 input-help">
                     <%= messages_for( :max_parallel_scans ) %>
 
-                    <p class="help-block alert alert-warning">
+                    <p class="text text-muted alert alert-warning">
                         It is recommended that the value be set to <kbd>1</kbd>,
                         in order to keep server stress low and prevent sessions
                         of authenticated scans from interfering with each other.
@@ -75,7 +75,7 @@
         <div class="col-md-6 input-help">
           <%= messages_for( :scan_mode ) %>
 
-          <p class="help-block alert alert-info">
+          <p class="text text-muted alert alert-info">
             Different web application may require different types of audit modes to yield best results. <br/>
             Adjust accordingly.
           </p>
@@ -93,7 +93,7 @@
                 <small>What platforms does the application use?</small>
             </h2>
 
-            <div class="help-block">
+            <div class="text text-muted mb-2">
                 Providing as much platform information as possible will result
                 in a much faster and focused scan.
             </div>
@@ -169,7 +169,7 @@
                 <small>Are there any special considerations regarding the scope of the scan?</small>
             </h2>
 
-            <div class="help-block">
+            <div class="text text-muted">
                 If there are dangerous, redundant or generally unwanted resources,
                 you can configure the site-wide scan scope to limit their processing
                 or exclude them altogether.
@@ -187,7 +187,7 @@
                 </div>
                 <div class="col-md-6 textarea-help">
                     <%= messages_for( :scope_exclude_file_extensions ) %>
-                    <p class="help-block">Separate extensions with space.</p>
+                    <p class="text text-muted">Separate extensions with space.</p>
                 </div>
             </div>
 
@@ -203,7 +203,7 @@
                 </div>
                 <div class="col-md-6 textarea-help">
                     <%= messages_for( :scope_template_path_patterns ) %>
-                    <p class="help-block">Input each rule in its own line.</p>
+                    <p class="text text-muted">Input each rule in its own line.</p>
                 </div>
             </div>
 
@@ -217,7 +217,7 @@
                 </div>
                 <div class="col-md-6 textarea-help">
                     <%= messages_for( :scope_exclude_path_patterns ) %>
-                    <p class="help-block">Input each rule in its own line.</p>
+                    <p class="text text-muted">Input each rule in its own line.</p>
                 </div>
             </div>
 
@@ -253,7 +253,7 @@
                     </div>
                     <div class="col-md-6 textarea-help">
                         <%= messages_for( :scope_extend_paths ) %>
-                        <p class="help-block">Input each path in its own line.</p>
+                        <p class="text text-muted">Input each path in its own line.</p>
                     </div>
                 </div>
 
@@ -269,7 +269,7 @@
                     </div>
                     <div class="col-md-6 textarea-help">
                         <%= messages_for( :scope_exclude_content_patterns ) %>
-                        <p class="help-block">Input each rule in its own line.</p>
+                        <p class="text text-muted">Input each rule in its own line.</p>
                     </div>
                 </div>
             <% end %>
@@ -295,7 +295,7 @@
                 </div>
                 <div class="col-md-6 textarea-help">
                     <%= messages_for( :audit_link_templates ) %>
-                    <p class="help-block">
+                    <p class="text text-muted">
                         For example, to extract the <code>input1</code> and <code>input2</code> inputs from
                         <code>http://test.com/input1/value1/input2/value2</code> use
                         <code>/input1\/(?&lt;input1&gt;\w+)\/input2\/(?&lt;input2&gt;\w+)/</code>.
@@ -316,7 +316,7 @@
                 </div>
                 <div class="col-md-6 textarea-help">
                     <%= messages_for( :scope_url_rewrites ) %>
-                    <p class="help-block">
+                    <p class="text text-muted">
                         Rules take the format of <kbd>pattern:substitution</kbd>,
                         input each rule in its own line.<br/>
 
@@ -340,7 +340,7 @@
                 </div>
                 <div class="col-md-6 textarea-help">
                     <%= messages_for( :input_values ) %>
-                    <p class="help-block">
+                    <p class="text text-muted">
                         Rules take the format of <kbd>pattern=value</kbd>,
                         input each rule in its own line &mdash; <kbd>pattern</kbd>
                         will be matched against input names.
@@ -398,7 +398,7 @@
                 <div class="col-md-6 textarea-help">
                     <%= messages_for( :http_cookies ) %>
 
-                    <p class="help-block">
+                    <p class="text text-muted">
                         Cookies take the format of <kbd>name=value</kbd>,
                         input each cookie in its own line.
                     </p>
@@ -424,7 +424,7 @@
                 </div>
                 <div class="col-md-6 textarea-help">
                     <%= messages_for( :http_request_headers ) %>
-                    <p class="help-block">
+                    <p class="text text-muted">
                         Headers take the format of <kbd>name=value</kbd>,
                         input each header in its own line.
                     </p>
@@ -471,7 +471,7 @@
                 </div>
                 <div class="col-md-6 textarea-help">
                     <%= messages_for( :dom_wait_for_elements ) %>
-                    <div class="help-block">
+                    <div class="text text-muted">
                         <p>
                             Rules take the format of <kbd>pattern=css</kbd>,
                             input each rule in its own line.
