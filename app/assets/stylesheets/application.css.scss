@@ -65,10 +65,6 @@ td.line-numbers {
 
 .breadcrumbs {
     background: none repeat scroll 0 0 #343a40;
-    border-color: -moz-use-text-color #343a40 #343a40;
-    border-right: 1px solid #252525;
-    border-style: none solid solid;
-    border-width: 0 1px 1px;
     margin-left: -1px;
     margin-bottom: -1px;
 }
@@ -153,9 +149,9 @@ li .fa-arrow-right {
     left: 0;
     overflow-x: hidden;
     overflow-y: auto;
-    padding: 10px;
+    padding: 20px;
     position: fixed;
-    top: 71px;
+    top: 43px;
     z-index: 1000;
 
     .nav {

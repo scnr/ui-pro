@@ -7,9 +7,9 @@
 %>
 
 <% if scans.any? %>
-<ul id="sidebar-scans" class="nav nav-pills nav-stacked">
-    <li class="nav-header">
-        <a>
+<ul id="sidebar-scans" class="nav nav-pills nav-stacked flex-column">
+    <li class="nav-header nav-item">
+        <a class="nav-link">
             Scans
 
             <% if total_scan_count != current_scan_count %>
@@ -37,7 +37,7 @@
             end
     %>
 
-        <li id="sidebar-scans-id-<%= scan.id %>"
+        <li class="nav-item" id="sidebar-scans-id-<%= scan.id %>"
 
             <% if revision_count > 0 %>
                 <% if issue_count > 0 %>
@@ -49,22 +49,22 @@
                 title="Has not run yet."
             <% end %>
         >
-            <%= link_to_with_filters scan do %>
+            <%= link_to_with_filters scan, class: 'nav-link' do %>
                 <%= scan.name %>
 
                 <i class="fa fa-arrow-right">
                 </i>
 
                 <% if revision_count > 0 %>
-                    <span class="badge badge-severity-<%= max_severity %>">
+                    <span class="label-severity badge-severity-<%= max_severity %>">
                         <%= issue_count %>
                     </span>
                 <% end %>
             <% end %>
         </li>
 
-        <li class="sidebar-info" id="sidebar-scans-id-<%= scan.id %>-info">
-            <small class="text-muted">
+        <li class="nav-item" class="sidebar-info" id="sidebar-scans-id-<%= scan.id %>-info">
+            <small class="nav-link text-muted">
                 <%= render partial: '/shared/scan_info', locals: {
                         scan: scan
                 } %>

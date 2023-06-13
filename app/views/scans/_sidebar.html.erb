@@ -12,9 +12,9 @@
     <hr/>
 
     <div id="sidebar-revisions">
-        <ul class="nav nav-pills nav-stacked">
-            <li class="nav-header">
-                <a>
+        <ul class="nav nav-pills nav-stacked flex-column">
+            <li class="nav-item nav-header">
+                <a class="nav-link">
                     Revisions
 
                     <% if total_revision_count != current_revision_count %>
@@ -40,21 +40,19 @@
                    end
             %>
 
-                <li id="sidebar-revisions-id-<%= revision.id %>"
+                <li class="nav-item" id="sidebar-revisions-id-<%= revision.id %>"
 
                     <% if issue_count > 0 %>
                         title="<%= pluralize issue_count, 'new issue' %> with a maximum severity of <%= max_severity %>."
                     <% else %>
                         title="<%= pluralize issue_count, 'new issue' %>."
                     <% end %>
-
-                    class="<%= 'active' if active %>"
                 >
 
-                    <%= link_to_with_filters revision do %>
+                    <%= link_to_with_filters revision, class: "nav-link #{('active' if active)}" do %>
                         #<%= revision.index %>
 
-                        <span class="text-muted">
+                        <span>
                             &ndash;
                             <%= pluralize revision.sitemap_entries.size, 'page' %>
 
@@ -65,16 +63,16 @@
                         </span>
 
                         <span>
-                            <span class="badge badge-severity-<%= max_severity %>">
+                            <span class="label-severity badge-severity-<%= max_severity %>">
                                 <%= issue_count %>
                             </span>
                         </span>
                     <% end %>
                 </li>
 
-                <li class="sidebar-info"
+                <li class="nav-item sidebar-info"
                     id="sidebar-revisions-id-<%= revision.id %>-info">
-                    <small class="text-muted">
+                    <small class="nav-link text-muted">
                         <%= render partial: '/shared/revision_info',
                                    locals: {
                                            scan:               @scan,
