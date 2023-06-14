@@ -1,8 +1,8 @@
 <div class="card-group" id="accordion" role="tablist" aria-multiselectable="true">
     <% components.each do |shortname, info| %>
         <div class="card-header" role="tab">
-            <h4 class="card-title" data-toggle="collapse"
-                role="tab" data-target="#<%= shortname %>">
+            <h4 class="card-title" data-bs-toggle="collapse"
+                role="tab" data-bs-target="#<%= shortname %>">
                 <%= info[:name] %> (<code><%= shortname %></code>)
             </h4>
             <div style="height: 0px;" id="<%= shortname %>" class="panel-collapse collapse">

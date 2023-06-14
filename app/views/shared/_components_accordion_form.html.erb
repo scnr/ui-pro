@@ -2,8 +2,8 @@
     <% components.each do |shortname, info| %>
         <div class="card-header profile-<%= input %>"
              id="profile-<%= input %>-<%= shortname %>-container">
-            <h4 class="card-title" data-toggle="collapse"
-                role="tab" data-target="#<%= shortname %>">
+            <h4 class="card-title" data-bs-toggle="collapse"
+                role="tab" data-bs-target="#<%= shortname %>">
                 <%= info[:name] %> (<code><%= shortname %></code>)
             </h4>
 
