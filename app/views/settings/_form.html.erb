@@ -73,7 +73,7 @@
                 <div class="col-md-6 input-help">
                     <%= messages_for( :max_parallel_scans ) %>
 
-                    <p id="max_parallel_scans_auto-help-block"
+                    <p id="max_parallel_scans_auto-text text-muted"
                        class="text text-muted alert alert-info
                        <%= 'd-none' if !@settings.max_parallel_scans_auto? %>">
 
@@ -85,7 +85,7 @@
                         on workload.</i>
                     </p>
 
-                    <p id="max_parallel_scans-help-block"
+                    <p id="max_parallel_scans-text text-muted"
                        class="text text-muted alert alert-warning
                        <%= 'd-none' if @settings.max_parallel_scans_auto? %>">
 

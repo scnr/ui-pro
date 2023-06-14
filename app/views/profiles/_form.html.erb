@@ -14,7 +14,7 @@
                                 <ul class="list-unstyled">
                                     <% messages.each do |message| %>
                                         <li>
-                                            <span class="help-block">
+                                            <span class="text text-muted">
                                                 <%= message %>
                                             </span>
                                         </li>
@@ -111,7 +111,7 @@
                 </div>
                 <div class="col-md-6 textarea-help">
                     <%= messages_for( :scope_include_path_patterns ) %>
-                    <p class="help-block">Input each rule in its own line.</p>
+                    <p class="text text-muted">Input each rule in its own line.</p>
                 </div>
             </div>
 
@@ -125,7 +125,7 @@
                 </div>
                 <div class="col-md-6 textarea-help">
                     <%= messages_for( :scope_exclude_path_patterns ) %>
-                    <p class="help-block">Input each rule in its own line.</p>
+                    <p class="text text-muted">Input each rule in its own line.</p>
                 </div>
             </div>
 
@@ -164,7 +164,7 @@
                     </div>
                     <div class="col-md-6 textarea-help">
                         <%= messages_for( :scope_exclude_content_patterns ) %>
-                        <p class="help-block">Input each rule in its own line.</p>
+                        <p class="text text-muted">Input each rule in its own line.</p>
                     </div>
                 </div>
                 <% end %>
@@ -302,7 +302,7 @@
                     </div>
                     <div class="col-md-6 textarea-help">
                         <%= messages_for( :audit_include_vector_patterns ) %>
-                        <p class="help-block">Input one pattern per line.</p>
+                        <p class="text text-muted">Input one pattern per line.</p>
                     </div>
                 </div>
 
@@ -316,7 +316,7 @@
                     </div>
                     <div class="col-md-6 textarea-help">
                         <%= messages_for( :audit_exclude_vector_patterns ) %>
-                        <p class="help-block">Input one pattern per line.</p>
+                        <p class="text text-muted">Input one pattern per line.</p>
                     </div>
                 </div>
             <% end %>
@@ -360,7 +360,7 @@
                                            class_name: 'col-md-6'
                                    } %>
                     <% else %>
-                        <p class="help-block alert alert-info">No active checks are available.</p>
+                        <p class="text text-muted alert alert-info">No active checks are available.</p>
                     <% end %>
                 </div>
             </div>
@@ -382,7 +382,7 @@
                                            class_name: 'col-md-6'
                                    } %>
                     <% else %>
-                        <p class="help-block alert alert-info">No passive checks are available.</p>
+                        <p class="text text-muted alert alert-info">No passive checks are available.</p>
                     <% end %>
                 </div>
             </div>

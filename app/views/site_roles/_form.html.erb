@@ -21,7 +21,7 @@
                             <ul class="list-unstyled">
                                 <% messages.each do |message| %>
                                     <li>
-                                        <span class="help-block">
+                                        <span class="text text-muted">
                                             <%= message %>
                                         </span>
                                     </li>
@@ -72,7 +72,7 @@
                                 input_html: { value: @site_role.scope_exclude_path_patterns.join( "\n" ) }%>
 
                     <%= messages_for( :scope_exclude_path_patterns ) %>
-                    <p class="help-block">Input each rule in its own line.</p>
+                    <p class="text text-muted">Input each rule in its own line.</p>
                 </div>
 
                 <div class="col-md-5">
@@ -135,7 +135,7 @@
                                  role="tabpanel"
                                  id="form">
 
-                                <div class="help-block">
+                                <div class="text text-muted">
                                     When using form-based authentication the system
                                     will look for a form whose inputs include the
                                     specified parameters at the given URL.
@@ -167,7 +167,7 @@
                                             }
                                 %>
 
-                                <p class="help-block">
+                                <p class="text text-muted">
                                     Parameters take the format of <kbd>name=value</kbd>,
                                     input each pair in its own line.
                                 </p>

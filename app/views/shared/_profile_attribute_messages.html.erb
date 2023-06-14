@@ -1,17 +1,17 @@
 <% if !(description = ProfileAttributeMessages.description_for( attribute )).to_s.empty? %>
-<p class="help-block">
+<p class="text text-muted">
     <%= description %>
 </p>
 <% end %>
 
 <% if !(notice = ProfileAttributeMessages.notice_for( attribute )).to_s.empty? %>
-    <p class="help-block">
+    <p class="text text-muted">
         <%= notice %>
     </p>
 <% end %>
 
 <% if !(warning = ProfileAttributeMessages.warning_for( attribute )).to_s.empty? %>
-    <p class="help-block alert alert-warning">
+    <p class="text text-muted alert alert-warning">
         <%= warning %>
     </p>
 <% end %>
