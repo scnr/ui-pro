@@ -97,8 +97,7 @@ section {
 }
 
 .authform form {
-  @extend .well !optional;
-  @extend .well-lg !optional;
+  @extend .card !optional;
   padding-bottom: 40px;
 }
 
@@ -112,7 +111,7 @@ section {
 }
 
 .authform fieldset {
-  @extend .well !optional;
+  @extend .card !optional;
 }
 
 #error_explanation {
