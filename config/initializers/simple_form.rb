@@ -40,7 +40,7 @@ SimpleForm.setup do |config|
     b.optional :maxlength
 
     # Calculate minlength from length validations for string inputs
-    # b.optional :minlength
+    b.optional :minlength
 
     # Calculates pattern from format validations for string inputs
     b.optional :pattern
@@ -71,7 +71,7 @@ SimpleForm.setup do |config|
   # Defaults to :nested for bootstrap config.
   #   inline: input + label
   #   nested: label > input
-  config.boolean_style = :inline
+  config.boolean_style = :inlune
 
   # Default class for buttons
   config.button_class = 'btn'
