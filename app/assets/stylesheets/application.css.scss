@@ -16,6 +16,10 @@
 @import "font-kit-rails/open-sans";
 @import "**/*";
 
+a {
+    text-decoration: none;
+}
+
 .fa .badge, .tick {
     font-family: "Open Sans", sans-serif;
 }

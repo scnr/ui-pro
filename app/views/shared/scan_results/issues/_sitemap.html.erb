@@ -15,7 +15,7 @@
         <%= link_to "All #{pluralize sitemap.size, 'page'}", filter_params_without_page %>
 
         <%= link_to filter_params_without_page do %>
-            <span class="label-severity badge-severity-<%= total_max_severity %>">
+            <span class="badge rounded-pill badge-severity-<%= total_max_severity %>">
                 <%= total_issue_count %>
             </span>
         <% end %>
@@ -44,7 +44,7 @@
             %>
 
             <%= link_to data[:internal] do %>
-                <span class="label-severity badge-severity-<%= max_severity %>">
+                <span class="badge rounded-pill badge-severity-<%= max_severity %>">
                     <%= data[:issue_count] %>
                 </span>
             <% end %>

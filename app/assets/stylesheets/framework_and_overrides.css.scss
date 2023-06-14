@@ -257,7 +257,7 @@ section {
 
 .label-severity {
   @extend .badge !optional;
-  @extend .badge-pill !optional;
+  @extend .rounded-pill !optional;
 }
 
 .label-severity-high {
@@ -286,7 +286,8 @@ section {
 }
 
 .label-severity-undetermined {
-  //@extend .label-default;
+  @extend .text-black;
+  @extend .bg-light;
 }
 
 .text-severity {

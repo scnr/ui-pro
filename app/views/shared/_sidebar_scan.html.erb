@@ -15,11 +15,11 @@
       <div class="md-12">
         <h6>
             <% if !@scan.status %>
-                <span class="scan-status badge badge-primary" >
+                <span class="scan-status badge bg-primary" >
                     <%= @scan.scheduled? ? 'Pending' : 'Unscheduled' %>
                 </span>
             <% else %>
-                <span class="scan-status badge badge-<%= status_to_label( @scan.status ) %>" >
+                <span class="scan-status badge bg-<%= status_to_label( @scan.status ) %>" >
                     <%= @scan.status.to_s.capitalize %>
                 </span>
             <% end %>

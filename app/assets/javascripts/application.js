@@ -12,7 +12,7 @@
 //
 //= require jquery
 //= require popper
-//= require bootstrap
+//= require bootstrap-sprockets
 //= require d3
 //= require ace/ace
 //= require ace/worker-html
@@ -186,7 +186,7 @@ function setup() {
     window.topOffset = $('#top-nav').height();
 
     // Init all tooltips.
-    $('[data-toggle="tooltip"]').tooltip();
+    // $('[data-toggle="tooltip"]').tooltip();
 
     $('a[data-toggle="tab"]').on('shown.bs.tab', setupScroll);
 
