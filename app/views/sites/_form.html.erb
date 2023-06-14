@@ -1,13 +1,19 @@
 <div class="row mb-3">
     <div class="col-md-12">
-        <%= simple_form_for @site, wrapper: :inline_form, html: { class: 'form-inline' } do |f| %>
+        <%= simple_form_for @site, html: { class: 'row gx-2 gy-2 align-items-center' } do |f| %>
             <%= f.error_notification %>
-            <%= f.input :protocol, as: :select, default: :http, collection: [:http, :https], wrapper_html: { class: 'col-auto' } %>
-            ://
-            <%= f.input :host, placeholder: 'www.example.com', wrapper_html: { class: 'col-auto' } %>
-            :
-            <%= f.input :port, wrapper_html: { class: 'col-auto' } %>
-            <%= f.button :submit, value: 'Add', wrapper_html: { class: 'col-auto' } %>
+            <%= f.input :protocol, as: :select, default: :http, collection: [:http, :https], label: false, wrapper_html: { class: 'col-auto' } %>
+            <div class="mb-3 col-auto">
+                ://
+            </div>
+            <%= f.input :host, placeholder: 'www.example.com', label: false, wrapper_html: { class: 'col-auto' }, input_html: { class: 'w-100' } %>
+            <div class="mb-3 col-auto">
+                :
+            </div>
+            <%= f.input :port, label: false, wrapper_html: { class: 'col-auto' } %>
+            <div class="mb-3 col-auto">
+                <%= f.button :submit, value: 'Add' %>
+            </div>
         <% end %>
     </div>
 </div>
