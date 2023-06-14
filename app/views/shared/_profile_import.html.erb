@@ -4,9 +4,7 @@
             <div class="modal-header">
                 <h4>Import <%= type %>:</h3>
 
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <%= simple_form_for type.gsub( '-', '_' ), url: import_url, html: { multipart: true } do |f| %>
@@ -18,7 +16,7 @@
                 </div>
                 <div class="modal-footer">
                     <%= f.button :submit, value: 'Import', class: 'btn btn-sm btn-primary' %>
-                    <button class="btn btn-sm btn-light" data-dismiss="modal" aria-hidden="true">Close</button>
+                    <button class="btn btn-sm btn-light" type="button" data-bs-dismiss="modal" aria-hidden="true">Close</button>
                 </div>
             <% end %>
         </div>
