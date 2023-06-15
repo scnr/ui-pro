@@ -137,11 +137,11 @@
         text-decoration: line-through;
     }
 
-    .check_boxes {
+    .form-check-input {
         display: none;
     }
 
-    .check_boxes:checked + label {
+    .form-check-input:checked + label {
         font-weight: bold;
         text-decoration: none;
     }
