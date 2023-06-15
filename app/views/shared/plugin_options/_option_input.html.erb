@@ -10,7 +10,7 @@
     <% if option.type == :path %>
         disabled="disabled" type="file"
     <% elsif option.type == :bool %>
-        type="checkbox" class="boolean <%= required %>"
+        type="checkbox" class="form-check-input <%= required %>"
 
         <% if !value.nil? %>
             <%= value ? 'checked="checked"' : '' %>

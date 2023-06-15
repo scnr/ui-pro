@@ -347,7 +347,7 @@
                 <div class="col-md-12">
                     <h3>
                         Active
-                        <small>These checks will actively engage the web application via its inputs (links, forms, etc.).</small>
+                        <small class="text text-muted">These checks will actively engage the web application via its inputs (links, forms, etc.).</small>
                     </h3>
                     <% active = checks.select { |n, i| i[:path].include?( '/checks/active' ) } %>
                     <% if active.any? %>
