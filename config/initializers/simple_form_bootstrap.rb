@@ -16,7 +16,7 @@ SimpleForm.setup do |config|
   config.button_class = 'btn btn-primary'
 
   # Define the default class of the input wrapper of the boolean input.
-  config.boolean_label_class = 'form-check-label'
+  # config.boolean_label_class = 'form-check-label'
 
   # How the label text should be generated altogether with the required text.
   config.label_text = lambda { |label, required, explicit_label| "#{label} #{required}" }
@@ -56,21 +56,20 @@ SimpleForm.setup do |config|
     b.optional :min_max
     b.optional :readonly
     b.use :label, class: 'form-label'
-    b.use :input, class: 'form-control'
+    b.use :input, class: 'form-control', error_class: 'is-invalid'
     b.use :full_error, wrap_with: { class: 'invalid-feedback' }
     b.use :hint, wrap_with: { class: 'form-text' }
   end
 
   # vertical input for boolean
-  config.wrappers :vertical_boolean, tag: 'fieldset', class: 'mb-3' do |b|
+  config.wrappers :vertical_boolean, tag: 'div', class: 'form-check mb-3' do |b|
     b.use :html5
     b.optional :readonly
-    b.wrapper :form_check_wrapper, class: 'form-check' do |bb|
-      bb.use :input, class: 'form-check-input', error_class: 'is-invalid', valid_class: 'is-valid'
-      bb.use :label, class: 'form-check-label'
-      bb.use :full_error, wrap_with: { class: 'invalid-feedback' }
-      bb.use :hint, wrap_with: { class: 'form-text' }
-    end
+
+    b.use :input, class: 'form-check-input', error_class: 'is-invalid'
+    b.use :label, class: 'form-check-label'
+    b.use :full_error, wrap_with: { class: 'invalid-feedback' }
+    b.use :hint, wrap_with: { class: 'form-text' }
   end
 
   # vertical input for radio buttons and check boxes
