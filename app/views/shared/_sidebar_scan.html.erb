@@ -11,8 +11,8 @@
         </li>
     </ul>
 
-    <div class="row d-block">
-      <div class="md-12">
+    <div class="row">
+      <div class="col-md-12">
         <h6>
             <% if !@scan.status %>
                 <span class="scan-status badge bg-primary" >
@@ -27,13 +27,13 @@
       </div>
     </div>
 
-    <div class="row buttons d-block">
-      <div class="md-12">
+    <div class="row buttons">
+      <div class="col-md-12">
         <%= render partial: '/scans/buttons', locals: { scan: @scan } %>
       </div>
     </div>
 
-    <div class="row d-block text text-muted mb-3" id="scan-info-details">
+    <div class="row text text-muted mb-3" id="scan-info-details">
         <%= render partial: '/shared/scan_info', locals: {
             scan: @scan
         } %>

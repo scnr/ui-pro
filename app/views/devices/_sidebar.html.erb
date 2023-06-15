@@ -5,8 +5,10 @@
         <%= @device.id ? 'Update' : 'Create' %>
     </button>
 <% else %>
-    <div class="row d-block mb-2">
-        <%= render 'actions', device: @device %>
+    <div class="row mb-2">
+        <div class="col-auto">
+            <%= render 'actions', device: @device %>
+        </div>
     </div>
 <% end %>
 

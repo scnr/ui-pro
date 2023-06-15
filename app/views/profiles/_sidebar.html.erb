@@ -15,8 +15,10 @@
         <%= @profile.id ? 'Update' : 'Create' %>
     </button>
 <% else %>
-    <div class="row d-block mb-2">
-        <%= render 'actions', profile: @profile %>
+    <div class="row mb-2">
+        <div class="col-auto">
+            <%= render 'actions', profile: @profile %>
+        </div>
     </div>
 <% end %>
 
