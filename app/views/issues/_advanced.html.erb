@@ -6,7 +6,7 @@
 
         Affected page:
 
-        <small>
+        <span class="text-muted fs-6">
             <%= link_to_url_with_external(
                     external: issue.page.dom.url,
                     internal: site_path(
@@ -16,7 +16,7 @@
                     display_path_only: true
                 )
             %>
-        </small>
+        </span>
     </h3>
 
     <p class="text-muted">
@@ -39,7 +39,7 @@
 
         Referring page:
 
-        <small>
+        <span class="text-muted fs-6">
             <%= link_to_url_with_external(
                     external: issue.referring_page.dom.url,
                     internal: site_path(
@@ -49,7 +49,7 @@
                     display_path_only: true
                 )
             %>
-        </small>
+        </span>
     </h3>
 
     <p class="text-muted">

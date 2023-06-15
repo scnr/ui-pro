@@ -55,13 +55,13 @@
 
                 <% if issue_count > 0 %>
                   ,
-                    <small>
+                    <span class="text-muted fs-6">
                         with a maximum severity of
 
                         <span class="label-severity label-severity-<%= max_severity %>">
                             <%= max_severity.capitalize %>
                         </span>
-                    </small>
+                    </span>
                 <% end %>
             </h3>
         </div>
@@ -115,12 +115,12 @@
 
                 <small class="scan-duration-clock-hms">
                   <%= seconds_to_hms @revision.duration %>
-                </small>
+                </span>
 
             <% else %>
-                <small>
+                <span class="text-muted fs-6">
                   <%= seconds_to_hms @revision.duration %>
-                </small>
+                </span>
           <% end %>
           </h4>
 

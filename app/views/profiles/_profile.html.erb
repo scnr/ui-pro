@@ -9,7 +9,7 @@
 <div id="scope">
     <h2 id="scope-h">
         Scope
-        <small>Rules governing scan coverage</small>
+        <span class="text-muted fs-6">Rules governing scan coverage</span>
     </h2>
 
     <div id="scope_page_limit" class="row">
@@ -124,7 +124,7 @@
 <div id="audit">
     <h2 id="audit-h">
         Audit
-        <small>How the scanner will audit web application inputs</small>
+        <span class="text-muted fs-6">How the scanner will audit web application inputs</span>
     </h2>
 
     <div id="audit_forms" class="row">
@@ -337,7 +337,7 @@
 <div id="checks">
     <h2 id="checks-h">
         Checks
-        <small>The security checks to be run again the web application</small>
+        <span class="text-muted fs-6">The security checks to be run again the web application</span>
     </h2>
 
     <% if profile.checks.any? %>
@@ -345,7 +345,7 @@
             <div id="checks-active" class="col-md-12">
                 <h3>
                     Active
-                    <small>These checks will actively engage the web application via its inputs (links, forms, etc.).</small>
+                    <span class="text-muted fs-6">These checks will actively engage the web application via its inputs (links, forms, etc.).</span>
                 </h3>
 
                 <% active = profile.checks_with_info.select { |n, i| i[:path].include?( '/checks/active' ) } %>
@@ -368,7 +368,7 @@
             <div id="checks-passive" class="col-md-12">
                 <h3>
                     Passive
-                    <small>These checks will passively collect data.</small>
+                    <span class="text-muted fs-6">These checks will passively collect data.</span>
                 </h3>
 
                 <% passive = profile.checks_with_info.select { |n, i| i[:path].include?( '/checks/passive' ) } %>
@@ -397,7 +397,7 @@
 <div id="plugins">
     <h2 id="plugins-h">
         Plugins
-        <small>Assisting components to be enabled during the process.</small>
+        <span class="text-muted fs-6">Assisting components to be enabled during the process.</span>
     </h2>
 
     <% if @profile.plugins.any? %>

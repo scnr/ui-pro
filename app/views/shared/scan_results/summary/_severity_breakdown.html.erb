@@ -7,7 +7,7 @@
 <h3>
     <%= issue_count %> <%= 'issue'.pluralize issue_count %>,
 
-    <small>
+    <span class="text-muted fs-6">
         <% severities_a.each_with_index do |severity, i| %>
             <%= 'and' if i > 0 && severity == severities_a[severities_a.size-1] %>
 
@@ -19,5 +19,5 @@
         <% end %>
 
         severity
-    </small>
+    </span>
 </h3>

@@ -17,12 +17,12 @@
                     <%= 'page'.pluralize sitemap_with_issues.size %>
                     with issues,
 
-                    <small>
+                    <span class="text-muted fs-6">
                         out of
                         <strong>
                             <%= sitemap.size %>
                         </strong>
-                    </small>
+                    </span>
                 </h3>
             </div>
         <% end %>
@@ -33,13 +33,13 @@
                 <%= 'issues'.pluralize issues_count %>,
 
                 <% if issues_count > 0 %>
-                    <small>
+                    <span class="text-muted fs-6">
                         with a maximum severity of
 
                         <span class="badge label-severity-<%= max_severity %>">
                             <%= max_severity.capitalize %>
                         </span>
-                    </small>
+                    </span>
                 <% end %>
             </h3>
         </div>
@@ -49,10 +49,10 @@
                 <strong><%= rc = revisions.size %></strong>
                 <%= 'revision'.pluralize rc %>,
 
-                <small>
+                <span class="text-muted fs-6">
                     from <strong><%= scans.size %></strong>
                     <%= 'scan'.pluralize(scans.size) %>
-                </small>
+                </span>
             </h3>
         </div>
     </div>
