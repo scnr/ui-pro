@@ -158,20 +158,17 @@ function scrollToChild( parent_selector, child_selector ){
 
 }
 
-// function setupScroll(){
-//     if( $('#scrollspy-container').is(':visible' ) ) {
-//         $('body').scrollspy({ target: '#scrollspy-container', offset: window.topOffset + 10 });
-//         $('body').scrollspy('refresh');
-//     } else {
-//         $('body').removeData( 'bs.scrollspy' );
-//     }
+function setupScroll(){
+    if( $('#scrollspy-container').is(':visible' ) ) {
+        const scrollSpy = new bootstrap.Scrollspy(document.body, {
+            target: '#scrollspy-container',
+            offset: window.topOffset + 20,
+            smoothScroll: true
+        });
 
-//     $( '.scroll' ).click( function( event ) {
-//         event.preventDefault();
-//         $( 'html,body' ).animate( { scrollTop: $( this.hash ).offset().top -
-//             window.topOffset }, 500 );
-//     });
-// }
+        scrollSpy.refresh();
+    };
+}
 
 // window.original_confirm = window.confirm;
 // Turbo.FormSubmission.confirmMethod = function( data, title, cb ){
@@ -188,9 +185,9 @@ function setup() {
     // Init all tooltips.
     // $('[data-toggle="tooltip"]').tooltip();
 
-    // $('a[data-toggle="tab"]').on('shown.bs.tab', setupScroll);
+    $('a[data-bs-toggle="tab"]').on('shown.bs.tab', setupScroll);
 
-    // setupScroll();
+    setupScroll();
 
     // Restore the last open tab from the URL fragment.
     openFromWindowLocation();
