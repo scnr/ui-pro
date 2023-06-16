@@ -56,18 +56,18 @@
                                 label: 'Maximum parallel scans'
                     %>
 
-                    <div class="form-group boolean optional setting_max_parallel_scans_auto">
-                        <label class="boolean optional control-label"
-                               for="setting_max_parallel_scans_auto">
-                            Auto
-                        </label>
-
-                        <input class="boolean optional"
+                    <div class="form-check boolean optional setting_max_parallel_scans_auto">
+                        <input class="boolean optional form-check-input"
                                name="setting[max_parallel_scans_auto]"
                                id="setting_max_parallel_scans_auto"
                                data-slots-total="<%= @slots_total_auto %>"
                                type="checkbox"
                                <%= 'checked=checked' if @settings.max_parallel_scans_auto? %>/>
+
+                        <label class="boolean optional form-check-label"
+                               for="setting_max_parallel_scans_auto">
+                            Auto
+                        </label>
                     </div>
                 </div>
                 <div class="col-md-6 input-help">
@@ -102,7 +102,7 @@
 
     <hr/>
 
-    <div id="http">
+    <div class="mt-3" id="http">
         <fieldset>
             <h2 id="http-h">
                 HTTP
@@ -206,7 +206,7 @@
 
     <hr/>
 
-    <div id="browser">
+    <div class="mt-3" id="browser">
         <fieldset>
             <h2 id="browser-h">
                 Browser
