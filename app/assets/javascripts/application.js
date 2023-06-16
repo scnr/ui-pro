@@ -183,7 +183,12 @@ function setup() {
     window.topOffset = $('#top-nav').height();
 
     // Init all tooltips.
-    // $('[data-toggle="tooltip"]').tooltip();
+    // https://github.com/twbs/bootstrap/issues/35710#issuecomment-1030352173
+    let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+
+    tooltipTriggerList.forEach(function (element) {
+        bootstrap.Tooltip.getOrCreateInstance(element);
+    });
 
     $('a[data-bs-toggle="tab"]').on('shown.bs.tab', setupScroll);
 
