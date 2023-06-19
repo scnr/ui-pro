@@ -68,8 +68,8 @@
                         %>
                     </div>
 
-                    <div class="col-md-4 d-flex">
-                        <%= sf.input :stop_after_hours, label: 'Stop after', hint: 'hours' %>
+                    <div class="col-md-4">
+                        <%= sf.input :stop_after_hours, label: 'Stop after', hint: 'hours', wrapper: :input_group %>
                         <%= sf.input :stop_suspend,
                                     label: 'Suspend instead of aborting',
                                     hint: 'Should the scan be suspended, the' +
@@ -109,38 +109,45 @@
                             <%= 'active' if !@scan.schedule.frequency_format ||
                                 @scan.schedule.frequency_format == 'simple' %>"
                             id="simple">
-                            Every
-                            <%= sf.input :day_frequency,
-                                            collection: (1..29),
-                                            as: :select,
-                                            label: false,
-                                            placeholder: 'Days (1-29)'
-                            %>
-                            days and
-                            <%= sf.input :month_frequency,
-                                            collection: (1..12),
-                                            as: :select,
-                                            label: false,
-                                            placeholder: 'Months (1-12)'
-                            %>
-                            months.
+                            <div class="d-flex flex-row align-items-center">
+                                Every
+                                <%= sf.input :day_frequency,
+                                                collection: (1..29),
+                                                as: :select,
+                                                label: false,
+                                                placeholder: 'Days (1-29)',
+                                                wrapper_html: { class: 'mx-2' }
+                                %>
+                                days and
+                                <%= sf.input :month_frequency,
+                                                collection: (1..12),
+                                                as: :select,
+                                                label: false,
+                                                placeholder: 'Months (1-12)',
+                                                wrapper_html: { class: 'mx-2' }
+                                %>
+                                months.
+                            </div>
                         </div>
 
                         <div role="tabpanel"
                             class="tab-pane update_schedule_preview
                             <%= 'active' if @scan.schedule.frequency_format == 'cron' %>"
                             id="cron">
-                            <%= sf.input :frequency_cron, label: false, as: :string %>
+                            <div class="d-flex flex-row align-items-center">
+                                <%= sf.input :frequency_cron, label: false, as: :string %>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="update_schedule_preview">
+                    <div class="update_schedule_preview mt-3 d-flex flex-row align-items-center">
                         Calculate the next occurrence from the scan's
                         <%= sf.input :frequency_base,
                                     collection: Schedule::FREQUENCY_BASES,
                                     as: :select,
                                     default: 'start',
-                                    label: false
+                                    label: false,
+                                    wrapper_html: { class: 'mx-2' }
                         %>
                         time.
                     </div>

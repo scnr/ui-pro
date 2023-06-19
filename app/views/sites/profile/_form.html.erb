@@ -57,7 +57,7 @@
 
     <hr/>
 
-  <div id="audit">
+  <div class="mt-3" id="audit">
     <fieldset>
       <h2 id="audit-h">
         Audit
@@ -86,7 +86,7 @@
 
   <hr/>
 
-  <div id="platforms">
+  <div class="mt-3" id="platforms">
         <fieldset>
             <h2 id="platforms-h">
                 Software stack
@@ -100,23 +100,23 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    <div class="card bg-info text-white">
-                        <div class="card-header">
+                    <div class="card">
+                        <div class="card-header bg-info text-white">
                             Popular configurations
                         </div>
 
                         <div class="card-body">
-                            <div class="btn-group">
-                                <button class="btn btn-light platforms-preset">
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-light platforms-preset">
                                     Linux, Apache, MySQL, PHP
                                 </button>
-                                <button class="btn btn-light platforms-preset">
+                                <button type="button"  class="btn btn-light platforms-preset">
                                     Linux, Nginx, Postgresql, Ruby, Ruby on Rails
                                 </button>
-                                <button class="btn btn-light platforms-preset">
+                                <button type="button"  class="btn btn-light platforms-preset">
                                     Linux, TomCat, Generic SQL family, Java
                                 </button>
-                                <button class="btn btn-light platforms-preset">
+                                <button type="button"  class="btn btn-light platforms-preset">
                                     MS Windows, IIS, MSSQL, ASP, ASP.NET
                                 </button>
                             </div>
@@ -125,7 +125,7 @@
                 </div>
             </div>
 
-            <div id="platforms-list" class="row">
+            <div id="platforms-list" class="row mt-3">
                 <% [:os, :servers, :db, :languages, :frameworks].each_with_index do |type, i| %>
                     <div class="col-md-2">
                         <div class="card bg-light">
@@ -162,7 +162,7 @@
 
     <hr/>
 
-    <div id="scope">
+    <div class="mt-3" id="scope">
         <fieldset>
             <h2 id="scope-h">
                 Scope
@@ -278,7 +278,7 @@
 
     <hr/>
 
-    <div id="inputs">
+    <div class="mt-3" id="inputs">
         <fieldset>
             <h2 id="inputs-h">
                 Inputs
@@ -356,7 +356,7 @@
 
     <hr/>
 
-    <div id="http">
+    <div class="mt-3" id="http">
         <fieldset>
             <h2 id="http-h">
                 HTTP
@@ -450,7 +450,7 @@
 
     <hr/>
 
-    <div id="browser">
+    <div class="mt-3" id="browser">
         <fieldset>
             <h2 id="browser-h">
                 Browser
@@ -503,7 +503,7 @@
         </fieldset>
     </div>
 
-    <div class="hide">
+    <div class="d-none">
         <%= f.input :apply, as: :fake %>
     </div>
 

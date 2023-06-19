@@ -13,7 +13,7 @@
                 <hr/>
                 <%= yield %>
             </div>
-            <textarea class="hide" id="login-script-<%= script %>-code"><%= code.html_safe %></textarea>
+            <textarea class="d-none" id="login-script-<%= script %>-code"><%= code.html_safe %></textarea>
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
                 <button onclick="insert_<%= script %>_code_into_editor()"

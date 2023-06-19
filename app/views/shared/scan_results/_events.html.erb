@@ -48,7 +48,7 @@
                            'table-success'
 
                        when 'update'
-                           'table-info event-with_object_changes'
+                           'info event-with_object_changes'
 
                        when 'destroy'
                            'table-danger'
@@ -124,7 +124,7 @@
 
         <% if event.event == 'update' %>
             <tr
-                class="event-object_changes table-info <%= css_class %>"
+                class="event-object_changes info <%= css_class %>"
                 id="event-object_changes-<%= index %>">
                 <td></td>
                 <td colspan="5">

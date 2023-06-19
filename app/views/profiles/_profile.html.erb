@@ -6,7 +6,7 @@
     </p>
 </div>
 
-<div id="scope">
+<div class="mt-3" id="scope">
     <h2 id="scope-h">
         Scope
         <span class="text-muted fs-6">Rules governing scan coverage</span>
@@ -79,7 +79,7 @@
             <div class="col-md-6">
                 <strong>Ignore binary content:</strong>
                 <input <%= 'checked' if profile.scope_exclude_binaries? %>
-                       disabled type="checkbox">
+                       disabled type="checkbox" class="form-check-input ms-1">
             </div>
             <div class="col-md-6">
                 <%= messages_for( :scope_exclude_binaries ) %>
@@ -121,7 +121,7 @@
 
 <hr/>
 
-<div id="audit">
+<div class="mt-3" id="audit">
     <h2 id="audit-h">
         Audit
         <span class="text-muted fs-6">How the scanner will audit web application inputs</span>
@@ -132,7 +132,7 @@
             <p>
                 <strong>Forms:</strong>
                 <input <%= 'checked' if profile.audit_forms? %>
-                       disabled type="checkbox">
+                       disabled type="checkbox" class="form-check-input ms-1">
             </p>
         </div>
         <div class="col-md-6">
@@ -145,7 +145,7 @@
             <p>
                 <strong>UI forms:</strong>
                 <input <%= 'checked' if profile.audit_ui_forms? %>
-                       disabled type="checkbox">
+                       disabled type="checkbox" class="form-check-input ms-1">
             </p>
         </div>
         <div class="col-md-6">
@@ -158,7 +158,7 @@
             <p>
                 <strong>UI inputs:</strong>
                 <input <%= 'checked' if profile.audit_ui_inputs? %>
-                       disabled type="checkbox">
+                       disabled type="checkbox" class="form-check-input ms-1">
             </p>
         </div>
         <div class="col-md-6">
@@ -171,7 +171,7 @@
             <p>
                 <strong>Links:</strong>
                 <input <%= 'checked' if profile.audit_links? %>
-                       disabled type="checkbox">
+                       disabled type="checkbox" class="form-check-input ms-1">
             </p>
         </div>
         <div class="col-md-6">
@@ -184,7 +184,7 @@
             <p>
                 <strong>Cookies:</strong>
                 <input <%= 'checked' if profile.audit_cookies? %>
-                       disabled type="checkbox">
+                       disabled type="checkbox" class="form-check-input ms-1">
             </p>
         </div>
         <div class="col-md-6">
@@ -197,7 +197,7 @@
             <p>
                 <strong>Headers:</strong>
                 <input <%= 'checked' if profile.audit_headers? %>
-                       disabled type="checkbox">
+                       disabled type="checkbox" class="form-check-input ms-1">
             </p>
         </div>
         <div class="col-md-6">
@@ -210,7 +210,7 @@
             <p>
                 <strong>XML inputs:</strong>
                 <input <%= 'checked' if profile.audit_xmls? %>
-                       disabled type="checkbox">
+                       disabled type="checkbox" class="form-check-input ms-1">
             </p>
         </div>
         <div class="col-md-6">
@@ -223,7 +223,7 @@
             <p>
                 <strong>JSON inputs:</strong>
                 <input <%= 'checked' if profile.audit_jsons? %>
-                       disabled type="checkbox">
+                       disabled type="checkbox" class="form-check-input ms-1">
             </p>
         </div>
         <div class="col-md-6">
@@ -237,7 +237,7 @@
                 <p>
                     <strong>Audit with both http methods:</strong>
                     <input <%= 'checked' if profile.audit_with_both_http_methods? %>
-                           disabled type="checkbox">
+                           disabled type="checkbox" class="form-check-input ms-1">
                 </p>
             </div>
             <div class="col-md-6">
@@ -250,7 +250,7 @@
                 <p>
                     <strong>Audit cookies extensively:</strong>
                     <input <%= 'checked' if profile.audit_cookies_extensively? %>
-                           disabled type="checkbox">
+                           disabled type="checkbox" class="form-check-input ms-1">
                 </p>
             </div>
             <div class="col-md-6">
@@ -263,7 +263,7 @@
                 <p>
                     <strong>Audit with extra parameter:</strong>
                     <input <%= 'checked' if profile.audit_with_extra_parameter? %>
-                           disabled type="checkbox">
+                           disabled type="checkbox" class="form-check-input ms-1">
                 </p>
             </div>
             <div class="col-md-6">
@@ -276,7 +276,7 @@
                 <p>
                     <strong>Audit parameter names:</strong>
                     <input <%= 'checked' if profile.audit_parameter_names? %>
-                           disabled type="checkbox">
+                           disabled type="checkbox" class="form-check-input ms-1">
                 </p>
             </div>
             <div class="col-md-6">
@@ -334,7 +334,7 @@
 
 <hr/>
 
-<div id="checks">
+<div class="mt-3" id="checks">
     <h2 id="checks-h">
         Checks
         <span class="text-muted fs-6">The security checks to be run again the web application</span>
@@ -394,7 +394,7 @@
 
 <hr/>
 
-<div id="plugins">
+<div class="mt-3" id="plugins">
     <h2 id="plugins-h">
         Plugins
         <span class="text-muted fs-6">Assisting components to be enabled during the process.</span>

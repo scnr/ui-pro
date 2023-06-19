@@ -15,6 +15,8 @@ selectPlatforms = ( platforms ) ->
 
 setup = () ->
     $('.profile-form button.platforms-preset').click ->
+        $('.platforms-preset').removeClass('active')
+        $(this).addClass('active')
         selectPlatforms $(this).html()
         false
     $('button#site_profile-submit').click ->
