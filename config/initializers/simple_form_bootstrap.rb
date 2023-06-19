@@ -110,7 +110,7 @@ SimpleForm.setup do |config|
   end
 
   # vertical select input
-  config.wrappers :vertical_select, class: 'mb-3' do |b|
+  config.wrappers :vertical_select do |b|
     b.use :html5
     b.optional :readonly
     b.use :label, class: 'form-label'
@@ -351,6 +351,22 @@ SimpleForm.setup do |config|
     b.use :hint, wrap_with: { class: 'form-text' }
   end
 
+  # styleless form
+  #
+  # styleless default wrapper
+  config.wrappers :styleless_form do |b|
+    b.use :html5
+    b.use :placeholder
+    b.optional :maxlength
+    b.optional :minlength
+    b.optional :pattern
+    b.optional :min_max
+    b.optional :readonly
+    b.use :label, class: 'form-label'
+    b.use :input, class: 'form-control', error_class: 'is-invalid'
+    b.use :full_error, wrap_with: { class: 'invalid-feedback' }
+    b.use :hint, wrap_with: { class: 'form-text' }
+  end
 
   # The default wrapper to be used by the FormBuilder.
   config.default_wrapper = :vertical_form

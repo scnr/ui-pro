@@ -62,7 +62,7 @@
 
     <div class="row">
         <div class="col-md-12">
-            <%= f.input :name, label: false, placeholder: '(Required) Name' %>
+            <%= f.input :name, label: false, placeholder: '(Required) Name', input_html: { class: 'w-100' } %>
         </div>
     </div>
     <div class="row">
@@ -73,7 +73,7 @@
         </div>
     </div>
 
-    <div id="scope">
+    <div class="mt-3" id="scope">
         <fieldset>
             <h2 id="scope-h">
                 Scope
@@ -173,7 +173,7 @@
 
     <hr/>
 
-    <div id="audit">
+    <div class="mt-3" id="audit">
         <fieldset>
             <h2 id="audit-h">
                 Audit
@@ -325,7 +325,7 @@
 
     <hr/>
 
-    <div id="checks">
+    <div class="mt-3" id="checks">
         <fieldset>
             <h2 id="checks-h">
                 Checks
@@ -343,7 +343,7 @@
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row mt-3">
                 <div class="col-md-12">
                     <h3>
                         Active
@@ -391,7 +391,7 @@
 
     <hr/>
 
-    <div id="plugins">
+    <div class="mt-3" id="plugins">
         <span id="profile_plugins"></span>
         <fieldset>
             <h2 id="plugins-h">
