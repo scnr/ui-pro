@@ -105,7 +105,7 @@
 
                     <div class="tab-content">
                         <div role="tabpanel"
-                            class="tab-pane update_schedule_preview
+                            class="tab-pane update_schedule_preview mb-3
                             <%= 'active' if !@scan.schedule.frequency_format ||
                                 @scan.schedule.frequency_format == 'simple' %>"
                             id="simple">
@@ -140,7 +140,7 @@
                         </div>
                     </div>
 
-                    <div class="update_schedule_preview mt-3 d-flex flex-row align-items-center">
+                    <div class="update_schedule_preview mb-3 d-flex flex-row align-items-center">
                         Calculate the next occurrence from the scan's
                         <%= sf.input :frequency_base,
                                     collection: Schedule::FREQUENCY_BASES,
