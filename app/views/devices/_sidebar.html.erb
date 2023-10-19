@@ -1,11 +1,15 @@
 <% if submit %>
-    <button class="btn btn-default btn-primary"
+    <button class="btn btn-primary mb-2"
             onclick="$('.device-form').submit()">
 
         <%= @device.id ? 'Update' : 'Create' %>
     </button>
 <% else %>
-    <%= render 'actions', device: @device %>
+    <div class="row mb-2">
+        <div class="col-auto">
+            <%= render 'actions', device: @device %>
+        </div>
+    </div>
 <% end %>
 
 <hr/>

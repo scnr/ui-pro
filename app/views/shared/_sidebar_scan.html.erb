@@ -1,7 +1,7 @@
 <div id="sidebar-scan">
-    <ul class="nav nav-stacked">
-        <li class="<%= 'active' if params[:controller] == 'scans' %>">
-            <%= link_to_with_filters @scan do %>
+    <ul class="nav nav-pills nav-stacked flex-column">
+        <li class="nav-item">
+            <%= link_to_with_filters @scan, class: "nav-link #{('active' if params[:controller] == 'scans')}" do %>
                 <% if @issue %>
                     <i class="fa fa-arrow-left"></i>
                 <% end %>
@@ -12,32 +12,34 @@
     </ul>
 
     <div class="row">
-      <div class="md-12">
-        <% if !@scan.status %>
-            <span class="scan-status label label-emphasis label-default" >
-                <%= @scan.scheduled? ? 'Pending' : 'Unscheduled' %>
-            </span>
-        <% else %>
-            <span class="scan-status label label-emphasis label-<%= status_to_label( @scan.status ) %>" >
-                <%= @scan.status.to_s.capitalize %>
-            </span>
-        <% end %>
+      <div class="col-md-12">
+        <h6>
+            <% if !@scan.status %>
+                <span class="scan-status badge bg-primary" >
+                    <%= @scan.scheduled? ? 'Pending' : 'Unscheduled' %>
+                </span>
+            <% else %>
+                <span class="scan-status badge bg-<%= status_to_label( @scan.status ) %>" >
+                    <%= @scan.status.to_s.capitalize %>
+                </span>
+            <% end %>
+        </h6>
       </div>
     </div>
 
     <div class="row buttons">
-      <div class="md-12">
+      <div class="col-md-12">
         <%= render partial: '/scans/buttons', locals: { scan: @scan } %>
       </div>
     </div>
 
-    <div class="help-block" id="scan-info-details">
+    <div class="row text text-muted mb-3" id="scan-info-details">
         <%= render partial: '/shared/scan_info', locals: {
             scan: @scan
         } %>
     </div>
 
-    <div class="description help-block">
+    <div class="description text text-muted">
         <%= md @scan.description %>
     </div>
 

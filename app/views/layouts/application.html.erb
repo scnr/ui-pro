@@ -1,67 +1,67 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        <%= "#{yield( :title )} - " if content_for?( :title ) %>
-        <%= "#{title_breadcrumbs} ~ " if !title_breadcrumbs.empty? %>
-        SCNR WebUI v<%= SCNR::UI::Web::VERSION %>
-        (Engine v<%= SCNR::Engine::VERSION %>)
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>
+            <%= "#{yield( :title )} - " if content_for?( :title ) %>
+            <%= "#{title_breadcrumbs} ~ " if !title_breadcrumbs.empty? %>
+            SCNR WebUI v<%= SCNR::UI::Web::VERSION %>
+            (Engine v<%= SCNR::Engine::VERSION %>)
 
-        [&copy; Ecsypno Single Member P.C.]
-    </title>
+            [&copy; Ecsypno Single Member P.C.]
+        </title>
 
-<!--    <meta name="turbo-cache-control" content="no-cache">-->
-    <meta name="turbo-cache-control" content="no-preview">
-    <meta name="description" content="<%= content_for?(:description) ? yield(:description) : 'SCNR Pro' %>">
-    <%= stylesheet_link_tag 'application', media: 'all' %>
-    <%= action_cable_meta_tag %>
-    <% if content_for?(:action_cable_channel) %>
-        <meta name="action-cable-channel" content="<%= yield(:action_cable_channel) %>">
-    <% end %>
-    <%= javascript_include_tag 'application' %>
-    <%= javascript_pack_tag "application" %>
-    <%= csrf_meta_tags %>
-</head>
-
-<body id="top">
-
-<div id="loading" class="progress progress-striped active">
-    <div class="progress-bar"></div>
-</div>
-
-<header>
-    <%= render 'layouts/navigation' %>
-</header>
-
-<main role="main">
-    <div class="row">
-
-        <%
-           offset = nil
-           size   = 12
-        %>
-
-        <% if sidebar %>
-            <div id="sidebar" class="col-md-2">
-                <%= sidebar %>
-            </div>
-
-            <%
-               offset = 'col-md-offset-2'
-               size = 10
-            %>
+    <!--    <meta name="turbo-cache-control" content="no-cache">-->
+        <meta name="turbo-cache-control" content="no-preview">
+        <meta name="description" content="<%= content_for?(:description) ? yield(:description) : 'SCNR Pro' %>">
+        <%= stylesheet_link_tag 'application', media: 'all' %>
+        <%= action_cable_meta_tag %>
+        <% if content_for?(:action_cable_channel) %>
+            <meta name="action-cable-channel" content="<%= yield(:action_cable_channel) %>">
         <% end %>
+        <%= javascript_include_tag 'application' %>
+        <%= javascript_pack_tag "application" %>
+        <%= csrf_meta_tags %>
+    </head>
 
-        <% if @site&.id %>
-          <%= render partial: 'shared/sidebar_site' %>
-        <% end %>
+    <body id="top">
 
-        <div id="content" class="col-md-<%= size %> <%= offset %>">
-            <%= render 'layouts/messages' %>
-            <%= yield %>
+        <div id="loading" class="progress progress-striped active">
+            <div class="progress-bar"></div>
         </div>
-    </div>
-</main>
-</body>
+
+        <header>
+            <%= render 'layouts/navigation' %>
+        </header>
+
+        <main role="main">
+            <div class="row">
+
+                <%
+                    offset = nil
+                    size   = 12
+                %>
+
+                <% if sidebar %>
+                    <div id="sidebar" class="col-md-2">
+                        <%= sidebar %>
+                    </div>
+
+                    <%
+                    offset = 'offset-md-2'
+                    size = 10
+                    %>
+                <% end %>
+
+                <% if @site&.id %>
+                    <%= render partial: 'shared/sidebar_site' %>
+                <% end %>
+
+                <div id="content" class="col-md-<%= size %> <%= offset %>">
+                    <%= render 'layouts/messages' %>
+                    <%= yield %>
+                </div>
+            </div>
+        </main>
+    </body>
 </html>

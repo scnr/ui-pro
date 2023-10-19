@@ -1,7 +1,7 @@
 <% code = render( partial: "site_roles/login/scripts/#{script}" ) %>
 
 <div class="modal" id="login-script-<%= script %>" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">
@@ -13,9 +13,9 @@
                 <hr/>
                 <%= yield %>
             </div>
-            <textarea class="hide" id="login-script-<%= script %>-code"><%= code.html_safe %></textarea>
+            <textarea class="d-none" id="login-script-<%= script %>-code"><%= code.html_safe %></textarea>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
                 <button onclick="insert_<%= script %>_code_into_editor()"
                         data-dismiss="modal"
                         type="button" class="btn btn-primary">

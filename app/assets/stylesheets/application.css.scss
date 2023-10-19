@@ -16,6 +16,14 @@
 @import "font-kit-rails/open-sans";
 @import "**/*";
 
+a {
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
 .fa .badge, .tick {
     font-family: "Open Sans", sans-serif;
 }
@@ -64,11 +72,6 @@ td.line-numbers {
 }
 
 .breadcrumbs {
-    background: none repeat scroll 0 0 #252525;
-    border-color: -moz-use-text-color #252525 #252525;
-    border-right: 1px solid #252525;
-    border-style: none solid solid;
-    border-width: 0 1px 1px;
     margin-left: -1px;
     margin-bottom: -1px;
 }
@@ -137,7 +140,7 @@ h6:hover .anchor {
     opacity: 1;
 }
 
-.panel-heading:hover .anchor {
+.card-header:hover .anchor {
     opacity: 1;
 }
 
@@ -153,9 +156,9 @@ li .fa-arrow-right {
     left: 0;
     overflow-x: hidden;
     overflow-y: auto;
-    padding: 10px;
+    padding: 20px;
     position: fixed;
-    top: 71px;
+    top: 43px;
     z-index: 1000;
 
     .nav {
@@ -229,14 +232,8 @@ form {
         float: right;
     }
 
-    input[type="checkbox"] {
-        position: relative;
-        right: 15px;
-    }
-
     input.numeric {
         width: 120px;
-        margin-top: 5px;
     }
 
     input.string {

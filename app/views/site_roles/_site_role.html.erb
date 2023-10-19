@@ -5,9 +5,9 @@
                 <%= @site_role.name %>
             </h2>
 
-            <div class="lead description">
+            <p class="lead description">
                 <%= md @site_role.description %>
-            </div>
+            </p>
         </div>
     </div>
 </div>
@@ -57,7 +57,7 @@
             </p>
 
             <p>
-                <table class="table-stripped table-hover table-condensed">
+                <table class="table-stripped table-hover table-sm">
                 <% @site_role.login_form_parameters.each do |name, value| %>
                     <tr>
                         <th>

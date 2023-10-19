@@ -17,7 +17,7 @@
     <% end %>
 </div>
 
-<table class="table table-condensed table-hover">
+<table class="table table-sm table-hover">
     <thead>
     <tr>
         <th>
@@ -107,7 +107,7 @@
                 <% nearby.each do |data| %>
                     <li>
                         <% if data[:dynamic] %>
-                            <i class="fa fa-info" data-toggle="tooltip"
+                            <i class="fa fa-info" data-bs-toggle="tooltip"
                                title="<%= dynamic_warning %>">
                             </i>
                         <% end %>

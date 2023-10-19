@@ -103,7 +103,7 @@
 
     tr.inspection th,
     tr.inspection td,
-    ul.nav-tabs li.active a {
+    ul.nav-tabs li a.active {
         background-color: #f5f5f5
     }
 
@@ -135,13 +135,14 @@
 
     label {
         text-decoration: line-through;
+        cursor: pointer;
     }
 
-    .check_boxes {
+    .form-check-input {
         display: none;
     }
 
-    .check_boxes:checked + label {
+    .form-check-input:checked + label {
         font-weight: bold;
         text-decoration: none;
     }

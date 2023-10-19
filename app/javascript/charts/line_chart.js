@@ -82,7 +82,7 @@ export default class LineChart {
 
     if (!tooltipEl) {
       tooltipEl = document.createElement('div');
-      tooltipEl.classList.add('panel', 'panel-default', 'performance-snapshot-tooltip');
+      tooltipEl.classList.add('card', 'performance-snapshot-tooltip');
       tooltipEl.style.opacity = 0;
 
       chart.canvas.parentNode.appendChild(tooltipEl);
@@ -97,8 +97,8 @@ export default class LineChart {
     const snapshot = window.performance_snapshots[index];
 
     const htmlContent = `
-      <div class="panel-body">
-        <table class="table table-condensed table-borderless">
+      <div class="card-body">
+        <table class="table table-sm text-white table-borderless">
           <tbody>
             <tr>
               <th>Duration</th>

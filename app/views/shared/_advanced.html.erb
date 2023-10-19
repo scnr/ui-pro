@@ -6,23 +6,23 @@
 
 <div class="row">
     <div class="col-md-12">
-        <button class="btn btn-sm btn-primary" type="button" data-toggle="collapse"
-                data-target="#<%= id %>-advanced" aria-expanded="false"
+        <button class="btn btn-sm btn-primary" type="button" data-bs-toggle="collapse"
+                data-bs-target="#<%= id %>-advanced" aria-expanded="false"
                 aria-controls="collapseExample">
             <%= button_text %>
         </button>
 
         <% if message %>
-            <p class="help-block">
+            <p class="text text-muted">
                 <%= message %>
             </p>
         <% end %>
 
         <div class="collapse" id="<%= id %>-advanced">
-            <div class="well well-sm">
-
-                <%= yield %>
-
+            <div class="card bg-light">
+                <div class="card-body">
+                    <%= yield %>
+                </div>
             </div>
         </div>
     </div>

@@ -8,7 +8,7 @@
    revisited = current_digests & up_to_now_exclusive_digests
 %>
 
-<p class="help-block">
+<p class="text text-muted">
     Coverage data show all audited resources.
 </p>
 
@@ -43,7 +43,7 @@
     missing_pct       = ((missing.size / total_count) * 100.0)
     missing_pct_round = missing_pct.round(1)
 
-    active_class = @scan.active? ? 'progress-bar-striped active' : nil
+    active_class = @scan.active? ? 'progress-bar-striped progress-bar-animated' : nil
     active_class = nil if @revision && @scan.revisions.size != @revision.index
 
     if active_class
@@ -63,10 +63,10 @@
                 <div id="coverage-new-bar"
                      data-location="new"
 
-                     data-toggle="tooltip"
+                     data-bs-toggle="tooltip"
                      title="<%= new_msg %>"
 
-                     class="coverage-bar progress-bar progress-bar-success <%= active_class %>"
+                     class="coverage-bar progress-bar bg-success progress-bar-striped progress-bar-animated <%= active_class %>"
                      style="width: <%= new_pct %>%">
 
                     <span><%= new_pct_round %>%</span>
@@ -77,10 +77,10 @@
                 <div id="coverage-revisited-bar"
                      data-location="revisited"
 
-                     data-toggle="tooltip"
+                     data-bs-toggle="tooltip"
                      title="<%= revisited_msg %>"
 
-                     class="coverage-bar progress-bar progress-bar-info <%= active_class %>"
+                     class="coverage-bar progress-bar bg-info progress-bar-striped progress-bar-animated <%= active_class %>"
                      style="width: <%= revisited_pct %>%">
 
                     <span><%= revisited_pct_round %>%</span>
@@ -91,10 +91,10 @@
                 <div id="coverage-missing-bar"
                      data-location="missing"
 
-                     data-toggle="tooltip"
+                     data-bs-toggle="tooltip"
                      title="<%= missing_msg %>"
 
-                     class="coverage-bar progress-bar progress-bar-warning <%= active_class %>"
+                     class="coverage-bar progress-bar bg-warning progress-bar-striped progress-bar-animated <%= active_class %>"
                      style="width: <%= missing_pct %>%">
 
                     <span><%= missing_pct_round %>%</span>

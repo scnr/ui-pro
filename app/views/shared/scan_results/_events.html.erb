@@ -5,7 +5,7 @@
    end
 %>
 
-<table class="table table-condensed table-hover">
+<table class="table table-sm table-hover">
     <thead>
         <tr>
         <th>
@@ -45,13 +45,13 @@
             onclick="$('#event-object_changes-<%= index %>').toggle()"
             class="<%= case event.event
                        when 'create'
-                           'bg-success'
+                           'table-success'
 
                        when 'update'
-                           'bg-info event-with_object_changes'
+                           'info event-with_object_changes'
 
                        when 'destroy'
-                           'bg-danger'
+                           'table-danger'
                    end %>
 
                    <%= case event.item_type
@@ -124,12 +124,12 @@
 
         <% if event.event == 'update' %>
             <tr
-                class="event-object_changes bg-info <%= css_class %>"
+                class="event-object_changes info <%= css_class %>"
                 id="event-object_changes-<%= index %>">
                 <td></td>
                 <td colspan="5">
 
-                    <table class="table table-condensed table-borderless">
+                    <table class="table table-sm table-borderless">
                         <thead>
                         <tr>
                             <th></th>

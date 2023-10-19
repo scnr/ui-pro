@@ -3,7 +3,7 @@
    fixed     ||= false
 %>
 
-<table class="table table-hash table-condensed table-borderless <%= 'table-fixed' if fixed %>">
+<table class="table table-hash table-sm table-borderless <%= 'table-fixed' if fixed %>">
     <% object.each do |k, v| %>
         <%
            cell = [k,v].include?( highlight ) ? 'th' : 'td'

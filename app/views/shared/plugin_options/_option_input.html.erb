@@ -10,7 +10,7 @@
     <% if option.type == :path %>
         disabled="disabled" type="file"
     <% elsif option.type == :bool %>
-        type="checkbox" class="boolean <%= required %>"
+        type="checkbox" class="form-check-input <%= required %>"
 
         <% if !value.nil? %>
             <%= value ? 'checked="checked"' : '' %>
@@ -21,10 +21,10 @@
     <% else %>
 
         <% if option.type == :integer || option.type == :port %>
-            class="numeric integer <%= required %> form-control"
+            class="numeric integer <%= required %> form-control input-group-text"
             type='number'
         <% else %>
-            class="string <%= required %> form-control"
+            class="string <%= required %> form-control input-group-text"
             type="text"
         <%end%>
 
