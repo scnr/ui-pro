@@ -3,11 +3,11 @@
            @revision.site_role.to_scanner_options
 %>
 
-<div id="configuration-site_role">
+<div class="mt-3" id="configuration-site_role">
     <h2>
         User role:
 
-        <small>
+        <span class="text-muted fs-6">
             <%= link_to @scan.site_role, site_role_path( @site, @scan.site_role ) %>
 
             <% if !@scan.site_role.guest? %>
@@ -25,7 +25,7 @@
                     Up to date
                 <% end %>
             <% end %>
-        </small>
+        </span>
     </h2>
 
     <div class="text text-muted">
@@ -48,7 +48,7 @@
         <div id="configuration-site_role-session">
             <h3>Session</h3>
 
-            <table class="table table-condensed">
+            <table class="table table-sm">
                 <thead>
                 <tr>
 

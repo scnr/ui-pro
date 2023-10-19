@@ -7,21 +7,21 @@
 
 <div class="row">
     <div class="col-md-12" id="issue-summary-filter-actions">
-        <form class="simple_form form-inline" id="scan-results-filter">
+        <form class="simple_form" id="scan-results-filter">
 
             <div class="row">
                 <div class="col-md-12">
-                    <div class="form-group boolean">
+                    <div class="flex-row d-flex justify-content-center">
                         <% i = 0
                            data[:states].each do |state, count| %>
 
-                            <div class="checkbox">
-                                <input class="check_boxes" type="checkbox" id="issue-state-<%= state %>"
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="issue-state-<%= state %>"
                                        name="filter[states][]" value="<%= state %>"
                                        <%= "checked=checked" if states.include?( state ) %>
                                 />
 
-                                <label for="issue-state-<%= state %>">
+                                <label class="form-check-label" for="issue-state-<%= state %>">
                                     <%= h = state.humanize; i == 0 ? h : h.downcase %>
                                     ( <i class="fa fa-<%= issue_state_to_icon state %>"></i>
                                     <%= count %>)
@@ -31,18 +31,20 @@
                             <% i += 1 %>
                         <% end %>
 
-                        issues of severities
+                        <div class="ms-3">
+                            issues of severities
+                        </div>
 
                         <% i = 0
                            data[:severities].each do |severity, count| %>
 
-                            <div class="checkbox">
-                                <input class="check_boxes" type="checkbox" id="issue-severity-<%= severity %>"
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="issue-severity-<%= severity %>"
                                        name="filter[severities][]" value="<%= severity %>"
                                        <%= "checked=checked" if severities.include?( severity.to_s ) %>
                                 />
 
-                                <label for="issue-severity-<%= severity %>">
+                                <label class="form-check-label" for="issue-severity-<%= severity %>">
                                     <%= severity.to_s %> (<%= count %>)
                                 </label>
                             </div>

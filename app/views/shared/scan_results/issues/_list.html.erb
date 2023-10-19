@@ -48,13 +48,13 @@
                     <%= issue.type.name %>
 
                     <% if chart_data %>
-                        <span class="badge-severity badge-severity-<%= severity %>">
+                        <span class="badge rounded-pill badge-severity-<%= severity %>">
                             <%= chart_data[:issue_names][issue.type.name] %>
                         </span>
                     <% end %>
                 </h4>
 
-            <table class="table table-condensed table-borderless table-hover
+            <table class="table table-sm table-borderless table-hover
                 table-striped table-issue-summary">
 
                 <thead>

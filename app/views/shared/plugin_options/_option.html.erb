@@ -1,16 +1,24 @@
-<%= render partial: 'shared/plugin_options/option_label', locals: {
-        plugin_name: plugin_name,
-        option:      option,
-        value:       value
-} %>
+<div class="row">
+    <div class="col">
+        <%= render partial: 'shared/plugin_options/option_label', locals: {
+                plugin_name: plugin_name,
+                option:      option,
+                value:       value
+        } %>
 
-<%= render partial: 'shared/plugin_options/option_input', locals: {
-        plugin_name: plugin_name,
-        option:      option,
-        value:       value,
-        disabled:    disabled
-} %>
+        <%= render partial: 'shared/plugin_options/option_input', locals: {
+                plugin_name: plugin_name,
+                option:      option,
+                value:       value,
+                disabled:    disabled
+        } %>
+    </div>
+</div>
 
-<div class="help-block">
-    <%= option.description %>
+<div class="row">
+    <div class="col">
+        <div class="form-text text-muted">
+            <%= option.description %>
+        </div>
+    </div>
 </div>

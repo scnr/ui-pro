@@ -11,15 +11,15 @@
         Scans
 
         <a title="New scan"
-           class="btn btn-xs btn-primary"
+           class="btn btn-sm btn-primary"
            href="<%= new_site_scan_path(@site) %>">
             <i class="fa fa-plus"></i>
         </a>
     </h1>
 
-    <div class="lead">
+    <p class="lead">
         Manage and monitor the state of all site scans.
-    </div>
+    </p>
 </div>
 
 <%= render 'scans/tables', active_scans: @active_scans, suspended_scans: @suspended_scans,

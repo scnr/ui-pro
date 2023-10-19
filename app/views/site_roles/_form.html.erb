@@ -21,7 +21,7 @@
                             <ul class="list-unstyled">
                                 <% messages.each do |message| %>
                                     <li>
-                                        <span class="help-block">
+                                        <span class="text text-muted">
                                             <%= message %>
                                         </span>
                                     </li>
@@ -47,13 +47,13 @@
         </div>
     </div>
 
-    <%= f.input :login_type, label: false, wrapper_html: { class: 'hide' } %>
+    <%= f.input :login_type, label: false, wrapper_html: { class: 'd-none' } %>
 
     <div id="session">
         <fieldset>
             <h2 id="session-h">
                 Session
-                <small>How will scanner determine its session's validity?</small>
+                <span class="text-muted fs-6">How will scanner determine its session's validity?</span>
             </h2>
 
             <div class="row">
@@ -72,15 +72,15 @@
                                 input_html: { value: @site_role.scope_exclude_path_patterns.join( "\n" ) }%>
 
                     <%= messages_for( :scope_exclude_path_patterns ) %>
-                    <p class="help-block">Input each rule in its own line.</p>
+                    <p class="text text-muted">Input each rule in its own line.</p>
                 </div>
 
                 <div class="col-md-5">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
+                    <div class="card bg-light">
+                        <div class="card-header">
                             Let's say there's a page at <code><%= @site.url %></code>:
                         </div>
-                        <div class="panel-body">
+                        <div class="card-body">
                             <%= code_highlight do %>
 <!-- [...] -->
 
@@ -114,20 +114,19 @@
         <fieldset>
             <h2 id="login-h">
                 Log-in procedure
-                <small>How will the scanner log-in?</small>
+                <span class="text-muted fs-6">How will the scanner log-in?</span>
             </h2>
 
             <div class="row">
                 <div class="col-md-7">
                     <div role="tabpanel" class="type-tabs">
                         <ul class="nav nav-tabs" role="tablist">
-                            <li role="presentation"
-                                class="<%= 'active' if !@site_role.login_type || @site_role.login_type == 'form' %>">
-                                <a href="#!/form" role="tab">Form</a>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link <%= 'active' if !@site_role.login_type || @site_role.login_type == 'form' %>" href="#!/form" role="tab">Form</a>
                             </li>
 
-                            <li role="presentation" class="<%= 'active' if @site_role.login_type == 'script' %>">
-                                <a href="#!/script"  role="tab" >Script</a>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link <%= 'active' if @site_role.login_type == 'script' %>" href="#!/script"  role="tab" >Script</a>
                             </li>
                         </ul>
 
@@ -136,7 +135,7 @@
                                  role="tabpanel"
                                  id="form">
 
-                                <div class="help-block">
+                                <div class="text text-muted">
                                     When using form-based authentication the system
                                     will look for a form whose inputs include the
                                     specified parameters at the given URL.
@@ -168,7 +167,7 @@
                                             }
                                 %>
 
-                                <p class="help-block">
+                                <p class="text text-muted">
                                     Parameters take the format of <kbd>name=value</kbd>,
                                     input each pair in its own line.
                                 </p>
@@ -187,8 +186,8 @@
                                     <div class="col-md-3">
                                         <ul class="nav nav-stacked nav-horizontal">
                                             <li>
-                                                <a href="#" data-toggle="modal"
-                                                   data-target="#login-script-browser">
+                                                <a href="#" data-bs-toggle="modal"
+                                                   data-bs-target="#login-script-browser">
                                                     Browser driver
                                                 </a>
                                                 <p class="text-muted">
@@ -197,8 +196,8 @@
                                                 </p>
                                             </li>
                                             <li>
-                                                <a href="#" data-toggle="modal"
-                                                   data-target="#login-script-http">
+                                                <a href="#" data-bs-toggle="modal"
+                                                   data-bs-target="#login-script-http">
                                                     HTTP client
                                                 </a>
                                                 <p class="text-muted">
@@ -222,11 +221,11 @@
                     </div>
                 </div>
                 <div class="col-md-5">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
+                    <div class="card bg-light">
+                        <div class="card-header">
                             Let's say there's a form at <code><%= @site.url %>/login</code>:
                         </div>
-                        <div class="panel-body">
+                        <div class="card-body">
                             <%= code_highlight do %>
 <!-- [...] -->
 
@@ -245,7 +244,7 @@
 
                             <hr/>
 
-                            <table class="table table-condensed table-borderless">
+                            <table class="table table-sm table-borderless">
                                 <tr>
                                     <th>Username</th>
                                     <td><kbd>admin</kbd></td>

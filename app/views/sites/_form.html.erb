@@ -1,21 +1,16 @@
-<div class="row">
+<div class="row mb-3">
     <div class="col-md-12">
-        <%= simple_form_for @site, html: { class: 'form-inline' } do |f| %>
-            <%= f.error_notification %>
-
-            <div class="form-group">
-                <%= f.input :protocol, label: false, as: :select, default: :http, collection: [:http, :https] %>
+        <%= simple_form_for @site, html: { class: 'row gx-2 gy-2 align-items-center' } do |f| %>
+            <%= f.input :protocol, as: :select, default: :http, collection: [:http, :https], label: false, wrapper_html: { class: 'col-auto mb-3' } %>
+            <div class="mb-3 col-auto">
+                ://
             </div>
-            ://
-            <div class="form-group">
-                <%= f.input :host, label: false, placeholder: 'www.example.com' %>
+            <%= f.input :host, placeholder: 'www.example.com', label: false, wrapper_html: { class: 'col-auto' }, input_html: { class: 'w-100' } %>
+            <div class="mb-3 col-auto">
+                :
             </div>
-            :
-            <div class="form-group">
-                <%= f.input :port, label: false %>
-            </div>
-
-            <div class="form-group">
+            <%= f.input :port, label: false, wrapper_html: { class: 'col-auto' } %>
+            <div class="mb-3 col-auto">
                 <%= f.button :submit, value: 'Add' %>
             </div>
         <% end %>

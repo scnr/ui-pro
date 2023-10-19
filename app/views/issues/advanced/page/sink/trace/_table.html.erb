@@ -1,4 +1,4 @@
-<table class="table table-condensed table-fixed">
+<table class="table table-sm table-fixed">
     <col width="4%" />
     <col width="74%" />
     <col width="5%" />
@@ -61,7 +61,7 @@
                 <td>
                     <a href="javascript:void(0);"
                        onclick="$('#<%= id %>-<%= i %>-inspect').toggle()"
-                       class="btn btn-info btn-xs">
+                       class="btn btn-info btn-sm">
                         Inspect
                     </a>
                 </td>
@@ -85,16 +85,16 @@
                     <% if frame.function.arguments %>
                         <% has_active = true %>
 
-                        <li class="active">
-                            <a data-turbo="false" href="<%= id_to_location id %>/<%= i %>/inspect/arguments">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-turbo="false" href="<%= id_to_location id %>/<%= i %>/inspect/arguments">
                                 Arguments
                             </a>
                         </li>
                     <% end %>
 
                     <% if with_source %>
-                        <li <%= 'class="active"' if !has_active %>>
-                            <a data-turbo="false" href="<%= id_to_location id %>/<%= i %>/inspect/source">
+                        <li class="nav-item">
+                            <a class="nav-link <%= 'active' if !has_active %>" data-turbo="false" href="<%= id_to_location id %>/<%= i %>/inspect/source">
                                 Source
                             </a>
                         </li>

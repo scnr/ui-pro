@@ -10,14 +10,14 @@
 }
 %>
 
-<button class="btn btn-default btn-primary" id="site_profile-submit">
+<button class="btn btn-primary mb-2" id="site_profile-submit">
     Save
 </button>
 
 <% if @site.revisions.active.any? %>
-    <span data-toggle="tooltip" title="Save and apply to active scans.">
-        <button class="btn btn-default btn-warning" data-toggle="modal"
-                data-target="#site_profile-submit-and-apply-confirm">
+    <span data-bs-toggle="tooltip" title="Save and apply to active scans.">
+        <button class="btn btn-light btn-warning" data-bs-toggle="modal"
+                data-bs-target="#site_profile-submit-and-apply-confirm">
             Save and apply
         </button>
     </span>
@@ -26,16 +26,16 @@
 <hr/>
 
 <div id="scrollspy-container">
-    <ul class="nav nav-pills nav-stacked">
-        <li>
-            <a href="#top" class="scroll">
+    <ul class="nav nav-pills nav-stacked flex-column">
+        <li class="nav-item">
+            <a href="#top" class="nav-link scroll">
                 <i class="fa fa-chevron-up"></i>
                 Top
             </a>
         </li>
         <% sections.each do |id, title| %>
-            <li>
-                <a href="#<%= id.to_s %>" class="scroll">
+            <li class="nav-item">
+                <a href="#<%= id.to_s %>" class="nav-link scroll">
                     <%= title.to_s.html_safe %>
                 </a>
             </li>

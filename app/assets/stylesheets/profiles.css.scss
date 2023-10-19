@@ -3,18 +3,20 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 #checks, #plugins {
-    .panel-heading:nth-child(even) {
+    .card-header:nth-child(even) {
         background-color: #E9E9E9;
     }
-    .panel-heading {
+    .card-header {
         border: 0px;
     }
 
     input[type="checkbox"] {
+        position: relative;
+        right: 15px;
         top: -20px;
     }
 
-    .panel-title {
+    .card-title {
         cursor: pointer;
     }
 }

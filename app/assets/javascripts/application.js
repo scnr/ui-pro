@@ -11,7 +11,8 @@
 // about supported directives.
 //
 //= require jquery
-//= require bootstrap
+//= require popper
+//= require bootstrap-sprockets
 //= require d3
 //= require ace/ace
 //= require ace/worker-html
@@ -159,17 +160,14 @@ function scrollToChild( parent_selector, child_selector ){
 
 function setupScroll(){
     if( $('#scrollspy-container').is(':visible' ) ) {
-        $('body').scrollspy({ target: '#scrollspy-container', offset: window.topOffset + 10 });
-        $('body').scrollspy('refresh');
-    } else {
-        $('body').removeData( 'bs.scrollspy' );
-    }
+        const scrollSpy = new bootstrap.Scrollspy(document.body, {
+            target: '#scrollspy-container',
+            offset: window.topOffset + 20,
+            smoothScroll: true
+        });
 
-    $( '.scroll' ).click( function( event ) {
-        event.preventDefault();
-        $( 'html,body' ).animate( { scrollTop: $( this.hash ).offset().top -
-            window.topOffset }, 500 );
-    });
+        scrollSpy.refresh();
+    };
 }
 
 // window.original_confirm = window.confirm;
@@ -185,9 +183,14 @@ function setup() {
     window.topOffset = $('#top-nav').height();
 
     // Init all tooltips.
-    $('[data-toggle="tooltip"]').tooltip();
+    // https://github.com/twbs/bootstrap/issues/35710#issuecomment-1030352173
+    let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
 
-    $('a[data-toggle="tab"]').on('shown.bs.tab', setupScroll);
+    tooltipTriggerList.forEach(function (element) {
+        bootstrap.Tooltip.getOrCreateInstance(element);
+    });
+
+    $('a[data-bs-toggle="tab"]').on('shown.bs.tab', setupScroll);
 
     setupScroll();
 

@@ -12,28 +12,28 @@
     <ul class="nav nav-tabs">
 
         <% if @revision %>
-            <li id="live-tab" class="<%= 'active' if sections['summary'] %>">
-                <%= link_to params_h.merge( action: 'summary' ).merge filter_params do %>
+            <li id="live-tab" class="nav-item">
+                <%= link_to params_h.merge( action: 'summary' ).merge(filter_params), class: "nav-link #{'active' if sections['summary']}" do %>
                     Summary
                 <% end %>
             </li>
         <% end %>
 
-        <li id="issues-tab" class="<%= 'active' if sections['issues'] %>">
-            <%= link_to params_h.merge( action: 'issues' ).merge filter_params do %>
+        <li id="issues-tab" class="nav-item">
+            <%= link_to params_h.merge( action: 'issues' ).merge(filter_params), class: "nav-link #{('active' if sections['issues'])}" do %>
                 Issues
             <% end %>
         </li>
 
-        <li id="coverage-tab" class="<%= 'active' if sections['coverage'] %>">
-            <%= link_to params_h.merge( action: 'coverage' ).merge filter_params do %>
+        <li id="coverage-tab" class="nav-item">
+            <%= link_to params_h.merge( action: 'coverage' ).merge(filter_params), class: "nav-link #{'active' if sections['coverage']}" do %>
                 Coverage
             <% end %>
         </li>
 
         <% if @reviews_count > 0 %>
-            <li id="reviews-tab" class="<%= 'active' if sections['reviews'] %>">
-                <%= link_to params_h.merge( action: 'reviews' ).merge filter_params do %>
+            <li id="reviews-tab" class="nav-item">
+                <%= link_to params_h.merge( action: 'reviews' ).merge(filter_params), class: "nav-link #{'active' if sections['reviews']}" do %>
                     Reviews
 
                     <span class="badge">
@@ -44,15 +44,15 @@
         <% end %>
 
         <% if @revision %>
-            <li id="health-tab" class="<%= 'active' if sections['health'] %>">
-                <%= link_to params_h.merge( action: 'health' ).merge filter_params do %>
+            <li id="health-tab" class="nav-item">
+                <%= link_to params_h.merge( action: 'health' ).merge(filter_params), class: "nav-link #{'active' if sections['health']}" do %>
                     Health
                 <% end %>
             </li>
 
             <% if !@revision.error_messages.blank? %>
-                <li id="errors-tab" class="<%= 'active' if sections['errors'] %>">
-                    <%= link_to params_h.merge( action: 'errors' ).merge filter_params do %>
+                <li id="errors-tab" class="nav-item">
+                    <%= link_to params_h.merge( action: 'errors' ).merge(filter_params), class: "nav-link #{'active' if sections['errors']}" do %>
                         Errors
                     <% end %>
                 </li>
@@ -60,22 +60,22 @@
         <% end %>
 
         <% if @revision %>
-            <li id="configuration-tab" class="<%= 'active' if sections['configuration'] %>">
-                <%= link_to params_h.merge( action: 'configuration' ).merge filter_params do %>
+            <li id="configuration-tab" class="nav-item">
+                <%= link_to params_h.merge( action: 'configuration' ).merge(filter_params), class: "nav-link #{'active' if sections['configuration']}" do %>
                     Configuration
                 <% end %>
             </li>
         <% end %>
 
-      <li id="events-tab" class="<%= 'active' if sections['events'] %>">
-        <%= link_to params_h.merge( action: 'events' ).merge filter_params do %>
+      <li id="events-tab" class="nav-item">
+        <%= link_to params_h.merge( action: 'events' ).merge(filter_params), class: "nav-link #{'active' if sections['events']}" do %>
             Events
         <% end %>
       </li>
 
         <% if @revision&.report %>
-            <li id="export-tab" class="<%= 'active' if sections['export'] %>">
-                <%= link_to params_h.merge( action: 'export' ).merge filter_params do %>
+            <li id="export-tab" class="nav-item">
+                <%= link_to params_h.merge( action: 'export' ).merge(filter_params), class: "nav-link #{'active' if sections['export']}" do %>
                     Export
                 <% end %>
             </li>

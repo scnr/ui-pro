@@ -18,12 +18,12 @@ $severity-none-color-faded: #dff0d8;
 
 // make all images responsive by default
 img {
-  //@extend .img-responsive;
+  //@extend .img-fluid;
   margin: 0 auto;
 }
 
 hr {
-  //@extend .img-responsive;
+  //@extend .img-fluid;
   margin: 0 auto;
 }
 
@@ -70,10 +70,16 @@ a.navbar-brand {
 // apply styles to HTML elements
 // to make views framework-neutral
 main {
-  @extend .container;
+  @extend .container-fluid;
   padding-bottom: 80px;
   width: 100%;
   margin-top: 78px; // accommodate the navbar
+}
+
+.page-header {
+  padding-bottom: 9px;
+  margin: 40px 20px;
+  border-bottom: 1px solid #eeeeee;
 }
 
 section {
@@ -91,8 +97,7 @@ section {
 }
 
 .authform form {
-  @extend .well !optional;
-  @extend .well-lg !optional;
+  @extend .card !optional;
   padding-bottom: 40px;
 }
 
@@ -106,7 +111,7 @@ section {
 }
 
 .authform fieldset {
-  @extend .well !optional;
+  @extend .card !optional;
 }
 
 #error_explanation {
@@ -126,7 +131,7 @@ section {
 .button-xs {
   @extend .btn;
   @extend .btn-primary;
-  @extend .btn-xs !optional;
+  @extend .btn-sm !optional;
 }
 
 .badge-severity {
@@ -134,22 +139,27 @@ section {
 }
 
 .badge-severity-high {
+  color: white;
   background-color: $severity-high-color;
 }
 
 .badge-severity-medium {
+  color: white;
   background-color: $severity-medium-color;
 }
 
 .badge-severity-low {
+  color: white;
   background-color: $severity-low-color;
 }
 
 .badge-severity-informational {
+  color: white;
   background-color: $severity-informational-color;
 }
 
 .badge-severity-none {
+  color: white;
   background-color: $severity-none-color;
 }
 
@@ -246,31 +256,38 @@ section {
 }
 
 .label-severity {
-  @extend .label !optional;
+  @extend .badge !optional;
+  @extend .rounded-pill !optional;
 }
 
 .label-severity-high {
+  color: white;
   background-color: $severity-high-color;
 }
 
 .label-severity-medium {
+  color: white;
   background-color: $severity-medium-color;
 }
 
 .label-severity-low {
+  color: white;
   background-color: $severity-low-color;
 }
 
 .label-severity-informational {
+  color: white;
   background-color: $severity-informational-color;
 }
 
 .label-severity-none {
+  color: white;
   background-color: $severity-none-color;
 }
 
 .label-severity-undetermined {
-  //@extend .label-default;
+  @extend .text-black;
+  @extend .bg-light;
 }
 
 .text-severity {
@@ -369,16 +386,16 @@ tr.table-row-indented-level-3 td:nth-child(1) {
   border: none;
 }
 
-.table .panel-group {
+.table .card-group {
   margin:  0;
   padding: 0;
 }
 
-.table .panel-group .panel-heading {
+.table .card-group .card-header {
   padding: 5px;
 }
 
-.table, .table .table-condensed {
+.table, .table .table-sm {
   margin-bottom: 0;
 }
 
@@ -404,7 +421,7 @@ h1, h2, h3, h4, h5 {
   word-wrap: break-word;
 }
 
-.panel .panel-heading {
+.card .card-header {
   margin-bottom: 0;
 }
 
@@ -429,10 +446,6 @@ h1, h2, h3, h4, h5 {
 
 .nav > li.nav-header > a:hover {
   background-color: inherit;
-}
-
-.navbar-fixed-top {
-  z-index: 999;
 }
 
 .tooltip {

@@ -6,9 +6,10 @@
 
 <%= simple_form_for( [@site, @scan],
                      html: {
-                         class: 'form-inline scan-form',
+                         class: 'scan-form',
                          onsubmit: 'on_submit()'
-                     }
+                     },
+                     wrapper: :vertical_form
     ) do |f| %>
     <%= f.error_notification %>
 
@@ -50,105 +51,109 @@
     <hr/>
 
     <%= f.simple_fields_for :schedule do |sf| %>
-    <div class="row">
-        <div class="col-md-8">
-            <h2>Schedule</h2>
+        <div class="row mt-3">
+            <div class="col-md-8">
+                <h2>Schedule</h2>
 
-            <div class="row">
-                <div class="col-md-8 update_schedule_preview">
-                    <%= sf.input :start_at,
-                                 disabled: @scan.active?,
-                                 include_blank: true,
-                                 start_year: Date.today.year,
-                                 end_year: Date.today.year + 2,
-                                 selected: Time.now,
-                                 hint: 'A time in the past will be replaced ' +
-                                        'with now.'
-                    %>
-                </div>
+                <div class="row">
+                    <div class="col-md-8 update_schedule_preview">
+                        <%= sf.input :start_at,
+                                    disabled: @scan.active?,
+                                    include_blank: true,
+                                    start_year: Date.today.year,
+                                    end_year: Date.today.year + 2,
+                                    selected: Time.now,
+                                    hint: 'A time in the past will be replaced ' +
+                                            'with now.'
+                        %>
+                    </div>
 
-                <div class="col-md-4">
-                    <%= sf.input :stop_after_hours, label: 'Stop after' %> hours
-                    <%= sf.input :stop_suspend,
-                                 label: 'Suspend instead of aborting',
-                                 hint: 'Should the scan be suspended, the' +
-                                       ' frequency settings will take place' +
-                                       ' after it has been restored.'
-                    %>
+                    <div class="col-md-4">
+                        <%= sf.input :stop_after_hours, label: 'Stop after', hint: 'hours', wrapper: :input_group %>
+                        <%= sf.input :stop_suspend,
+                                    label: 'Suspend instead of aborting',
+                                    hint: 'Should the scan be suspended, the' +
+                                        ' frequency settings will take place' +
+                                        ' after it has been restored.'
+                        %>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-md-4">
-            <h2>Frequency</h2>
+            <div class="col-md-4">
+                <h2>Frequency</h2>
 
-            <%= sf.input :frequency_format, label: false, wrapper_html: { class: 'hide' } %>
+                <%= sf.input :frequency_format, label: false, wrapper_html: { class: 'd-none' } %>
 
-            <div class="format-tabs">
-                <ul class="nav nav-tabs" role="tablist">
-                    <li role="presentation"
-                        class="<%= 'active' if !@scan.schedule.frequency_format ||
+                <div class="format-tabs">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link <%= 'active' if !@scan.schedule.frequency_format || @scan.schedule.frequency_format == 'simple' %>"
+                            href="#simple"
+                            aria-controls="simple"
+                            role="tab" data-bs-toggle="tab">
+                                Simple
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link <%= 'active' if @scan.schedule.frequency_format == 'cron' %>"
+                            href="#cron" aria-controls="cron" role="tab" data-bs-toggle="tab">
+                                Cronline
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div role="tabpanel"
+                            class="tab-pane update_schedule_preview mb-3
+                            <%= 'active' if !@scan.schedule.frequency_format ||
                                 @scan.schedule.frequency_format == 'simple' %>"
-                    >
-                        <a href="#simple" aria-controls="simple"
-                           role="tab" data-toggle="tab">
-                            Simple
-                        </a>
-                    </li>
-                    <li role="presentation"
-                        class="<%= 'active' if @scan.schedule.frequency_format == 'cron' %>"
-                    >
-                        <a href="#cron" aria-controls="cron"
-                           role="tab" data-toggle="tab">
-                            Cronline
-                        </a>
-                    </li>
-                </ul>
+                            id="simple">
+                            <div class="d-flex flex-row align-items-center">
+                                Every
+                                <%= sf.input :day_frequency,
+                                                collection: (1..29),
+                                                as: :select,
+                                                label: false,
+                                                placeholder: 'Days (1-29)',
+                                                wrapper_html: { class: 'mx-2' }
+                                %>
+                                days and
+                                <%= sf.input :month_frequency,
+                                                collection: (1..12),
+                                                as: :select,
+                                                label: false,
+                                                placeholder: 'Months (1-12)',
+                                                wrapper_html: { class: 'mx-2' }
+                                %>
+                                months.
+                            </div>
+                        </div>
 
-                <div class="tab-content">
-                    <div role="tabpanel"
-                         class="tab-pane update_schedule_preview
-                         <%= 'active' if !@scan.schedule.frequency_format ||
-                            @scan.schedule.frequency_format == 'simple' %>"
-                         id="simple">
-                        Every
-                        <%= sf.input :day_frequency,
-                                          collection: (1..29),
-                                          as: :select,
-                                          label: false,
-                                          placeholder: 'Days (1-29)'
-                        %>
-                        days and
-                        <%= sf.input :month_frequency,
-                                          collection: (1..12),
-                                          as: :select,
-                                          label: false,
-                                          placeholder: 'Months (1-12)'
-                        %>
-                        months.
+                        <div role="tabpanel"
+                            class="tab-pane update_schedule_preview
+                            <%= 'active' if @scan.schedule.frequency_format == 'cron' %>"
+                            id="cron">
+                            <div class="d-flex flex-row align-items-center">
+                                <%= sf.input :frequency_cron, label: false, as: :string %>
+                            </div>
+                        </div>
                     </div>
 
-                    <div role="tabpanel"
-                         class="tab-pane update_schedule_preview
-                         <%= 'active' if @scan.schedule.frequency_format == 'cron' %>"
-                         id="cron">
-                        <%= sf.input :frequency_cron, label: false, as: :string %>
+                    <div class="update_schedule_preview mb-3 d-flex flex-row align-items-center">
+                        Calculate the next occurrence from the scan's
+                        <%= sf.input :frequency_base,
+                                    collection: Schedule::FREQUENCY_BASES,
+                                    as: :select,
+                                    default: 'start',
+                                    label: false,
+                                    wrapper_html: { class: 'mx-2' }
+                        %>
+                        time.
                     </div>
-                </div>
-
-                <div class="update_schedule_preview">
-                    Calculate the next occurrence from the scan's
-                    <%= sf.input :frequency_base,
-                                 collection: Schedule::FREQUENCY_BASES,
-                                 as: :select,
-                                 default: 'start',
-                                 label: false
-                    %>
-                    time.
                 </div>
             </div>
         </div>
-    </div>
     <% end %>
 
     <% if !@scan.active? %>
@@ -166,7 +171,7 @@
     <% end %>
 
     <div class="row">
-        <div class="form-actions col-md-12">
+        <div class="form-actions col-md-12 mt-4">
             <%= f.button :submit %>
         </div>
     </div>

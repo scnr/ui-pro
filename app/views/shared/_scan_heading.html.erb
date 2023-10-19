@@ -1,6 +1,6 @@
 <% if @sitemap_entry %>
     <h1>
-    <small>
+    <span class="text-muted fs-6">
         Showing for:
         <%= link_to_url_with_external(
                     external: @sitemap_entry.url,
@@ -12,10 +12,10 @@
         <%= link_to filter_params_without_page,
                     title: 'Remove page filter' do %>
 
-            <small>
+            <span class="text-muted fs-6">
                 <i class="text text-danger fa fa-minus-circle"></i>
-            </small>
+            </span>
         <% end %>
-    </small>
+    </span>
     </h1>
 <% end %>

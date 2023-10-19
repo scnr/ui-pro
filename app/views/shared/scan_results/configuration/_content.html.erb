@@ -20,9 +20,9 @@
     <% end %>
 
     <% if show_current && changed %>
-        <button class="btn btn-inverse btn-primary btn-xs btn-toggle-current-value"
-                type="button" data-toggle="collapse"
-                data-target="#<%= current.hash %>" aria-expanded="false"
+        <button class="btn btn-inverse btn-primary btn-sm btn-toggle-current-value"
+                type="button" data-bs-toggle="collapse"
+                data-bs-target="#<%= current.hash %>" aria-expanded="false"
                 aria-controls="collapseExample">
             Toggle visibility of current value
         </button>

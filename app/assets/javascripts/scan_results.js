@@ -1,3 +1,3 @@
-$(document).on('change', '#scan-results-filter .check_boxes', function() {
+$(document).on('change', '#scan-results-filter .form-check-input', function() {
   this.form.requestSubmit();
 });

@@ -1,17 +1,17 @@
 <% if user_signed_in? %>
-    <li class="<%= "active" if request.url.include?( sites_path ) || current_page?( root_path ) %>">
-        <%= link_to 'Sites', sites_path %>
+    <li class="nav-item">
+        <%= link_to 'Sites', sites_path, class: "nav-link #{'active' if request.url.include?( sites_path ) || current_page?( root_path )}" %>
     </li>
 
-    <li class="<%= "active" if current_page?( profiles_path ) %>">
-        <%= link_to 'Profiles', profiles_path %>
+    <li class="nav-item">
+        <%= link_to 'Profiles', profiles_path, class: "nav-link #{"active" if current_page?( profiles_path )}" %>
     </li>
 
-    <li class="<%= "active" if current_page?( devices_path ) %>">
-        <%= link_to 'Devices', devices_path %>
+    <li class="nav-item">
+        <%= link_to 'Devices', devices_path, class: "nav-link #{'active' if current_page?( devices_path )}" %>
     </li>
 
-    <li class="<%= "active" if current_page?( settings_path ) %>">
-        <%= link_to 'Settings', settings_path %>
+    <li class="nav-item">
+        <%= link_to 'Settings', settings_path, class: "nav-link #{'active' if current_page?( settings_path )}" %>
     </li>
 <% end %>

@@ -9,11 +9,11 @@ update_form = () ->
         $('#setting_max_parallel_scans').val(
             $('#setting_max_parallel_scans_auto').data('slots-total')
         )
-        $('#max_parallel_scans-help-block').addClass( 'hide' )
-        $('#max_parallel_scans_auto-help-block').removeClass( 'hide' )
+        $('#max_parallel_scans-help-block').addClass( 'd-none' )
+        $('#max_parallel_scans_auto-help-block').removeClass( 'd-none' )
     else
-        $('#max_parallel_scans-help-block').removeClass( 'hide' )
-        $('#max_parallel_scans_auto-help-block').addClass( 'hide' )
+        $('#max_parallel_scans-help-block').removeClass( 'd-none' )
+        $('#max_parallel_scans_auto-help-block').addClass( 'd-none' )
 
     $('#setting_max_parallel_scans').prop( 'disabled', is_checked )
 

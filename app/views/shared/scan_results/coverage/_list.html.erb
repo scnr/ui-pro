@@ -2,14 +2,14 @@
    sitemap = sitemap.sort_by { |entry| entry.url }
 %>
 
-<div class="row">
+<div class="row mt-3">
     <div class="col-md-12" id="<%= id %>">
 
         <% if title %>
             <h2>
                 <%= title %>
 
-                <span class="badge <%= badge %>">
+                <span class="badge rounded-pill <%= badge %>">
                     <%= sitemap.size %>
                 </span>
             </h2>
