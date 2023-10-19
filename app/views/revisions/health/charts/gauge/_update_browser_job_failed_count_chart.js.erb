@@ -1,0 +1,23 @@
+<% value = revision.performance_snapshot.browser_job_failed_count_pct %>
+<% label = "#{revision.performance_snapshot.browser_job_failed_count_pct}%".to_json.html_safe %>
+
+const browserJobFailedCountGaugeChart = new window.Charts.gaugeChart(
+    'current_browser_job_failed_count',
+    {
+        name: 'Reliability',
+        value: <%= value %>,
+        label: <%= label %>,
+        max: <%= PerformanceSnapshot::MAX_BROWSER_FAILED_RATIO %>,
+        unit: 'failed browser jobs',
+        better: 'low'
+    }
+);
+
+browserJobFailedCountGaugeChart.initializeChart();
+
+<% if local_assigns[:update] %>
+    browserJobFailedCountGaugeChart.updateDataset({
+        value: <%= value %>,
+        label: <%= label %>
+    });
+<% end %>

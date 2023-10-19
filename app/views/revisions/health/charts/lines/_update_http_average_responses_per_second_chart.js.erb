@@ -1,0 +1,20 @@
+<% values = health.map { |d| d['http_average_responses_per_second'] }.to_json %>
+
+const httpAverageResponsesPerSecondLineChart = new window.Charts.lineChart(
+    'historic_http_average_responses_per_second',
+    {
+        name:   'Average responses per second',
+        values: <%= values %>,
+        x_axis: <%= x_axis %>,
+        max:    <%= PerformanceSnapshot::MAX_HTTP_AVERAGE_RESPONSES_PER_SECOND %>
+    }
+);
+
+httpAverageResponsesPerSecondLineChart.initializeChart();
+
+<% if local_assigns[:update] %>
+    httpAverageResponsesPerSecondLineChart.updateDataset({
+        labels: <%= x_axis %>,
+        values: <%= values %>
+    });
+<% end %>

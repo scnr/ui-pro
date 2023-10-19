@@ -1,0 +1,19 @@
+<% values = health.map { |d| d['browser_job_count'] }.to_json %>
+
+const browserJobCountLineChart = new window.Charts.lineChart(
+    'historic_browser_job_count',
+    {
+        name:  'Events',
+        values: <%= values %>,
+        x_axis: <%= x_axis %>
+    }
+);
+
+browserJobCountLineChart.initializeChart();
+
+<% if local_assigns[:update] %>
+    browserJobCountLineChart.updateDataset({
+        labels: <%= x_axis %>,
+        values: <%= values %>
+    });
+<% end %>

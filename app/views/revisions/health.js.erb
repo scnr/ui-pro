@@ -1,0 +1,35 @@
+<% if @health.any? %>
+    if ($('#health-application-server-group').length) {
+        $("#sidebar").html("<%= j render(partial: 'revisions/sidebar', formats: :html) %>");
+
+        window.performance_snapshots = <%= @health.to_json.html_safe %>;
+
+        // Update Gauge Charts
+        <%= render(
+                partial: 'revisions/health/gauge_charts',
+                formats: :js,
+                locals: { revision: @revision, health: @health, update: true }
+            )
+        %>
+
+        // Update Line Charts
+        <%= render(
+                partial: 'revisions/health/line_charts',
+                formats: :js,
+                locals: { revision: @revision, health: @health, update: true }
+            )
+        %>
+
+        // Update state blocks
+        $('#health-total_average_app_time').replaceWith("<%= j render(partial: 'revisions/health/health_total_average_app_time', locals: { revision: @revision }) %>");
+        $('#health-network_reliability').replaceWith("<%= j render(partial: 'revisions/health/health_network_reliability', locals: { revision: @revision }) %>");
+        $('#health-server_performance').replaceWith("<%= j render(partial: 'revisions/health/health_server_performance', locals: { revision: @revision }) %>");
+        $('#health-server_responsiveness').replaceWith("<%= j render(partial: 'revisions/health/health_server_responsiveness', locals: { revision: @revision }) %>");
+        $('#health-browser_failed_job_count').replaceWith("<%= j render(partial: 'revisions/health/health_browser_failed_job_count', locals: { revision: @revision }) %>")
+        $('#health-scanner_performance').replaceWith("<%= j render(partial: 'revisions/health/health_scanner_performance', locals: { revision: @revision }) %>")
+    } else {
+        <%= render(partial: 'shared/scan_results', formats: :js, locals: { sidebar_partial_path: 'revisions/sidebar' }) %>
+    };
+<% else %>
+    <%= render(partial: 'shared/scan_results', formats: :js, locals: { sidebar_partial_path: 'revisions/sidebar' }) %>
+<% end %>

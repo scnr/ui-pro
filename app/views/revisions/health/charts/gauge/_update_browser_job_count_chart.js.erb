@@ -1,0 +1,21 @@
+<% value = revision.performance_snapshot.browser_job_count %>
+<% label = number_with_delimiter( revision.performance_snapshot.browser_job_count ).to_json.html_safe %>
+
+const browserJobCountGaugeChart = new window.Charts.gaugeChart(
+    'current_browser_job_count',
+    {
+        name:  'Jobs',
+        value: <%= value %>,
+        label: <%= label %>,
+        unit:  'jobs'
+    }
+);
+
+browserJobCountGaugeChart.initializeChart();
+
+<% if local_assigns[:update] %>
+    browserJobCountGaugeChart.updateDataset({
+        value: <%= value %>,
+        label: <%= label %>
+    });
+<% end %>

@@ -1,0 +1,60 @@
+<%= render(
+        partial: 'revisions/health/charts/gauge/update_browser_job_count_chart',
+        formats: :js,
+        locals: { revision: revision, update: local_assigns[:update] }
+    )
+%>
+<%= render(
+        partial: 'revisions/health/charts/gauge/update_browser_job_failed_count_chart',
+        formats: :js,
+        locals: { revision: revision, update: local_assigns[:update] }
+    )
+%>
+<%= render(
+        partial: 'revisions/health/charts/gauge/update_current_total_average_app_time_chart',
+        formats: :js,
+        locals: { revision: revision, update: local_assigns[:update] }
+    )
+%>
+<%= render(
+        partial: 'revisions/health/charts/gauge/update_download_kbps_chart',
+        formats: :js,
+        locals: { revision: revision, health: health, update: local_assigns[:update] }
+    )
+%>
+<%= render(
+        partial: 'revisions/health/charts/gauge/update_http_max_concurency_chart',
+        formats: :js,
+        locals: { revision: revision, update: local_assigns[:update] }
+    )
+%>
+<%= render(
+        partial: 'revisions/health/charts/gauge/update_http_request_count_chart',
+        formats: :js,
+        locals: { revision: revision, update: local_assigns[:update] }
+    )
+%>
+<%= render(
+        partial: 'revisions/health/charts/gauge/update_upload_kbps_chart',
+        formats: :js,
+        locals: { revision: revision, health: health, update: local_assigns[:update] }
+    )
+%>
+<%= render(
+        partial: 'revisions/health/charts/gauge/update_current_http_responses_per_second_chart',
+        formats: :js,
+        locals: { revision: revision, update: local_assigns[:update] }
+    )
+%>
+<%= render(
+        partial: 'revisions/health/charts/gauge/update_current_http_average_response_time_chart',
+        formats: :js,
+        locals: { revision: revision, update: local_assigns[:update] }
+    )
+%>
+<%= render(
+        partial: 'revisions/health/charts/gauge/update_current_http_failed_count_chart',
+        formats: :js,
+        locals: { revision: revision, update: local_assigns[:update] }
+    )
+%>

@@ -1,0 +1,30 @@
+<% state = revision.performance_snapshot.total_average_app_time_state %>
+
+<div class="chart-container col-md-12" id="health-total_average_app_time">
+  <h3>
+    Responsiveness
+  </h3>
+
+  <h4 class="text text-state-<%= state %> health-state">
+    <%= state.capitalize %>
+  </h4>
+
+  <p class="text-muted health-description">
+    <%= case state
+          when :excellent
+              'The application does not seem to be under any stress.'
+
+          when :good
+              'The application seems to be under a little stress, this ' +
+                  'will have a small impact on performance.'
+
+          when :fair
+              'The application seems to be under stress, this ' +
+                  'will have a considerable impact on performance.'
+
+          when :poor
+              'The application seems to be under a lot of stress, this ' +
+                  'will have a massive impact on performance.'
+        end
+    %>
+</div>

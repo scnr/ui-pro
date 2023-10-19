@@ -1,7 +1,8 @@
 {
   "dependencies": {
     "@hotwired/turbo-rails": "^7.1.1",
-    "@rails/webpacker": "^5.4.4"
+    "@rails/webpacker": "^5.4.4",
+    "chart.js": "^4.3.0"
   },
   "devDependencies": {
     "webpack-dev-server": "^4.13.1"

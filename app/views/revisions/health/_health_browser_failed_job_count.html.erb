@@ -1,0 +1,31 @@
+<% state = @revision.performance_snapshot.browser_failed_job_count_state %>
+
+<div class="chart-container col-md-3" id="health-browser_failed_job_count">
+  <h3>
+    Reliability
+  </h3>
+
+  <h4 class="text text-state-<%= state %> health-state">
+    <%= state.capitalize %>
+  </h4>
+
+  <p class="text-muted health-description">
+    <%= case state
+          when :excellent
+              'DOM operations seem highly reliable.'
+
+          when :good
+              'A small amount of DOM operations have failed, nothing to ' +
+                'worry about yet though.'
+
+          when :fair
+              'A considerable amount of DOM operations have failed, there ' +
+                'is a small chance that scan will yield incomplete results.'
+
+          when :poor
+              'A large amount of DOM operations have failed, there is a ' +
+                'chance that scan will yield incomplete results.'
+      end
+    %>
+  </p>
+</div>

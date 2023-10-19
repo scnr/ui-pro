@@ -87,7 +87,7 @@
             <div class="tab-pane <%= 'active' if sections['summary'] %>" id="summary">
                 <%= render partial: 'shared/scan_results/summary', locals: {
                     data: @summary
-                } %>
+                }, formats: :html %>
             </div>
         <% end %>
 
@@ -95,49 +95,49 @@
             <div class="tab-pane <%= 'active' if sections['issues'] %>" id="issues">
                 <%= render partial: 'shared/scan_results/issues', locals: {
                     data: @issues_summary
-                } %>
+                }, formats: :html %>
             </div>
         <% end %>
 
         <% if sections['coverage'] %>
             <div class="tab-pane <%= 'active' if sections['coverage'] %>" id="coverage">
-                <%= render partial: 'shared/scan_results/coverage' %>
+                <%= render partial: 'shared/scan_results/coverage', formats: :html %>
             </div>
         <% end %>
 
         <% if @reviews_count > 0 && sections['reviews'] %>
             <div class="tab-pane <%= 'active' if sections['reviews'] %>" id="reviews">
-                <%= render partial: 'shared/scan_results/reviews' %>
+                <%= render partial: 'shared/scan_results/reviews', formats: :html %>
             </div>
         <% end %>
 
         <% if sections['health'] %>
             <div class="tab-pane <%= 'active' if sections['health'] %>" id="health">
-                <%= render partial: 'shared/scan_results/health' %>
+                <%= render partial: 'shared/scan_results/health', formats: :html %>
             </div>
         <% end %>
 
         <% if sections['errors'] %>
             <div class="tab-pane <%= 'active' if sections['errors'] %>" id="errors">
-                <%= render partial: 'shared/scan_results/errors' %>
+                <%= render partial: 'shared/scan_results/errors', formats: :html %>
             </div>
         <% end %>
 
         <% if sections['configuration'] %>
             <div class="tab-pane <%= 'active' if sections['configuration'] %>" id="configuration">
-                <%= render partial: 'shared/scan_results/configuration' %>
+                <%= render partial: 'shared/scan_results/configuration', formats: :html %>
             </div>
         <% end %>
 
       <% if sections['events'] %>
           <div class="tab-pane <%= 'active' if sections['events'] %>" id="events">
-            <%= render partial: 'shared/scan_results/events' %>
+            <%= render partial: 'shared/scan_results/events', formats: :html %>
           </div>
       <% end %>
 
         <% if sections['export'] %>
             <div class="tab-pane <%= 'active' if sections['export'] %>" id="export">
-                <%= render partial: 'shared/scan_results/export' %>
+                <%= render partial: 'shared/scan_results/export', formats: :html %>
             </div>
         <% end %>
     </div>

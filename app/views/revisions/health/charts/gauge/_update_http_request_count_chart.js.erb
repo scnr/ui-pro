@@ -1,0 +1,20 @@
+<% value = revision.performance_snapshot.http_request_count %>
+<% label = number_with_delimiter( revision.performance_snapshot.http_request_count ).to_json.html_safe %>
+const httpRequestCountGaugeChart = new window.Charts.gaugeChart(
+    'current_http_request_count',
+    {
+        name: 'Requests',
+        value: <%= value %>,
+        label: <%= label %>,
+        unit: 'requests'
+    }
+);
+
+httpRequestCountGaugeChart.initializeChart();
+
+<% if local_assigns[:update] %>
+    httpRequestCountGaugeChart.updateDataset({
+        value: <%= value %>,
+        label: <%= label %>
+    });
+<% end %>

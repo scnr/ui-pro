@@ -1,0 +1,21 @@
+<% values = health.map { |d| d['browser_job_failed_count'] }.to_json %>
+
+const browserJobFailedCountLineChart = new window.Charts.lineChart(
+    'historic_browser_job_failed_count',
+    {
+        name:  'Failed browser jobs',
+        values: <%= values %>,
+        x_axis: <%= x_axis %>,
+        max:    <%= revision.performance_snapshot.max_browser_job_failed_count %>,
+        better: 'low'
+    }
+);
+
+browserJobFailedCountLineChart.initializeChart();
+
+<% if local_assigns[:update] %>
+    browserJobFailedCountLineChart.updateDataset({
+        labels: <%= x_axis %>,
+        values: <%= values %>
+    });
+<% end %>

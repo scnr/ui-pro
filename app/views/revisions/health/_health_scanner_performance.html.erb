@@ -1,0 +1,28 @@
+<% state = @revision.performance_snapshot.http_max_concurrency_state %>
+
+<div class="chart-container col-md-3" id="health-scanner_performance">
+  <h3>
+    Performance
+  </h3>
+
+  <h4 class="text text-state-<%= state %> health-state">
+    <%= state.capitalize %>
+  </h4>
+
+  <p class="text-muted health-description">
+    <%= case state
+          when :excellent
+              'Operating close to the configured maximum.'
+
+          when :good
+              'To alleviate temporary server stress concurrency had to be lowered a little.'
+
+          when :fair
+              'To alleviate persistent server stress concurrency had to be lowered considerably .'
+
+          when :poor
+              'To alleviate high server stress concurrency had to be greatly lowered.'
+      end
+    %>
+  </p>
+</div>

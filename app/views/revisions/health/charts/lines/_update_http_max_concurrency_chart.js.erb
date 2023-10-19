@@ -1,0 +1,21 @@
+<% values = health.map { |d| d['http_max_concurrency'] }.to_json %>
+
+const httpMaxConcurrencyLineChart = new window.Charts.lineChart(
+    'historic_http_max_concurrency',
+    {
+        name:  'Request concurrency',
+        values: <%= values %>,
+        x_axis: <%= x_axis %>,
+        min:    <%= PerformanceSnapshot::MIN_MAX_CONCURRENCY %>,
+        max:   <%= revision.performance_snapshot.http_original_max_concurrency %>
+    }
+);
+
+httpMaxConcurrencyLineChart.initializeChart();
+
+<% if local_assigns[:update] %>
+    httpMaxConcurrencyLineChart.updateDataset({
+        labels: <%= x_axis %>,
+        values: <%= values %>
+    });
+<% end %>

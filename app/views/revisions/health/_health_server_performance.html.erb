@@ -1,0 +1,30 @@
+<% state = @revision.performance_snapshot.http_average_responses_per_second_state %>
+
+<div class="chart-container col-md-4" id="health-server_performance">
+  <h3>
+    Performance
+  </h3>
+
+  <h4 class="text text-state-<%= state %> health-state">
+    <%= state.capitalize %>
+  </h4>
+
+  <p class="text-muted health-description">
+    <%= case state
+          when :excellent
+              'The server is performing very group.'
+
+          when :good
+              'The server is performing group enough.'
+
+          when :fair
+              'The server is somewhat slow, this will have ' +
+                'an impact on performance.'
+
+          when :poor
+              'The server is performing poorly, this will ' +
+                'have a considerable impact on performance.'
+        end
+    %>
+  </p>
+</div>

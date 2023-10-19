@@ -16,3 +16,11 @@
 // const imagePath = (name) => images(name, true)
 
 import "@hotwired/turbo-rails";
+import IssueChart from '../charts/issue_chart';
+import GaugeChart from '../charts/gauge_chart';
+import LineChart from '../charts/line_chart';
+
+window.Charts ||= {}
+window.Charts.issueChart = IssueChart;
+window.Charts.gaugeChart = GaugeChart;
+window.Charts.lineChart = LineChart;

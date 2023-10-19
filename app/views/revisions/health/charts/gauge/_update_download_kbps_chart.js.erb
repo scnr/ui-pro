@@ -1,0 +1,23 @@
+<% value = revision.performance_snapshot.download_kbps %>
+<% label = "#{revision.performance_snapshot.download_kbps} KBps".to_json.html_safe %>
+<% max = health.map { |d| d['download_kbps'].to_f }.max %>
+
+const downloadKbpsGaugeChart = new window.Charts.gaugeChart(
+    'current_download_kbps',
+    {
+        name: 'Download KBps',
+        value: <%= value %>,
+        label: <%= label %>,
+        max: <%= max %>
+    }
+);
+
+downloadKbpsGaugeChart.initializeChart();
+
+<% if local_assigns[:update] %>
+    downloadKbpsGaugeChart.updateDataset({
+        value: <%= value %>,
+        label: <%= label %>,
+        max: <%= max %>
+    });
+<% end %>

@@ -1,0 +1,23 @@
+<% value = revision.performance_snapshot.http_failed_count_pct %>
+<% label = "#{revision.performance_snapshot.http_failed_count_pct}%".to_json.html_safe %>
+
+const currentHttpFailedCountGaugeChart = new window.Charts.gaugeChart(
+    'current_http_failed_count',
+    {
+        name: 'Reliability',
+        value: <%= value %>,
+        label: <%= label %>,
+        max: <%= PerformanceSnapshot::MAX_HTTP_FAILED_RATIO %>,
+        unit: 'failed requests',
+        better: 'low'
+    }
+);
+
+currentHttpFailedCountGaugeChart.initializeChart();
+
+<% if local_assigns[:update] %>
+    currentHttpFailedCountGaugeChart.updateDataset({
+        value: <%= value %>,
+        label: <%= label %>,
+    });
+<% end %>
