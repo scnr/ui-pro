@@ -4,12 +4,15 @@
             <div class="col-md-12">
                 <h2>Active</h2>
 
+              <% if active_scans.any? %>
                 <%= render partial: 'scans/tables/active',
                            locals: { scans: active_scans, site: site } %>
 
+              <% else %>
                 <p class="alert alert-info">
                     No active scans.
                 </p>
+                <% end %>
             </div>
         </div>
 
@@ -17,12 +20,16 @@
             <div class="col-md-12">
                 <h2>Suspended</h2>
 
+              <% if suspended_scans.any? %>
                 <%= render partial: 'scans/tables/suspended',
                            locals: { scans: suspended_scans, site: site } %>
 
+              <% else %>
                 <p class="alert alert-info">
                     No suspended scans.
                 </p>
+
+                <% end %>
             </div>
         </div>
 
@@ -30,12 +37,16 @@
             <div class="col-md-12">
                 <h2>Finished</h2>
 
+              <% if finished_scans.any? %>
                 <%= render partial: 'scans/tables/finished',
                            locals: { scans: finished_scans, site: site } %>
 
+              <% else %>
                 <p class="alert alert-info">
                     No finished scans.
                 </p>
+
+                <% end %>
             </div>
         </div>
     </div>
