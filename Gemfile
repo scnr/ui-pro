@@ -79,8 +79,6 @@ group :development, :test do
     gem 'pry-byebug'
 end
 
-gem 'ethon', github: 'typhoeus/ethon', branch: 'thread-safe-easy-handle-cleanup'
-
 if File.exist? '../application'
     gem 'scnr-application', path: '../application'
 else
