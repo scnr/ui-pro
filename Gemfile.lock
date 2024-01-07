@@ -1,11 +1,3 @@
-GIT
-  remote: https://github.com/typhoeus/ethon.git
-  revision: 54b50335120f782628e4e923448943a21d860b2b
-  branch: thread-safe-easy-handle-cleanup
-  specs:
-    ethon (0.15.0)
-      ffi (>= 1.15.0)
-
 PATH
   remote: ../application
   specs:
@@ -202,6 +194,8 @@ GEM
       i18n
     dsel (0.1.0)
     erubi (1.12.0)
+    ethon (0.15.0)
+      ffi (>= 1.15.0)
     execjs (2.9.1)
     factory_girl (4.9.0)
       activesupport (>= 3.0.0)
@@ -264,7 +258,8 @@ GEM
     net-smtp (0.4.0)
       net-protocol
     nio4r (2.7.0)
-    nokogiri (1.15.5-x86_64-linux)
+    nokogiri (1.15.5)
+      mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
     oj (3.16.3)
       bigdecimal (>= 3.0)
@@ -405,8 +400,7 @@ GEM
       actionpack (>= 5.2)
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
-    sqlite3 (1.7.0)
-      mini_portile2 (~> 2.8.0)
+    sqlite3 (1.7.0-x86_64-linux)
     sys-proctable (1.1.5-universal-linux)
     thermite (0.13.0)
       minitar (~> 0.5)
@@ -466,7 +460,6 @@ DEPENDENCIES
   devise
   diffy
   dotiw
-  ethon!
   factory_girl_rails
   faker
   font-awesome-sass
