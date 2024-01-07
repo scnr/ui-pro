@@ -90,7 +90,7 @@ class SiteRole < ActiveRecord::Base
 
     def login_script_code_tempfile
         path = create_login_script_code_tempfile_path
-        return path if File.exists? path
+        return path if File.exists path
 
         IO.write( path, login_script_code )
         path
