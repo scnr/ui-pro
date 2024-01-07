@@ -56,22 +56,22 @@ p = Profile.create! engine_defaults.merge(
     name:        'XSS checks',
     description: 'Scans for XSS issues.',
     checks:      %w(xss xss_dom xss_dom_script_context xss_event
-        xss_path xss_script_context xss_tag)
+        xss_path xss_script_context xss_tag xss_tag_dom)
 )
 puts 'XSS profile created: ' << p.name
 
 p = Profile.create! engine_defaults.merge(
     name:        'Client-side checks',
     description: 'Scans for DOM issues like DOM XSS, unvalidated redirects etc.',
-    checks:      %w(xss_dom xss_dom_script_context unvalidated_redirect_dom)
+    checks:      %w(xss_dom xss_dom_script_context xss_tag_dom unvalidated_redirect_dom)
     )
 puts 'Client-side profile created: ' << p.name
 
 devices = []
 
 devices << firefox_ua = Device.create(
-    name:          'Firefox 36.0',
-    device_user_agent:    'Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0',
+    name:          'Firefox',
+    device_user_agent:    'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0',
     device_width:  1200,
     device_height: 1600,
     device_touch:  false,
@@ -79,8 +79,8 @@ devices << firefox_ua = Device.create(
 )
 
 devices << ie_ua = Device.create(
-    name:          'Internet Explorer 11.0',
-    device_user_agent:    'Mozilla/5.0 (compatible, MSIE 11, Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko',
+    name:          'Edge',
+    device_user_agent:    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.2210.121',
     device_width:  1200,
     device_height: 1600,
     device_touch:  false,
