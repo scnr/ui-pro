@@ -1046,7 +1046,7 @@ describe ScanScheduler::Helpers::Scan do
         it "stores the report under #{described_class}::REPORT_DIR" do
             subject.download_report_and_shutdown(revision)
 
-            expect(File.exists(described_class::REPORT_DIR + "/#{revision.id}.afr")).to be_truthy
+            expect(File.exist?(described_class::REPORT_DIR + "/#{revision.id}.afr")).to be_truthy
         end
 
         it 'passes the report to #import_issues_from_report' do

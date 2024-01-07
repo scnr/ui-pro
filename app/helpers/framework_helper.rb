@@ -90,7 +90,7 @@ module FrameworkHelper
     def components_for( type, list = :available )
         path = File.join( Rails.root, 'config', 'component_cache', "#{type}_#{list}.yml" )
 
-        if !File.exists( path )
+        if !File.exist?( path )
             components = framework do |f|
                 (manager = f.send( type )).loaded.inject( {} ) do |h, name|
                     h[name] = manager[name].info.merge( path: manager.name_to_path( name ) )
