@@ -31,7 +31,7 @@ class PerformanceSnapshot < ActiveRecord::Base
     end
 
     def max_browser_job_failed_count
-        (browser_job_count * MAX_BROWSER_FAILED_RATIO).to_i
+        (100 * MAX_BROWSER_FAILED_RATIO).to_i
     end
 
     def browser_job_failed_count_pct
