@@ -1,5 +1,3 @@
-require 'scnr/application'
-
 class ScanScheduler
     include Singleton
 
