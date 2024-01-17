@@ -12,9 +12,8 @@
 options = SCNR::Engine::Options
 
 # Production defaults.
-options.audit.elements :forms, :links, :cookies, :ui_forms, :ui_inputs, :xmls, :jsons
+options.audit.elements :forms, :links, :cookies, :headers, :ui_forms, :ui_inputs, :xmls, :jsons
 
 # We do this so that the values that will be used will appear in the UI.
 options.input.values = options.input.default_values.dup
 options.input.default_values.clear
-
