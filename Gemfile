@@ -89,6 +89,10 @@ if File.exist? '../scnr'
     gem 'scnr', path: '../scnr'
 end
 
+if File.exist? '../introspector'
+    gem 'scnr-introspector', path: '../introspector'
+end
+
 if File.exist? '../engine'
     gem 'scnr-engine', path: '../engine'
 end
