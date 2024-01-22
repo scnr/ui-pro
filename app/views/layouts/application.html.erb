@@ -5,10 +5,9 @@
         <title>
             <%= "#{yield( :title )} - " if content_for?( :title ) %>
             <%= "#{title_breadcrumbs} ~ " if !title_breadcrumbs.empty? %>
-            SCNR WebUI v<%= SCNR::UI::Web::VERSION %>
-            (Engine v<%= SCNR::Engine::VERSION %>)
+            Codename SCNR v<%= SCNR::VERSION %>
 
-            [&copy; Ecsypno Single Member P.C.]
+            (&copy; Ecsypno Single Member P.C.)
         </title>
 
     <!--    <meta name="turbo-cache-control" content="no-cache">-->
