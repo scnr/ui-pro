@@ -1,9 +1,9 @@
 PATH
   remote: ../application
   specs:
-    scnr-application (1.0dev)
+    scnr-application (1.0)
       cuboid (~> 0.2)
-      scnr-engine (~> 1.0dev)
+      scnr-engine (~> 1.0)
 
 PATH
   remote: ../engine
@@ -38,6 +38,11 @@ PATH
       vmstat (= 2.3.0)
       watir (= 6.19.1)
       webrick (= 1.7.0)
+
+PATH
+  remote: ../scnr
+  specs:
+    scnr (3.1)
 
 GEM
   remote: https://rubygems.org/
@@ -360,7 +365,6 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
-    scnr (1.0dev)
     scnr-introspector (1.0dev)
     sdoc (0.4.2)
       json (~> 1.7, >= 1.7.7)
@@ -479,6 +483,7 @@ DEPENDENCIES
   rails_layout
   rspec-rails
   sass-rails
+  scnr!
   scnr-application!
   scnr-engine!
   sdoc (~> 0.4.0)
