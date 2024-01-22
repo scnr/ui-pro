@@ -24,7 +24,7 @@ class PerformanceSnapshot < ActiveRecord::Base
 
     def browser_failed_job_count_state
         self.class.determine_state(
-          browser_job_failed_count,
+          browser_job_failed_count_pct,
           max_browser_job_failed_count,
           better: :low
         )
@@ -40,7 +40,7 @@ class PerformanceSnapshot < ActiveRecord::Base
 
     def http_time_out_count_state
         self.class.determine_state(
-            http_time_out_count,
+            http_time_out_count_pct,
             max_http_time_out_count,
             better: :low
         )
@@ -56,7 +56,7 @@ class PerformanceSnapshot < ActiveRecord::Base
 
     def http_failed_count_state
         self.class.determine_state(
-          http_failed_count,
+          http_failed_count_pct,
           max_http_failed_count,
           better: :low
         )

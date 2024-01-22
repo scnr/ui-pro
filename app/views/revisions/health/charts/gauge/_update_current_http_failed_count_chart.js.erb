@@ -7,7 +7,7 @@ const currentHttpFailedCountGaugeChart = new window.Charts.gaugeChart(
         name: 'Reliability',
         value: <%= value %>,
         label: <%= label %>,
-        max: <%= PerformanceSnapshot::MAX_HTTP_FAILED_RATIO %>,
+        max: <%= revision.performance_snapshot.max_http_failed_count %>,
         unit: 'failed requests',
         better: 'low'
     }
