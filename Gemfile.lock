@@ -8,7 +8,7 @@ PATH
 PATH
   remote: ../engine
   specs:
-    scnr-engine (0.1)
+    scnr-engine (0.1.1)
       addressable (= 2.5.2)
       awesome_print (= 1.6.1)
       bundler
