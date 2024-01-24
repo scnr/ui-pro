@@ -45,9 +45,16 @@ PATH
     scnr-introspector (0.1)
 
 PATH
+  remote: ../license-client
+  specs:
+    scnr-license-client (0.1.0)
+      typhoeus (= 1.4.0)
+
+PATH
   remote: ../scnr
   specs:
     scnr (1.1)
+      scnr-license-client (~> 0.1)
 
 GEM
   remote: https://rubygems.org/
@@ -491,6 +498,7 @@ DEPENDENCIES
   scnr-application!
   scnr-engine!
   scnr-introspector!
+  scnr-license-client!
   sdoc (~> 0.4.0)
   selenium-webdriver
   shoulda
