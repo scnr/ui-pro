@@ -3,11 +3,13 @@ require File.expand_path('../boot', __FILE__)
 require 'rails/all'
 require 'scnr/application'
 
-begin
-    SCNR::License.guard! :dev, :trial, :pro, :enterprise
-rescue SCNR::License::Error => e
-    puts "[ERROR] #{e}"
-    exit 1
+if ENV['PACKAGING'] != '1'
+    begin
+        SCNR::License.guard! :dev, :trial, :pro, :enterprise
+    rescue SCNR::License::Error => e
+        puts "[ERROR] #{e}"
+        exit 1
+    end
 end
 
 # Require the gems listed in Gemfile, including any gems
