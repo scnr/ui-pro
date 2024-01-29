@@ -265,7 +265,7 @@ module Scan
             # missing issues from previous revisions as fixed.
             without: { issues: progress_tracking_for( revision )[:issue_digests] },
         ) do |progress|
-            handle_progress( revision, progress.my_symbolize_keys )
+            handle_progress( revision, progress )
         end
     end
 
@@ -274,6 +274,8 @@ module Scan
             handle_rpc_error( revision, progress )
             return
         end
+
+        progress = progress.my_symbolize_keys
 
         log_info_for revision, 'Got progress.'
 
