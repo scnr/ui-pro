@@ -309,7 +309,7 @@ module Scan
             schedule.stop_after_hours.hours < runtime.seconds
 
             log_debug_for revision, 'Timeout reached.'
-            ap 'TIMEOUT'
+            # ap 'TIMEOUT'
 
             revision.timed_out = true
             revision.save
