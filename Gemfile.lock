@@ -48,7 +48,7 @@ PATH
 PATH
   remote: ../scnr
   specs:
-    scnr (1.3.2)
+    scnr (1.3.3)
       scnr-license-client (~> 0.1)
 
 GEM
