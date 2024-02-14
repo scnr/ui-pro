@@ -129,7 +129,8 @@ class SitesController < ApplicationController
             return
         end
 
-        if response.headers['content-type'].start_with?( 'image' )
+        if response.headers['content-type'] &&
+          response.headers['content-type'].start_with?( 'image' )
             IO.binwrite( site.provisioned_favicon_path, response.body )
         end
 
