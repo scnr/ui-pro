@@ -48,7 +48,7 @@ PATH
 PATH
   remote: ../scnr
   specs:
-    scnr (1.3.5)
+    scnr (1.3.6)
       scnr-license-client (~> 0.1)
 
 GEM
@@ -248,7 +248,7 @@ GEM
       net-imap
       net-pop
       net-smtp
-    marcel (1.0.2)
+    marcel (1.0.3)
     matrix (0.4.2)
     method_source (1.0.0)
     mini_mime (1.1.5)
