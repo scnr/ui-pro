@@ -45,8 +45,8 @@ module Web
         # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
         if File.exist? '/etc/timezone'
             config.time_zone = File.read('/etc/timezone').strip
-        else
-            config.time_zone = ActiveSupport::TimeZone[Time.now.strftime('%z').gsub('0', '').to_i]
+        elsif (tz = ActiveSupport::TimeZone[Time.now.strftime('%z').gsub('0', '').to_i])
+            config.time_zone = tz
         end
 
         # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
