@@ -46,7 +46,7 @@ module Web
         if File.exist? '/etc/timezone'
             config.time_zone = File.read('/etc/timezone').strip
         else
-            config.time_zone ||= ActiveSupport::TimeZone[Time.now.strftime('%z').gsub('0', '').to_i]
+            config.time_zone = ActiveSupport::TimeZone[Time.now.strftime('%z').gsub('0', '').to_i]
         end
 
         # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
