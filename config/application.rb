@@ -6,7 +6,7 @@ require 'scnr/application'
 if ENV['PACKAGING'] != '1'
     begin
         SCNR::License.guard! :dev, :trial, :pro, :enterprise
-    rescue SCNR::License::Error => e
+    rescue => e
         puts "[ERROR] #{e}"
         exit 1
     end
