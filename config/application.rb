@@ -4,12 +4,7 @@ require 'rails/all'
 require 'scnr/application'
 
 if ENV['PACKAGING'] != '1'
-    begin
-        SCNR::License.guard! :dev, :trial, :pro, :enterprise
-    rescue => e
-        puts "[ERROR] #{e}"
-        exit 1
-    end
+    SCNR::License.guard! :dev, :trial, :pro, :enterprise
 end
 
 # Require the gems listed in Gemfile, including any gems
