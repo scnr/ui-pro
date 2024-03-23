@@ -105,7 +105,7 @@ module FrameworkHelper
                 end
             end
 
-            ap components = Hash[components.sort]
+            components = Hash[components.sort]
 
             File.open( path, 'wb' ) do |f|
                 f.write Marshal.dump( components )
