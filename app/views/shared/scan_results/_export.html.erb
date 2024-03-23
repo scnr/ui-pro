@@ -5,6 +5,16 @@
 
         <ul class="list-without-style">
 
+          <li>
+            <%= link_to report_site_scan_revision_url( @scan.site, @scan, @revision, format: :pdf ),
+                        data: {
+                          turbo: false
+                        },
+                        class: 'btn btn-primary' do %>
+              PDF
+            <% end %>
+          </li>
+
             <li>
                 <%= link_to report_site_scan_revision_url( @scan.site, @scan, @revision, format: :html ),
                             data: {
