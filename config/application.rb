@@ -3,7 +3,7 @@ require File.expand_path('../boot', __FILE__)
 require 'rails/all'
 require 'scnr/application'
 
-if ENV['PACKAGING'] != '1'
+if ENV['PACKAGING_gfGEFgdfGdG'] != '1'
     SCNR::License.guard! :dev, :trial, :pro, :enterprise
 end
 
