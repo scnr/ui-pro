@@ -5,6 +5,6 @@ class AddObjectChangesToVersions < ActiveRecord::Migration[5.1]
   TEXT_BYTES = 1_073_741_823
 
   def change
-    add_column :versions, :object_changes, :jsonb
+    add_column :versions, :object_changes, :json
   end
 end

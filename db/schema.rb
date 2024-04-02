@@ -551,7 +551,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_22_045509) do
     t.string "whodunnit"
     t.binary "object"
     t.datetime "created_at", precision: nil
-    t.jsonb "object_changes"
+    t.json "object_changes"
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
     t.index ["revision_id"], name: "index_versions_on_revision_id"
     t.index ["scan_id"], name: "index_versions_on_scan_id"
