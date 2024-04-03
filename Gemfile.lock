@@ -48,7 +48,7 @@ PATH
 PATH
   remote: ../scnr
   specs:
-    scnr (1.3.14.3)
+    scnr (1.3.14.4)
       scnr-license-client (~> 0.1)
 
 GEM
@@ -213,7 +213,7 @@ GEM
     factory_girl_rails (4.9.0)
       factory_girl (~> 4.9.0)
       railties (>= 3.0.0)
-    faker (3.3.0)
+    faker (3.3.1)
       i18n (>= 1.8.11, < 2)
     ffi (1.16.3)
     font-awesome-sass (6.5.1)
