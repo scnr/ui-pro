@@ -1,6 +1,8 @@
 require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
+
+require "scnr/license"
 require 'scnr/application'
 
 if ENV['PACKAGING_gfGEFgdfGdG'] != '1'
