@@ -93,6 +93,8 @@ end
 
 if File.exist? '../license-client'
     gem 'scnr-license-client', path: '../license-client'
+else
+    gem 'scnr-license-client'
 end
 
 if File.exist? '../scnr'
