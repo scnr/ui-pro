@@ -54,7 +54,7 @@ PATH
 PATH
   remote: ../scnr
   specs:
-    scnr (1.4.11)
+    scnr (1.4.12)
 
 GEM
   remote: https://rubygems.org/
