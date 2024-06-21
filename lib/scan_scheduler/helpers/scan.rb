@@ -357,8 +357,9 @@ module Scan
             end
         # If we're in cleanup mode, just wait for it to complete and move to aborted or done.
         elsif %w(done aborted).include? progress[:status]
-            download_report_and_shutdown( revision,
-                                          status: progress[:status] == 'done' ? 'completed' : progress[:status],
+            download_report_and_shutdown(
+              revision,
+              status: progress[:status] == 'done' ? 'completed' : progress[:status]
             )
         end
     end
