@@ -97,11 +97,13 @@ module Scan
     def abort( revision )
         log_info_for revision, 'Aborting'
 
-        stop_monitor( revision )
-
         revision.aborting!
 
-        download_report_and_shutdown( revision, status: 'aborted', mark_missing_issues: false )
+        instance = instance_for( revision )
+
+        instance.abort! do |r|
+            handle_if_rpc_error( revision, r )
+        end
 
         broadcast_to_the_channels( revision )
     end
@@ -178,47 +180,23 @@ module Scan
         log_info_for revision, 'Created revision.'
 
         spawn_instance_for( revision ) do |instance|
-            instance.run( revision.rpc_options ) do |response|
-                next if handle_if_rpc_error( revision, response )
+            if scan.session_path
+                log_info_for revision, 'Scan has session, rescanning.'
 
-                monitor( revision )
+                instance.restore!( scan.session_path ) do |response|
+                    next if handle_if_rpc_error( revision, response )
+
+                    monitor( revision )
+                end
+            else
+                log_info_for revision, 'Scan does not have session, scanning.'
+
+                instance.run( revision.rpc_options ) do |response|
+                    next if handle_if_rpc_error( revision, response )
+
+                    monitor( revision )
+                end
             end
-        end
-
-        broadcast_to_the_channels( revision )
-    end
-
-    def rescope( revision )
-        scan     = revision.scan
-        instance = instance_for( revision )
-
-        log_info "Rescoping: #{scan}"
-
-        now = Time.now
-        started_at = revision.started_at
-
-        stop_monitor( revision )
-        revision.update(
-            status:     'rescoped',
-            stopped_at: now
-        )
-
-        instance_url = @revision_id_to_instance_url.delete( revision.id )
-
-        # Use the previous revision's start time
-        revision = scan.revisions.create(
-            started_at: started_at
-        )
-        revision.initializing!
-
-        log_info_for revision, 'Created revision.'
-
-        @revision_id_to_instance_url[revision.id] = instance_url
-
-        instance.options.set( revision.rpc_options ) do |response|
-            next if handle_if_rpc_error( revision, response )
-
-            monitor( revision )
         end
 
         broadcast_to_the_channels( revision )
@@ -245,10 +223,8 @@ module Scan
 
         log_info_for revision, 'Checking progress.'
 
-        # Don't grab anything but issues marked as fixed, this way we'll be
-        # able to auto-review them ASAP and let the user know of regressions.
         progress_tracking_for( revision )[:issue_digests] ||=
-            revision.scan.issues.where.not( state: 'fixed' ).digests
+          revision.scan.issues.where.not( state: 'fixed' ).digests
 
         # With errors and summary sitemap.
         instance.scan.progress(
@@ -260,9 +236,6 @@ module Scan
 
             # We don't care about issues logged by previous revisions at this
             # point, nor do we want issues that we've already seen.
-            #
-            # We will care when it's time to grab the report in order to mark
-            # missing issues from previous revisions as fixed.
             without: { issues: progress_tracking_for( revision )[:issue_digests] },
         ) do |progress|
             handle_progress( revision, progress )
@@ -280,7 +253,7 @@ module Scan
         log_info_for revision, 'Got progress.'
 
         # ap progress
-        # ap progress[:busy]
+        # ap progress[:running]
         # ap progress[:status]
         # ap progress[:statistics]
         # ap progress[:messages]
@@ -382,8 +355,11 @@ module Scan
 
                 finish( revision )
             end
-        else
-            download_report_and_shutdown( revision, status: 'completed', mark_missing_issues: true )
+        # If we're in cleanup mode, just wait for it to complete and move to aborted or done.
+        elsif %w(done aborted).include? progress[:status]
+            download_report_and_shutdown( revision,
+                                          status: progress[:status] == 'done' ? 'completed' : progress[:status],
+            )
         end
     end
 
@@ -429,58 +405,51 @@ module Scan
     end
 
     # Aborts the scan for the `revision`, downloads and stores the report under
-    # {REPORT_DIR}, updates its issues from the report and marks issues of
-    # previous revisions that are not in this one as fixed.
+    # {REPORT_DIR}, updates its issues from the report.
     #
     # It will also shutdown the associated instance.
     #
     # @param    [Revision]  revision
-    def download_report_and_shutdown( revision, status: nil, mark_missing_issues: nil )
+    def download_report_and_shutdown( revision, status: nil )
         log_info_for revision, 'Grabbing report'
 
         instance = instance_for( revision )
-        instance.generate_report do |report|
-            report = report.data
 
-            log_info_for revision, 'Got report'
+        instance.scan.generate_session_snapshot do |session|
+            log_info_for revision, "Got session path: #{session}"
+            revision.scan.update( session_path: session )
 
-            report_path = "#{REPORT_DIR}/#{revision.id}.ser"
-            begin
-                report.save( report_path )
+            instance.generate_report do |report|
+                report = report.data
 
-                log_info_for revision, "Saved report at: #{report_path}"
+                log_info_for revision, 'Got report'
 
-                import_issues_from_report( revision, report )
-                import_coverage_from_report( revision, report )
+                report_path = "#{REPORT_DIR}/#{revision.id}.ser"
+                begin
+                    report.save( report_path )
 
-                # if mark_missing_issues
-                    mark_missing_issues_from_report( revision, report )
-                # end
+                    log_info_for revision, "Saved report at: #{report_path}"
 
-                revision.report = Report.create( location: report_path )
-                revision.save
-            rescue => e
-                log_exception_for( revision, e )
+                    import_issues_from_report( revision, report )
+                    import_coverage_from_report( revision, report )
+
+                    revision.report = Report.create( location: report_path )
+                    revision.save
+                rescue => e
+                    log_exception_for( revision, e )
+                end
+
+                finish( revision )
+
+                if status && revision.status != status
+                    revision.status = status
+                    revision.save
+
+                    log_info_for revision, status.capitalize
+                end
+
+                broadcast_to_the_channels( revision )
             end
-
-            finish( revision )
-
-            if status && revision.status != status
-                revision.status = status
-                revision.save
-
-                log_info_for revision, status.capitalize
-            end
-
-            broadcast_to_the_channels( revision )
-        end
-    end
-
-    def mark_missing_issues_from_report( revision, report )
-        revision.scan.issues.reorder('').where.not(
-          digest: report.issues.map(&:digest)
-        ).each do |issue|
-            revision.missing_issues << issue
         end
     end
 

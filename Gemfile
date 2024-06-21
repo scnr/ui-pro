@@ -79,6 +79,10 @@ group :development, :test do
     gem 'pry-byebug'
 end
 
+if File.exist? '../../qadron/cuboid'
+    gem 'cuboid', path: '../../qadron/cuboid'
+end
+
 if File.exist? '../application'
     gem 'scnr-application', path: '../application'
 else
