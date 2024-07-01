@@ -74,7 +74,7 @@ PATH
 PATH
   remote: ../scnr
   specs:
-    scnr (1.5)
+    scnr (1.5.1)
 
 GEM
   remote: https://rubygems.org/
@@ -264,12 +264,12 @@ GEM
     mini_mime (1.1.5)
     mini_portile2 (2.8.7)
     minitar (0.9)
-    minitest (5.24.0)
+    minitest (5.24.1)
     msgpack (1.7.2)
     multi_json (1.15.0)
     mustermann (1.1.2)
       ruby2_keywords (~> 0.0.1)
-    net-imap (0.4.13)
+    net-imap (0.4.14)
       date
       net-protocol
     net-pop (0.1.2)
@@ -352,7 +352,7 @@ GEM
     responders (3.1.1)
       actionpack (>= 5.2)
       railties (>= 5.2)
-    rexml (3.3.0)
+    rexml (3.3.1)
       strscan
     rouge (4.3.0)
     rspec-core (3.13.0)
@@ -430,7 +430,7 @@ GEM
       rake (>= 10)
       tomlrb (~> 1.2)
     thor (1.3.1)
-    tilt (2.3.0)
+    tilt (2.4.0)
     timeout (0.4.1)
     tomlrb (1.3.0)
     toq (0.1.0)
