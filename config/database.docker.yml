@@ -1,0 +1,8 @@
+production:
+  host: codename-scnr-db-1
+  adapter: postgresql
+  encoding: unicode
+  pool: 100
+  username: scnr-pro
+  password: secret
+  database: scnr_pro_production
