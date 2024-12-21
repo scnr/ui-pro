@@ -1,0 +1,34 @@
+<table class="table data-flow table-hover">
+  <th></th>
+  <th>
+    Object
+  </th>
+  <th>
+    Method
+  </th>
+  <th>
+    Argument index
+  </th>
+  <th>
+    Argument value
+  </th>
+  <% data_flow['sinks'].each.with_index do |sink, i| %>
+    <%= sink['arguments'][0].class %>
+    <tr data-bs-toggle="collapse" data-bs-target="#<%= id %>-<%= i %>-debug" class="collapses">
+      <th><%= i %></th>
+      <td><code><%= sink['object'] %></code></td>
+      <td><code><%= sink['method_name'] %></code></td>
+      <td><code><%= sink['tainted_argument_index'] %></code></td>
+      <td><code><%= sink['tainted_value'].inspect %></code></td>
+    </tr>
+    <tr id="<%= id %>-<%= i %>-debug" class="collapse">
+      <td></td>
+      <td colspan="2">
+        <code><%= code_highlight ::JSON.pretty_generate( sink['backtrace'] ), :json %></code>
+      </td>
+      <td colspan="2">
+        <code><%= code_highlight ::JSON.pretty_generate( sink['arguments'].map { |v| ::JSON.load v } ), :json %></code>
+      </td>
+    </tr>
+  <% end %>
+</table>

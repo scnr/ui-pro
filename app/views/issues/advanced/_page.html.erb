@@ -1,3 +1,40 @@
+<% if page.request.execution_flow&.any? %>
+  <div id="<%= id %>-execution-flow">
+    <h4>
+      <a id="<%= id %>_execution_flow" class="anchor"
+         href="<%= id_to_location "#{id}_execution_flow" %>">
+        <span class="fa fa-link"></span>
+      </a>
+
+      Execution flow
+    </h4>
+
+    <div class="row">
+      <%= render 'issues/advanced/page/execution_flow',
+                 execution_flow: page.request.execution_flow %>
+    </div>
+  </div>
+<% end %>
+
+<% if page.request.data_flow&.any? %>
+  <div id="<%= id %>-data-flow">
+    <h4>
+      <a id="<%= id %>_data_flow" class="anchor"
+         href="<%= id_to_location "#{id}_data_flow" %>">
+        <span class="fa fa-link"></span>
+      </a>
+
+      Data flow
+    </h4>
+
+    <div class="row">
+      <%= render 'issues/advanced/page/data_flow',
+                 id: "#{id}_data_flow",
+                 data_flow: page.request.data_flow %>
+    </div>
+  </div>
+<% end %>
+
 <% if !page.request.to_s.empty? || !page.response.to_s.empty? %>
     <div id="<%= id %>-http-traffic">
         <h4>
@@ -23,7 +60,7 @@
 
                     <pre class="highlight-container code-container"><%= highlight_http_request( page.request.to_s, issue, issue.input_vector.seed ) || page.request %></pre>
                 </div>
-            <% end %>
+        <% end %>
 
             <% if !page.response.to_s.empty? %>
                 <div class="col-md-6" id="<%= id %>-http-traffic-response">

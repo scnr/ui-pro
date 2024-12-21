@@ -1,10 +1,4 @@
 PATH
-  remote: ../../ecsypno/license-client
-  specs:
-    ecsypno-license-client (0.1.0)
-      typhoeus (~> 1.4.0)
-
-PATH
   remote: ../../qadron/cuboid
   specs:
     cuboid (0.2.11)
@@ -74,7 +68,8 @@ PATH
 PATH
   remote: ../scnr
   specs:
-    scnr (1.5.6)
+    scnr (1.3.2)
+      scnr-license-client (~> 0.1)
 
 GEM
   remote: https://rubygems.org/
@@ -213,6 +208,8 @@ GEM
       activesupport
       i18n
     dsel (0.1.0)
+    ecsypno-license-client (0.1.0)
+      typhoeus (~> 1.4.0)
     erubi (1.13.0)
     ethon (0.16.0)
       ffi (>= 1.15.0)
@@ -484,7 +481,7 @@ DEPENDENCIES
   devise
   diffy
   dotiw
-  ecsypno-license-client!
+  ecsypno-license-client
   factory_girl_rails
   faker
   font-awesome-sass

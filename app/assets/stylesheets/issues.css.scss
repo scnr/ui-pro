@@ -193,3 +193,7 @@ ul.sitemap > li.active {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
+
+table.data-flow tr.collapses {
+    cursor: pointer;
+}
