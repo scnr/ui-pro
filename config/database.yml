@@ -14,7 +14,7 @@ development:
     database: scnr_pro_development
 
 test:
-    host: localhost
+    host:  "<%= (host = ENV['SCNR_PRO_DB_HOST']) ? host : 'localhost' %>"
     adapter: postgresql
     encoding: unicode
     pool: 100
