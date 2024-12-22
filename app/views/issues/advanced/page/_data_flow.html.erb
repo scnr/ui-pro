@@ -22,8 +22,17 @@
     </tr>
     <tr id="<%= id %>-<%= i %>-debug" class="collapse">
       <td colspan="5">
-        <strong>Arguments list</strong>
-        <code><%= code_highlight ::JSON.pretty_generate( sink['arguments'].map { |v| ::JSON.load v } ), :json %></code>
+        <div class="row">
+          <div class="col-md-6">
+            <strong>Method source</strong>
+            <code><%= code_highlight sink['method_source'], :ruby %></code>
+          </div>
+
+          <div class="col-md-6">
+            <strong>Arguments list</strong>
+            <code><%= code_highlight ::JSON.pretty_generate( sink['arguments'].map { |v| ::JSON.load v } ), :json %></code>
+          </div>
+        </div>
 
         <strong>Backtrace</strong>
         <code><%= code_highlight ::JSON.pretty_generate( sink['backtrace'] ), :json %></code>
