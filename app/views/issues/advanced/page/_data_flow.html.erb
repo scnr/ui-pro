@@ -23,13 +23,16 @@
     <tr id="<%= id %>-<%= i %>-debug" class="collapse">
       <td colspan="5">
         <div class="row">
-          <div class="col-md-6">
-            <strong>Method source</strong>
-            <div>
-              <code><%= sink['source_location'].join ':' %></code>
+
+          <% if sink['method_source'] %>
+            <div class="col-md-6">
+              <strong>Method source</strong>
+              <div>
+                <code><%= sink['source_location'].join ':' %></code>
+              </div>
+              <code><%= code_highlight sink['method_source'], :ruby %></code>
             </div>
-            <code><%= code_highlight sink['method_source'], :ruby %></code>
-          </div>
+          <% end %>
 
           <div class="col-md-6">
             <strong>Arguments list</strong>
