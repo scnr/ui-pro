@@ -24,13 +24,22 @@
       <td colspan="5">
         <div class="row">
 
-          <% if sink['method_source'] %>
+          <% if sink['source'] %>
             <div class="col-md-6">
-              <strong>Method source</strong>
+              <strong>Source</strong>
               <div>
-                <code><%= sink['source_location'].join ':' %></code>
+                <code><%= sink['backtrace'].first %></code>
               </div>
-              <code><%= code_highlight sink['method_source'], :ruby %></code>
+              <div>
+                <%
+                  breakpoint = sink['backtrace'].first.split( ':' )[1].to_i - 1
+                %>
+                <code><%= code_highlight sink['source'], :ruby,
+                                         from: breakpoint - 10,
+                                         to: breakpoint + 10,
+                                         breakpoint: breakpoint
+                %></code>
+              </div>
             </div>
           <% end %>
 
@@ -40,8 +49,23 @@
           </div>
         </div>
 
-        <strong>Backtrace</strong>
-        <code><%= code_highlight ::JSON.pretty_generate( sink['backtrace'] ), :json %></code>
+        <div class="row">
+
+          <% if sink['method_source'] %>
+            <div class="col-md-6">
+              <strong>Method source</strong>
+              <div>
+                <code><%= sink['method_source_location'].join ':' %></code>
+              </div>
+              <code><%= code_highlight sink['method_source'], :ruby %></code>
+            </div>
+          <% end %>
+
+          <div class="col-md-6">
+            <strong>Backtrace</strong>
+            <code><%= code_highlight ::JSON.pretty_generate( sink['backtrace'] ), :json %></code>
+          </div>
+        </div>
       </td>
     </tr>
   <% end %>
