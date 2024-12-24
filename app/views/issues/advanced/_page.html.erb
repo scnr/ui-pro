@@ -1,8 +1,8 @@
 <% if page.request.execution_flow&.any? %>
-  <div id="<%= id %>-execution-flow">
+  <div id="<%= id %>-request-execution-flow">
     <h4>
-      <a id="<%= id %>_execution_flow" class="anchor"
-         href="<%= id_to_location "#{id}_execution_flow" %>">
+      <a id="<%= id %>_request_execution_flow" class="anchor"
+         href="<%= id_to_location "#{id}_request_execution_flow" %>">
         <span class="fa fa-link"></span>
       </a>
 
@@ -11,16 +11,17 @@
 
     <div class="row">
       <%= render 'issues/advanced/page/execution_flow',
+                 id: "#{id}_request_execution_flow",
                  execution_flow: page.request.execution_flow %>
     </div>
   </div>
 <% end %>
 
 <% if page.request.data_flow&.any? %>
-  <div id="<%= id %>-data-flow">
+  <div id="<%= id %>-request-data-flow">
     <h4>
-      <a id="<%= id %>_data_flow" class="anchor"
-         href="<%= id_to_location "#{id}_data_flow" %>">
+      <a id="<%= id %>_request_data_flow" class="anchor"
+         href="<%= id_to_location "#{id}_request_data_flow" %>">
         <span class="fa fa-link"></span>
       </a>
 
@@ -29,7 +30,7 @@
 
     <div class="row">
       <%= render 'issues/advanced/page/data_flow',
-                 id: "#{id}_data_flow",
+                 id: "#{id}_request_data_flow",
                  data_flow: page.request.data_flow %>
     </div>
   </div>
