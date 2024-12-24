@@ -10,21 +10,25 @@
                                include_actions: ScanResults::SCAN_RESULT_ACTIONS
                        ) do %>
         <i class="fa fa-globe"></i>
+      Overview
     <% end %>
 
     <%= link_to site_scans_path( site ), title: 'Scans',
                 class: select_button_class( site_scans_path( site ) ) do %>
         <i class="fa fa-bolt"></i>
+      Scans
     <% end %>
 
     <%= link_to site_roles_path( site ), title: 'User roles',
                 class: select_button_class( site_roles_path( site ) ) do %>
         <i class="fa fa-users"></i>
+      User roles
     <% end %>
 
     <%= link_to edit_site_path( site ), title: 'Settings',
                 class: select_button_class( edit_site_path( site ) ) do %>
         <i class="fa fa-cog"></i>
+      Settings
     <% end %>
 
   <% if !no_delete && !site.being_scanned? %>
@@ -37,6 +41,7 @@
                                          'associated data, are you sure?'
                 } do %>
         <i class="fa fa-trash"></i>
+        Delete
     <% end %>
   <% end %>
 </div>
