@@ -203,6 +203,8 @@ module ScanResultsHelper
 
                 sitemap_data[:issue_count]  =
                     sitemap_with_issues.values.map{ |v| v[:issue_count] }.inject(:+)
+
+                sitemap_with_issues = Hash[sitemap_with_issues.sort_by { |url, _| url.size }]
             end
 
             if @revision && revision_data[@revision.id]
