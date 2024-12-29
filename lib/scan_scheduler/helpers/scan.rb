@@ -253,10 +253,10 @@ module Scan
         log_info_for revision, 'Got progress.'
 
         # ap progress
-        ap progress[:running]
-        ap progress[:status]
+        # ap progress[:running]
+        # ap progress[:status]
         # ap progress[:statistics]
-        ap progress[:messages]
+        # ap progress[:messages]
         # ap progress[:sitemap]
 
         log_debug_for revision, "Running: #{progress[:running]}"
@@ -268,10 +268,10 @@ module Scan
 
         revision.scan.update( scanner_messages: progress[:messages] )
 
-        if progress[:status] != 'done'
-            handle_progress_active( revision, progress )
-        else
+        if %w(aborted done).include? progress[:status]
             handle_progress_inactive( revision, progress )
+        else
+            handle_progress_active( revision, progress )
         end
     end
 
