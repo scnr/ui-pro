@@ -114,6 +114,22 @@
 <hr/>
 <% end %>
 
+<% if @issue.insights %>
+  <div class="mt-3" id="insights">
+    <h2>
+      <a class="anchor" href="#!/insights">
+        <span class="fa fa-link"></span>
+      </a>
+
+      Insights
+    </h2>
+
+    <%= md issue.insights %>
+  </div>
+
+  <hr/>
+<% end %>
+
 <% if @issue.patch %>
   <div class="mt-3" id="patch">
     <h2>
