@@ -7,12 +7,15 @@
 <% if scan.active? %>
     <% if scan.paused? %>
         <%= render partial: 'scans/buttons/resume', locals: { scan: scan } %>
-    <% else %>
+    <% elsif !scan.cleanup? %>
         <%= render partial: 'scans/buttons/pause', locals: { scan: scan } %>
         <%= render partial: 'scans/buttons/suspend', locals: { scan: scan } %>
     <% end %>
 
-    <%= render partial: 'scans/buttons/abort', locals: { scan: scan } %>
+    <% if !scan.cleanup? %>
+      <%= render partial: 'scans/buttons/abort', locals: { scan: scan } %>
+    <% end %>
+
     <%= render partial: 'scans/buttons/edit', locals: { scan: scan } %>
 <% end %>
 
