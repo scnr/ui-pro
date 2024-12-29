@@ -253,10 +253,10 @@ module Scan
         log_info_for revision, 'Got progress.'
 
         # ap progress
-        # ap progress[:running]
-        # ap progress[:status]
+        ap progress[:running]
+        ap progress[:status]
         # ap progress[:statistics]
-        # ap progress[:messages]
+        ap progress[:messages]
         # ap progress[:sitemap]
 
         log_debug_for revision, "Running: #{progress[:running]}"
@@ -266,7 +266,9 @@ module Scan
             revision.update( seed: progress[:seed] )
         end
 
-        if progress[:running]
+        revision.scan.update( scanner_messages: progress[:messages] )
+
+        if progress[:status] != 'done'
             handle_progress_active( revision, progress )
         else
             handle_progress_inactive( revision, progress )
@@ -369,6 +371,8 @@ module Scan
         @progress_tracker.delete revision.id
 
         scan = revision.scan
+
+        scan.update( scanner_messages: [] )
 
         revision.update( stopped_at: Time.now )
 

@@ -1,9 +1,12 @@
 class Scan < ActiveRecord::Base
+    include WithCustomSerializer
     include WithEvents
     include ScanStates
 
     events ignore: [:status],
                     track: %w(name description status timed_out)
+
+    custom_serialize :scanner_messages, Array
 
     belongs_to :site, counter_cache: true, optional: true
     belongs_to :site_role, optional: true
@@ -136,6 +139,8 @@ class Scan < ActiveRecord::Base
         end
 
         options['url'] = url
+
+        ap options
 
         options
     end

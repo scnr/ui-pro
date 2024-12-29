@@ -35,6 +35,13 @@ class Setting < ActiveRecord::Base
             options['http'][proxy] = nil
         end
 
+        if !self.openai_key.blank?
+            options['plugins'] ||= {}
+            options['plugins']['openai'] = {
+              'apikey' => self.openai_key
+            }
+        end
+
         options
     end
 

@@ -44,7 +44,7 @@
 <div class="row" id="info">
     <div class="col-md-<%= has_references ? 10 : 12 %>">
         <div class="description">
-            <%= md @issue.type.description %>
+            <%= md @issue.description %>
         </div>
     </div>
 
@@ -114,20 +114,84 @@
 <hr/>
 <% end %>
 
-<% if @issue.type.remedy_guidance %>
-    <div class="mt-3" id="remediation">
+<% if @issue.patch %>
+  <div class="mt-3" id="patch">
+    <h2>
+      <a class="anchor" href="#!/patch">
+        <span class="fa fa-link"></span>
+      </a>
+
+      Patching
+    </h2>
+
+    <%= md issue.patch %>
+  </div>
+
+  <hr/>
+<% end %>
+
+<% if @issue.exploit %>
+  <div class="mt-3" id="exploit">
+    <h2>
+      <a class="anchor" href="#!/exploit">
+        <span class="fa fa-link"></span>
+      </a>
+
+      Exploitation
+    </h2>
+
+    <%= md issue.exploit %>
+  </div>
+
+  <hr/>
+<% end %>
+
+<% if @issue.remediation_guidance %>
+    <div class="mt-3" id="remediation_guidance">
         <h2>
-            <a class="anchor" href="#!/remediation">
+            <a class="anchor" href="#!/remediation_guidance">
                 <span class="fa fa-link"></span>
             </a>
 
-            Remediation
+            Remediation guidance
         </h2>
 
-        <%= render 'issues/remediation', issue: issue %>
+        <%= render 'issues/remediation_guidance', issue: issue %>
     </div>
 
     <hr/>
+<% end %>
+
+<% if @issue.remediation_code %>
+  <div class="mt-3" id="remediation_code">
+    <h2>
+      <a class="anchor" href="#!/remediation_code">
+        <span class="fa fa-link"></span>
+      </a>
+
+      Remediation code
+    </h2>
+
+    <%= md issue.remediation_code %>
+  </div>
+
+  <hr/>
+<% end %>
+
+<% if @issue.report %>
+  <div class="mt-3" id="report">
+    <h2>
+      <a class="anchor" href="#!/report">
+        <span class="fa fa-link"></span>
+      </a>
+
+      Report
+    </h2>
+
+    <%= md issue.report %>
+  </div>
+
+  <hr/>
 <% end %>
 
 <div class="mt-3" id="advanced">

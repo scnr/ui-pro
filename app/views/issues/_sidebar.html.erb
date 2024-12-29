@@ -10,9 +10,33 @@
        )
    end
 
-   if !@issue.type.remedy_guidance.to_s.empty?
+   if @issue.patch
        sections.merge!(
-           remediation: 'Remediation'
+         patch: 'Patching'
+       )
+   end
+
+   if @issue.exploit
+       sections.merge!(
+         exploit: 'Exploitation'
+       )
+   end
+
+   if !@issue.remediation_guidance.to_s.empty?
+       sections.merge!(
+           remediation_guidance: 'Remediation guidance'
+       )
+   end
+
+   if !@issue.remediation_code.to_s.empty?
+       sections.merge!(
+         remediation_code: 'Remediation code'
+       )
+   end
+
+   if @issue.report
+       sections.merge!(
+         report: 'Report'
        )
    end
 

@@ -103,3 +103,5 @@ device_height: ''
 
 max_parallel_scans: 'Maximum number of active scans at any given time.'
 scan_mode: 'How extensive should the audit process be -- affects the amount of payloads sent to the web application.'
+
+openai_key: 'An OpenAI API key with all permissions granted.'

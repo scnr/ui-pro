@@ -27,6 +27,20 @@
       </div>
     </div>
 
+  <% if @scan.active? %>
+  <div class="row">
+    <div class="col-md-12">
+      <ul class="list-info">
+      <% @scan.scanner_messages.each do |msg| %>
+          <li>
+            <%= msg %>
+          </li>
+      <% end %>
+      </ul>
+    </div>
+  </div>
+  <% end %>
+
     <div class="row buttons">
       <div class="col-md-12">
         <%= render partial: '/scans/buttons', locals: { scan: @scan } %>

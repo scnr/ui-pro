@@ -89,6 +89,24 @@ class Issue < ActiveRecord::Base
         end
     end
 
+    def description
+        r = super
+        if r.blank?
+            self.type.description
+        else
+            r
+        end
+    end
+
+    def remediation_guidance
+        r = super
+        if r.blank?
+            self.type.remedy_guidance
+        else
+            r
+        end
+    end
+
     def to_s
         s = ''
 
@@ -180,7 +198,14 @@ class Issue < ActiveRecord::Base
         issue = create({
             type:           IssueType.find_by_check_shortname( issue.check[:shortname] ),
             digest:         issue.digest,
+            description:    issue.description,
+            remediation_guidance:    issue.remedy_guidance,
+            remediation_code:       issue.remedy_code,
             signature:      issue.signature,
+            patch:          issue.patch,
+            exploit:        issue.exploit,
+            insights:       issue.insights,
+            report:         issue.report,
             proof:          issue.proof,
             state:          options[:state] || state_from_native_issue( issue ),
             active:         issue.active?,

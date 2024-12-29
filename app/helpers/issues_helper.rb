@@ -164,7 +164,7 @@ module IssuesHelper
                 Regexp.escape( escaped_proof ),
                 Regexp::IGNORECASE | Regexp::MULTILINE
             ),
-            "<span class=\"highlight\">\\0</span>"
+            "<span class=\"mark-highlight\">\\0</span>"
         ).html_safe
     end
 

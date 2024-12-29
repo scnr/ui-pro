@@ -40,7 +40,34 @@
         </div>
     <% end %>
 
-    <div id="scans">
+  <div id="openai">
+    <fieldset>
+      <h2 id="openai-h">
+        OpenAI
+      </h2>
+
+      <div class="row">
+        <div class="col-md-6">
+          <%= f.input :openai_key,
+                      label: 'OpenAI key'
+          %>
+          </div>
+
+          <div class="col-md-6 input-help">
+            <%= messages_for( :openai_key ) %>
+
+            <p class="text text-muted alert alert-info">
+              Make the issue data come to life!
+            </p>
+
+          </div>
+        </div>
+    </fieldset>
+  </div>
+
+  <hr/>
+
+  <div id="scans">
         <fieldset>
             <h2 id="scans-h">
                 Scans

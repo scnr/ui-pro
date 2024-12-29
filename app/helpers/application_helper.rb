@@ -127,7 +127,7 @@ module ApplicationHelper
     def md( markdown )
         return if !markdown
 
-        html = Kramdown::Document.new( markdown ).to_html.recode
+        html = Kramdown::Document.new( markdown.gsub( '```', '~~~' ) ).to_html.recode
         Loofah.fragment( html ).scrub!(:prune).to_s.html_safe
     end
 
