@@ -45,13 +45,14 @@ PATH
       cuboid (~> 0.2)
       dsel
       http_parser.rb (= 0.8.0)
-      kramdown (= 2.5.1)
       loofah (= 2.23.1)
       nokogiri
       ox (= 2.14.17)
       pony (= 1.13.1)
       rack (~> 2.2.3)
       rack-test
+      redcarpet (= 3.6.0)
+      rouge
       ruby-openai (~> 7.3.1)
       scnr
       scnr-introspector (~> 0.1)
@@ -252,8 +253,6 @@ GEM
       railties (>= 4.2.0)
       thor (>= 0.14, < 2.0)
     json (1.8.6)
-    kramdown (2.5.1)
-      rexml (>= 3.3.9)
     launchy (3.0.1)
       addressable (~> 2.8)
       childprocess (~> 5.0)
@@ -359,6 +358,7 @@ GEM
     rb-inotify (0.11.1)
       ffi (~> 1.0)
     rdoc (4.3.0)
+    redcarpet (3.6.0)
     regexp_parser (2.9.3)
     request_store (1.7.0)
       rack (>= 1.4)
@@ -506,7 +506,6 @@ DEPENDENCIES
   font-kit-rails
   jbuilder
   jquery-rails
-  kramdown
   launchy
   listen
   loofah
@@ -519,6 +518,8 @@ DEPENDENCIES
   puma
   rails (= 7.0.2.3)
   rails_layout
+  redcarpet
+  rouge
   rspec-rails
   sass-rails
   scnr!

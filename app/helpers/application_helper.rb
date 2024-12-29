@@ -1,3 +1,7 @@
+require 'redcarpet'
+require 'rouge'
+require 'rouge/plugins/redcarpet'
+
 module ApplicationHelper
 
     SCOPED_FIND_EACH_BATCH_SIZE = 1000
@@ -124,10 +128,22 @@ module ApplicationHelper
         end
     end
 
+    class RougeHTML < ::Redcarpet::Render::HTML
+        include ::Rouge::Plugins::Redcarpet
+    end
+
     def md( markdown )
         return if !markdown
 
-        html = Kramdown::Document.new( markdown.gsub( '```', '~~~' ) ).to_html.recode
+        html = Redcarpet::Markdown.new(
+          RougeHTML,
+          autolink: true,
+          tables: true,
+          with_toc_data: true,
+          prettify: true,
+          fenced_code_blocks: true,
+          footnotes: true
+        ).render( markdown ).recode
         Loofah.fragment( html ).scrub!(:prune).to_s.html_safe
     end
 

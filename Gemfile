@@ -18,8 +18,9 @@ gem 'oj'
 gem 'oj_mimic_json'
 
 gem 'webpacker'
-gem 'kramdown'
+gem 'redcarpet'
 gem 'loofah'
+gem 'rouge'
 
 gem 'd3-rails', '3.5.16'
 
