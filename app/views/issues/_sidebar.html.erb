@@ -10,6 +10,12 @@
        )
    end
 
+   if @issue.insights
+       sections.merge!(
+         insights: 'Insights'
+       )
+   end
+
    if @issue.patch
        sections.merge!(
          patch: 'Patching'
