@@ -10,7 +10,8 @@ EXCLUDE_PLUGINS = [
     :login_script,
     :form_dicattack,
     :http_dicattack,
-    :exec
+    :exec,
+    :openai
 ]
 
 DEFAULT_PLUGINS = [
