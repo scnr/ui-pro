@@ -140,8 +140,6 @@ class Scan < ActiveRecord::Base
 
         options['url'] = url
 
-        ap options
-
         options
     end
 
