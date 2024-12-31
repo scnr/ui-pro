@@ -204,6 +204,7 @@ class Issue < ActiveRecord::Base
             signature:      issue.signature,
             patch:          issue.patch,
             exploit:        issue.exploit,
+            dissect:        issue.dissect,
             insights:       issue.insights,
             report:         issue.report,
             proof:          issue.proof,

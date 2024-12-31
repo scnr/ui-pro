@@ -10,6 +10,12 @@
        )
    end
 
+   if @issue.dissect
+       sections.merge!(
+         dissect: 'Dissection'
+       )
+   end
+
    if @issue.insights
        sections.merge!(
          insights: 'Insights'
