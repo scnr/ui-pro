@@ -66,12 +66,13 @@
 
             <div id="settings-apikey-input-container">
               <%= f.input :openai_key,
-                          input_html: { value: nil },
+                          input_html: { autocomplete: 'off', value: nil },
                           label: 'API key'
               %>
             </div>
           <% else %>
             <%= f.input :openai_key,
+                        input_html: { autocomplete: 'off' },
                         label: 'API key'
             %>
           <% end %>
