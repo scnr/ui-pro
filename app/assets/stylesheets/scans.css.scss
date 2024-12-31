@@ -80,21 +80,3 @@ form.scan-form {
         padding-bottom: 10px;
     }
 }
-
-// Display/hide table/alert message based on the content of the table.
-#site-scans-active,
-#site-scans-suspended,
-#site-scans-finished,
-#site-scans-schedule-pending {
-  &:not(:has(table tbody tr)) {
-    table {
-        display: none;
-    }
-  }
-
-  &:has(table tbody tr) {
-    .alert {
-        display: none;
-    }
-  }
-}

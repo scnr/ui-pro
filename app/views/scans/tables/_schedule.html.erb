@@ -1,7 +1,9 @@
 <div id="site-scans-schedule-pending">
-    <%= render 'scans/tables/schedule/pending', scans: scheduled_scans, site: site %>
-
-    <p class="alert alert-info">
-        No pending scans.
-    </p>
+  <% if scheduled_scans.any? %>
+        <%= render 'scans/tables/schedule/pending', scans: scheduled_scans, site: site %>
+    <% else %>
+        <p class="alert alert-info">
+            No pending scans.
+        </p>
+    <% end %>
 </div>
