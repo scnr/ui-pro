@@ -17,9 +17,14 @@ update_form = () ->
 
     $('#setting_max_parallel_scans').prop( 'disabled', is_checked )
 
+show_openai_apikey_input = () ->
+    $('#settings-apikey-input-container').show()
+    $('#settings-openai-key-container').hide()
+
 form_setup = () ->
     update_form()
     $('#setting_max_parallel_scans_auto').click update_form
+    $('#settings-openaikey-remove-button').click show_openai_apikey_input
 
 setup = () ->
     if $('#edit_setting_1').exists()

@@ -48,9 +48,33 @@
 
       <div class="row">
         <div class="col-md-6">
-          <%= f.input :openai_key,
-                      label: 'API key'
-          %>
+          <% if !(openai_key = @settings.openai_key.dup).blank? %>
+            <div id="settings-openai-key-container">
+              <label>API key</label>
+              <% openai_key[15..100] = '*' * 10 %>
+
+              <div id="settings-openaikey-remove-button-container">
+                <button type="button" id="settings-openaikey-remove-button" class="btn btn-danger">
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+              </div>
+
+              <div class="alert alert-secondary" id="settings-openai-apikey" role="alert">
+                <%= openai_key %>
+              </div>
+            </div>
+
+            <div id="settings-apikey-input-container">
+              <%= f.input :openai_key,
+                          input_html: { value: nil },
+                          label: 'API key'
+              %>
+            </div>
+          <% else %>
+            <%= f.input :openai_key,
+                        label: 'API key'
+            %>
+          <% end %>
           </div>
 
           <div class="col-md-6 input-help">
