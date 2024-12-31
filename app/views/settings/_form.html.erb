@@ -53,14 +53,14 @@
               <label>API key</label>
               <% openai_key[15..100] = '*' * 10 %>
 
-              <div id="settings-openaikey-remove-button-container">
-                <button type="button" id="settings-openaikey-remove-button" class="btn btn-danger">
-                  <i class="fa-solid fa-xmark"></i>
-                </button>
-              </div>
-
               <div class="alert alert-secondary" id="settings-openai-apikey" role="alert">
-                <%= openai_key %>
+                <span id="settings-openaikey-remove-button-container">
+                  <%= openai_key %>
+
+                  <button type="button" id="settings-openaikey-remove-button" class="btn">
+                    <i class="fa-solid fa-xmark"></i>
+                  </button>
+                </span>
               </div>
             </div>
 
