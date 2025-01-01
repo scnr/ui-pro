@@ -169,9 +169,9 @@ module ApplicationHelper
         lines = CodeRay.scan( code.recode, language ).html.lines.to_a
 
         if options[:from]
-            from = [1, options[:from]].max
+            from = [0, options[:from]].max
         else
-            from = 1
+            from = 0
         end
 
         if options[:to]
