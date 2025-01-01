@@ -143,7 +143,7 @@ module ApplicationHelper
           prettify: true,
           fenced_code_blocks: true,
           footnotes: true
-        ).render( markdown ).recode
+        ).render( markdown.gsub( '```', "\n```" ) ).recode
         Loofah.fragment( html ).scrub!(:prune).to_s.html_safe
     end
 
@@ -169,9 +169,9 @@ module ApplicationHelper
         lines = CodeRay.scan( code.recode, language ).html.lines.to_a
 
         if options[:from]
-            from = [0, options[:from]].max
+            from = [1, options[:from]].max
         else
-            from = 0
+            from = 1
         end
 
         if options[:to]

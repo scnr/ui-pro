@@ -1,4 +1,4 @@
-<table class="table">
+<table class="table table-hover">
   <th></th>
   <th>
     Path
@@ -19,14 +19,23 @@
     Event
   </th>
 <% execution_flow['points'].each.with_index do |point, i| %>
-  <tr>
-    <th><%= i %></th>
-    <td><%= point['path'] %></td>
-    <td><%= point['line_number'] %></td>
-    <td><code><%= point['class_name'] %></code></td>
-    <td><code><%= point['method_name'] %></code></td>
-    <td><code><%= point['source'] %></code></td>
-    <td><code><%= point['event'] %></code></td>
-  </tr>
+    <tr data-bs-toggle="collapse" data-bs-target="#<%= id %>-<%= i %>-debug" class="collapses">
+      <th><%= i %></th>
+      <td><%= point['path'] %></td>
+      <td><%= point['line_number'] %></td>
+      <td><code><%= point['class_name'] %></code></td>
+      <td><code><%= point['method_name'] %></code></td>
+      <td><code><%= point['source'] %></code></td>
+      <td><code><%= point['event'] %></code></td>
+    </tr>
+    <tr id="<%= id %>-<%= i %>-debug" class="collapse">
+      <td colspan="7">
+        <code><%= code_highlight point['file_contents'], :ruby,
+                                 from: point['line_number'] - 10,
+                                 to: point['line_number'] + 10,
+                                 breakpoint: point['line_number'] - 1
+        %></code>
+      </td>
+    </tr>
 <% end %>
 </table>
