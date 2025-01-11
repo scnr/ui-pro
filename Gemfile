@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '7.0.2.3'
+gem 'rails', '7.0.4.1'
 gem 'sprockets'#, '3.7.2' # Fixes segfault on asset precompile.
 gem 'sass-rails'#, '5.1.0' # Fixes segfault on asset precompile.
 gem 'closure-compiler'
