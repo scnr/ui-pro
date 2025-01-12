@@ -32,9 +32,10 @@
               </div>
               <div>
                 <%
-                  breakpoint = sink['backtrace'].first.split( ':' )[1].to_i - 1
+                  path, breakpoint = sink['backtrace'].first.split( ':' )
+                  breakpoint = breakpoint.to_i
                 %>
-                <code><%= code_highlight sink['source'], :ruby,
+                <code><%= code_highlight sink['source'], path_to_language( path ),
                                          from: breakpoint - 10,
                                          to: breakpoint + 10,
                                          breakpoint: breakpoint
@@ -57,7 +58,7 @@
               <div>
                 <code><%= sink['method_source_location'].join ':' %></code>
               </div>
-              <code><%= code_highlight sink['method_source'], :ruby %></code>
+              <code><%= code_highlight sink['method_source'], path_to_language( sink['method_source_location'].first ) %></code>
             </div>
           <% end %>
 

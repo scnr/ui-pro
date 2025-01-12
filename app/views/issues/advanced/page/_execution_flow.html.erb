@@ -30,7 +30,7 @@
     </tr>
     <tr id="<%= id %>-<%= i %>-debug" class="collapse">
       <td colspan="7">
-        <code><%= code_highlight point['file_contents'], :ruby,
+        <code><%= code_highlight point['file_contents'], path_to_language( point['path'] ),
                                  from: point['line_number'] - 10,
                                  to: point['line_number'] + 10,
                                  breakpoint: point['line_number'] - 1

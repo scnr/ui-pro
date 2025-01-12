@@ -151,6 +151,47 @@ module ApplicationHelper
         render layout: 'shared/advanced', locals: options, &block
     end
 
+    def path_to_language( path )
+        extension = File.extname(path).downcase
+
+        case extension
+            when '.rb'
+                :ruby
+            when '.js'
+                :javascript
+            when '.html', '.htm'
+                :html
+            when '.css'
+                :css
+            when '.json'
+                :json
+            when '.xml'
+                :xml
+            when '.java'
+                :java
+            when '.py'
+                :python
+            when '.php'
+                :php
+            when '.cpp'
+                :cplusplus
+            when '.c'
+                :c
+            when '.cs'
+                :csharp
+            when '.go'
+                :go
+            when '.rs'
+                :rust
+            when '.swift'
+                :swift
+            when '.kt'
+                :kotlin
+            else
+                :unknown
+        end
+    end
+
     def code_highlight( *args, &block )
         if block_given?
             code  = capture( &block )
