@@ -1,4 +1,4 @@
-<% if page.request.execution_flow&.any? %>
+<% if page.request.execution_flow && page.request.execution_flow['points'].any? %>
   <div id="<%= id %>-request-execution-flow">
     <h4>
       <a id="<%= id %>_request_execution_flow" class="anchor"
@@ -17,7 +17,7 @@
   </div>
 <% end %>
 
-<% if page.request.data_flow&.any? %>
+<% if page.request.data_flow && page.request.data_flow['sinks'].any? %>
   <div id="<%= id %>-request-data-flow">
     <h4>
       <a id="<%= id %>_request_data_flow" class="anchor"
