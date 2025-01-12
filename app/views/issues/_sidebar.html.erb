@@ -58,13 +58,15 @@
        advanced_affected_page: '&ndash; Affected page'
    )
 
-   if @issue.page.request.execution_flow && @issue.page.request.execution_flow['points'].any?
+   if @issue.page.request.execution_flow && @issue.page.request.execution_flow['points'] &&
+      @issue.page.request.execution_flow['points'].any?
      sections.merge!(
        advanced_affected_page_request_execution_flow: '&mdash; Execution flow',
        )
    end
 
-   if @issue.page.request.data_flow && @issue.page.request.data_flow['sinks'].any?
+   if @issue.page.request.data_flow && @issue.page.request.data_flow['sinks'] &&
+      @issue.page.request.data_flow['sinks'].any?
      sections.merge!(
        advanced_affected_page_request_data_flow: '&mdash; Data flow',
        )
@@ -101,13 +103,15 @@
        advanced_referring_page: '&ndash; Referring page',
    )
 
-   if @issue.referring_page.request.execution_flow && @issue.referring_page.request.execution_flow['points'].any?
+   if @issue.referring_page.request.execution_flow && @issue.referring_page.request.execution_flow['points'] &&
+      @issue.referring_page.request.execution_flow['points'].any?
      sections.merge!(
        advanced_referring_page_request_execution_flow: '&mdash; Execution flow',
        )
    end
 
-   if @issue.referring_page.request.data_flow && @issue.referring_page.request.data_flow['sinks'].any?
+   if @issue.referring_page.request.data_flow && @issue.referring_page.request.data_flow['sinks'] &&
+      @issue.referring_page.request.data_flow['sinks'].any?
      sections.merge!(
        advanced_referring_page_request_data_flow: '&mdash; Data flow',
        )
