@@ -59,7 +59,7 @@ PATH
 PATH
   remote: ../introspector
   specs:
-    scnr-introspector (0.3.0)
+    scnr-introspector (0.3.1)
 
 PATH
   remote: ../license-client
