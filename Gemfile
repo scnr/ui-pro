@@ -45,10 +45,6 @@ gem 'paper_trail'#, '~> 4.0.0'
 
 gem 'turbo-rails'
 
-group :doc do
-    gem 'sdoc', '~> 0.4.0'
-end
-
 group :development do
     gem 'listen'
     gem 'spring'
