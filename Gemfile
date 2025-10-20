@@ -76,6 +76,8 @@ group :development, :test do
     gem 'pry-byebug'
 end
 
+gem 'mutex_m'
+
 if File.exist? '../../qadron/cuboid'
     gem 'cuboid', path: '../../qadron/cuboid'
 end
